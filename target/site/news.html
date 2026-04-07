@@ -1,0 +1,74 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>News</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Automating compliance verification for standards-driven industries.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <nav>
+        <div class="nav-brand"><a href="/">[asymm] <span>systems</span></a></div>
+        <a href="mailto:info@asymm.systems" class="nav-contact">info@asymm.systems</a>
+    </nav>
+</div>
+
+<div class="container" style="padding-top: 6rem; padding-bottom: 8rem; min-height: 70vh;">
+    <h1 class="page-title">System Logs</h1>
+    <hr style="border:none; border-bottom:1px solid var(--border-subtle); margin-bottom: 3rem;">
+    
+    <div class="news-item">
+        <a href="news/2026-04-asymm-jdk-25-released.html" class="news-link">Asymm JDK 25.0.2 Available on SDKman</a>
+        <span class="news-date">03 April 2026</span>
+    </div>
+</div>
+
+<footer>
+    <div class="container">
+        <div class="footer-grid">
+            <div>
+                <div class="nav-brand" style="color: white; margin-bottom: 1rem;">[asymm] <span>systems</span></div>
+                <p style="color: #A0AEC0;">Asymm Systems (Pvt) Ltd<br>fahim@asymm.systems</p>
+            </div>
+            <div class="footer-links">
+                <a href="/">asymm.systems</a>
+                <a href="https://jdk.asymm.systems" target="_blank" rel="noopener">jdk.asymm.systems</a>
+                <a href="https://dial-lang.dev" target="_blank" rel="noopener">dial-lang.dev</a>
+                <a href="https://linkedin.com/in/fahimfarookme" target="_blank" rel="noopener">LinkedIn</a>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2026 Asymm Systems (Pvt) Ltd. All rights reserved. Built statically via JBake.
+        </div>
+    </div>
+</footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const observerOptions = { root: null, rootMargin: '0px', threshold: 0.1 };
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = entry.target.classList.contains('slide-up') ? 'translateY(0)' : 'none';
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+        document.querySelectorAll('.fade-in, .slide-up').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transition = 'opacity 0.8s ease-out, transform 0.8s cubic-bezier(0.25, 0.8, 0.25, 1)';
+            if (el.classList.contains('slide-up')) { el.style.transform = 'translateY(30px)'; }
+            observer.observe(el);
+        });
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+<script src="/js/main.js"></script>
+</body>
+</html>

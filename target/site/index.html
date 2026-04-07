@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8"/>
+<title>Asymm Systems | Automated Compliance Verification</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="description" content="Automating compliance verification for standards-driven industries.">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600&family=JetBrains+Mono:wght@400;500&family=Outfit:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+<link href="css/style.css" rel="stylesheet">
+</head>
+<body>
+
+
+<section class="hero">
+    <div class="container hero-grid">
+        <div class="hero-content fade-in">
+            <div class="nav-brand" style="margin-bottom: 4rem;"><a href="/">[asymm] <span>systems</span></a></div>
+            <h1>Automated compliance<br>for standards-driven<br>industries.</h1>
+            <p>We build developer tools that verify conformance to industry specifications — before deployment, not
+                after.</p>
+        </div>
+        <div class="hero-visual">
+            <img src="/images/asymm-dial-ecosystem.png" alt="Asymm & Dial Ecosystem">
+        </div>
+    </div>
+</section>
+
+<section class="section-block fade-in">
+    <div class="container">
+        <div class="minimal-stack">
+
+            <div class="stack-item slide-up">
+                <h3>01 — The Platform OS</h3>
+                <h2>Intentional Asymmetry.</h2>
+                <p>Perfect symmetry looks good on a whiteboard, but real systems thrive on clear boundaries, directional
+                    flows, and pragmatic constraints. We build verification tools that mathematically enforce these
+                    realities in massive deployments.</p>
+            </div>
+
+            <div class="stack-item slide-up" style="transition-delay: 0.1s;">
+                <h3>02 — Runtime Architecture</h3>
+                <h2>Asymm JDK.</h2>
+                <p>A server-first OpenJDK distribution with telecom-optimised defaults and enterprise-hardened security.
+                    It runs exactly the way large-scale network topologies demand.</p>
+                <a href="https://jdk.asymm.systems" class="btn-ghost" target="_blank" rel="noopener">Available via
+                    SDKman &rarr;</a>
+            </div>
+
+            <div class="stack-item slide-up" style="transition-delay: 0.2s;">
+                <h3>03 — Protocol Enforcement</h3>
+                <h2>Dial Engine.</h2>
+                <p>A developer tool that verifies TMF Open Digital Architecture conformance during active software
+                    development. If it compiles, it explicitly complies.</p>
+                <a href="https://dial-lang.dev" class="btn-ghost" target="_blank" rel="noopener">View Technical Preview
+                    &rarr;</a>
+            </div>
+
+            <div class="stack-item slide-up" style="transition-delay: 0.3s;">
+                <h3>04 — Foundation</h3>
+                <h2>Engineering Logs.</h2>
+                <p>Our founder actively contributes to Spring Cloud Netflix, Spring Boot, and Debezium. Foundational
+                    architecture should be incredibly open, shared, and relentlessly documented.</p>
+                <div style="display:flex; gap:2rem; justify-content:center;">
+                    <a href="/news.html" class="btn-ghost">System Logs</a>
+                    <a href="/research/bss-survey-2026.html" class="btn-ghost">Research Diagnostics</a>
+                </div>
+            </div>
+
+        </div>
+    </div>
+</section>
+
+
+<footer>
+    <div class="container">
+        <div class="footer-grid">
+            <div>
+                <div class="nav-brand" style="color: white; margin-bottom: 1rem;">[asymm] <span>systems</span></div>
+                <p style="color: #A0AEC0;">Asymm Systems (Pvt) Ltd<br>fahim@asymm.systems</p>
+            </div>
+            <div class="footer-links">
+                <a href="/">asymm.systems</a>
+                <a href="https://jdk.asymm.systems" target="_blank" rel="noopener">jdk.asymm.systems</a>
+                <a href="https://dial-lang.dev" target="_blank" rel="noopener">dial-lang.dev</a>
+                <a href="https://linkedin.com/in/fahimfarookme" target="_blank" rel="noopener">LinkedIn</a>
+            </div>
+        </div>
+        <div class="copyright">
+            &copy; 2026 Asymm Systems (Pvt) Ltd. All rights reserved. Built statically via JBake.
+        </div>
+    </div>
+</footer>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const observerOptions = { root: null, rootMargin: '0px', threshold: 0.1 };
+        const observer = new IntersectionObserver((entries, observer) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.style.opacity = '1';
+                    entry.target.style.transform = entry.target.classList.contains('slide-up') ? 'translateY(0)' : 'none';
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, observerOptions);
+        document.querySelectorAll('.fade-in, .slide-up').forEach(el => {
+            el.style.opacity = '0';
+            el.style.transition = 'opacity 0.8s ease-out, transform 0.8s cubic-bezier(0.25, 0.8, 0.25, 1)';
+            if (el.classList.contains('slide-up')) { el.style.transform = 'translateY(30px)'; }
+            observer.observe(el);
+        });
+    });
+</script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/matter-js/0.19.0/matter.min.js"></script>
+<script src="/js/main.js"></script>
+</body>
+</html>

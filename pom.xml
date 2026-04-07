@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <modelVersion>4.0.0</modelVersion>
+
+    <groupId>systems.asymm</groupId>
+    <artifactId>asymm-corporate-website</artifactId>
+    <version>1.0.0-SNAPSHOT</version>
+    <packaging>pom</packaging>
+
+    <name>asymm.systems</name>
+    <description>Corporate website for Asymm Systems (Pvt) Ltd</description>
+
+    <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <jbake.version>2.6.7</jbake.version>
+        <jbake.plugin.version>0.3.4</jbake.plugin.version>
+        <freemarker.version>2.3.33</freemarker.version>
+        <minify.plugin.version>1.7.11</minify.plugin.version>
+        <htmlcompressor.plugin.version>2.1.1</htmlcompressor.plugin.version>
+        <skip.optimize>false</skip.optimize>
+    </properties>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.jbake</groupId>
+                <artifactId>jbake-maven-plugin</artifactId>
+                <version>${jbake.plugin.version}</version>
+                <configuration>
+                    <inputDirectory>${project.basedir}/src/main/jbake</inputDirectory>
+                    <outputDirectory>${project.build.directory}/site</outputDirectory>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>default-generate</id>
+                        <phase>generate-resources</phase>
+                        <goals>
+                            <goal>generate</goal>
+                        </goals>
+                    </execution>
+                </executions>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.jbake</groupId>
+                        <artifactId>jbake-core</artifactId>
+                        <version>${jbake.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>org.freemarker</groupId>
+                        <artifactId>freemarker</artifactId>
+                        <version>${freemarker.version}</version>
+                    </dependency>
+                    <dependency>
+                        <groupId>com.vladsch.flexmark</groupId>
+                        <artifactId>flexmark-all</artifactId>
+                        <version>0.64.8</version>
+                    </dependency>
+                </dependencies>
+            </plugin>
+
+            <!-- CSS Minification -->
+            <plugin>
+                <groupId>com.7p-group</groupId>
+                <artifactId>minify-maven-plugin</artifactId>
+                <version>${minify.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>minify-css</id>
+                        <phase>process-resources</phase>
+                        <goals><goal>minify</goal></goals>
+                        <configuration>
+                            <webappSourceDir>${project.basedir}/src/main/jbake/assets</webappSourceDir>
+                            <webappTargetDir>${project.build.directory}/site</webappTargetDir>
+                            <cssSourceDir>css</cssSourceDir>
+                            <cssSourceFiles>
+                                <cssSourceFile>style.css</cssSourceFile>
+                            </cssSourceFiles>
+                            <cssFinalFile>style.css</cssFinalFile>
+                            <skipMerge>true</skipMerge>
+                            <nosuffix>true</nosuffix>
+                            <charset>UTF-8</charset>
+                            <skipMinify>${skip.optimize}</skipMinify>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- HTML Compression -->
+            <plugin>
+                <groupId>com.github.hazendaz.maven</groupId>
+                <artifactId>htmlcompressor-maven-plugin</artifactId>
+                <version>${htmlcompressor.plugin.version}</version>
+                <executions>
+                    <execution>
+                        <id>compress-html</id>
+                        <phase>process-resources</phase>
+                        <goals><goal>html</goal></goals>
+                        <configuration>
+                            <srcFolder>${project.build.directory}/site</srcFolder>
+                            <targetFolder>${project.build.directory}/site</targetFolder>
+                            <javascriptHtmlSprite>false</javascriptHtmlSprite>
+                            <removeComments>true</removeComments>
+                            <removeMultiSpaces>true</removeMultiSpaces>
+                            <removeIntertagSpaces>false</removeIntertagSpaces>
+                            <preserveLineBreaks>false</preserveLineBreaks>
+                            <compressJavaScript>false</compressJavaScript>
+                            <compressCss>false</compressCss>
+                            <encoding>UTF-8</encoding>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <!-- Clean URLs: strip .html from href links for Cloudflare Pages -->
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>exec-maven-plugin</artifactId>
+                <version>3.1.0</version>
+                <executions>
+                    <execution>
+                        <id>clean-urls</id>
+                        <phase>process-resources</phase>
+                        <goals><goal>exec</goal></goals>
+                        <configuration>
+                            <executable>${project.basedir}/scripts/clean-urls.sh</executable>
+                            <arguments>
+                                <argument>${project.build.directory}/site</argument>
+                            </arguments>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+        </plugins>
+    </build>
+</project>
