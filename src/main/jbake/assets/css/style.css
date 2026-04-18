@@ -35,6 +35,74 @@ body {
     line-height: 1.6;
     -webkit-font-smoothing: antialiased;
     overflow-x: hidden;
+    padding-bottom: 35px;
+}
+
+/* IDE Status Bar Navigation */
+.ide-status-bar {
+    position: fixed;
+    bottom: 0;
+    left: 0;
+    width: 100%;
+    height: 35px;
+    background-color: var(--surface-inverted);
+    color: #888;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 0;
+    font-family: 'Proza Libre', sans-serif;
+    font-size: 0.8rem;
+    z-index: 1000;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    overflow-x: auto;
+    white-space: nowrap;
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+}
+
+.ide-status-bar::-webkit-scrollbar {
+    display: none;
+}
+
+.ide-status-bar a,
+.ide-status-bar span {
+    color: #F9F7F6;
+    text-decoration: none;
+    transition: color 0.2s, background-color 0.2s;
+    height: 100%;
+    display: inline-flex;
+    align-items: center;
+    padding: 0 1rem;
+}
+
+.ide-status-bar a:hover {
+    color: #F9F7F6;
+    background-color: rgba(255, 255, 255, 0.05);
+    opacity: 1;
+}
+
+.ide-status-bar .status-left,
+.ide-status-bar .status-right {
+    display: flex;
+    height: 100%;
+    align-items: center;
+}
+
+.status-highlight {
+    background-color: var(--accent-brand-hover);
+    color: #F9F7F6 !important;
+    font-weight: 500;
+}
+
+.status-highlight:hover {
+    background-color: #a05a7a !important;
+}
+
+.status-icon {
+    /* margin-right: 0.5rem; */
+    font-size: 0.9em;
+    padding-left: 0rem !important;
 }
 
 a {

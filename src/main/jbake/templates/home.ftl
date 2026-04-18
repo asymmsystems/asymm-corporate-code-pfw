@@ -12,5 +12,6 @@
 ${content.body}
 
 <#include "footer.ftl">
+<#include "menu.ftl">
 </body>
 </html>
