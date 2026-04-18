@@ -1,5 +1,5 @@
 <div class="container">
     <nav>
-        <div class="nav-brand"><a href="/">[asymm] <span>systems</span></a></div>
+        <div class="nav-brand"><#include "brand.ftl"></div>
     </nav>
 </div>

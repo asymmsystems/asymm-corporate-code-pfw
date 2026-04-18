@@ -2,7 +2,10 @@
     <div class="container">
         <div class="footer-grid">
             <div class="footer-brand">
-                <div class="nav-brand" style="color: white; margin-bottom: 1rem;">[asymm] <span>systems</span></div>
+                <div style="margin-bottom: 1rem;">
+                    <#assign brand_theme="dark">
+                    <#include "brand.ftl">
+                </div>
                 <p style="color: #A0AEC0; font-size: 0.9rem;">Asymm Systems (Pvt) Ltd<br>Verification tools that verify conformance to industry specifications.</p>
             </div>
             <div class="footer-column">

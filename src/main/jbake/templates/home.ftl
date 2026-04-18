@@ -5,6 +5,10 @@
 </head>
 <body>
 
+<#if content.hero_title??>
+<#include "hero.ftl">
+</#if>
+
 ${content.body}
 
 <#include "footer.ftl">
