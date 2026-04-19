@@ -22,7 +22,7 @@
     }
     .asymm-brand .brand-text {
         padding-bottom: 2px;
-        margin: 0 0.13em;
+        margin: 0 0.16em;
         color: inherit;
         line-height: 1;
         transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
@@ -33,7 +33,7 @@
     .asymm-brand .systems-text {
         font-weight: 300;
         color: #333333;
-        padding-left: 0.36em;
+        padding-left: 0.42em;
         padding-bottom: 2px;
         transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         line-height: 1;
@@ -57,10 +57,10 @@
         opacity: 1.0;
     }
     .asymm-brand:hover .brand-text, .asymm-brand:focus .brand-text, .asymm-brand:active .brand-text, .brand-reveal .brand-text {
-        transform: translate3d(0.45em, 0, 0);
+        transform: translate3d(0.58em, 0, 0);
     }
     .asymm-brand:hover .bracket.right, .asymm-brand:focus .bracket.right, .asymm-brand:active .bracket.right, .brand-reveal .bracket.right {
-        transform: translate3d(-3.0em, 0, 0);
+        transform: translate3d(-2.95em, 0, 0);
     }
     .asymm-brand:hover .systems-text, .asymm-brand:focus .systems-text, .asymm-brand:active .systems-text, .brand-reveal .systems-text {
         color: #333333;
