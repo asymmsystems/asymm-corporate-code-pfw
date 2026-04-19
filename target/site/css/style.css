@@ -1,16 +1,31 @@
 /* Asymm Systems - V14.2 (Organic Minimalism + Matter.js Circles) */
 
 :root {
-    --surface-base: #F9F7F6;
-    --surface-elevated: #FFFFFF;
-    --surface-inverted: #121212;
+    /* Color Palette */
+    --color-teal: #5295A3;
+    --color-teal-light: #9CC8D1;
+    --color-rose: #BA6E8F;
+    --color-rose-light: #C985A3;
+    --color-olive: #8FA96D;
+    --color-olive-light: #AFC29C;
+    --color-sand: #F8DBA9;
+    --color-sand-light: #FDF5E5;
+    --color-base: #F9F7F6;
+    --color-white: #FFFFFF;
+    --color-black: #1A1C1E;
+    --color-dark-grey: #333333;
 
-    --text-primary: #1A1C1E;
-    --text-secondary: #333333;
-    --text-inverted: #F9F7F6;
+    /* Semantic Variables */
+    --surface-base: var(--color-base);
+    --surface-elevated: var(--color-white);
+    --surface-inverted: var(--color-black);
 
-    --accent-asymmetric: #CF89AF;
-    --accent-brand-hover: #BA6E8F;
+    --text-primary: var(--color-black);
+    --text-secondary: var(--color-dark-grey);
+    --text-inverted: var(--color-base);
+
+    --accent-asymmetric: var(--color-rose-light);
+    --accent-brand-hover: var(--color-rose);
     --border-subtle: rgba(0, 0, 0, 0.06);
 
     --font-display: 'Proza Libre', sans-serif;
@@ -109,10 +124,6 @@ a {
     text-decoration: none;
     color: inherit;
     transition: opacity 0.3s;
-}
-
-a:hover {
-    opacity: 0.6;
 }
 
 ul {
@@ -232,7 +243,7 @@ ul {
     margin-bottom: 3rem;
 }
 
-/* Ghost Buttons */
+/* Ghost Buttons — legacy, kept for compatibility */
 .btn-ghost {
     display: inline-flex;
     align-items: center;
@@ -247,6 +258,230 @@ ul {
 
 .btn-ghost:hover {
     opacity: 0.6;
+}
+
+/* ============================================
+   ORG-MODE LINK SYSTEM
+   [[ text → ]]  internal (hover → rose)
+   [[ text ↗ ]]  external (hover → olive)
+   ============================================ */
+
+.org-link {
+    display: inline-flex;
+    align-items: center;
+    text-decoration: none;
+    font-family: var(--font-body);
+    font-weight: 400;
+    color: var(--text-primary);
+    border-bottom: 1px dashed var(--text-secondary);
+    padding-bottom: 0px;
+    transition: color 0.3s ease, border-color 0.3s ease;
+}
+
+.org-link::before {
+    /* content: "["; */
+    /* margin-right: 0.3em; */
+    font-family: var(--font-code);
+    font-weight: 400;
+    opacity: 0.6;
+    transition: color 0.3s ease, opacity 0.3s ease;
+}
+
+.org-link::after {
+    font-family: var(--font-code);
+    font-weight: 400;
+    opacity: 0.6;
+    margin-left: 0.3em;
+    transition: color 0.3s ease, opacity 0.3s ease;
+}
+
+/* internal link arrow */
+.org-link--internal::after {
+    /* content: "\2192  ]"; */
+    content: "\2192";
+}
+
+/* external link arrow */
+.org-link--external::after {
+    /* content: "\2197  ]"; */
+    content: "\2197";
+}
+
+/* Internal hover → rose */
+.org-link--internal:hover {
+    color: var(--accent-brand-hover);
+    border-bottom: 1px solid var(--accent-brand-hover);
+}
+
+.org-link--internal:hover::before,
+.org-link--internal:hover::after {
+    color: var(--accent-brand-hover);
+    opacity: 1;
+}
+
+/* External hover → olive */
+.org-link--external:hover {
+    color: var(--color-teal);
+    border-bottom: 1px solid var(--color-teal);
+}
+
+.org-link--external:hover::before,
+.org-link--external:hover::after {
+    color: var(--color-teal);
+    opacity: 1;
+}
+
+/* CTA variant — just larger */
+.org-cta {
+    font-size: 1.05rem;
+    font-weight: 500;
+    letter-spacing: 0.01em;
+}
+
+/* Hero CTA row */
+.hero-cta {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 2.5rem;
+    flex-wrap: wrap;
+}
+
+/* Inline variant — NO brackets */
+.org-link--inline {
+    display: inline;
+    font-family: inherit;
+    font-size: inherit;
+    font-weight: inherit;
+    color: inherit;
+    border-bottom: 1px dashed var(--text-secondary);
+}
+
+.org-link--inline::before {
+    content: "";
+    margin-right: 0;
+}
+
+.org-link--inline.org-link--internal::after {
+    content: "\2192";
+    margin-left: 0.3em;
+}
+
+.org-link--inline.org-link--external::after {
+    content: "\2197";
+    margin-left: 0.3em;
+}
+
+/* Product Cards */
+.products-section {
+    padding: 8rem 0;
+    position: relative;
+    z-index: 10;
+    background: var(--surface-base);
+}
+
+.product-cards {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    max-width: 1100px;
+    margin: 0 auto;
+}
+
+.product-card {
+    background: var(--surface-elevated);
+    border: 1px solid var(--border-subtle);
+    border-radius: 16px;
+    padding: 3rem;
+    display: flex;
+    flex-direction: column;
+}
+
+.product-icon {
+    font-size: 2rem;
+    margin-bottom: 1.5rem;
+    display: block;
+}
+
+.product-card h3 {
+    font-family: var(--font-display);
+    font-size: 1.6rem;
+    font-weight: 400;
+    color: var(--text-primary);
+    margin-bottom: 1.2rem;
+    letter-spacing: -0.02em;
+    line-height: 1.2;
+}
+
+.product-card p {
+    font-size: 1.05rem;
+    font-weight: 300;
+    color: var(--text-secondary);
+    line-height: 1.65;
+    margin-bottom: 1.5rem;
+    flex-grow: 1;
+}
+
+.product-code {
+    background: var(--surface-inverted);
+    color: var(--text-inverted);
+    font-family: var(--font-code);
+    font-size: 0.9rem;
+    padding: 1rem 1.4rem;
+    border-radius: 8px;
+    margin-bottom: 1.5rem;
+    overflow-x: auto;
+}
+
+.product-code code {
+    color: #e2e8f0;
+    white-space: nowrap;
+}
+
+.product-badge {
+    font-family: var(--font-code);
+    font-size: 0.8rem;
+    color: var(--accent-brand-hover);
+    letter-spacing: 0.02em;
+    margin-bottom: 1.5rem;
+    font-weight: 500;
+}
+
+/* Platform Story */
+.platform-story {
+    max-width: 800px;
+    margin: 0 auto;
+    text-align: center;
+}
+
+.platform-story p {
+    font-size: 1.3rem;
+    font-weight: 300;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-bottom: 2rem;
+}
+
+.platform-story-oss {
+    font-size: 1.05rem !important;
+    color: var(--text-secondary);
+    opacity: 0.8;
+}
+
+/* Founder links row */
+
+.founder-links {
+    display: flex;
+    gap: 1.5rem;
+    flex-wrap: wrap;
+    margin-top: 1rem;
+}
+
+/* 404 links row */
+.not-found-links {
+    display: flex;
+    gap: 1.5rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
 }
 
 /* Footer */
@@ -358,6 +593,33 @@ footer {
 
     form {
         margin: 2rem 0;
+    }
+
+    .product-cards {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+
+    .product-card {
+        padding: 2rem;
+    }
+
+    .products-section {
+        padding: 5rem 0;
+    }
+
+    .hero-cta {
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+
+    .btn-cta {
+        text-align: center;
+        justify-content: center;
+    }
+
+    .platform-story p {
+        font-size: 1.1rem;
     }
 }
 

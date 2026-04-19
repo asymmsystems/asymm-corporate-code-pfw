@@ -2,33 +2,139 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
-<title>News</title>
+<title>News — Asymm Systems</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Automating compliance verification for standards-driven industries.">
+<meta name="description" content="Latest announcements from Asymm Systems.">
+<link rel="icon" href="images/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Alegreya:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600&family=Proza+Libre:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
 <link href="css/style.css" rel="stylesheet">
+
+<!-- Open Graph -->
+<meta property="og:title" content="News — Asymm Systems">
+<meta property="og:description" content="Developer tools that verify conformance to industry specifications — before deployment, not after.">
+<meta property="og:image" content="https://asymm.systems/images/og-image.png">
+<meta property="og:url" content="https://asymm.systemsnews.html">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
 </head>
 <body>
+<div class="container">
+    <nav style="padding-top: 3rem;">
+        <div class="nav-brand"><style>
+    .asymm-brand {
+        display: inline-flex;
+        align-items: center;
+        text-decoration: none;
+        font-family: 'Alegreya', serif;
+        font-weight: 600;
+        font-size: 1.6rem;
+        letter-spacing: -0.02em;
+        color: #1A1C1E;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        line-height: 1;
+    }
+    .asymm-brand .bracket {
+        color: inherit;
+    }
+    .asymm-brand .bracket.right {
+        transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        transform: translate3d(0, 0, 0);
+        will-change: transform;
+        backface-visibility: hidden;
+    }
+    .asymm-brand .brand-text {
+        padding-bottom: 2px;
+        margin: 0 0.16em;
+        color: inherit;
+        transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        transform: translate3d(0, 0, 0);
+        will-change: transform;
+        backface-visibility: hidden;
+    }
+    .asymm-brand .systems-text {
+        font-weight: 300;
+        color: #333333;
+        padding-left: 0.42em;
+        padding-bottom: 2px;
+        transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+    }
+    /* Dark Theme */
+    .asymm-brand.brand-dark {
+        color: #F9F7F6;
+    }
+    .asymm-brand.brand-dark .systems-text {
+        color: #F9F7F6;
+    }
+    .asymm-brand.brand-dark:hover .systems-text, 
+    .asymm-brand.brand-dark:focus .systems-text, 
+    .asymm-brand.brand-dark:active .systems-text, 
+    .asymm-brand.brand-dark.brand-reveal .systems-text {
+        color: #F9F7F6;
+    }
+
+    .asymm-brand:hover, .asymm-brand:focus, .asymm-brand:active, .brand-reveal, .asymm-brand.brand-initial-release {
+        color: #BA6E8F;
+        opacity: 1.0;
+    }
+    .asymm-brand:hover .brand-text, .asymm-brand:focus .brand-text, .asymm-brand:active .brand-text, .brand-reveal .brand-text {
+        transform: translate3d(0.58em, 0, 0);
+    }
+    .asymm-brand:hover .bracket.right, .asymm-brand:focus .bracket.right, .asymm-brand:active .bracket.right, .brand-reveal .bracket.right {
+        transform: translate3d(-2.95em, 0, 0);
+    }
+    .asymm-brand:hover .systems-text, .asymm-brand:focus .systems-text, .asymm-brand:active .systems-text, .brand-reveal .systems-text {
+        color: #333333;
+        opacity: 1.0;
+    }
+    .asymm-brand.brand-initial-release,
+    .asymm-brand.brand-initial-release .bracket.right,
+    .asymm-brand.brand-initial-release .brand-text,
+    .asymm-brand.brand-initial-release .systems-text {
+        transition-duration: 1s !important;
+    }
+</style>
+<a href="/" class="asymm-brand  brand-reveal brand-initial-release">
+    <span class="bracket">[</span><span class="brand-text">asymm</span><span class="bracket right">}</span>
+    <span class="systems-text">systems</span>
+</a>
+<script>
+    window.addEventListener('DOMContentLoaded', () => { 
+        const reveals = document.querySelectorAll('.brand-reveal');
+        setTimeout(() => reveals.forEach(el => el.classList.remove('brand-reveal')), 3000); 
+        setTimeout(() => reveals.forEach(el => el.classList.remove('brand-initial-release')), 4200); 
+    });
+</script>
+</div>
+    </nav>
+</div>
+
+<div class="container" style="padding-top: 4rem; padding-bottom: 8rem; min-height: 70vh;">
+    <h1 class="page-title">News</h1>
+    <hr style="border:none; border-bottom:1px solid var(--border-subtle); margin-bottom: 3rem;">
+    
+</div>
+
+<!-- Footer superseded by the .ide-status-bar in menu.ftl -->
 <div class="ide-status-bar">
     <!-- Desktop -->
     <div class="status-left desktop-only">
         <a href="/" class="status-item" style="color: #BA6E8F; font-family: 'Alegreya', serif; font-size: 1.5rem; font-weight: 600; padding: 0 1.2rem; letter-spacing: 0.05em; padding-bottom: 3px;">
             [ }
         </a>
-        <a href="https://jdk.asymm.systems" target="_blank" rel="noopener" class="status-item">
+        <a href="/product/jdk" class="status-item">
             <span class="status-icon">⚡</span> Asymm JDK
         </a>
-        <a href="https://dial-lang.dev" target="_blank" rel="noopener" class="status-item">
-            <span class="status-icon">⎔</span> Dial Engine
+        <a href="/product/dial" class="status-item">
+            <span class="status-icon">⎔</span> Dial
         </a>
     </div>
     <div class="status-right desktop-only">
         <a href="/research/bss-survey-2026.html" class="status-item">Research</a>
         <a href="/news.html" class="status-item">News</a>
         <a href="/about.html" class="status-item">About</a>
-        <a href="mailto:info@asymm.systems" class="status-item">Contact</a>
+        <a href="mailto:ping@asymm.systems" class="status-item">Contact</a>
         <span class="status-item" style="opacity: 0.5; padding-right: 1.2rem; cursor: default;">© 2026 Asymm</span>
     </div>
 
@@ -55,12 +161,12 @@
     </div>
     <div class="drawer-content">
         <div class="drawer-section">
-            <span class="drawer-label">// EXECUTABLES</span>
-            <a href="https://jdk.asymm.systems" target="_blank" rel="noopener" class="drawer-link">
+            <span class="drawer-label">// PRODUCTS</span>
+            <a href="/product/jdk" class="drawer-link">
                 <span class="status-icon" style="margin-right: 0.7rem;">⚡</span> Asymm JDK
             </a>
-            <a href="https://dial-lang.dev" target="_blank" rel="noopener" class="drawer-link">
-                <span class="status-icon" style="margin-right: 0.7rem;">⎔</span> Dial Engine
+            <a href="/product/dial" class="drawer-link">
+                <span class="status-icon" style="margin-right: 0.7rem;">⎔</span> Dial
             </a>
         </div>
         <div class="drawer-section">
@@ -68,7 +174,7 @@
             <a href="/research/bss-survey-2026.html" class="drawer-link">Research</a>
             <a href="/news.html" class="drawer-link">News</a>
             <a href="/about.html" class="drawer-link">About</a>
-            <a href="mailto:info@asymm.systems" class="drawer-link">Contact</a>
+            <a href="mailto:ping@asymm.systems" class="drawer-link">Contact</a>
         </div>
         <div class="drawer-footer">
             <span style="opacity: 0.5;">© 2026 Asymm Systems</span>
@@ -96,17 +202,5 @@
         }
     });
 </script>
-
-<div class="container" style="padding-top: 6rem; padding-bottom: 8rem; min-height: 70vh;">
-    <h1 class="page-title">System Logs</h1>
-    <hr style="border:none; border-bottom:1px solid var(--border-subtle); margin-bottom: 3rem;">
-    
-    <div class="news-item">
-        <a href="news/2026-04-asymm-jdk-25-released.html" class="news-link">Asymm JDK 25.0.2 Available on SDKman</a>
-        <span class="news-date">03 April 2026</span>
-    </div>
-</div>
-
-<!-- Footer superseded by the .ide-status-bar in menu.ftl -->
 </body>
 </html>

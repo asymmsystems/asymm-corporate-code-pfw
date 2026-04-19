@@ -2,13 +2,22 @@
 <html lang="en">
 <head>
 <meta charset="utf-8"/>
-<title>BSS/TMF Engineering Practices Survey 2026</title>
+<title>Asymm Systems</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<meta name="description" content="Automating compliance verification for standards-driven industries.">
+<meta name="description" content="Developer tools that verify conformance to industry specifications — before deployment, not after.">
+<link rel="icon" href="../images/favicon.svg" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Alegreya:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600&family=Proza+Libre:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
 <link href="../css/style.css" rel="stylesheet">
+
+<!-- Open Graph -->
+<meta property="og:title" content="Asymm Systems">
+<meta property="og:description" content="Developer tools that verify conformance to industry specifications — before deployment, not after.">
+<meta property="og:image" content="https://asymm.systems/images/og-image.png">
+<meta property="og:url" content="https://asymm.systemsresearch/bss-survey-2026.html">
+<meta property="og:type" content="website">
+<meta name="twitter:card" content="summary_large_image">
 </head>
 <body>
 <div class="container">
@@ -24,10 +33,10 @@
         letter-spacing: -0.02em;
         color: #1A1C1E;
         transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        line-height: 1;
     }
     .asymm-brand .bracket {
         color: inherit;
-        line-height: 1;
     }
     .asymm-brand .bracket.right {
         transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
@@ -39,7 +48,6 @@
         padding-bottom: 2px;
         margin: 0 0.16em;
         color: inherit;
-        line-height: 1;
         transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         transform: translate3d(0, 0, 0);
         will-change: transform;
@@ -51,7 +59,6 @@
         padding-left: 0.42em;
         padding-bottom: 2px;
         transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-        line-height: 1;
     }
     /* Dark Theme */
     .asymm-brand.brand-dark {
@@ -105,11 +112,14 @@
 
 <div class="container" style="padding-top: 4rem; padding-bottom: 8rem; min-height: 70vh;">
     
-<p>Asymm Systems is conducting research into BSS/OSS engineering practices in the telecom industry, with a focus on TMF standards adoption and common deployment challenges.</p>
+<p>Asymm Systems is conducting research into BSS/OSS engineering practices in the telecom industry, with a focus on TMF
+    standards adoption and common deployment challenges.</p>
 
-<p>This survey takes approximately 5 minutes to complete. All responses are confidential. Individual responses will not be shared. Aggregated findings will be published as a research report later this year.</p>
+<p>This survey takes approximately 5 minutes to complete. Results will be published as an industry brief later this
+    year.</p>
 
-<p>Your participation helps us understand real-world engineering challenges facing the telecom development community.</p>
+<p>Your participation helps us understand real-world engineering challenges facing the telecom development community.
+</p>
 
 <form id="surveyForm" action="https://formspree.io/f/mvzvwqvw" method="POST">
 
@@ -160,7 +170,8 @@
         </div>
 
         <div class="form-group">
-            <label for="organisation">Organizations / Telcos you have worked for <span class="optional">(optional)</span></label>
+            <label for="organisation">Organizations / Telcos you have worked for <span
+                    class="optional">(optional)</span></label>
             <input type="text" id="organisation" name="organisation" placeholder="Your organisations">
         </div>
 
@@ -176,7 +187,8 @@
         <legend>Section 2: BSS Deployment</legend>
 
         <div class="form-group">
-            <label for="deployment-duration">Typical duration of a BSS platform deployment at your organisation? <span class="required">*</span></label>
+            <label for="deployment-duration">Typical duration of a BSS platform deployment at your organisation? <span
+                    class="required">*</span></label>
             <select id="deployment-duration" name="deployment_duration" required>
                 <option value="" disabled selected>Select duration</option>
                 <option value="Less than 6 months">Less than 6 months</option>
@@ -188,7 +200,8 @@
         </div>
 
         <div class="form-group">
-            <label for="lead-time">What is the average lead time from contract signing to first live subscriber in your recent BSS transformations? <span class="required">*</span></label>
+            <label for="lead-time">What is the average lead time from contract signing to first live subscriber in your
+                recent BSS transformations? <span class="required">*</span></label>
             <select id="lead-time" name="lead_time" required>
                 <option value="" disabled selected>Select lead time</option>
                 <option value="Less than 6 months">Less than 6 months</option>
@@ -201,7 +214,8 @@
         </div>
 
         <div class="form-group">
-            <label for="on-time">What percentage of BSS deployments you've been involved in were delivered on time and within budget? <span class="required">*</span></label>
+            <label for="on-time">What percentage of BSS deployments you've been involved in were delivered on time and
+                within budget? <span class="required">*</span></label>
             <select id="on-time" name="on_time_percentage" required>
                 <option value="" disabled selected>Select percentage</option>
                 <option value="Less than 25%">Less than 25%</option>
@@ -212,7 +226,8 @@
         </div>
 
         <div class="form-group">
-            <label>What are the top 3 causes of BSS deployment delays? <span class="required">*</span> <span class="optional">(select up to 3)</span></label>
+            <label>What are the top 3 causes of BSS deployment delays? <span class="required">*</span> <span
+                    class="optional">(select up to 3)</span></label>
             <div class="checkbox-group" data-max="3">
                 <label class="checkbox-label">
                     <input type="checkbox" name="delay_causes" value="Requirements changes mid-project">
@@ -239,7 +254,8 @@
                     Organisational and governance issues
                 </label>
                 <label class="checkbox-label">
-                    <input type="checkbox" name="delay_causes" value="Unforeseen issues arising from legacy system migration">
+                    <input type="checkbox" name="delay_causes"
+                        value="Unforeseen issues arising from legacy system migration">
                     Unforeseen issues arising from legacy system migration
                 </label>
                 <label class="checkbox-label">
@@ -250,7 +266,8 @@
                     <input type="checkbox" name="delay_causes" value="Other">
                     Other
                 </label>
-                <input type="text" class="other-text" name="delay_causes_other" placeholder="Please specify..." style="display: none;">
+                <input type="text" class="other-text" name="delay_causes_other" placeholder="Please specify..."
+                    style="display: none;">
             </div>
         </div>
     </fieldset>
@@ -261,7 +278,8 @@
         <legend>Section 3: Standards and Certification</legend>
 
         <div class="form-group">
-            <label for="tmf-adoption">Has your organisation adopted or begun adopting TMF standards (Open APIs, eTOM, SID, ODA)? <span class="required">*</span></label>
+            <label for="tmf-adoption">Has your organisation adopted or begun adopting TMF standards (Open APIs, eTOM,
+                SID, ODA)? <span class="required">*</span></label>
             <select id="tmf-adoption" name="tmf_adoption" required>
                 <option value="" disabled selected>Select adoption status</option>
                 <option value="Yes, in production">Yes, in production</option>
@@ -273,7 +291,8 @@
         </div>
 
         <div class="form-group">
-            <label for="compliance-stage">At what stage are TMF compliance issues mostly discovered in your projects? <span class="required">*</span></label>
+            <label for="compliance-stage">At what stage are TMF compliance issues mostly discovered in your projects?
+                <span class="required">*</span></label>
             <select id="compliance-stage" name="compliance_discovery_stage" required>
                 <option value="" disabled selected>Select stage</option>
                 <option value="During development">During development</option>
@@ -286,21 +305,26 @@
         </div>
 
         <div class="form-group">
-            <label for="verify-method">How does your team currently verify TMF compliance? <span class="required">*</span></label>
+            <label for="verify-method">How does your team currently verify TMF compliance? <span
+                    class="required">*</span></label>
             <select id="verify-method" name="compliance_verification_method" required>
                 <option value="" disabled selected>Select method</option>
-                <option value="Manual code review & Internal checklists">Manual code review & Internal checklists</option>
+                <option value="Manual code review & Internal checklists">Manual code review & Internal checklists
+                </option>
                 <option value="Automated test suites">Automated test suites</option>
                 <option value="Third-party audit">Third-party audit</option>
-                <option value="We verify during integration testing only">We verify during integration testing only</option>
+                <option value="We verify during integration testing only">We verify during integration testing only
+                </option>
                 <option value="We don't formally verify">We don't formally verify</option>
                 <option value="Other">Other</option>
             </select>
-            <input type="text" class="other-text" name="compliance_verification_other" placeholder="Please specify..." style="display: none;">
+            <input type="text" class="other-text" name="compliance_verification_other" placeholder="Please specify..."
+                style="display: none;">
         </div>
 
         <div class="form-group">
-            <label>What are the most time-consuming aspects of BSS component development? <span class="required">*</span> <span class="optional">(select up to 3)</span></label>
+            <label>What are the most time-consuming aspects of BSS component development? <span
+                    class="required">*</span> <span class="optional">(select up to 3)</span></label>
             <div class="checkbox-group" data-max="3">
                 <label class="checkbox-label">
                     <input type="checkbox" name="time_consuming" value="Requirements analysis">
@@ -334,7 +358,8 @@
                     <input type="checkbox" name="time_consuming" value="Other">
                     Other
                 </label>
-                <input type="text" class="other-text" name="time_consuming_other" placeholder="Please specify..." style="display: none;">
+                <input type="text" class="other-text" name="time_consuming_other" placeholder="Please specify..."
+                    style="display: none;">
             </div>
         </div>
     </fieldset>
@@ -345,36 +370,43 @@
         <legend>Section 4: Open-Ended</legend>
 
         <div class="form-group">
-            <label for="biggest-cause">In post-mortem reviews, what is typically identified as the single biggest cause of project delays? <span class="optional">(optional)</span></label>
+            <label for="biggest-cause">In post-mortem reviews, what is typically identified as the single biggest cause
+                of project delays? <span class="optional">(optional)</span></label>
             <textarea id="biggest-cause" name="biggest_delay_cause" rows="4" placeholder="Your answer..."></textarea>
         </div>
 
         <div class="form-group">
-            <label for="one-change">If you could change one thing about how BSS components are built and delivered today, what would it be? <span class="optional">(optional)</span></label>
+            <label for="one-change">If you could change one thing about how BSS components are built and delivered
+                today, what would it be? <span class="optional">(optional)</span></label>
             <textarea id="one-change" name="one_change" rows="4" placeholder="Your answer..."></textarea>
         </div>
     </fieldset>
 
     <div class="form-submit">
-        <button type="submit" class="btn btn-primary">Submit Survey</button>
+        <button type="submit" class="org-link org-cta org-link--internal"
+            style="background: none; border: none; cursor: pointer; padding: 0;">Submit Survey</button>
         <p class="form-note">Your responses are confidential. We will not share individual responses.</p>
     </div>
 
     <div id="surveySuccess" class="survey-message survey-success" style="display: none;">
         <h3>Thank you for participating.</h3>
-        <p>Your responses have been recorded. We will publish aggregated findings as a research report later this year.</p>
+        <p>Your responses have been recorded. We will publish aggregated findings as a research report later this year.
+        </p>
     </div>
 
     <div id="surveyError" class="survey-message survey-error" style="display: none;">
         <h3>Something went wrong.</h3>
-        <p>Please try again or contact <a href="mailto:fahim@asymm.systems">fahim@asymm.systems</a> directly.</p>
+        <p>Please try again or contact <a href="mailto:ping@asymm.systems"
+                class="org-link org-link--inline org-link--external">ping@asymm.systems</a> directly.
+        </p>
     </div>
 
 </form>
 
 <hr>
 
-<p>If you have questions about this research, contact <a href="mailto:fahim@asymm.systems">fahim@asymm.systems</a>.</p>
+<p>If you have questions about this research, contact <a href="mailto:ping@asymm.systems"
+        class="org-link org-link--inline org-link--external">ping@asymm.systems</a>.</p>
 
 </div>
 
@@ -385,18 +417,18 @@
         <a href="/" class="status-item" style="color: #BA6E8F; font-family: 'Alegreya', serif; font-size: 1.5rem; font-weight: 600; padding: 0 1.2rem; letter-spacing: 0.05em; padding-bottom: 3px;">
             [ }
         </a>
-        <a href="https://jdk.asymm.systems" target="_blank" rel="noopener" class="status-item">
+        <a href="/product/jdk" class="status-item">
             <span class="status-icon">⚡</span> Asymm JDK
         </a>
-        <a href="https://dial-lang.dev" target="_blank" rel="noopener" class="status-item">
-            <span class="status-icon">⎔</span> Dial Engine
+        <a href="/product/dial" class="status-item">
+            <span class="status-icon">⎔</span> Dial
         </a>
     </div>
     <div class="status-right desktop-only">
         <a href="/research/bss-survey-2026.html" class="status-item">Research</a>
         <a href="/news.html" class="status-item">News</a>
         <a href="/about.html" class="status-item">About</a>
-        <a href="mailto:info@asymm.systems" class="status-item">Contact</a>
+        <a href="mailto:ping@asymm.systems" class="status-item">Contact</a>
         <span class="status-item" style="opacity: 0.5; padding-right: 1.2rem; cursor: default;">© 2026 Asymm</span>
     </div>
 
@@ -423,12 +455,12 @@
     </div>
     <div class="drawer-content">
         <div class="drawer-section">
-            <span class="drawer-label">// EXECUTABLES</span>
-            <a href="https://jdk.asymm.systems" target="_blank" rel="noopener" class="drawer-link">
+            <span class="drawer-label">// PRODUCTS</span>
+            <a href="/product/jdk" class="drawer-link">
                 <span class="status-icon" style="margin-right: 0.7rem;">⚡</span> Asymm JDK
             </a>
-            <a href="https://dial-lang.dev" target="_blank" rel="noopener" class="drawer-link">
-                <span class="status-icon" style="margin-right: 0.7rem;">⎔</span> Dial Engine
+            <a href="/product/dial" class="drawer-link">
+                <span class="status-icon" style="margin-right: 0.7rem;">⎔</span> Dial
             </a>
         </div>
         <div class="drawer-section">
@@ -436,7 +468,7 @@
             <a href="/research/bss-survey-2026.html" class="drawer-link">Research</a>
             <a href="/news.html" class="drawer-link">News</a>
             <a href="/about.html" class="drawer-link">About</a>
-            <a href="mailto:info@asymm.systems" class="drawer-link">Contact</a>
+            <a href="mailto:ping@asymm.systems" class="drawer-link">Contact</a>
         </div>
         <div class="drawer-footer">
             <span style="opacity: 0.5;">© 2026 Asymm Systems</span>

@@ -4,10 +4,14 @@
 <#include "header.ftl">
 </head>
 <body>
-<#include "menu.ftl">
+<div class="container">
+    <nav style="padding-top: 3rem;">
+        <div class="nav-brand"><#include "brand.ftl"></div>
+    </nav>
+</div>
 
-<div class="container" style="padding-top: 6rem; padding-bottom: 8rem; min-height: 70vh;">
-    <h1 class="page-title">System Logs</h1>
+<div class="container" style="padding-top: 4rem; padding-bottom: 8rem; min-height: 70vh;">
+    <h1 class="page-title">News</h1>
     <hr style="border:none; border-bottom:1px solid var(--border-subtle); margin-bottom: 3rem;">
     
     <#list published_posts as post>
@@ -19,5 +23,6 @@
 </div>
 
 <#include "footer.ftl">
+<#include "menu.ftl">
 </body>
 </html>

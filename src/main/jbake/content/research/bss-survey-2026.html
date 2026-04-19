@@ -1,15 +1,19 @@
 title=BSS/TMF Engineering Practices Survey 2026
-description=A survey of BSS engineering practices and TMF compliance verification approaches across the telecom industry.
+description=A survey of BSS engineering practices and TMF compliance verification approaches across the telecom
+industry.
 type=page
 noindex=true
 status=published
 ~~~~~~
 
-<p>Asymm Systems is conducting research into BSS/OSS engineering practices in the telecom industry, with a focus on TMF standards adoption and common deployment challenges.</p>
+<p>Asymm Systems is conducting research into BSS/OSS engineering practices in the telecom industry, with a focus on TMF
+    standards adoption and common deployment challenges.</p>
 
-<p>This survey takes approximately 5 minutes to complete. All responses are confidential. Individual responses will not be shared. Aggregated findings will be published as a research report later this year.</p>
+<p>This survey takes approximately 5 minutes to complete. Results will be published as an industry brief later this
+    year.</p>
 
-<p>Your participation helps us understand real-world engineering challenges facing the telecom development community.</p>
+<p>Your participation helps us understand real-world engineering challenges facing the telecom development community.
+</p>
 
 <form id="surveyForm" action="https://formspree.io/f/mvzvwqvw" method="POST">
 
@@ -60,7 +64,8 @@ status=published
         </div>
 
         <div class="form-group">
-            <label for="organisation">Organizations / Telcos you have worked for <span class="optional">(optional)</span></label>
+            <label for="organisation">Organizations / Telcos you have worked for <span
+                    class="optional">(optional)</span></label>
             <input type="text" id="organisation" name="organisation" placeholder="Your organisations">
         </div>
 
@@ -76,7 +81,8 @@ status=published
         <legend>Section 2: BSS Deployment</legend>
 
         <div class="form-group">
-            <label for="deployment-duration">Typical duration of a BSS platform deployment at your organisation? <span class="required">*</span></label>
+            <label for="deployment-duration">Typical duration of a BSS platform deployment at your organisation? <span
+                    class="required">*</span></label>
             <select id="deployment-duration" name="deployment_duration" required>
                 <option value="" disabled selected>Select duration</option>
                 <option value="Less than 6 months">Less than 6 months</option>
@@ -88,7 +94,8 @@ status=published
         </div>
 
         <div class="form-group">
-            <label for="lead-time">What is the average lead time from contract signing to first live subscriber in your recent BSS transformations? <span class="required">*</span></label>
+            <label for="lead-time">What is the average lead time from contract signing to first live subscriber in your
+                recent BSS transformations? <span class="required">*</span></label>
             <select id="lead-time" name="lead_time" required>
                 <option value="" disabled selected>Select lead time</option>
                 <option value="Less than 6 months">Less than 6 months</option>
@@ -101,7 +108,8 @@ status=published
         </div>
 
         <div class="form-group">
-            <label for="on-time">What percentage of BSS deployments you've been involved in were delivered on time and within budget? <span class="required">*</span></label>
+            <label for="on-time">What percentage of BSS deployments you've been involved in were delivered on time and
+                within budget? <span class="required">*</span></label>
             <select id="on-time" name="on_time_percentage" required>
                 <option value="" disabled selected>Select percentage</option>
                 <option value="Less than 25%">Less than 25%</option>
@@ -112,7 +120,8 @@ status=published
         </div>
 
         <div class="form-group">
-            <label>What are the top 3 causes of BSS deployment delays? <span class="required">*</span> <span class="optional">(select up to 3)</span></label>
+            <label>What are the top 3 causes of BSS deployment delays? <span class="required">*</span> <span
+                    class="optional">(select up to 3)</span></label>
             <div class="checkbox-group" data-max="3">
                 <label class="checkbox-label">
                     <input type="checkbox" name="delay_causes" value="Requirements changes mid-project">
@@ -139,7 +148,8 @@ status=published
                     Organisational and governance issues
                 </label>
                 <label class="checkbox-label">
-                    <input type="checkbox" name="delay_causes" value="Unforeseen issues arising from legacy system migration">
+                    <input type="checkbox" name="delay_causes"
+                        value="Unforeseen issues arising from legacy system migration">
                     Unforeseen issues arising from legacy system migration
                 </label>
                 <label class="checkbox-label">
@@ -150,7 +160,8 @@ status=published
                     <input type="checkbox" name="delay_causes" value="Other">
                     Other
                 </label>
-                <input type="text" class="other-text" name="delay_causes_other" placeholder="Please specify..." style="display: none;">
+                <input type="text" class="other-text" name="delay_causes_other" placeholder="Please specify..."
+                    style="display: none;">
             </div>
         </div>
     </fieldset>
@@ -161,7 +172,8 @@ status=published
         <legend>Section 3: Standards and Certification</legend>
 
         <div class="form-group">
-            <label for="tmf-adoption">Has your organisation adopted or begun adopting TMF standards (Open APIs, eTOM, SID, ODA)? <span class="required">*</span></label>
+            <label for="tmf-adoption">Has your organisation adopted or begun adopting TMF standards (Open APIs, eTOM,
+                SID, ODA)? <span class="required">*</span></label>
             <select id="tmf-adoption" name="tmf_adoption" required>
                 <option value="" disabled selected>Select adoption status</option>
                 <option value="Yes, in production">Yes, in production</option>
@@ -173,7 +185,8 @@ status=published
         </div>
 
         <div class="form-group">
-            <label for="compliance-stage">At what stage are TMF compliance issues mostly discovered in your projects? <span class="required">*</span></label>
+            <label for="compliance-stage">At what stage are TMF compliance issues mostly discovered in your projects?
+                <span class="required">*</span></label>
             <select id="compliance-stage" name="compliance_discovery_stage" required>
                 <option value="" disabled selected>Select stage</option>
                 <option value="During development">During development</option>
@@ -186,21 +199,26 @@ status=published
         </div>
 
         <div class="form-group">
-            <label for="verify-method">How does your team currently verify TMF compliance? <span class="required">*</span></label>
+            <label for="verify-method">How does your team currently verify TMF compliance? <span
+                    class="required">*</span></label>
             <select id="verify-method" name="compliance_verification_method" required>
                 <option value="" disabled selected>Select method</option>
-                <option value="Manual code review & Internal checklists">Manual code review & Internal checklists</option>
+                <option value="Manual code review & Internal checklists">Manual code review & Internal checklists
+                </option>
                 <option value="Automated test suites">Automated test suites</option>
                 <option value="Third-party audit">Third-party audit</option>
-                <option value="We verify during integration testing only">We verify during integration testing only</option>
+                <option value="We verify during integration testing only">We verify during integration testing only
+                </option>
                 <option value="We don't formally verify">We don't formally verify</option>
                 <option value="Other">Other</option>
             </select>
-            <input type="text" class="other-text" name="compliance_verification_other" placeholder="Please specify..." style="display: none;">
+            <input type="text" class="other-text" name="compliance_verification_other" placeholder="Please specify..."
+                style="display: none;">
         </div>
 
         <div class="form-group">
-            <label>What are the most time-consuming aspects of BSS component development? <span class="required">*</span> <span class="optional">(select up to 3)</span></label>
+            <label>What are the most time-consuming aspects of BSS component development? <span
+                    class="required">*</span> <span class="optional">(select up to 3)</span></label>
             <div class="checkbox-group" data-max="3">
                 <label class="checkbox-label">
                     <input type="checkbox" name="time_consuming" value="Requirements analysis">
@@ -234,7 +252,8 @@ status=published
                     <input type="checkbox" name="time_consuming" value="Other">
                     Other
                 </label>
-                <input type="text" class="other-text" name="time_consuming_other" placeholder="Please specify..." style="display: none;">
+                <input type="text" class="other-text" name="time_consuming_other" placeholder="Please specify..."
+                    style="display: none;">
             </div>
         </div>
     </fieldset>
@@ -245,33 +264,40 @@ status=published
         <legend>Section 4: Open-Ended</legend>
 
         <div class="form-group">
-            <label for="biggest-cause">In post-mortem reviews, what is typically identified as the single biggest cause of project delays? <span class="optional">(optional)</span></label>
+            <label for="biggest-cause">In post-mortem reviews, what is typically identified as the single biggest cause
+                of project delays? <span class="optional">(optional)</span></label>
             <textarea id="biggest-cause" name="biggest_delay_cause" rows="4" placeholder="Your answer..."></textarea>
         </div>
 
         <div class="form-group">
-            <label for="one-change">If you could change one thing about how BSS components are built and delivered today, what would it be? <span class="optional">(optional)</span></label>
+            <label for="one-change">If you could change one thing about how BSS components are built and delivered
+                today, what would it be? <span class="optional">(optional)</span></label>
             <textarea id="one-change" name="one_change" rows="4" placeholder="Your answer..."></textarea>
         </div>
     </fieldset>
 
     <div class="form-submit">
-        <button type="submit" class="btn btn-primary">Submit Survey</button>
+        <button type="submit" class="org-link org-cta org-link--internal"
+            style="background: none; border: none; cursor: pointer; padding: 0;">Submit Survey</button>
         <p class="form-note">Your responses are confidential. We will not share individual responses.</p>
     </div>
 
     <div id="surveySuccess" class="survey-message survey-success" style="display: none;">
         <h3>Thank you for participating.</h3>
-        <p>Your responses have been recorded. We will publish aggregated findings as a research report later this year.</p>
+        <p>Your responses have been recorded. We will publish aggregated findings as a research report later this year.
+        </p>
     </div>
 
     <div id="surveyError" class="survey-message survey-error" style="display: none;">
         <h3>Something went wrong.</h3>
-        <p>Please try again or contact <a href="mailto:fahim@asymm.systems">fahim@asymm.systems</a> directly.</p>
+        <p>Please try again or contact <a href="mailto:ping@asymm.systems"
+                class="org-link org-link--inline org-link--external">ping@asymm.systems</a> directly.
+        </p>
     </div>
 
 </form>
 
 <hr>
 
-<p>If you have questions about this research, contact <a href="mailto:fahim@asymm.systems">fahim@asymm.systems</a>.</p>
+<p>If you have questions about this research, contact <a href="mailto:ping@asymm.systems"
+        class="org-link org-link--inline org-link--external">ping@asymm.systems</a>.</p>

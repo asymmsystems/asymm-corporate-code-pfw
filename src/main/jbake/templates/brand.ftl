@@ -9,10 +9,10 @@
         letter-spacing: -0.02em;
         color: #1A1C1E;
         transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+        line-height: 1;
     }
     .asymm-brand .bracket {
         color: inherit;
-        line-height: 1;
     }
     .asymm-brand .bracket.right {
         transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
@@ -24,7 +24,6 @@
         padding-bottom: 2px;
         margin: 0 0.16em;
         color: inherit;
-        line-height: 1;
         transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
         transform: translate3d(0, 0, 0);
         will-change: transform;
@@ -36,7 +35,6 @@
         padding-left: 0.42em;
         padding-bottom: 2px;
         transition: all 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-        line-height: 1;
     }
     /* Dark Theme */
     .asymm-brand.brand-dark {

@@ -4,18 +4,18 @@
         <a href="/" class="status-item" style="color: #BA6E8F; font-family: 'Alegreya', serif; font-size: 1.5rem; font-weight: 600; padding: 0 1.2rem; letter-spacing: 0.05em; padding-bottom: 3px;">
             [ }
         </a>
-        <a href="https://jdk.asymm.systems" target="_blank" rel="noopener" class="status-item">
+        <a href="/product/jdk" class="status-item">
             <span class="status-icon">⚡</span> Asymm JDK
         </a>
-        <a href="https://dial-lang.dev" target="_blank" rel="noopener" class="status-item">
-            <span class="status-icon">⎔</span> Dial Engine
+        <a href="/product/dial" class="status-item">
+            <span class="status-icon">⎔</span> Dial
         </a>
     </div>
     <div class="status-right desktop-only">
         <a href="/research/bss-survey-2026.html" class="status-item">Research</a>
         <a href="/news.html" class="status-item">News</a>
         <a href="/about.html" class="status-item">About</a>
-        <a href="mailto:info@asymm.systems" class="status-item">Contact</a>
+        <a href="mailto:ping@asymm.systems" class="status-item">Contact</a>
         <span class="status-item" style="opacity: 0.5; padding-right: 1.2rem; cursor: default;">© 2026 Asymm</span>
     </div>
 
@@ -42,12 +42,12 @@
     </div>
     <div class="drawer-content">
         <div class="drawer-section">
-            <span class="drawer-label">// EXECUTABLES</span>
-            <a href="https://jdk.asymm.systems" target="_blank" rel="noopener" class="drawer-link">
+            <span class="drawer-label">// PRODUCTS</span>
+            <a href="/product/jdk" class="drawer-link">
                 <span class="status-icon" style="margin-right: 0.7rem;">⚡</span> Asymm JDK
             </a>
-            <a href="https://dial-lang.dev" target="_blank" rel="noopener" class="drawer-link">
-                <span class="status-icon" style="margin-right: 0.7rem;">⎔</span> Dial Engine
+            <a href="/product/dial" class="drawer-link">
+                <span class="status-icon" style="margin-right: 0.7rem;">⎔</span> Dial
             </a>
         </div>
         <div class="drawer-section">
@@ -55,7 +55,7 @@
             <a href="/research/bss-survey-2026.html" class="drawer-link">Research</a>
             <a href="/news.html" class="drawer-link">News</a>
             <a href="/about.html" class="drawer-link">About</a>
-            <a href="mailto:info@asymm.systems" class="drawer-link">Contact</a>
+            <a href="mailto:ping@asymm.systems" class="drawer-link">Contact</a>
         </div>
         <div class="drawer-footer">
             <span style="opacity: 0.5;">© 2026 Asymm Systems</span>
