@@ -3,58 +3,140 @@ description=Developer tools that automate compliance verification for standards-
 type=home
 status=published
 hero_title=Automated compliance for standards-driven industries
-hero_text=We build developer tools that verify conformance to industry specifications — before deployment, not after.
+hero_text=We build developer tools that verify conformance to industry specifications - before deployment, not after.
 hero_image=/images/asymm-dial-ecosystem.png
 ~~~~~~
 
 
 <!-- Products Section -->
-<section class="products-section fade-in">
+<section class="products-bento fade-in">
     <div class="container">
-        <div class="product-cards">
+        <div class="section-intro">
+            <span class="section-kicker">Developer Ecosystem</span>
+            <h2>Shift Compliance Left. Build Right the First Time.</h2>
+            <p>Our solutions move compliance and execution validation upstream - ensuring what you build is verified,
+                resilient, and production-ready before they ever reach deployment.</p>
+        </div>
+        <div class="bento-grid">
 
-            <div class="product-card">
-                <span class="product-icon">⚡</span>
-                <h3>The JDK Built for Telecom</h3>
-                <p>A server-first OpenJDK distribution optimised for telecom-scale defaults and enterprise-hardened
-                    security. Available on SDKman.</p>
-                <div class="product-code">
-                    <code>sdk install java 25.0.2-asymm</code>
+            <!-- Card 1: Dial Ecosystem -->
+            <div class="bento-card bento-dial">
+                <div class="bento-content">
+                    <span class="product-badge">ODA-Native</span>
+                    <h3>Build-Time Compliance Verification</h3>
+                    <p>The developer ecosystem that understands TMFC components, eTOM processes, and Open APIs natively.
+                        Non-compliant architectures and specification violations fail at build-time, preventing
+                        expensive integration remediation.</p>
+                    <p class="bento-status">Prototype complete. Launching 2026.</p>
+                    <a href="/product/dial" class="org-link org-cta org-link--internal">Explore Dial</a>
                 </div>
-                <a href="/product/jdk" class="org-link org-cta org-link--internal">Download</a>
             </div>
 
-            <div class="product-card">
-                <span class="product-icon">⎔</span>
-                <h3>ODA Compliance Verification for Telecom</h3>
-                <p>The developer ecosystem that verifies TMF Open Digital Architecture conformance during development —
-                    not during integration testing.</p>
-                <span class="product-badge">Prototype complete. Launching 2026.</span>
-                <a href="/product/dial" class="org-link org-cta org-link--internal">Learn more</a>
+            <!-- Card 2: Asymm JDK -->
+            <div class="bento-card bento-jdk">
+                <div class="bento-content">
+                    <span class="product-badge">Platform Foundation</span>
+                    <h3>The JDK Built for Telecom</h3>
+                    <p>A server-first OpenJDK distribution optimised for telecom-scale defaults and enterprise-hardened
+                        security. Available on SDKman.</p>
+                    <div class="inline-terminal"
+                        onclick="navigator.clipboard.writeText('sdk install java 25.0.2-asymm'); const btn = this.querySelector('.copy-btn'); const orig = btn.innerText; btn.innerText = 'Copied!'; setTimeout(() => btn.innerText = orig, 2000);"
+                        title="Click to copy">
+                        <code>sdk install java 25.0.2-asymm</code>
+                        <span class="copy-btn">Copy</span>
+                    </div>
+                    <a href="/product/jdk" class="org-link org-cta org-link--internal">Download</a>
+                </div>
+            </div>
+
+        </div>
+
+        <!-- Market context -->
+        <div class="market-context">
+            <p>Dial serves the <strong>TMF Open Digital Architecture</strong> ecosystem - the global standard for
+                telecom digital transformation. We started with telecom because that's where we have 15 years of domain
+                expertise. The
+                approach is designed to extend to any industry with formal specifications.</p>
+
+            <div class="market-image-wrapper">
+                <img src="/images/oda-simplified.png" alt="ODA Simplified Mapping" class="market-img" />
+            </div>
+
+            <div class="stats-grid stats-grid--inline">
+                <div class="stat-item">
+                    <span class="stat-number">186</span>
+                    <span class="stat-label">ODA Signatories</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">18</span>
+                    <span class="stat-label">CSPs on ODA</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">2B+</span>
+                    <span class="stat-label">Subscribers</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number">1,700+</span>
+                    <span class="stat-label">API Deployments</span>
+                </div>
+            </div>
+            <p class="stats-source">Source: <a href="https://www.tmforum.org/oda" target="_blank" rel="noopener"
+                    class="org-link org-link--inline org-link--external">TM Forum</a></p>
+        </div>
+    </div>
+</section>
+<section class="pipeline-section fade-in">
+    <div class="container">
+        <div class="section-intro">
+            <span class="section-kicker">The Methodology</span>
+            <h2>Rethinking Compliance</h2>
+            <p>We believe true compliance isn't verified manually before deployment - it's enforced automatically during
+                the development process.</p>
+        </div>
+        <div class="pipeline-grid">
+
+            <div class="pipeline-step">
+                <div class="step-number">01</div>
+                <h4>ODA-Native Development</h4>
+                <p>Build components utilizing ODA standards as first-class developer constructs. The ecosystem
+                    inherently understands the specifications.</p>
+            </div>
+
+            <div class="pipeline-connector"></div>
+
+            <div class="pipeline-step">
+                <div class="step-number">02</div>
+                <h4>Build-Time Compliance</h4>
+                <p>Shift TMF compliance validation entirely to the left. Violations are caught during the build, not
+                    during expensive integration rounds.</p>
+            </div>
+
+            <div class="pipeline-connector"></div>
+
+            <div class="pipeline-step">
+                <div class="step-number">03</div>
+                <h4>Fast Execution</h4>
+                <p>Deploy standard, compliant TMF components powered by Asymm JVM defaults tailored for the world's
+                    heaviest workloads.</p>
             </div>
 
         </div>
     </div>
 </section>
 
-<!-- Platform Story -->
-<section class="section-block fade-in">
+<!-- OSS Banner -->
+<section class="oss-banner fade-in">
     <div class="container">
-        <div class="platform-story">
-            <p>We built Asymm JDK because telecom workloads deserve a JDK that understands their environment. We built
-                Dial because ODA compliance shouldn't be discovered during integration testing. Both share a conviction:
-                industry standards should be verified automatically, during development, not manually, after deployment.
-            </p>
-            <p class="platform-story-oss">Our founder is a contributor to <a
-                    href="https://spring.io/projects/spring-cloud-netflix" target="_blank" rel="noopener"
-                    class="org-link org-link--inline org-link--external">Spring Cloud Netflix</a>, <a
-                    href="https://spring.io/projects/spring-boot" target="_blank" rel="noopener"
-                    class="org-link org-link--inline org-link--external">Spring Boot</a>, and
-                <a href="https://debezium.io/" target="_blank" rel="noopener"
-                    class="org-link org-link--inline org-link--external">Debezium</a>. We believe in giving back to the
-                JVM ecosystem that
-                powers our products.
-            </p>
+        <div class="oss-content">
+            <div>
+                <p>Our founder is a contributor to <a href="https://spring.io/projects/spring-cloud-netflix"
+                        target="_blank" rel="noopener" class="org-link org-link--inline org-link--external">Spring Cloud
+                        Netflix</a>, <a href="https://spring.io/projects/spring-boot" target="_blank" rel="noopener"
+                        class="org-link org-link--inline org-link--external">Spring Boot</a>, and <a
+                        href="https://debezium.io/" target="_blank" rel="noopener"
+                        class="org-link org-link--inline org-link--external">Debezium</a>. We believe in giving back to
+                    the JVM ecosystem that powers our products.</p>
+            </div>
         </div>
     </div>
 </section>
