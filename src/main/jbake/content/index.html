@@ -30,6 +30,7 @@ hero_image=/images/asymm-dial-ecosystem.png
                     <p class="bento-status">Prototype complete. Launching 2026.</p>
                     <a href="/product/dial" class="org-link org-cta org-link--internal">Explore Dial</a>
                 </div>
+                <img src="/images/dial-logo-short.png" class="bento-watermark" alt="" />
             </div>
 
             <!-- Card 2: Asymm JDK -->
@@ -140,3 +141,21 @@ hero_image=/images/asymm-dial-ecosystem.png
         </div>
     </div>
 </section>
+
+<script>
+    document.addEventListener('DOMContentLoaded', () => {
+        const dialCard = document.querySelector('.bento-dial');
+        if (dialCard) {
+            const watermark = dialCard.querySelector('.bento-watermark');
+            if (watermark) {
+                dialCard.addEventListener('mouseenter', () => {
+                    watermark.classList.add('is-dialing');
+                });
+
+                watermark.addEventListener('animationend', () => {
+                    watermark.classList.remove('is-dialing');
+                });
+            }
+        }
+    });
+</script>

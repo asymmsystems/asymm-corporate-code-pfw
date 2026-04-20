@@ -14,7 +14,7 @@
     ${content.body}
 </div>
 
-<#include "footer.ftl">
+
 <#include "menu.ftl">
 </body>
 </html>

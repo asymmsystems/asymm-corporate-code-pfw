@@ -20,7 +20,6 @@
     </div>
 </div>
 
-<#include "footer.ftl">
 <#include "menu.ftl">
 </body>
 </html>
