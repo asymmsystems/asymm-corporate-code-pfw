@@ -6,6 +6,8 @@ noindex=true
 status=published
 ~~~~~~
 
+<h1>BSS Engineering Practices Survey 2026</h1>
+
 <p>Asymm Systems is conducting research into BSS/OSS engineering practices in the telecom industry, with a focus on TMF
     standards adoption and common deployment challenges.</p>
 
@@ -15,7 +17,7 @@ status=published
 <p>Your participation helps us understand real-world engineering challenges facing the telecom development community.
 </p>
 
-<form id="surveyForm" action="https://formspree.io/f/mvzvwqvw" method="POST">
+<form id="bss-survey-form" method="POST">
 
     <!-- Section 1: Profile -->
     <fieldset class="survey-section">
@@ -23,7 +25,7 @@ status=published
 
         <div class="form-group">
             <label for="area-of-work">What is your primary area of work? <span class="required">*</span></label>
-            <select id="area-of-work" name="area-of-work" required>
+            <select id="area-of-work" name="area-of-work" class="form-control" required>
                 <option value="" disabled selected>Select your area of work</option>
                 <option value="Software Architecture">Software Architecture</option>
                 <option value="Software Development">Software Development</option>
@@ -36,7 +38,7 @@ status=published
 
         <div class="form-group">
             <label for="seniority">What is your seniority level? <span class="required">*</span></label>
-            <select id="seniority" name="seniority" required>
+            <select id="seniority" name="seniority" class="form-control" required>
                 <option value="" disabled selected>Select your seniority level</option>
                 <option value="Individual Contributor">Individual Contributor</option>
                 <option value="Senior / Staff Engineer">Senior / Staff Engineer</option>
@@ -48,7 +50,7 @@ status=published
 
         <div class="form-group">
             <label for="experience">Years in telecom BSS/OSS? <span class="required">*</span></label>
-            <select id="experience" name="experience" required>
+            <select id="experience" name="experience" class="form-control" required>
                 <option value="" disabled selected>Select experience</option>
                 <option value="0-2">0 - 2</option>
                 <option value="3-5">3 - 5</option>
@@ -60,18 +62,19 @@ status=published
 
         <div class="form-group">
             <label for="name">Name <span class="optional">(optional)</span></label>
-            <input type="text" id="name" name="name" placeholder="Your name">
+            <input type="text" id="name" name="name" class="form-control" placeholder="Your name">
         </div>
 
         <div class="form-group">
             <label for="organisation">Organizations / Telcos you have worked for <span
                     class="optional">(optional)</span></label>
-            <input type="text" id="organisation" name="organisation" placeholder="Your organisations">
+            <input type="text" id="organisation" name="organisation" class="form-control"
+                placeholder="Your organisations">
         </div>
 
         <div class="form-group">
             <label for="email">Email - to receive published results <span class="optional">(optional)</span></label>
-            <input type="email" id="email" name="email" placeholder="you@example.com">
+            <input type="email" id="email" name="email" class="form-control" placeholder="you@example.com">
         </div>
     </fieldset>
 
@@ -83,7 +86,7 @@ status=published
         <div class="form-group">
             <label for="deployment-duration">Typical duration of a BSS platform deployment at your organisation? <span
                     class="required">*</span></label>
-            <select id="deployment-duration" name="deployment_duration" required>
+            <select id="deployment-duration" name="deployment_duration" class="form-control" required>
                 <option value="" disabled selected>Select duration</option>
                 <option value="Less than 6 months">Less than 6 months</option>
                 <option value="6-12 months">6 - 12 months</option>
@@ -96,7 +99,7 @@ status=published
         <div class="form-group">
             <label for="lead-time">What is the average lead time from contract signing to first live subscriber in your
                 recent BSS transformations? <span class="required">*</span></label>
-            <select id="lead-time" name="lead_time" required>
+            <select id="lead-time" name="lead_time" class="form-control" required>
                 <option value="" disabled selected>Select lead time</option>
                 <option value="Less than 6 months">Less than 6 months</option>
                 <option value="6-12 months">6 - 12 months</option>
@@ -110,7 +113,7 @@ status=published
         <div class="form-group">
             <label for="on-time">What percentage of BSS deployments you've been involved in were delivered on time and
                 within budget? <span class="required">*</span></label>
-            <select id="on-time" name="on_time_percentage" required>
+            <select id="on-time" name="on_time_percentage" class="form-control" required>
                 <option value="" disabled selected>Select percentage</option>
                 <option value="Less than 25%">Less than 25%</option>
                 <option value="25-50%">25 - 50%</option>
@@ -174,7 +177,7 @@ status=published
         <div class="form-group">
             <label for="tmf-adoption">Has your organisation adopted or begun adopting TMF standards (Open APIs, eTOM,
                 SID, ODA)? <span class="required">*</span></label>
-            <select id="tmf-adoption" name="tmf_adoption" required>
+            <select id="tmf-adoption" name="tmf_adoption" class="form-control" required>
                 <option value="" disabled selected>Select adoption status</option>
                 <option value="Yes, in production">Yes, in production</option>
                 <option value="Yes, in progress">Yes, in progress</option>
@@ -187,7 +190,7 @@ status=published
         <div class="form-group">
             <label for="compliance-stage">At what stage are TMF compliance issues mostly discovered in your projects?
                 <span class="required">*</span></label>
-            <select id="compliance-stage" name="compliance_discovery_stage" required>
+            <select id="compliance-stage" name="compliance_discovery_stage" class="form-control" required>
                 <option value="" disabled selected>Select stage</option>
                 <option value="During development">During development</option>
                 <option value="During integration testing">During integration testing</option>
@@ -201,7 +204,7 @@ status=published
         <div class="form-group">
             <label for="verify-method">How does your team currently verify TMF compliance? <span
                     class="required">*</span></label>
-            <select id="verify-method" name="compliance_verification_method" required>
+            <select id="verify-method" name="compliance_verification_method" class="form-control" required>
                 <option value="" disabled selected>Select method</option>
                 <option value="Manual code review & Internal checklists">Manual code review & Internal checklists
                 </option>
@@ -212,8 +215,8 @@ status=published
                 <option value="We don't formally verify">We don't formally verify</option>
                 <option value="Other">Other</option>
             </select>
-            <input type="text" class="other-text" name="compliance_verification_other" placeholder="Please specify..."
-                style="display: none;">
+            <input type="text" class="other-text form-control" name="compliance_verification_other"
+                placeholder="Please specify..." style="display: none;">
         </div>
 
         <div class="form-group">
@@ -266,38 +269,72 @@ status=published
         <div class="form-group">
             <label for="biggest-cause">In post-mortem reviews, what is typically identified as the single biggest cause
                 of project delays? <span class="optional">(optional)</span></label>
-            <textarea id="biggest-cause" name="biggest_delay_cause" rows="4" placeholder="Your answer..."></textarea>
+            <textarea id="biggest-cause" name="biggest_delay_cause" rows="4" class="form-control"
+                placeholder="Your answer..."></textarea>
         </div>
 
         <div class="form-group">
             <label for="one-change">If you could change one thing about how BSS components are built and delivered
                 today, what would it be? <span class="optional">(optional)</span></label>
-            <textarea id="one-change" name="one_change" rows="4" placeholder="Your answer..."></textarea>
+            <textarea id="one-change" name="one_change" rows="4" class="form-control"
+                placeholder="Your answer..."></textarea>
         </div>
     </fieldset>
 
-    <div class="form-submit">
-        <button type="submit" class="org-link org-cta org-link--internal"
-            style="background: none; border: none; cursor: pointer; padding: 0;">Submit Survey</button>
-        <p class="form-note">Your responses are confidential. We will not share individual responses.</p>
-    </div>
+    <button type="submit" class="form-submit">
+        <span class="org-link org-link--internal">Submit Survey</span>
+    </button>
 
-    <div id="surveySuccess" class="survey-message survey-success" style="display: none;">
-        <h3>Thank you for participating.</h3>
-        <p>Your responses have been recorded. We will publish aggregated findings as a research report later this year.
-        </p>
-    </div>
-
-    <div id="surveyError" class="survey-message survey-error" style="display: none;">
-        <h3>Something went wrong.</h3>
-        <p>Please try again or contact <a href="mailto:ping@asymm.systems"
-                class="org-link org-link--inline org-link--external">ping@asymm.systems</a> directly.
-        </p>
-    </div>
+    <p class="form-note">Your responses are confidential. We will not share individual responses.</p>
 
 </form>
+
+<div id="surveySuccess" class="survey-message survey-success" style="display: none;">
+    <h3>Thank you for participating.</h3>
+    <p>Your responses have been recorded. We will publish aggregated findings as a research report later this year.
+    </p>
+</div>
+
+<div id="surveyError" class="survey-message survey-error" style="display: none;">
+    <h3>Something went wrong.</h3>
+    <p>Please try again or contact <a href="mailto:ping@asymm.systems"
+            class="org-link org-link--inline org-link--external">ping@asymm.systems</a> directly.
+    </p>
+</div>
 
 <hr>
 
 <p>If you have questions about this research, contact <a href="mailto:ping@asymm.systems"
-        class="org-link org-link--inline org-link--external">ping@asymm.systems</a>.</p>
+        class="org-link org-link--inline org-link--internal">research@asymm.systems</a>.</p>
+
+
+<script src="/js/validation.js"></script>
+<script>
+    window.formspree =
+        window.formspree ||
+        function () {
+            (formspree.q = formspree.q || []).push(arguments);
+        };
+    const surveyForm = document.getElementById("bss-survey-form");
+    if (surveyForm) {
+        surveyForm.addEventListener("submit", function (ev) {
+            if (!window.validateAsymmForm(surveyForm)) {
+                ev.preventDefault();
+                ev.stopImmediatePropagation();
+            }
+        }, true);
+    }
+
+    formspree("initForm", {
+        formElement: "#bss-survey-form",
+        formId: "mvzvwqvw",
+        onSuccess: function (data) {
+            document.getElementById("bss-survey-form").style.display = "none";
+            document.getElementById("surveySuccess").style.display = "block";
+        },
+        onError: function (err) {
+            document.getElementById("surveyError").style.display = "block";
+        }
+    });
+</script>
+<script src="https://unpkg.com/@formspree/ajax@1" defer></script>

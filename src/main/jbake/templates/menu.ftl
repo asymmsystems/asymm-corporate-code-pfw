@@ -15,7 +15,7 @@
         <a href="/research/bss-survey-2026.html" class="status-item">Research</a>
         <a href="/news.html" class="status-item">News</a>
         <a href="/about.html" class="status-item">About</a>
-        <a href="mailto:ping@asymm.systems" class="status-item">Contact</a>
+        <a href="/about.html#contact" class="status-item">Contact</a>
         <span class="status-item" style="opacity: 0.5; padding-right: 1.2rem; cursor: default;">© 2026 Asymm</span>
     </div>
 
@@ -55,7 +55,7 @@
             <a href="/research/bss-survey-2026.html" class="drawer-link">Research</a>
             <a href="/news.html" class="drawer-link">News</a>
             <a href="/about.html" class="drawer-link">About</a>
-            <a href="mailto:ping@asymm.systems" class="drawer-link">Contact</a>
+            <a href="/about.html#contact" class="drawer-link">Contact</a>
         </div>
         <div class="drawer-footer">
             <span style="opacity: 0.5;">© 2026 Asymm Systems</span>

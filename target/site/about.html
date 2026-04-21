@@ -5,7 +5,7 @@
 <title>Asymm Systems</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="Developer tools that verify conformance to industry specifications - before deployment, not after.">
-<link rel="icon" href="images/favicon.svg" type="image/svg+xml">
+<link rel="icon" href="images/favicon.png" type="image/svg+xml">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Alegreya:wght@400;500;600;700&family=Montserrat:wght@300;400;500;600&family=Proza+Libre:wght@400;500;600;700;800&family=Fira+Code:wght@400;500&display=swap" rel="stylesheet">
@@ -111,60 +111,151 @@
 </div>
 
 <div class="container" style="padding-top: 4rem; padding-bottom: 8rem; min-height: 70vh;">
-    
-<h2>The Company</h2>
+    <article class="page-body">
+        
+<div class="asymm-grid">
+    <!-- Company Section -->
+    <section class="asymm-row">
+        <aside class="asymm-meta">
+            <h2>The Company</h2>
+            <div class="asymm-meta-data">
+                Founded: 2026<br>
+                Location: Sri Lanka<br>
+                Focus: Compliance
+            </div>
+        </aside>
+        <article class="asymm-body">
+            <p>Asymm Systems builds developer tools that automate compliance verification for standards-driven
+                industries. Our name reflects a core belief in <i>asymmetrical leverage</i> - building tools that give
+                engineers disproportionate control over systemic complexity.</p>
 
-<p>Asymm Systems builds developer tools that automate compliance verification for standards-driven industries.</p>
+            <p>Today, every standards-driven industry faces the same bottleneck - specifications exist as documents, but
+                compliance is verified during integration testing or certification - late, expensive and avoidable. We
+                solve this by shifting compliance left - turning industry specifications into development ecosystem
+                constructs. This transforms compliance from a late, expensive, and avoidable risk into a build-time
+                guarantee.</p>
 
-<p>The telecom industry is undergoing a massive architectural shift. 186 organisations have signed the TM Forum Open
-    Digital Architecture manifesto. 18 CSPs are Running on ODA. Over 1,700 Open API deployments are certified. Two
-    billion subscribers are served globally.</p>
+            <p>We started with telecom because that's where we have 15 years of domain expertise and where the pain is
+                most acute. With over 186 organisations moving toward Open Digital Architecture, the demand for
+                automated conformance is global. The approach is designed to extend to any industry with formal
+                specifications.</p>
+        </article>
+    </section>
 
-<p>Yet the development tools haven't kept up. Engineers build ODA components with no automated way to verify conformance
-    during development. Compliance issues are discovered during integration testing or certification - late, expensive,
-    and avoidable.</p>
+    <!-- Founder Section -->
+    <section class="asymm-row">
+        <aside class="asymm-meta">
+            <h2>Founder</h2>
+            <div class="asymm-meta-data">
+                Principal Architect
+            </div>
+            <div class="founder-links" style="display: flex; flex-direction: column; gap: 0.8rem;">
+                <a href="https://fahimfarook.me" target="_blank" rel="noopener"
+                    class="org-link org-link--internal">fahimfarook.me</a>
+                <a href="https://www.linkedin.com/in/fahimfarookme" target="_blank" rel="noopener"
+                    class="org-link org-link--external">LinkedIn</a>
+            </div>
+        </aside>
+        <article class="asymm-body">
+            <h3>Fahim Farook</h3>
+            <p>15+ years in telecom software architecture. 9 years at Virtusa including 7+ as Software Architect for
+                British Telecom Openreach. Delivery leadership for du ($1B digital transformation), Ooredoo, and
+                Vodafone.</p>
 
-<p>We started with telecom because that's where we have 15 years of domain expertise and where the pain is most acute.
-    The approach is designed to extend to any industry with formal specifications.</p>
+            <p>Open-source contributor: Spring Cloud Netflix, Spring Boot, Debezium. GitHub Arctic Code Vault
+                Contributor.</p>
 
-<hr>
+            <p>BSc Information Technology, Curtin University.</p>
+        </article>
+    </section>
 
-<h2>Founder</h2>
+    <!-- Corporate Section -->
+    <section class="asymm-row" id="contact">
+        <aside class="asymm-meta">
+            <h2>Corporate</h2>
+            <div class="asymm-meta-data">
+                35B, Torrington Avenue<br>
+                Colombo 7, Sri Lanka
+            </div>
+            <div class="company-links" style="display: flex; flex-direction: column; gap: 0.8rem; margin-top: 1.5rem;">
+                <a href="mailto:ping@asymm.systems" class="org-link org-link--internal">ping@asymm.systems</a>
+                <a href="https://github.com/asymmsystems" target="_blank" rel="noopener"
+                    class="org-link org-link--external">GitHub</a>
+                <a href="https://www.linkedin.com/company/asymmsystems" target="_blank" rel="noopener"
+                    class="org-link org-link--external">LinkedIn</a>
+            </div>
+        </aside>
+        <article class="asymm-body">
+            <h3>Collaboration &amp; Inquiries</h3>
+            <p>For product inquiries, consultations, or collaboration discussions, please reach out directly.</p>
 
-<h3>Fahim Farook - Founder &amp; Principal Architect</h3>
+            <form id="contact-form" method="POST" class="contact-form">
+                <div class="form-group">
+                    <label for="name">Name</label>
+                    <input type="text" id="name" name="name" class="form-control" placeholder="Identify yourself..."
+                        required>
+                </div>
+                <div class="form-group">
+                    <label for="email">Email</label>
+                    <input type="email" id="email" name="_replyto" class="form-control"
+                        placeholder="Your digital return address..." required>
+                </div>
+                <div class="form-group">
+                    <label for="message">Message</label>
+                    <textarea id="message" name="message" class="form-control" placeholder="What shall we build?"
+                        required></textarea>
+                </div>
+                <button type="submit" class="form-submit">
+                    <span class="org-link org-link--internal">Send Message</span>
+                </button>
+            </form>
 
-<p>15+ years in telecom software architecture. 9 years at Virtusa including 7+ as Software Architect for British Telecom
-    Openreach. Delivery leadership for du ($1B digital transformation), Ooredoo, and Vodafone.</p>
+            <div id="contactSuccess" class="form-message success" style="display: none;">
+                <h3>Message Received.</h3>
+                <p>We'll get back to you shortly.</p>
+            </div>
 
-<p>Active open-source contributor: Spring Cloud Netflix, Spring Boot, Debezium. GitHub Arctic Code Vault Contributor.
-</p>
-
-<p>BSc Information Technology, Curtin University.</p>
-
-<div class="founder-links">
-    <a href="https://fahimfarook.me" target="_blank" rel="noopener"
-        class="org-link org-link--external">fahimfarook.me</a>
-    <a href="https://www.linkedin.com/in/fahimfarookme" target="_blank" rel="noopener"
-        class="org-link org-link--external">LinkedIn</a>
+            <div id="contactError" class="form-message error" style="display: none;">
+                <h3>Transmission Error.</h3>
+                <p>Please try again or contact <a href="mailto:ping@asymm.systems"
+                        class="org-link org-link--inline org-link--internal">ping@asymm.systems</a> directly.</p>
+            </div>
+        </article>
+    </section>
 </div>
 
-<hr>
+<script src="/js/validation.js"></script>
+<script>
+    window.formspree =
+        window.formspree ||
+        function () {
+            (formspree.q = formspree.q || []).push(arguments);
+        };
+    const contactForm = document.getElementById("contact-form");
+    if (contactForm) {
+        contactForm.addEventListener("submit", function (ev) {
+            if (!window.validateAsymmForm(contactForm)) {
+                ev.preventDefault();
+                ev.stopImmediatePropagation();
+            }
+        }, true);
+    }
 
-<h2>Company</h2>
+    formspree("initForm", {
+        formElement: "#contact-form",
+        formId: "mkokvabe",
+        onSuccess: function (data) {
+            document.getElementById("contact-form").style.display = "none";
+            document.getElementById("contactSuccess").style.display = "block";
+        },
+        onError: function (err) {
+            document.getElementById("contactError").style.display = "block";
+        }
+    });
+</script>
+<script src="https://unpkg.com/@formspree/ajax@1" defer></script>
 
-<p>Asymm Systems (Pvt) Ltd is incorporated in Sri Lanka.</p>
-
-<div class="company-links" style="display: flex; gap: 1.5rem; margin: 1.5rem 0;">
-    <a href="https://github.com/asymmsystems" target="_blank" rel="noopener"
-        class="org-link org-link--external">GitHub</a>
-    <a href="https://www.linkedin.com/company/asymmsystems" target="_blank" rel="noopener"
-        class="org-link org-link--external">LinkedIn</a>
-    <!-- Add Twitter/X here if you have one -->
-</div>
-
-<p>For inquiries, contact <a href="mailto:ping@asymm.systems"
-        class="org-link org-link--inline org-link--external">ping@asymm.systems</a>.</p>
-
+    </article>
 </div>
 
 
@@ -185,7 +276,7 @@
         <a href="/research/bss-survey-2026.html" class="status-item">Research</a>
         <a href="/news.html" class="status-item">News</a>
         <a href="/about.html" class="status-item">About</a>
-        <a href="mailto:ping@asymm.systems" class="status-item">Contact</a>
+        <a href="/about.html#contact" class="status-item">Contact</a>
         <span class="status-item" style="opacity: 0.5; padding-right: 1.2rem; cursor: default;">© 2026 Asymm</span>
     </div>
 
@@ -225,7 +316,7 @@
             <a href="/research/bss-survey-2026.html" class="drawer-link">Research</a>
             <a href="/news.html" class="drawer-link">News</a>
             <a href="/about.html" class="drawer-link">About</a>
-            <a href="mailto:ping@asymm.systems" class="drawer-link">Contact</a>
+            <a href="/about.html#contact" class="drawer-link">Contact</a>
         </div>
         <div class="drawer-footer">
             <span style="opacity: 0.5;">© 2026 Asymm Systems</span>

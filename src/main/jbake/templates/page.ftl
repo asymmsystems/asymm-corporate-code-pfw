@@ -11,7 +11,9 @@
 </div>
 
 <div class="container" style="padding-top: 4rem; padding-bottom: 8rem; min-height: 70vh;">
-    ${content.body}
+    <article class="page-body">
+        ${content.body}
+    </article>
 </div>
 
 
