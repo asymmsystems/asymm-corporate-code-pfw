@@ -113,7 +113,7 @@
             <h1>Automated compliance for standards-driven industries</h1>
             <p>We build developer tools that verify conformance to industry specifications - before deployment, not after.</p>
             <div class="hero-cta">
-                <a href="/product/jdk" class="org-link org-cta org-link--internal">Explore Asymm JDK</a>
+                <a href="/product/eliya" class="org-link org-cta org-link--internal">Explore Eliya JDK</a>
                 <a href="/product/dial" class="org-link org-cta org-link--internal">Learn about Dial</a>
             </div>
         </div>
@@ -147,24 +147,51 @@
                     <p class="bento-status">Prototype complete. Launching 2026.</p>
                     <a href="/product/dial" class="org-link org-cta org-link--internal">Explore Dial</a>
                 </div>
-                <img src="/images/dial-logo-short.png" class="bento-watermark" alt="" />
+                <img src="/images/dial-logo-short-2.png" class="bento-watermark bento-watermark-dial" alt="" />
+                <img src="/images/dial-logo-short-1.png" class="bento-watermark bento-watermark-dial bento-watermark-1"
+                    alt="" />
             </div>
 
-            <!-- Card 2: Asymm JDK -->
-            <div class="bento-card bento-jdk">
+            <!-- Card 2: Eliya (The Light Build of OpenJDK) -->
+            <div class="bento-card bento-eliya">
                 <div class="bento-content">
                     <span class="product-badge">Platform Foundation</span>
                     <h3>The JDK Built for Telecom</h3>
                     <p>A server-first OpenJDK distribution optimised for telecom-scale defaults and enterprise-hardened
                         security. Available on SDKman.</p>
                     <div class="inline-terminal"
-                        onclick="navigator.clipboard.writeText('sdk install java 25.0.2-asymm'); const btn = this.querySelector('.copy-btn'); const orig = btn.innerText; btn.innerText = 'Copied!'; setTimeout(() => btn.innerText = orig, 2000);"
+                        onclick="navigator.clipboard.writeText('sdk install java 25.0.2-eliya'); const btn = this.querySelector('.copy-btn'); const orig = btn.innerText; btn.innerText = 'Copied!'; setTimeout(() => btn.innerText = orig, 2000);"
                         title="Click to copy">
-                        <code>sdk install java 25.0.2-asymm</code>
+                        <code>sdk install java 25.0.2-eliya</code>
                         <span class="copy-btn">Copy</span>
                     </div>
-                    <a href="/product/jdk" class="org-link org-cta org-link--internal">Download</a>
+                    <a href="/product/eliya" class="org-link org-cta org-link--internal">Download</a>
                 </div>
+
+                <!-- MORPHING SVG LOGO -->
+                <svg class="bento-watermark bento-watermark-eliya eliya-svg-logo" viewBox="0 0 399 391" fill="none"
+                    xmlns="http://www.w3.org/2000/svg">
+                    <g transform="translate(0.5,0.5)">
+                        <!-- Cup & Base (Static) -->
+                        <path d="M 137 360 Q 17 310 27 170" stroke="#e6e6e6" stroke-width="20" stroke-miterlimit="10" />
+                        <path d="M 133 359.5 L 221 359.5" stroke="#e6e6e6" stroke-width="20" stroke-miterlimit="10" />
+                        <path d="M 17 170 L 337 170" stroke="#e6e6e6" stroke-width="20" stroke-miterlimit="10" />
+                        <path d="M 7 382 L 367 382" stroke="#e6e6e6" stroke-width="15" stroke-miterlimit="10" />
+                        <path d="M 217 360 Q 337 310 327 170" stroke="#e6e6e6" stroke-width="20"
+                            stroke-miterlimit="10" />
+                        <!-- Handle (Static) -->
+                        <path d="M 267 330 Q 377 280 387 230 Q 397 180 327 200" stroke="#e6e6e6" stroke-width="20"
+                            stroke-miterlimit="10" />
+
+                        <!-- Smoke Beams (Dynamic Morphing) -->
+                        <path id="smoke-beam-1" d="M 177 150 L 177 70" stroke="#e6e6e6" stroke-width="20"
+                            stroke-miterlimit="10" style="transition: d 0.8s ease-in-out;" />
+                        <path id="smoke-beam-2" d="M 137 150 L 137 110" stroke="#e6e6e6" stroke-width="20"
+                            stroke-miterlimit="10" style="transition: d 0.8s ease-in-out;" />
+                        <path id="smoke-beam-3" d="M 217 150 L 217 10" stroke="#e6e6e6" stroke-width="20"
+                            stroke-miterlimit="10" style="transition: d 0.8s ease-in-out;" />
+                    </g>
+                </svg>
             </div>
 
         </div>
@@ -261,18 +288,65 @@
 
 <script>
     document.addEventListener('DOMContentLoaded', () => {
+        // --- DIAL WATERMARK ANIMATION ---
         const dialCard = document.querySelector('.bento-dial');
         if (dialCard) {
-            const watermark = dialCard.querySelector('.bento-watermark');
-            if (watermark) {
+            const watermark1 = dialCard.querySelector('.bento-watermark-1');
+            if (watermark1) {
                 dialCard.addEventListener('mouseenter', () => {
-                    watermark.classList.add('is-dialing');
+                    watermark1.classList.add('is-dialing');
                 });
 
-                watermark.addEventListener('animationend', () => {
-                    watermark.classList.remove('is-dialing');
+                watermark1.addEventListener('animationend', () => {
+                    watermark1.classList.remove('is-dialing');
                 });
             }
+        }
+
+        // --- ELIYA SMOKE ANIMATION (SVG PATH MORPHING) ---
+        const eliyaCard = document.querySelector('.bento-eliya');
+        if (eliyaCard) {
+            const b1 = document.getElementById('smoke-beam-1');
+            const b2 = document.getElementById('smoke-beam-2');
+            const b3 = document.getElementById('smoke-beam-3');
+
+            const paths = [
+                // Short
+                ['M 177 150 L 177 70', 'M 137 150 L 137 110', 'M 217 150 L 217 10'],
+                // Medium
+                ['M 177 150 L 177 10', 'M 137 150 L 137 60', 'M 217 150 L 217 110']
+            ];
+
+            let currentIdx = 0;
+            let morphTimer = null;
+
+            const morphStep = () => {
+                currentIdx = (currentIdx + 1) % paths.length;
+                const set = paths[currentIdx];
+                b1.setAttribute('d', set[0]);
+                b2.setAttribute('d', set[1]);
+                b3.setAttribute('d', set[2]);
+            };
+
+            const stopMorph = () => {
+                if (morphTimer) clearInterval(morphTimer);
+                morphTimer = null;
+                // Return to base state
+                b1.setAttribute('d', paths[0][0]);
+                b2.setAttribute('d', paths[0][1]);
+                b3.setAttribute('d', paths[0][2]);
+                currentIdx = 0;
+            };
+
+            eliyaCard.addEventListener('mouseenter', () => {
+                if (morphTimer) clearInterval(morphTimer);
+                // Cycle starts
+                morphStep();
+                morphTimer = setInterval(morphStep, 1000); // 1000ms loop for 800ms transition
+            });
+
+            eliyaCard.addEventListener('mouseleave', stopMorph);
+            window.addEventListener('blur', stopMorph);
         }
     });
 </script>
@@ -285,11 +359,11 @@
         <a href="/" class="status-item" style="color: #BA6E8F; font-family: 'Alegreya', serif; font-size: 1.5rem; font-weight: 600; padding: 0 1.2rem; letter-spacing: 0.05em; padding-bottom: 3px;">
             [ }
         </a>
-        <a href="/product/jdk" class="status-item">
-            <span class="status-icon">⚡</span> Asymm JDK
+        <a href="/product/eliya" class="status-item">
+            <img src="/images/eliya-logo-short.png" class="status-icon-img" alt="Eliya" /> Eliya
         </a>
         <a href="/product/dial" class="status-item">
-            <span class="status-icon">⎔</span> Dial
+            <img src="/images/dial-logo-short.png" class="status-icon-img" alt="Dial" /> Dial
         </a>
     </div>
     <div class="status-right desktop-only">
@@ -324,11 +398,11 @@
     <div class="drawer-content">
         <div class="drawer-section">
             <span class="drawer-label">// PRODUCTS</span>
-            <a href="/product/jdk" class="drawer-link">
-                <span class="status-icon" style="margin-right: 0.7rem;">⚡</span> Asymm JDK
+            <a href="/product/eliya" class="drawer-link">
+                <img src="/images/eliya-logo-short.png" class="status-icon-img" style="margin-right: 0.7rem;" alt="Eliya" /> Eliya
             </a>
             <a href="/product/dial" class="drawer-link">
-                <span class="status-icon" style="margin-right: 0.7rem;">⎔</span> Dial
+                <img src="/images/dial-logo-short.png" class="status-icon-img" style="margin-right: 0.7rem;" alt="Dial" /> Dial
             </a>
         </div>
         <div class="drawer-section">
