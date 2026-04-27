@@ -1,0 +1,76 @@
+title=Eliya — Lifecycle & Support
+description=Quarterly CPU cadence, LTS support windows, and release calendar for Eliya JDK.
+type=page
+toc=true
+status=published
+~~~~~~
+
+<nav class="eliya-breadcrumb" aria-label="Breadcrumb"><span class="crumb-collapse" role="button" tabindex="0" onclick="this.parentElement.classList.toggle(&apos;expanded&apos;)">~ / &hellip;</span><span class="crumb-hidden"><span class="crumb-sep">/</span><a href="/">asymm</a></span><span class="crumb-hidden"><span class="crumb-sep">/</span>product</span><span class="crumb-sep">/</span><a href="/product/eliya.html">eliya</a><span class="crumb-sep">/</span><span class="crumb-leaf">lifecycle</span></nav>
+
+<header class="page-header">
+    <span class="section-kicker">Eliya</span>
+    <h1>Lifecycle &amp; support</h1>
+    <p style="max-width: 60ch;">Eliya aligns with the upstream OpenJDK release and security
+        cadence. LTS versions receive quarterly Critical Patch Updates; Eliya targets publication within
+        two weeks of each upstream CPU.</p>
+</header>
+
+<section style="margin-bottom: 5rem;">
+    <h2 class="section-title">Supported versions</h2>
+
+    <div class="eliya-terminal-panel">
+        <span class="terminal-prompt">$ eliya versions --lts</span>
+<pre>
+  version       upstream          released              lts-support-through
+  ────────────────────────────────────────────────────────────────────────────
+  eliya-25      openjdk-25u       2026-04              2030-09   <span class="term-ok">✓ active</span>
+  eliya-29      openjdk-29u       2027-09 (planned)    aligned   <span class="term-dim">· planned</span>
+</pre>
+    </div>
+
+    <p style="margin-top: 2rem; font-size: 0.95rem;">
+        Eliya publishes the latest LTS. JDK 21 is not a published target — anyone needing JDK 21 in
+        production today is already on an established vendor distribution (Corretto, Temurin, Zulu).
+        Eliya will become multi-version naturally when JDK 29 LTS lands in September 2027.
+    </p>
+</section>
+
+<section style="margin-bottom: 5rem;">
+    <h2 class="section-title">Quarterly CPU calendar</h2>
+    <p style="margin-bottom: 1.5rem;">OpenJDK publishes Critical Patch Updates on the third
+        Tuesday of January, April, July, and October. Eliya targets publication within two weeks of each
+        upstream release. Out-of-cycle CVE-triggered rebuilds target one week.</p>
+
+    <div class="eliya-terminal-panel">
+        <span class="terminal-prompt">$ eliya schedule --upcoming --full</span>
+<pre>
+  quarter     upstream cpu        eliya target          release      status
+  ────────────────────────────────────────────────────────────────────────────
+  Q2 2026     2026-04-21          ≤ 2026-05-05          25.0.2       <span class="term-ok">✓ shipped</span>
+  Q3 2026     2026-07-21          ≤ 2026-08-04          25.0.3       <span class="term-pending">· scheduled</span>
+  Q4 2026     2026-10-20          ≤ 2026-11-03          25.0.4       <span class="term-dim">· scheduled</span>
+  Q1 2027     2027-01-19          ≤ 2027-02-02          25.0.5       <span class="term-dim">· scheduled</span>
+  Q2 2027     2027-04-20          ≤ 2027-05-04          25.0.6       <span class="term-dim">· scheduled</span>
+  Q3 2027     2027-07-20          ≤ 2027-08-03          25.0.7       <span class="term-dim">· scheduled</span>
+
+  <span class="term-dim"># cron expression (upstream CPU window)</span>
+  <span class="term-dim">00 00 15-21 1,4,7,10 tue  # 3rd Tuesday of Jan/Apr/Jul/Oct</span>
+</pre>
+    </div>
+</section>
+
+<section style="margin-bottom: 5rem;">
+    <h2 class="section-title">What changes between CPUs</h2>
+    <p>Each quarterly release includes:</p>
+    <ul style="max-width: 70ch; line-height: 1.8; margin-top: 1rem;">
+        <li>All upstream OpenJDK security fixes and stability patches for the quarter.</li>
+        <li>Refreshed <code>java.security</code> hardening if upstream defaults have changed.</li>
+        <li>No behavioural changes to <code>-XX:+UseEliyaDefaults</code> unless explicitly noted in
+            <a href="https://github.com/asymmsystems/eliya-jdk/blob/main/CHANGELOG.md" class="org-link org-link--inline org-link--external">CHANGELOG</a>.</li>
+        <li>No API changes — strictly CPU semantics.</li>
+    </ul>
+</section>
+
+<div style="margin-top: 5rem; text-align: center;">
+    <a href="/product/eliya.html" class="org-link org-link--internal">← back to Eliya</a>
+</div>

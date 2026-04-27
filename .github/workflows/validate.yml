@@ -1,0 +1,30 @@
+name: Validate Build
+
+on:
+  pull_request:
+    branches:
+      - develop
+      - master
+
+env:
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+
+permissions:
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Set up Java 25
+        uses: actions/setup-java@v4
+        with:
+          distribution: zulu
+          java-version: 25
+          cache: maven
+
+      - name: Build site
+        run: ./mvnw clean process-resources --batch-mode --no-transfer-progress

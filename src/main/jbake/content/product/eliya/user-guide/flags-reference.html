@@ -1,0 +1,127 @@
+title=Eliya flags reference
+description=Complete reference for -XX:+UseEliyaDefaults and Eliya's always-on security defaults.
+type=page
+toc=true
+status=published
+~~~~~~
+
+<nav class="eliya-breadcrumb" aria-label="Breadcrumb"><span class="crumb-collapse" role="button" tabindex="0" onclick="this.parentElement.classList.toggle(&apos;expanded&apos;)">~ / &hellip;</span><span class="crumb-hidden"><span class="crumb-sep">/</span><a href="/">asymm</a></span><span class="crumb-hidden"><span class="crumb-sep">/</span>product</span><span class="crumb-sep">/</span><a href="/product/eliya.html">eliya</a><span class="crumb-sep">/</span><a href="/product/eliya/user-guide/">user-guide</a><span class="crumb-sep">/</span><span class="crumb-leaf">flags-reference</span></nav>
+
+<header class="page-header">
+    <span class="section-kicker">User guide</span>
+    <h1>Flags reference</h1>
+    <p style="max-width: 60ch;">Eliya adds one flag to the JVM and modifies one
+        configuration file. Everything else is upstream OpenJDK behaviour.</p>
+</header>
+
+<section style="margin-bottom: 5rem;">
+    <h2 class="section-title"><code>-XX:+UseEliyaDefaults</code></h2>
+    <p style="max-width: 70ch; margin-bottom: 1rem;"><strong>Default:</strong> off.
+        <strong>Scope:</strong> product flag. <strong>Location:</strong>
+        <code>src/hotspot/share/runtime/globals.hpp</code>.</p>
+
+    <p style="max-width: 70ch;">When enabled, applies a curated runtime profile tuned for
+        telecom and request-processing workloads. Every individual flag is set via
+        <code>FLAG_SET_ERGO</code> — meaning an explicit value on the command line always wins.</p>
+
+    <h3>What it sets</h3>
+    <table class="clinical-table" style="margin-top: 1rem;">
+        <thead>
+            <tr>
+                <th>Flag</th>
+                <th>Value</th>
+                <th>Purpose</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code>UseG1GC</code></td>
+                <td>true</td>
+                <td>G1 collector — predictable pauses for request-driven workloads</td>
+            </tr>
+            <tr>
+                <td><code>MaxGCPauseMillis</code></td>
+                <td>50</td>
+                <td>50 ms pause target — aggressive for tail-latency SLAs</td>
+            </tr>
+            <tr>
+                <td><code>G1HeapRegionSize</code></td>
+                <td>4M</td>
+                <td>Fixed 4 MB regions — eliminates region-size heuristic variance</td>
+            </tr>
+            <tr>
+                <td><code>InitiatingHeapOccupancyPercent</code></td>
+                <td>35</td>
+                <td>Start concurrent marking earlier than default 45%</td>
+            </tr>
+            <tr>
+                <td><code>UseStringDeduplication</code></td>
+                <td>true</td>
+                <td>Deduplicate duplicate String bodies — large XML/JSON payload wins</td>
+            </tr>
+            <tr>
+                <td><code>OptimizeStringConcat</code></td>
+                <td>true</td>
+                <td>Optimise string concatenation</td>
+            </tr>
+            <tr>
+                <td><code>UseCompressedOops</code></td>
+                <td>true</td>
+                <td>Compressed object pointers — smaller heap footprint</td>
+            </tr>
+            <tr>
+                <td><code>TieredCompilation</code></td>
+                <td>true</td>
+                <td>Tiered JIT — faster warmup for request paths</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>Override semantics</h3>
+    <p style="max-width: 70ch;">Any flag set explicitly on the command line overrides the
+        Eliya default. Example:</p>
+    <div class="inline-terminal" style="max-width: 700px; margin-top: 1rem;"
+        onclick="copyToClipboard('java -XX:+UseEliyaDefaults -XX:MaxGCPauseMillis=100 -jar app.jar');" title="Click to copy">
+        <code>java -XX:+UseEliyaDefaults -XX:MaxGCPauseMillis=100 -jar app.jar</code>
+        <span class="copy-btn">Copy</span>
+    </div>
+    <p style="max-width: 70ch; margin-top: 1rem;">Uses all Eliya defaults <em>except</em>
+        <code>MaxGCPauseMillis</code> (user value 100 ms wins).</p>
+
+    <h3>Inspecting applied values</h3>
+    <div class="inline-terminal" style="max-width: 700px;"
+        onclick="copyToClipboard('java -XX:+UseEliyaDefaults -XX:+PrintFlagsFinal -version | grep -E &quot;UseG1GC|MaxGCPauseMillis|UseStringDeduplication&quot;');" title="Click to copy">
+        <code>java -XX:+UseEliyaDefaults -XX:+PrintFlagsFinal -version | grep -E "UseG1GC|MaxGCPauseMillis|UseStringDeduplication"</code>
+        <span class="copy-btn">Copy</span>
+    </div>
+    <p style="max-width: 70ch; margin-top: 1rem;">Eliya-applied flags show
+        <code>{ergonomic}</code> as the origin. Explicit user flags show <code>{command line}</code>.</p>
+</section>
+
+<section style="margin-bottom: 5rem;">
+    <h2 class="section-title">Security defaults (always on)</h2>
+    <p style="max-width: 70ch;">Eliya modifies
+        <code>$JAVA_HOME/conf/security/java.security</code> in the overlay so hardening is active from
+        every JVM invocation — no flag required. This is separate from
+        <code>-XX:+UseEliyaDefaults</code> (performance) because security hardening is a safety
+        requirement, not a performance preference.</p>
+
+    <p style="max-width: 70ch; margin-top: 1.5rem;">Full breakdown on the
+        <a href="/product/eliya/security.html" class="org-link org-link--inline org-link--internal">security page</a>.
+        Source of truth:
+        <a href="https://github.com/asymmsystems/eliya-jdk/blob/main/conf/eliya/security.properties" class="org-link org-link--inline org-link--external">conf/eliya/security.properties</a>.</p>
+
+    <h3>Opt-out (not recommended)</h3>
+    <div class="inline-terminal" style="max-width: 700px;"
+        onclick="copyToClipboard('java -Djava.security.properties==/path/to/vanilla-java.security ...');" title="Click to copy">
+        <code>java -Djava.security.properties==/path/to/vanilla-java.security ...</code>
+        <span class="copy-btn">Copy</span>
+    </div>
+    <p style="max-width: 70ch; margin-top: 1rem;">The double equals <code>==</code>
+        overrides; a single <code>=</code> appends. Only use this if a legacy integration genuinely
+        requires TLS 1.0 or weak ciphers.</p>
+</section>
+
+<div style="margin-top: 5rem; text-align: center;">
+    <a href="/product/eliya/user-guide/" class="org-link org-link--internal">← user guide</a>
+</div>

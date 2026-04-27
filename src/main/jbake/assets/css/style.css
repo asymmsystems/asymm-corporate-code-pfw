@@ -193,10 +193,10 @@ ul {
 }
 
 .asymm-body p:first-child {
-    font-size: 1.25rem;
+    /* font-size: 1.25rem;
     line-height: 1.6;
     color: var(--text-primary);
-    margin-bottom: 2rem;
+    margin-bottom: 2rem; */
 }
 
 @media (max-width: 1024px) {
@@ -212,7 +212,7 @@ ul {
     }
 
     .asymm-body p:first-child {
-        font-size: 1.1rem;
+        /* font-size: 1.1rem; */
     }
 }
 
@@ -383,7 +383,10 @@ select.form-control {
     /* Aligned to left of container */
 }
 
-.page-body h1 {
+/* --- Clinical Content Typography (Shared across Page, Grid, and Registry) --- */
+.page-body h1,
+.asymm-body h1,
+.news-post-header h1 {
     font-family: var(--font-display);
     font-size: 3rem;
     font-weight: 300;
@@ -393,7 +396,9 @@ select.form-control {
     line-height: 1.1;
 }
 
-.page-body h2 {
+.page-body h2,
+.asymm-body h2,
+.news-content h2 {
     font-family: var(--font-display);
     font-size: 2.2rem;
     font-weight: 300;
@@ -402,7 +407,9 @@ select.form-control {
     letter-spacing: -0.02em;
 }
 
-.page-body h3 {
+.page-body h3,
+.asymm-body h3,
+.news-content h3 {
     font-family: var(--font-display);
     font-size: 1.4rem;
     font-weight: 400;
@@ -410,7 +417,9 @@ select.form-control {
     margin: 2rem 0 1rem 0;
 }
 
-.page-body p {
+.page-body p,
+.asymm-body p,
+.news-content p {
     font-size: 1.1rem;
     line-height: 1.7;
     color: var(--text-secondary);
@@ -1718,5 +1727,508 @@ form .form-note {
     .stats-grid {
         grid-template-columns: repeat(2, 1fr);
         gap: 3rem;
+    }
+}
+
+/* --- News & Announcements --- */
+.news-list {
+    margin-top: 4rem;
+}
+
+.news-entry {
+    margin-bottom: 2.5rem;
+    border-bottom: 1px solid var(--border-subtle);
+    padding-bottom: 2rem;
+}
+
+.news-entry:last-child {
+    border-bottom: none;
+}
+
+.news-entry-date {
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    color: var(--color-rose);
+    display: block;
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+}
+
+h2.news-entry-title {
+    font-size: 1.6rem;
+    margin: 0.8rem 0;
+    font-family: var(--font-display);
+}
+
+.news-entry-summary {
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: 1.5rem;
+}
+
+.news-content {
+    color: var(--text-secondary);
+}
+
+/* --- Error Pages (404) --- */
+.error-page {
+    text-align: center;
+    padding-top: 10vh;
+    padding-bottom: 20vh;
+}
+
+.error-code {
+    font-size: 6rem;
+    margin-bottom: 1rem;
+    font-family: var(--font-display);
+    color: var(--text-primary);
+}
+
+.error-message {
+    font-size: 1.25rem;
+    margin-bottom: 3rem;
+    color: var(--text-secondary);
+}
+
+.error-actions {
+    display: flex;
+    gap: 2.5rem;
+    justify-content: center;
+    flex-wrap: wrap;
+}
+
+/* --- News Post Layout --- */
+.news-post-header {
+    margin-bottom: 3rem;
+}
+
+.news-post-header h1 {
+    margin-bottom: 0.6rem;
+}
+
+.news-post-meta {
+    font-family: var(--font-body);
+    font-size: 0.85rem;
+    color: var(--color-rose);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+}
+
+/* --- Product Page Specifics (Eliya) --- */
+.product-hero {
+    padding: 8rem 0 6rem 0;
+    position: relative;
+    overflow: hidden;
+}
+
+.product-hero-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.4rem 0.8rem;
+    background: var(--color-sand-light);
+    border: 1px solid var(--border-subtle);
+    border-radius: 4px;
+    font-family: var(--font-code);
+    font-size: 0.75rem;
+    color: var(--text-primary);
+    margin-bottom: 2rem;
+    letter-spacing: 0.05em;
+}
+
+.product-hero-badge .dot {
+    width: 6px;
+    height: 6px;
+    background: var(--color-rose);
+    border-radius: 50%;
+}
+
+.product-title {
+    font-size: 4.5rem;
+    line-height: 1;
+    margin-bottom: 1.5rem;
+    font-weight: 800;
+}
+
+.product-subtitle {
+    font-size: 1.4rem;
+    color: var(--text-secondary);
+    max-width: 700px;
+    line-height: 1.4;
+    margin-bottom: 3rem;
+}
+
+/* Feature Grid */
+.product-features {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 2.5rem;
+    margin: 6rem 0;
+}
+
+.product-feature-card {
+    padding: 2.5rem;
+    background: var(--surface-elevated);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    transition: border-color 0.4s ease;
+}
+
+.product-feature-card:hover {
+    border-color: var(--color-rose);
+}
+
+.product-feature-card h3 {
+    font-size: 1.25rem;
+    margin-bottom: 1rem;
+    color: var(--text-primary);
+}
+
+.product-feature-card p {
+    font-size: 1rem;
+    line-height: 1.6;
+    color: var(--text-secondary);
+}
+
+/* Install Tabs */
+.install-section {
+    margin: 8rem 0;
+    padding: 6rem;
+    background: var(--color-sand-light);
+    border-radius: 12px;
+}
+
+.install-tabs {
+    display: flex;
+    gap: 1.5rem;
+    margin-bottom: 3rem;
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.install-tab {
+    padding: 1rem 0;
+    background: none;
+    border: none;
+    font-family: var(--font-display);
+    font-size: 1.1rem;
+    color: var(--text-secondary);
+    cursor: pointer;
+    position: relative;
+    transition: color 0.3s ease;
+}
+
+.install-tab.active {
+    color: var(--text-primary);
+}
+
+.install-tab.active::after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background: var(--color-rose);
+}
+
+.install-panel {
+    display: none;
+}
+
+.install-panel.active {
+    display: block;
+}
+
+/* Technical Inset */
+.technical-inset {
+    margin: 6rem 0;
+    padding: 4rem;
+    background: var(--surface-inverted);
+    color: var(--surface-base);
+    border-radius: 8px;
+}
+
+.technical-inset h3 {
+    color: var(--color-rose);
+    margin-bottom: 1.5rem;
+}
+
+.technical-inset p {
+    opacity: 0.8;
+    line-height: 1.7;
+}
+
+/* Clinical Table */
+.clinical-table {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 4rem 0;
+    font-size: 0.95rem;
+}
+
+.clinical-table th {
+    text-align: left;
+    padding: 1.2rem;
+    border-bottom: 1px solid var(--border-normal);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.75rem;
+    color: var(--text-secondary);
+    font-family: var(--font-body);
+}
+
+.clinical-table td {
+    padding: 1.5rem 1.2rem;
+    border-bottom: 1px solid var(--border-subtle);
+}
+
+.clinical-table tr:last-child td {
+    border-bottom: none;
+}
+
+@media (max-width: 1024px) {
+    .product-hero {
+        grid-template-columns: 1fr !important;
+        text-align: center;
+        gap: 3rem !important;
+    }
+
+    .hero-text-content {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+    }
+}
+
+@media (max-width: 768px) {
+    .product-title {
+        font-size: 3rem;
+    }
+
+    .product-features {
+        grid-template-columns: 1fr;
+    }
+
+    .install-section {
+        padding: 2.5rem;
+    }
+}
+
+/* ============================================================
+   Eliya microsite — page header, breadcrumb, right-side ToC,
+   terminal panel. Used on /product/eliya/* and the long-form
+   research articles that opt in via toc=true frontmatter.
+   ============================================================ */
+
+/* Page header: replaces ad-hoc <header style="margin-bottom: 4rem;"> */
+.page-header {
+    margin-bottom: 4rem;
+}
+
+.page-header .section-kicker {
+    display: block;
+    margin-bottom: 0.5rem;
+}
+
+.page-header h1 {
+    margin: 0 0 1rem 0;
+}
+
+.page-header p {
+    max-width: 65ch;
+}
+
+/* Terminal-style breadcrumb — matches .ide-status-bar typography */
+.eliya-breadcrumb {
+    font-family: var(--font-code);
+    font-size: 0.85rem;
+    opacity: 0.75;
+    margin-bottom: 2.5rem;
+    padding-bottom: 1rem;
+    border-bottom: 1px solid var(--border-subtle);
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 0.3rem;
+}
+
+.eliya-breadcrumb a,
+.eliya-breadcrumb .crumb-sep,
+.eliya-breadcrumb .crumb-leaf {
+    color: var(--text-secondary);
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+.eliya-breadcrumb a:hover {
+    color: var(--color-rose);
+}
+
+.eliya-breadcrumb .crumb-leaf {
+    color: var(--color-rose);
+    opacity: 0.9;
+}
+
+.eliya-breadcrumb .crumb-sep {
+    opacity: 0.4;
+}
+
+.eliya-breadcrumb .crumb-collapse {
+    cursor: pointer;
+    padding: 0 0.3rem;
+    border-radius: 3px;
+    transition: background 0.15s ease;
+}
+
+.eliya-breadcrumb .crumb-collapse:hover {
+    background: var(--border-subtle);
+}
+
+.eliya-breadcrumb .crumb-hidden {
+    display: none;
+}
+
+.eliya-breadcrumb.expanded .crumb-hidden {
+    display: inline;
+}
+
+.eliya-breadcrumb.expanded .crumb-collapse {
+    display: none;
+}
+
+/* Right-side sticky ToC (IDE minimap analogue) */
+.page-with-toc {
+    display: grid;
+    grid-template-columns: 1fr 220px;
+    gap: 4rem;
+    align-items: start;
+}
+
+.page-toc {
+    position: sticky;
+    top: 2rem;
+    font-family: var(--font-code);
+    font-size: 0.8rem;
+    padding-left: 1rem;
+    border-left: 1px solid var(--border-subtle);
+    max-height: calc(100vh - 4rem);
+    overflow-y: auto;
+}
+
+.page-toc .toc-label {
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    font-size: 0.7rem;
+    opacity: 0.5;
+    margin-bottom: 0.8rem;
+    display: block;
+}
+
+.page-toc ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+}
+
+.page-toc li {
+    margin: 0.35rem 0;
+    line-height: 1.4;
+}
+
+.page-toc li.toc-h3 {
+    padding-left: 1rem;
+    font-size: 0.75rem;
+    opacity: 0.8;
+}
+
+.page-toc a {
+    color: var(--text-secondary);
+    text-decoration: none;
+    opacity: 0.75;
+    border-left: 2px solid transparent;
+    padding-left: 0.6rem;
+    margin-left: -0.8rem;
+    display: block;
+    transition: color 0.15s ease, border-color 0.15s ease, opacity 0.15s ease;
+}
+
+.page-toc a:hover {
+    color: var(--color-rose);
+    opacity: 1;
+}
+
+.page-toc a.toc-active {
+    color: var(--color-rose);
+    border-left-color: var(--color-rose);
+    opacity: 1;
+}
+
+/* Terminal panel — variant of .technical-inset tuned for <pre> cadence output */
+.eliya-terminal-panel {
+    margin: 4rem 0;
+    padding: 2.5rem 3rem;
+    background: var(--surface-inverted);
+    color: var(--surface-base);
+    border-radius: 8px;
+    overflow-x: auto;
+}
+
+.eliya-terminal-panel .terminal-prompt {
+    color: var(--color-rose);
+    font-family: var(--font-code);
+    font-size: 0.95rem;
+    display: block;
+    margin-bottom: 1.5rem;
+}
+
+.eliya-terminal-panel pre {
+    font-family: var(--font-code);
+    font-size: 0.85rem;
+    line-height: 1.7;
+    color: var(--surface-base);
+    opacity: 0.92;
+    margin: 0;
+    white-space: pre;
+}
+
+.eliya-terminal-panel .term-ok {
+    color: var(--color-olive-light);
+}
+
+.eliya-terminal-panel .term-pending {
+    color: var(--color-sand);
+    opacity: 0.7;
+}
+
+.eliya-terminal-panel .term-current {
+    color: var(--color-rose);
+}
+
+.eliya-terminal-panel .term-dim {
+    opacity: 0.55;
+}
+
+/* Responsive: ToC hides on narrow viewports; grid collapses */
+@media (max-width: 1024px) {
+    .page-with-toc {
+        grid-template-columns: 1fr;
+    }
+
+    .page-toc {
+        display: none;
+    }
+}
+
+@media (max-width: 768px) {
+    .eliya-breadcrumb {
+        font-size: 0.78rem;
+    }
+
+    .eliya-terminal-panel {
+        padding: 1.5rem 1rem;
+    }
+
+    .eliya-terminal-panel pre {
+        font-size: 0.75rem;
     }
 }

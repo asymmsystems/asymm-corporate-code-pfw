@@ -1,0 +1,48 @@
+title=Eliya release notes
+description=Every Eliya JDK release, newest first.
+type=page
+status=published
+~~~~~~
+
+<nav class="eliya-breadcrumb" aria-label="Breadcrumb"><span class="crumb-collapse" role="button" tabindex="0" onclick="this.parentElement.classList.toggle(&apos;expanded&apos;)">~ / &hellip;</span><span class="crumb-hidden"><span class="crumb-sep">/</span><a href="/">asymm</a></span><span class="crumb-hidden"><span class="crumb-sep">/</span>product</span><span class="crumb-sep">/</span><a href="/product/eliya.html">eliya</a><span class="crumb-sep">/</span><a href="/product/eliya/user-guide/">user-guide</a><span class="crumb-sep">/</span><span class="crumb-leaf">release-notes</span></nav>
+
+<header class="page-header">
+    <span class="section-kicker">User guide</span>
+    <h1>Release notes</h1>
+    <p style="max-width: 60ch;">Canonical source is the CHANGELOG in the public repo —
+        this page mirrors it for quick reading. Full advisory detail is on the
+        <a href="/product/eliya/security.html" class="org-link org-link--inline org-link--internal">security page</a>.</p>
+    <p style="margin-top: 1rem; font-size: 0.95rem;">
+        Authoritative CHANGELOG:
+        <a href="https://github.com/asymmsystems/eliya-jdk/blob/main/CHANGELOG.md" class="org-link org-link--inline org-link--external">github.com/asymmsystems/eliya-jdk</a>.
+    </p>
+</header>
+
+<section style="margin-bottom: 5rem;">
+    <h2 class="section-title">Eliya 25.0.2 — April 2026</h2>
+    <p style="max-width: 70ch;"><strong>Type:</strong> first public release.
+        <strong>Upstream base:</strong> OpenJDK 25.0.2-ga.</p>
+    <ul style="max-width: 70ch; line-height: 1.8; margin-top: 1rem;">
+        <li>Built from <code>openjdk/jdk25u</code> tag <code>jdk-25.0.2-ga</code>.</li>
+        <li>Eliya source patch: <code>-XX:+UseEliyaDefaults</code> flag added (globals.hpp,
+            arguments.cpp).</li>
+        <li>Eliya overlay: hardened <code>java.security</code>; <code>asymm</code> diagnostic CLI.</li>
+        <li>Platform: Linux x64, tar.gz.</li>
+        <li>SDKman: <code>sdk install java 25.0.2-eliya</code>.</li>
+    </ul>
+    <p style="max-width: 70ch; margin-top: 1.5rem;">CVEs addressed by upstream in this
+        CPU: see the
+        <a href="https://www.oracle.com/security-alerts/" class="org-link org-link--inline org-link--external">Oracle CPU advisory for April 2026</a>.
+        Eliya-specific advisories: none.</p>
+</section>
+
+<section style="margin-bottom: 5rem;">
+    <h2 class="section-title">Previously (as Asymm JDK)</h2>
+    <p style="max-width: 70ch;">Earlier development builds were published under the "Asymm JDK" name
+        during the April 2026 rename transition. Eliya 25.0.2 is the first public release under the
+        new product name; no earlier version reached SDKman.</p>
+</section>
+
+<div style="margin-top: 5rem; text-align: center;">
+    <a href="/product/eliya/user-guide/" class="org-link org-link--internal">← user guide</a>
+</div>

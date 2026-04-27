@@ -1,0 +1,93 @@
+title=Eliya — FAQ
+description=Frequently asked questions about Eliya JDK — TCK, licensing, support, the Dial relationship, platforms.
+type=page
+toc=true
+status=published
+~~~~~~
+
+<nav class="eliya-breadcrumb" aria-label="Breadcrumb"><span class="crumb-collapse" role="button" tabindex="0" onclick="this.parentElement.classList.toggle(&apos;expanded&apos;)">~ / &hellip;</span><span class="crumb-hidden"><span class="crumb-sep">/</span><a href="/">asymm</a></span><span class="crumb-hidden"><span class="crumb-sep">/</span>product</span><span class="crumb-sep">/</span><a href="/product/eliya.html">eliya</a><span class="crumb-sep">/</span><span class="crumb-leaf">faq</span></nav>
+
+<header class="page-header">
+    <span class="section-kicker">Eliya</span>
+    <h1>FAQ</h1>
+</header>
+
+<section style="max-width: 70ch;">
+
+<h3>Is Eliya TCK-certified?</h3>
+<p style="line-height: 1.8;">Eliya builds from upstream OpenJDK source and preserves upstream
+    TCK compliance. Asymm Systems has not separately submitted to Oracle's TCK programme. An independent TCK
+    run is planned for JDK 25.0.3 and the result will be published on the
+    <a href="/product/eliya/security.html" class="org-link org-link--inline org-link--internal">security page</a>.</p>
+
+<h3>Can I use Eliya in production?</h3>
+<p style="line-height: 1.8;">Yes. Eliya is distributed under GPLv2 with the Classpath Exception
+    — the same licence as upstream OpenJDK. Production use is explicitly permitted. Telecom workloads are
+    the primary design target.</p>
+
+<h3>How does Eliya differ from OpenJDK?</h3>
+<p style="line-height: 1.8;">See the distribution comparison on the
+    <a href="/product/eliya.html" class="org-link org-link--inline org-link--internal">Eliya overview page</a>.
+    In short: telecom-tuned GC defaults behind <code>-XX:+UseEliyaDefaults</code>, always-on security
+    hardening in <code>java.security</code>, an <code>asymm</code> diagnostic CLI, and first-class SDKman
+    distribution. Everything else is upstream OpenJDK.</p>
+
+<h3>Should I use Eliya, or one of Corretto / Temurin / Zulu / Liberica?</h3>
+<p style="line-height: 1.8;">Honest answer: most people should use Temurin, Corretto, Zulu,
+    or Liberica. Eliya wins in a narrow niche (low-latency telecom / BSS workloads, Dial users, FreeBSD).
+    We wrote a comprehensive vendor-by-vendor guide that explicitly tells you when <em>not</em> to pick
+    Eliya:
+    <a href="/research/choosing-a-jdk-2026.html" class="org-link org-link--inline org-link--internal">Choosing a JDK in 2026 — an honest guide</a>.</p>
+
+<h3>How long is each Eliya version supported?</h3>
+<p style="line-height: 1.8;">Eliya LTS versions align with upstream OpenJDK LTS support
+    windows. Eliya 25 LTS is supported through September 2030. See the
+    <a href="/product/eliya/lifecycle.html" class="org-link org-link--inline org-link--internal">lifecycle page</a>
+    for the full calendar.</p>
+
+<h3>Do I need Eliya to run Dial?</h3>
+<p style="line-height: 1.8;"><strong>No.</strong> Dial targets JDK 25 and above from any vendor
+    — Corretto, Temurin, Zulu, Oracle, Liberica, or Eliya. Eliya is the recommended runtime because of the
+    telecom optimisations, but never required. Asymm Systems does not create vendor lock-in for Dial users.</p>
+
+<h3>Why does Eliya only ship JDK 25?</h3>
+<p style="line-height: 1.8;">Eliya is a forward-lean distribution focused on the latest LTS.
+    Organisations running JDK 21 in production are already on established vendor distributions and would
+    not migrate to a new vendor for that version. When JDK 29 LTS lands in September 2027, Eliya will ship
+    both 25 and 29.</p>
+
+<h3>How do I report a security issue?</h3>
+<p style="line-height: 1.8;">Email
+    <a href="mailto:security@asymm.systems" class="org-link org-link--inline org-link--external">security@asymm.systems</a>.
+    Disclosure policy on the
+    <a href="/product/eliya/security.html" class="org-link org-link--inline org-link--internal">security page</a>.</p>
+
+<h3>Is commercial support available?</h3>
+<p style="line-height: 1.8;">Not today. Eliya is a community distribution with a quarterly
+    CPU commitment but no paid support tier. GitHub Issues on
+    <a href="https://github.com/asymmsystems/eliya-jdk" class="org-link org-link--inline org-link--external">the public repo</a>
+    are the community support channel. Commercial support is a Phase 2 consideration.</p>
+
+<h3>Why no Windows build?</h3>
+<p style="line-height: 1.8;">Eliya is server-first. ODA components and telecom BSS/OSS
+    workloads deploy on Linux. Windows support is demand-gated — if enterprise users request it, the
+    build matrix can be extended, but it's not a default.</p>
+
+<h3>Why a FreeBSD build? Nobody else does this.</h3>
+<p style="line-height: 1.8;">Exactly. Eliya ships a FreeBSD Research Preview — honestly
+    labelled, community-supported, no CVE SLA — because Asymm Systems operates at the JVM infrastructure
+    level. It's a single quarterly manual build, not a GA product. See the
+    <a href="/product/eliya.html" class="org-link org-link--inline org-link--internal">platform matrix</a>
+    for scope and caveats.</p>
+
+<h3>How do I contribute?</h3>
+<p style="line-height: 1.8;">The Eliya overlay, CHANGELOG, and PATCHES live in
+    <a href="https://github.com/asymmsystems/eliya-jdk" class="org-link org-link--inline org-link--external">the public repo</a>.
+    Issues and pull requests are welcome. JVM-level source patches go through the mirror; open an issue
+    first to discuss scope.</p>
+
+</section>
+
+<div style="margin-top: 5rem; text-align: center;">
+    <a href="/product/eliya.html" class="org-link org-link--internal">← back to Eliya</a>
+</div>

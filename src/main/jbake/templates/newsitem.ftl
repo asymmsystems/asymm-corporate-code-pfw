@@ -11,13 +11,23 @@
 </div>
 
 <div class="container" style="padding-top: 4rem; padding-bottom: 8rem; min-height: 70vh;">
-    <span class="news-date">${content.date?string("dd MMMM yyyy")}</span>
-    <h1 class="page-title" style="margin-top: 0.5rem;">${content.title}</h1>
-    <hr style="border:none; border-bottom:1px solid var(--border-subtle); margin-bottom: 3rem;">
-    
-    <div style="color:var(--text-secondary); font-size:1.15rem; line-height:1.7;">
-        ${content.body}
-    </div>
+    <article class="page-body">
+        <div class="news-post-header">
+            <h1>${content.title}</h1>
+            <div class="news-post-meta">
+                ${content.kicker!"Official Announcement"} <span style="margin: 0 0.6rem; opacity: 0.5;">|</span> ${content.date?string("dd MMMM yyyy")}
+            </div>
+        </div>
+
+        <div class="asymm-body">
+            <div class="news-content">
+                ${content.body}
+            </div>
+            
+            <hr class="section-divider" style="margin: 4rem 0;">
+            <p><a href="/registry.html" class="org-link org-link--inline org-link--internal">Back to Registry</a></p>
+        </div>
+    </article>
 </div>
 
 <#include "menu.ftl">

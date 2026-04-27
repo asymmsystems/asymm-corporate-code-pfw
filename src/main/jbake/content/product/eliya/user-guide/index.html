@@ -1,0 +1,117 @@
+title=Eliya User Guide
+description=Complete user guide for Eliya JDK — install, verify, configure, migrate, and troubleshoot.
+type=page
+status=published
+~~~~~~
+
+<nav class="eliya-breadcrumb" aria-label="Breadcrumb"><span class="crumb-collapse" role="button" tabindex="0" onclick="this.parentElement.classList.toggle(&apos;expanded&apos;)">~ / &hellip;</span><span class="crumb-hidden"><span class="crumb-sep">/</span><a href="/">asymm</a></span><span class="crumb-hidden"><span class="crumb-sep">/</span>product</span><span class="crumb-sep">/</span><a href="/product/eliya.html">eliya</a><span class="crumb-sep">/</span><span class="crumb-leaf">user-guide</span></nav>
+
+<header class="page-header">
+    <span class="section-kicker">Eliya</span>
+    <h1>User guide</h1>
+    <p style="max-width: 60ch;">Everything you need to install, operate, and tune Eliya JDK
+        in production. Organised as a reference — jump to the chapter you need.</p>
+</header>
+
+<section style="margin-bottom: 5rem;">
+    <h2 class="section-title">Getting started</h2>
+    <div class="product-features" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">
+        <div class="product-feature-card">
+            <h3>What is Eliya?</h3>
+            <p>Positioning, relationship to upstream OpenJDK, telecom optimisations.</p>
+            <a href="/product/eliya/user-guide/what-is-eliya.html" class="org-link org-link--inline org-link--internal">Read</a>
+        </div>
+        <div class="product-feature-card">
+            <h3>Install on Linux</h3>
+            <p>SDKman, tar.gz, .deb, .rpm.</p>
+            <a href="/product/eliya/user-guide/install-linux.html" class="org-link org-link--inline org-link--internal">Install</a>
+        </div>
+        <div class="product-feature-card">
+            <h3>Install with Docker</h3>
+            <p>Multi-arch OCI images on GHCR.</p>
+            <a href="/product/eliya/user-guide/install-docker.html" class="org-link org-link--inline org-link--internal">Install</a>
+        </div>
+        <div class="product-feature-card">
+            <h3>Install on macOS</h3>
+            <p>SDKman; native PKG deferred to Phase 2.</p>
+            <a href="/product/eliya/user-guide/install-macos.html" class="org-link org-link--inline org-link--internal">Install</a>
+        </div>
+        <div class="product-feature-card">
+            <h3>Install on FreeBSD</h3>
+            <p>Research Preview — honestly labelled, no CVE SLA.</p>
+            <a href="/product/eliya/user-guide/install-freebsd.html" class="org-link org-link--inline org-link--internal">Install</a>
+        </div>
+        <div class="product-feature-card">
+            <h3>Verify your download</h3>
+            <p>SHA256 checksums and GPG signature verification.</p>
+            <a href="/product/eliya/user-guide/verify-download.html" class="org-link org-link--inline org-link--internal">Verify</a>
+        </div>
+    </div>
+</section>
+
+<section style="margin-bottom: 5rem;">
+    <h2 class="section-title">Configuration &amp; operations</h2>
+    <div class="product-features" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">
+        <div class="product-feature-card">
+            <h3>Flags reference</h3>
+            <p><code>-XX:+UseEliyaDefaults</code> breakdown, security defaults, all Eliya-specific flags.</p>
+            <a href="/product/eliya/user-guide/flags-reference.html" class="org-link org-link--inline org-link--internal">Reference</a>
+        </div>
+        <div class="product-feature-card">
+            <h3>Migration</h3>
+            <p>Switching from Corretto, Temurin, Zulu, or Oracle JDK.</p>
+            <a href="/product/eliya/migration.html" class="org-link org-link--inline org-link--internal">Guide</a>
+        </div>
+        <div class="product-feature-card">
+            <h3>Troubleshooting</h3>
+            <p>Common errors, diagnostic commands, <code>asymm --info</code>.</p>
+            <a href="/product/eliya/user-guide/troubleshooting.html" class="org-link org-link--inline org-link--internal">Troubleshoot</a>
+        </div>
+        <div class="product-feature-card">
+            <h3>Uninstall</h3>
+            <p>Clean removal per platform.</p>
+            <a href="/product/eliya/user-guide/uninstall.html" class="org-link org-link--inline org-link--internal">Uninstall</a>
+        </div>
+    </div>
+</section>
+
+<section style="margin-bottom: 5rem;">
+    <h2 class="section-title">Not sure Eliya is right for you?</h2>
+    <div class="product-feature-card" style="max-width: 800px;">
+        <h3>Choosing a JDK in 2026 — an honest guide</h3>
+        <p>Vendor-by-vendor comparison across Temurin, Corretto, Zulu, Liberica, Oracle, Microsoft, Red
+            Hat, SapMachine, IBM Semeru, GraalVM, and Eliya. Written by us, but honest about when Eliya
+            is not the right pick.</p>
+        <a href="/research/choosing-a-jdk-2026.html" class="org-link org-link--inline org-link--internal">Read the guide</a>
+    </div>
+</section>
+
+<section style="margin-bottom: 5rem;">
+    <h2 class="section-title">Reference</h2>
+    <div class="product-features" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">
+        <div class="product-feature-card">
+            <h3>Release notes</h3>
+            <p>Every Eliya release, newest first.</p>
+            <a href="/product/eliya/user-guide/release-notes.html" class="org-link org-link--inline org-link--internal">Notes</a>
+        </div>
+        <div class="product-feature-card">
+            <h3>License</h3>
+            <p>GPLv2 with Classpath Exception — same as upstream OpenJDK.</p>
+            <a href="/product/eliya/user-guide/license.html" class="org-link org-link--inline org-link--internal">License</a>
+        </div>
+        <div class="product-feature-card">
+            <h3>Security</h3>
+            <p>Reporting, advisories, always-on hardening.</p>
+            <a href="/product/eliya/security.html" class="org-link org-link--inline org-link--internal">Security</a>
+        </div>
+        <div class="product-feature-card">
+            <h3>Lifecycle</h3>
+            <p>LTS windows and quarterly CPU calendar.</p>
+            <a href="/product/eliya/lifecycle.html" class="org-link org-link--inline org-link--internal">Lifecycle</a>
+        </div>
+    </div>
+</section>
+
+<div style="margin-top: 5rem; text-align: center;">
+    <a href="/product/eliya.html" class="org-link org-link--internal">← back to Eliya</a>
+</div>

@@ -12,8 +12,9 @@
         </a>
     </div>
     <div class="status-right desktop-only">
-        <a href="/research/bss-survey-2026.html" class="status-item">Research</a>
-        <a href="/news.html" class="status-item">News</a>
+        <a href="/research.html" class="status-item">Research</a>
+        <a href="/product/eliya.html" class="status-item">Eliya JDK</a>
+        <a href="/registry.html" class="status-item">Registry</a>
         <a href="/about.html" class="status-item">About</a>
         <a href="/about.html#contact" class="status-item">Contact</a>
         <span class="status-item" style="opacity: 0.5; padding-right: 1.2rem; cursor: default;">© 2026 Asymm</span>
@@ -51,13 +52,14 @@
             </a>
         </div>
         <div class="drawer-section">
-            <span class="drawer-label">// DIRECTORIES</span>
-            <a href="/research/bss-survey-2026.html" class="drawer-link">Research</a>
-            <a href="/news.html" class="drawer-link">News</a>
+            <span class="drawer-label">Ecosystem</span>
+            <a href="/registry.html" class="drawer-link">Registry</a>
+            <a href="/research.html" class="drawer-link">Research</a>
             <a href="/about.html" class="drawer-link">About</a>
             <a href="/about.html#contact" class="drawer-link">Contact</a>
         </div>
         <div class="drawer-footer">
+            <a href="/privacy.html" class="drawer-link" style="font-size: 0.8rem; margin-bottom: 0.5rem; opacity: 0.7;">Privacy Policy</a>
             <span style="opacity: 0.5;">© 2026 Asymm Systems</span>
         </div>
     </div>
@@ -82,4 +84,13 @@
             });
         }
     });
+
+    function copyToClipboard(text) {
+        navigator.clipboard.writeText(text).then(() => {
+            const btn = event.target;
+            const originalText = btn.innerText;
+            btn.innerText = 'Copied!';
+            setTimeout(() => { btn.innerText = originalText; }, 2000);
+        });
+    }
 </script>

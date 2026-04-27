@@ -1,0 +1,76 @@
+title=Uninstall Eliya
+description=Remove Eliya JDK cleanly from SDKman, tar.gz, .deb, or .rpm installs.
+type=page
+toc=true
+status=published
+~~~~~~
+
+<nav class="eliya-breadcrumb" aria-label="Breadcrumb"><span class="crumb-collapse" role="button" tabindex="0" onclick="this.parentElement.classList.toggle(&apos;expanded&apos;)">~ / &hellip;</span><span class="crumb-hidden"><span class="crumb-sep">/</span><a href="/">asymm</a></span><span class="crumb-hidden"><span class="crumb-sep">/</span>product</span><span class="crumb-sep">/</span><a href="/product/eliya.html">eliya</a><span class="crumb-sep">/</span><a href="/product/eliya/user-guide/">user-guide</a><span class="crumb-sep">/</span><span class="crumb-leaf">uninstall</span></nav>
+
+<header class="page-header">
+    <span class="section-kicker">User guide</span>
+    <h1>Uninstall</h1>
+</header>
+
+<section style="margin-bottom: 5rem;">
+    <h2 class="section-title">SDKman</h2>
+    <div class="inline-terminal" style="max-width: 500px;"
+        onclick="copyToClipboard('sdk uninstall java 25.0.2-eliya');" title="Click to copy">
+        <code>sdk uninstall java 25.0.2-eliya</code>
+        <span class="copy-btn">Copy</span>
+    </div>
+</section>
+
+<section style="margin-bottom: 5rem;">
+    <h2 class="section-title">tar.gz archive</h2>
+    <p style="max-width: 70ch; margin-bottom: 1.5rem;">Remove the extracted directory. If
+        you registered it with <code>update-alternatives</code>, deregister first:</p>
+
+    <div class="inline-terminal" style="max-width: 700px; margin-bottom: 1rem;"
+        onclick="copyToClipboard('sudo update-alternatives --remove java /opt/eliya/bin/java');" title="Click to copy">
+        <code>sudo update-alternatives --remove java /opt/eliya/bin/java</code>
+        <span class="copy-btn">Copy</span>
+    </div>
+    <div class="inline-terminal" style="max-width: 700px;"
+        onclick="copyToClipboard('sudo rm -rf /opt/java-25.0.2-eliya');" title="Click to copy">
+        <code>sudo rm -rf /opt/java-25.0.2-eliya</code>
+        <span class="copy-btn">Copy</span>
+    </div>
+
+    <p style="max-width: 70ch; margin-top: 1.5rem;">Also unset or edit any shell profile
+        lines exporting <code>JAVA_HOME</code> that pointed at the Eliya install path.</p>
+</section>
+
+<section style="margin-bottom: 5rem;">
+    <h2 class="section-title">.deb package</h2>
+    <div class="inline-terminal" style="max-width: 500px;"
+        onclick="copyToClipboard('sudo apt-get remove eliya-jdk');" title="Click to copy">
+        <code>sudo apt-get remove eliya-jdk</code>
+        <span class="copy-btn">Copy</span>
+    </div>
+
+    <p style="max-width: 70ch; margin-top: 1rem;"><code>update-alternatives</code> is
+        deregistered automatically.</p>
+</section>
+
+<section style="margin-bottom: 5rem;">
+    <h2 class="section-title">.rpm package</h2>
+    <div class="inline-terminal" style="max-width: 500px;"
+        onclick="copyToClipboard('sudo rpm -e eliya-jdk');" title="Click to copy">
+        <code>sudo rpm -e eliya-jdk</code>
+        <span class="copy-btn">Copy</span>
+    </div>
+</section>
+
+<section style="margin-bottom: 5rem;">
+    <h2 class="section-title">Docker</h2>
+    <div class="inline-terminal" style="max-width: 700px;"
+        onclick="copyToClipboard('docker rmi ghcr.io/asymmsystems/eliya:25-lts');" title="Click to copy">
+        <code>docker rmi ghcr.io/asymmsystems/eliya:25-lts</code>
+        <span class="copy-btn">Copy</span>
+    </div>
+</section>
+
+<div style="margin-top: 5rem; text-align: center;">
+    <a href="/product/eliya/user-guide/" class="org-link org-link--internal">← user guide</a>
+</div>

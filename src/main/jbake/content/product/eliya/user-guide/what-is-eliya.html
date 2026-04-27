@@ -1,0 +1,97 @@
+title=What is Eliya?
+description=Eliya's positioning, relationship to upstream OpenJDK, and telecom optimisations.
+type=page
+toc=true
+status=published
+~~~~~~
+
+<nav class="eliya-breadcrumb" aria-label="Breadcrumb"><span class="crumb-collapse" role="button" tabindex="0" onclick="this.parentElement.classList.toggle(&apos;expanded&apos;)">~ / &hellip;</span><span class="crumb-hidden"><span class="crumb-sep">/</span><a href="/">asymm</a></span><span class="crumb-hidden"><span class="crumb-sep">/</span>product</span><span class="crumb-sep">/</span><a href="/product/eliya.html">eliya</a><span class="crumb-sep">/</span><a href="/product/eliya/user-guide/">user-guide</a><span class="crumb-sep">/</span><span class="crumb-leaf">what-is-eliya</span></nav>
+
+<header class="page-header">
+    <span class="section-kicker">User guide</span>
+    <h1>What is Eliya?</h1>
+</header>
+
+<section style="max-width: 70ch; line-height: 1.8;">
+
+<p>Eliya JDK is an OpenJDK distribution built and maintained by Asymm Systems. It is
+distributed under GPLv2 with the Classpath Exception — the same licence as upstream OpenJDK.</p>
+
+<p>Eliya exists to do three things:</p>
+<ol>
+    <li><strong>Ship upstream OpenJDK unchanged in essence.</strong> Eliya builds from the same source tree
+        (<code>openjdk/jdk25u</code>), publishes on the same quarterly CPU cadence, and preserves API
+        semantics. If your application runs on upstream OpenJDK 25, it runs on Eliya.</li>
+    <li><strong>Activate telecom-optimised runtime defaults behind a single flag.</strong>
+        <code>-XX:+UseEliyaDefaults</code> enables a curated profile (G1GC with 50 ms pause targets,
+        string deduplication, compressed oops, tiered compilation) tuned for request-processing workloads
+        like telecom API gateways and BSS components. Off by default — TCK compliance preserved.</li>
+    <li><strong>Harden security defaults, always on.</strong> Eliya modifies <code>java.security</code> in
+        the overlay to disable SSLv3, TLS 1.0, and TLS 1.1, block weak cipher suites (RC4, DES, 3DES,
+        MD5), and enforce 2048-bit minimum key sizes. Active on every JVM invocation — no flags
+        required.</li>
+</ol>
+
+<h3>What Eliya is not</h3>
+
+<p>Eliya is not a fork of OpenJDK in the sense of diverging from upstream. It is a
+branded build with a minimal, merge-safe source patch (the UseEliyaDefaults flag) and configuration
+overlays. Every quarterly upstream CPU flows into Eliya within two weeks.</p>
+
+<p>Eliya is not a proprietary JVM. HotSpot is the underlying VM; no custom JIT,
+custom GC, or ahead-of-time compiler is layered on top. If you need those, see Azul Platform Prime or
+BellSoft Liberica NIK.</p>
+
+<p>Eliya is not required for Dial. Dial targets JDK 25+ from any vendor — Corretto,
+Temurin, Zulu, Oracle, Liberica, or Eliya. Eliya is the recommended runtime because of the telecom
+optimisations, but never mandatory.</p>
+
+<h3>Relationship to upstream OpenJDK</h3>
+
+<table class="clinical-table" style="margin-top: 1.5rem;">
+    <thead>
+        <tr>
+            <th>Layer</th>
+            <th>Source</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Java APIs, compiler, standard library</td>
+            <td>Upstream <code>openjdk/jdk25u</code> — unchanged</td>
+        </tr>
+        <tr>
+            <td>HotSpot VM</td>
+            <td>Upstream — unchanged except the UseEliyaDefaults flag definition</td>
+        </tr>
+        <tr>
+            <td>GC defaults</td>
+            <td>Upstream defaults unless <code>-XX:+UseEliyaDefaults</code> is set</td>
+        </tr>
+        <tr>
+            <td><code>java.security</code></td>
+            <td>Eliya overlay — hardened</td>
+        </tr>
+        <tr>
+            <td><code>asymm</code> CLI (<code>bin/asymm</code>)</td>
+            <td>Eliya overlay — diagnostic helper</td>
+        </tr>
+        <tr>
+            <td>Overlay config (<code>conf/eliya/</code>)</td>
+            <td>Eliya overlay — inspectable references</td>
+        </tr>
+    </tbody>
+</table>
+
+<h3>Who Eliya is for</h3>
+
+<p>Eliya is built with telecom workloads in mind — BSS/OSS components, TMF
+Open-API gateways, request-heavy services where tail latency matters more than peak throughput. It is a
+reasonable default for any Linux server Java workload. It is not positioned for desktop or Windows
+deployments.</p>
+
+</section>
+
+<div style="margin-top: 5rem; text-align: center;">
+    <a href="/product/eliya/user-guide/" class="org-link org-link--internal">← user guide</a>
+</div>

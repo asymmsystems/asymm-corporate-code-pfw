@@ -1,0 +1,105 @@
+title=Eliya troubleshooting
+description=Common Eliya issues and diagnostic commands.
+type=page
+toc=true
+status=published
+~~~~~~
+
+<nav class="eliya-breadcrumb" aria-label="Breadcrumb"><span class="crumb-collapse" role="button" tabindex="0" onclick="this.parentElement.classList.toggle(&apos;expanded&apos;)">~ / &hellip;</span><span class="crumb-hidden"><span class="crumb-sep">/</span><a href="/">asymm</a></span><span class="crumb-hidden"><span class="crumb-sep">/</span>product</span><span class="crumb-sep">/</span><a href="/product/eliya.html">eliya</a><span class="crumb-sep">/</span><a href="/product/eliya/user-guide/">user-guide</a><span class="crumb-sep">/</span><span class="crumb-leaf">troubleshooting</span></nav>
+
+<header class="page-header">
+    <span class="section-kicker">User guide</span>
+    <h1>Troubleshooting</h1>
+</header>
+
+<section style="margin-bottom: 5rem;">
+    <h2 class="section-title">The <code>asymm</code> CLI</h2>
+    <p style="max-width: 70ch;">Eliya ships a small diagnostic helper at
+        <code>$JAVA_HOME/bin/asymm</code>. Use it to confirm which runtime you're on and to print
+        build metadata.</p>
+
+    <div class="inline-terminal" style="max-width: 500px; margin-top: 1.5rem;"
+        onclick="copyToClipboard('asymm --info');" title="Click to copy">
+        <code>asymm --info</code>
+        <span class="copy-btn">Copy</span>
+    </div>
+
+    <p style="max-width: 70ch; margin-top: 1.5rem;">Output includes JDK version, vendor,
+        build date, platform, and which Eliya features are active. Attach this output to any issue you
+        file on GitHub.</p>
+</section>
+
+<section style="margin-bottom: 5rem;">
+    <h2 class="section-title">Common issues</h2>
+
+    <h3>TLS handshake fails with "protocol disabled" or "no cipher suites in common"</h3>
+    <p style="max-width: 70ch;">Eliya disables SSLv3, TLS 1.0, TLS 1.1, and weak cipher
+        suites by default. A legacy peer insisting on these will fail to negotiate. Either upgrade the
+        peer (correct fix) or opt out of hardening for this JVM invocation:</p>
+    <div class="inline-terminal" style="max-width: 700px; margin-top: 1rem;"
+        onclick="copyToClipboard('java -Djava.security.properties==/path/to/vanilla-java.security -jar app.jar');" title="Click to copy">
+        <code>java -Djava.security.properties==/path/to/vanilla-java.security -jar app.jar</code>
+        <span class="copy-btn">Copy</span>
+    </div>
+
+    <h3>"Unrecognized VM option 'UseEliyaDefaults'"</h3>
+    <p style="max-width: 70ch;">You're running a non-Eliya JVM. Confirm with
+        <code>java -version</code> — the version string must include "Eliya". If not, check
+        <code>JAVA_HOME</code>, your <code>PATH</code>, and SDKman's current version
+        (<code>sdk current java</code>).</p>
+
+    <h3><code>SHA256SUMS.txt</code> verification fails</h3>
+    <p style="max-width: 70ch;">Re-download both the archive and the
+        <code>SHA256SUMS.txt</code> from the same GitHub Release page. If the re-download still fails,
+        do not run the archive — report to
+        <a href="mailto:security@asymm.systems" class="org-link org-link--inline org-link--external">security@asymm.systems</a>.</p>
+
+    <h3>GC pauses exceed 50 ms despite <code>-XX:+UseEliyaDefaults</code></h3>
+    <p style="max-width: 70ch;">The 50 ms target is aspirational — G1 can exceed it under
+        heavy allocation pressure, large live sets, or tight heap sizing. Diagnose with:</p>
+    <div class="inline-terminal" style="max-width: 700px; margin-top: 1rem;"
+        onclick="copyToClipboard('java -XX:+UseEliyaDefaults -Xlog:gc* -jar app.jar');" title="Click to copy">
+        <code>java -XX:+UseEliyaDefaults -Xlog:gc* -jar app.jar</code>
+        <span class="copy-btn">Copy</span>
+    </div>
+    <p style="max-width: 70ch; margin-top: 1rem;">Usual fixes: larger heap
+        (<code>-Xmx</code>), profile allocation hot spots, or swap to Shenandoah or ZGC for sub-10 ms
+        pauses at the cost of throughput.</p>
+
+    <h3>SDKman says version not found</h3>
+    <p style="max-width: 70ch;">Run <code>sdk update</code> to refresh the candidate
+        metadata. If still not found 24 hours after a new Eliya release, check the
+        <a href="https://github.com/asymmsystems/eliya-jdk/releases" class="org-link org-link--inline org-link--external">releases page</a>
+        and file an issue.</p>
+
+    <h3>Eliya runs but applications behave differently than on Corretto/Zulu</h3>
+    <p style="max-width: 70ch;">The most likely cause is the hardened
+        <code>java.security</code> — check TLS negotiation and cipher suite selection. Second most
+        likely: <code>-XX:+UseEliyaDefaults</code> is set and G1 tuning is interacting with your
+        allocation profile differently from the default 200 ms target. See the
+        <a href="/product/eliya/migration.html" class="org-link org-link--inline org-link--internal">migration guide</a>
+        for behavioural parity details.</p>
+</section>
+
+<section style="margin-bottom: 5rem;">
+    <h2 class="section-title">Filing an issue</h2>
+    <p style="max-width: 70ch;">Non-security issues: open a GitHub issue on
+        <a href="https://github.com/asymmsystems/eliya-jdk/issues" class="org-link org-link--inline org-link--external">asymmsystems/eliya-jdk</a>.
+        Include:</p>
+    <ul style="max-width: 70ch; line-height: 1.8; margin-top: 1rem;">
+        <li><code>asymm --info</code> output</li>
+        <li><code>java -version</code></li>
+        <li>OS, architecture, container image if applicable</li>
+        <li>Full command line (flags, JAR path)</li>
+        <li>Minimal reproducer if possible</li>
+    </ul>
+
+    <p style="max-width: 70ch; margin-top: 1.5rem;">Security issues: email
+        <a href="mailto:security@asymm.systems" class="org-link org-link--inline org-link--external">security@asymm.systems</a>
+        — see the
+        <a href="/product/eliya/security.html" class="org-link org-link--inline org-link--internal">security page</a>.</p>
+</section>
+
+<div style="margin-top: 5rem; text-align: center;">
+    <a href="/product/eliya/user-guide/" class="org-link org-link--internal">← user guide</a>
+</div>

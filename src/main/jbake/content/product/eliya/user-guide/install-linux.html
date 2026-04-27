@@ -1,0 +1,115 @@
+title=Install Eliya on Linux
+description=Install Eliya JDK on Linux via SDKman, tar.gz, .deb, or .rpm.
+type=page
+toc=true
+status=published
+~~~~~~
+
+<nav class="eliya-breadcrumb" aria-label="Breadcrumb"><span class="crumb-collapse" role="button" tabindex="0" onclick="this.parentElement.classList.toggle(&apos;expanded&apos;)">~ / &hellip;</span><span class="crumb-hidden"><span class="crumb-sep">/</span><a href="/">asymm</a></span><span class="crumb-hidden"><span class="crumb-sep">/</span>product</span><span class="crumb-sep">/</span><a href="/product/eliya.html">eliya</a><span class="crumb-sep">/</span><a href="/product/eliya/user-guide/">user-guide</a><span class="crumb-sep">/</span><span class="crumb-leaf">install-linux</span></nav>
+
+<header class="page-header">
+    <span class="section-kicker">User guide</span>
+    <h1>Install on Linux</h1>
+    <p style="max-width: 60ch;">Four installation paths. Pick the one that matches your
+        deployment style. SDKman is recommended for development environments; tar.gz or .deb/.rpm
+        for servers and CI.</p>
+</header>
+
+<section style="margin-bottom: 5rem;">
+    <h2 class="section-title">1. SDKman (recommended for developers)</h2>
+    <p style="max-width: 70ch; margin-bottom: 1.5rem;">One command. Handles upgrades
+        automatically. Works on any Linux shell with SDKman installed.</p>
+
+    <div class="inline-terminal" style="max-width: 600px;"
+        onclick="copyToClipboard('sdk install java 25.0.2-eliya');" title="Click to copy">
+        <code>sdk install java 25.0.2-eliya</code>
+        <span class="copy-btn">Copy</span>
+    </div>
+
+    <p style="margin-top: 1.5rem; font-size: 0.95rem;">
+        Don't have SDKman? See
+        <a href="https://sdkman.io/install" class="org-link org-link--inline org-link--external">sdkman.io/install</a>.
+    </p>
+</section>
+
+<section style="margin-bottom: 5rem;">
+    <h2 class="section-title">2. tar.gz archive</h2>
+    <p style="max-width: 70ch; margin-bottom: 1.5rem;">For servers, containers, and any
+        deployment where SDKman isn't appropriate.</p>
+
+    <div class="inline-terminal" style="max-width: 700px; margin-bottom: 1rem;"
+        onclick="copyToClipboard('curl -LO https://github.com/asymmsystems/eliya-jdk/releases/download/v25.0.2/java-25.0.2-eliya-linux-x64.tar.gz');" title="Click to copy">
+        <code>curl -LO https://github.com/asymmsystems/eliya-jdk/releases/download/v25.0.2/java-25.0.2-eliya-linux-x64.tar.gz</code>
+        <span class="copy-btn">Copy</span>
+    </div>
+    <div class="inline-terminal" style="max-width: 700px; margin-bottom: 1rem;"
+        onclick="copyToClipboard('sudo tar -xzf java-25.0.2-eliya-linux-x64.tar.gz -C /opt');" title="Click to copy">
+        <code>sudo tar -xzf java-25.0.2-eliya-linux-x64.tar.gz -C /opt</code>
+        <span class="copy-btn">Copy</span>
+    </div>
+    <div class="inline-terminal" style="max-width: 700px;"
+        onclick="copyToClipboard('export JAVA_HOME=/opt/java-25.0.2-eliya &amp;&amp; export PATH=$JAVA_HOME/bin:$PATH');" title="Click to copy">
+        <code>export JAVA_HOME=/opt/java-25.0.2-eliya && export PATH=$JAVA_HOME/bin:$PATH</code>
+        <span class="copy-btn">Copy</span>
+    </div>
+
+    <p style="max-width: 70ch; margin-top: 1.5rem; font-size: 0.95rem;">
+        Verify the download before installing — see the
+        <a href="/product/eliya/user-guide/verify-download.html" class="org-link org-link--inline org-link--internal">verification guide</a>.
+    </p>
+</section>
+
+<section style="margin-bottom: 5rem;">
+    <h2 class="section-title">3. .deb package (Debian, Ubuntu)</h2>
+    <p style="max-width: 70ch; margin-bottom: 1.5rem; font-style: italic;">Planned 2026.
+        Today use SDKman or tar.gz.</p>
+
+    <div class="inline-terminal" style="max-width: 700px; margin-bottom: 1rem;">
+        <code>sudo dpkg -i eliya-jdk_25.0.2_amd64.deb</code>
+    </div>
+
+    <p style="max-width: 70ch; font-size: 0.95rem;">The .deb package will register Eliya
+        with <code>update-alternatives</code> automatically and install to <code>/opt/eliya</code>.
+        Hosted apt repository (<code>deb.asymm.systems</code>) is a Phase 2 (2027) item.</p>
+</section>
+
+<section style="margin-bottom: 5rem;">
+    <h2 class="section-title">4. .rpm package (RHEL, Rocky, Fedora, openSUSE)</h2>
+    <p style="max-width: 70ch; margin-bottom: 1.5rem; font-style: italic;">Planned 2026.
+        Today use SDKman or tar.gz.</p>
+
+    <div class="inline-terminal" style="max-width: 700px; margin-bottom: 1rem;">
+        <code>sudo rpm -i eliya-jdk-25.0.2.x86_64.rpm</code>
+    </div>
+
+    <p style="max-width: 70ch; font-size: 0.95rem;">Hosted yum repository
+        (<code>rpm.asymm.systems</code>) is a Phase 2 item.</p>
+</section>
+
+<section style="margin-bottom: 5rem;">
+    <h2 class="section-title">Verify the installation</h2>
+
+    <div class="inline-terminal" style="max-width: 500px; margin-bottom: 1rem;"
+        onclick="copyToClipboard('java -version');" title="Click to copy">
+        <code>java -version</code>
+        <span class="copy-btn">Copy</span>
+    </div>
+
+    <p>Expected output:</p>
+    <div class="inline-terminal" style="max-width: 700px; cursor: default;">
+        <code>openjdk version "25.0.2" 2026-01-20<br>
+OpenJDK Runtime Environment Eliya (build 25.0.2+1-Eliya)<br>
+OpenJDK 64-Bit Server VM Eliya (build 25.0.2+1-Eliya, mixed mode, sharing)</code>
+    </div>
+
+    <p style="margin-top: 2rem;">Confirm the Eliya-specific flag is present:</p>
+    <div class="inline-terminal" style="max-width: 700px;"
+        onclick="copyToClipboard('java -XX:+PrintFlagsFinal -version 2>&amp;1 | grep UseEliyaDefaults');" title="Click to copy">
+        <code>java -XX:+PrintFlagsFinal -version 2>&1 | grep UseEliyaDefaults</code>
+        <span class="copy-btn">Copy</span>
+    </div>
+</section>
+
+<div style="margin-top: 5rem; text-align: center;">
+    <a href="/product/eliya/user-guide/" class="org-link org-link--internal">← user guide</a>
+</div>

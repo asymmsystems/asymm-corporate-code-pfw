@@ -1,0 +1,117 @@
+title=Eliya — Security
+description=Eliya's security hardening, vulnerability reporting address, CPU commitment, and advisories.
+type=page
+toc=true
+status=published
+~~~~~~
+
+<nav class="eliya-breadcrumb" aria-label="Breadcrumb"><span class="crumb-collapse" role="button" tabindex="0" onclick="this.parentElement.classList.toggle(&apos;expanded&apos;)">~ / &hellip;</span><span class="crumb-hidden"><span class="crumb-sep">/</span><a href="/">asymm</a></span><span class="crumb-hidden"><span class="crumb-sep">/</span>product</span><span class="crumb-sep">/</span><a href="/product/eliya.html">eliya</a><span class="crumb-sep">/</span><span class="crumb-leaf">security</span></nav>
+
+<header class="page-header">
+    <span class="section-kicker">Eliya</span>
+    <h1>Security</h1>
+    <p style="max-width: 60ch;">Eliya ships with hardened defaults that are active on every
+        JVM invocation, a clear disclosure process, and a quarterly CPU commitment aligned with upstream
+        OpenJDK.</p>
+</header>
+
+<section style="margin-bottom: 5rem;">
+    <h2 class="section-title">Reporting a vulnerability</h2>
+    <p style="max-width: 70ch;">Email
+        <a href="mailto:security@asymm.systems" class="org-link org-link--inline org-link--external">security@asymm.systems</a>.
+        Responsible disclosure policy: acknowledgement within 72 hours, remediation target within 30 days
+        for high-severity issues. Public advisories are published after fixes ship.</p>
+
+    <p style="max-width: 70ch; margin-top: 1rem;">Do not file security issues as GitHub Issues
+        on the public repo. Upstream OpenJDK vulnerabilities should be reported to
+        <a href="https://openjdk.org/groups/vulnerability/report" class="org-link org-link--inline org-link--external">the OpenJDK Vulnerability Group</a>;
+        Eliya-specific issues (patches, packaging, configuration) come to us.</p>
+</section>
+
+<section style="margin-bottom: 5rem;">
+    <h2 class="section-title">Hardening, always on</h2>
+    <p style="max-width: 70ch; margin-bottom: 1.5rem;">Eliya modifies
+        <code>conf/security/java.security</code> in the overlay so hardening is active from the first JVM
+        invocation — no flags required. This is separate from
+        <code>-XX:+UseEliyaDefaults</code> (which controls GC and performance, not security).</p>
+
+    <table class="clinical-table">
+        <thead>
+            <tr>
+                <th>Category</th>
+                <th>Default</th>
+                <th>Rationale</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>TLS protocols</td>
+                <td>SSLv3, TLS 1.0, TLS 1.1 disabled</td>
+                <td>Known-broken. Modern enterprise policy baseline.</td>
+            </tr>
+            <tr>
+                <td>Minimum key sizes</td>
+                <td>RSA 2048, DSA 2048, DH 2048, EC 224</td>
+                <td>NIST guidance post-2024.</td>
+            </tr>
+            <tr>
+                <td>Weak cipher suites</td>
+                <td>RC4, DES, 3DES, MD5 blocked</td>
+                <td>No legitimate production use case.</td>
+            </tr>
+            <tr>
+                <td>Ephemeral DH</td>
+                <td>2048-bit enforced</td>
+                <td>Forward secrecy at modern strength.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p style="max-width: 70ch; margin-top: 2rem; font-size: 0.95rem;">
+        If a specific deployment genuinely needs vanilla defaults (legacy interoperability), use
+        <code>-Djava.security.properties==&lt;path-to-vanilla-java.security&gt;</code> (double equals
+        overrides rather than appends). Not recommended for general use.
+    </p>
+</section>
+
+<section style="margin-bottom: 5rem;">
+    <h2 class="section-title">Patch commitment</h2>
+    <ul style="max-width: 70ch; line-height: 1.8;">
+        <li><strong>Quarterly CPU:</strong> Eliya publishes within two weeks of each upstream OpenJDK CPU
+            (third Tuesday of January, April, July, October).</li>
+        <li><strong>CVE-triggered rebuild:</strong> If upstream releases an out-of-cycle patch for a
+            critical CVE, Eliya targets one week to ship.</li>
+        <li><strong>No SLA:</strong> Eliya does not today offer commercial support SLAs. The target windows
+            above are commitments, not contractual guarantees. Enterprise support is a Phase 2
+            consideration.</li>
+    </ul>
+
+    <p style="max-width: 70ch; margin-top: 1.5rem; font-size: 0.95rem;">
+        See the
+        <a href="/product/eliya/lifecycle.html" class="org-link org-link--inline org-link--internal">lifecycle page</a>
+        for the forward CPU calendar.
+    </p>
+</section>
+
+<section style="margin-bottom: 5rem;">
+    <h2 class="section-title">Advisories</h2>
+    <p style="max-width: 70ch;">Each Eliya release documents the upstream CVEs it addresses
+        plus any Eliya-specific patches. Canonical advisory list:
+        <a href="https://github.com/asymmsystems/eliya-jdk/blob/main/PATCHES.md" class="org-link org-link--inline org-link--external">PATCHES.md on GitHub</a>.</p>
+</section>
+
+<section class="technical-inset">
+    <div style="max-width: 800px; margin: 0 auto;">
+        <h3>TCK compliance</h3>
+        <p>Eliya is built from upstream OpenJDK source and preserves the Technology Compatibility Kit
+            compliance of upstream builds. Asymm Systems has not independently submitted Eliya to Oracle's
+            TCK programme — an independent TCK run is planned for JDK 25.0.3.</p>
+        <p style="margin-top: 1rem; font-size: 0.9rem;">
+            This is the honest framing. Eliya is not dishonestly claiming certifications it hasn't earned.
+        </p>
+    </div>
+</section>
+
+<div style="margin-top: 5rem; text-align: center;">
+    <a href="/product/eliya.html" class="org-link org-link--internal">← back to Eliya</a>
+</div>
