@@ -65,7 +65,7 @@ asymm-corporate-code-pfw/
 └── .github/workflows/
     ├── preview.yml                      develop branch → preview deploy
     ├── production.yml                   v* tag       → production deploy
-    └── validate.yml                     PRs to develop/master → build verification
+    └── validate.yml                     PRs to develop/main → build verification
 ```
 
 ## Adding Content
@@ -124,7 +124,7 @@ CI/CD is via **GitHub Actions + Cloudflare Pages**, following [git-flow](https:/
 **Branches:**
 
 - `develop` — integration branch. Push here triggers preview deploy.
-- `master` — production. Only tagged releases (`vYYYY.MM.DD`) deploy to production.
+- `main` — production. Only tagged releases (`vYYYY.MM.DD`) deploy to production.
 - `feature/*` — work branches, merged into `develop` via PR.
 
 **Workflow:**
@@ -132,8 +132,8 @@ CI/CD is via **GitHub Actions + Cloudflare Pages**, following [git-flow](https:/
 | Trigger | Workflow | Effect |
 |---|---|---|
 | Push to `develop` | `preview.yml` | Builds + deploys to `https://develop.asymm-corporate-code-pfw.pages.dev` |
-| PR to `develop` or `master` | `validate.yml` | Build verification only (no deploy) |
-| Tag `v*` on `master` | `production.yml` | Builds + deploys to `https://asymm.systems` |
+| PR to `develop` or `main` | `validate.yml` | Build verification only (no deploy) |
+| Tag `v*` on `main` | `production.yml` | Builds + deploys to `https://asymm.systems` |
 
 **Required GitHub Secrets** (Settings → Secrets and variables → Actions):
 
@@ -144,10 +144,10 @@ CI/CD is via **GitHub Actions + Cloudflare Pages**, following [git-flow](https:/
 
 ```bash
 # from develop, integration tested, preview deploy verified:
-git checkout master
+git checkout main
 git merge develop --no-ff
 git tag v$(date +%Y.%m.%d)
-git push origin master --tags
+git push origin main --tags
 # production.yml fires on the tag push
 ```
 
