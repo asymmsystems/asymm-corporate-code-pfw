@@ -1,70 +1,20 @@
 title=Eliya
 description=The light build of OpenJDK — carrier-grade runtime for telecom and standards-driven industries.
-type=product_page
+type=product_home
 status=published
+hero_badge=JDK 25 LTS — available on SDKman
+hero_title=Eliya
+hero_text=The light build of OpenJDK. Carrier-grade JVM infrastructure with telecom-optimised runtime defaults and enterprise-hardened security, shipped by Asymm Systems.
+hero_install_command=sdk install java 25.0.2-eliya
+hero_cta_primary=All downloads
+hero_cta_primary_href=/product/eliya/downloads.html
+hero_cta_secondary=User guide
+hero_cta_secondary_href=/product/eliya/user-guide/
+hero_visual_include=/brand/eliya-brand.ftl
+eliya_theme=color
+eliya_trigger=auto
+eliya_rounds=3
 ~~~~~~
-
-<!-- Hero -->
-<section class="product-hero" style="display: grid; grid-template-columns: 1.2fr 1fr; align-items: center; gap: 4rem;">
-    <div class="hero-text-content">
-        <div class="product-hero-badge">
-            <span class="dot"></span>
-            JDK 25 LTS — available on SDKman
-        </div>
-        <h1 class="product-title">Eliya</h1>
-        <p class="product-subtitle">The light build of OpenJDK. Carrier-grade JVM infrastructure with
-            telecom-optimised runtime defaults and enterprise-hardened security, shipped by Asymm Systems.</p>
-
-        <div class="inline-terminal" style="max-width: 500px; margin-top: 2.5rem;"
-            onclick="copyToClipboard('sdk install java 25.0.2-eliya');" title="Click to copy">
-            <code>sdk install java 25.0.2-eliya</code>
-            <span class="copy-btn">Copy</span>
-        </div>
-
-        <div style="margin-top: 1.5rem; display: flex; gap: 1.5rem; flex-wrap: wrap;">
-            <a href="/product/eliya/downloads.html" class="org-link org-link--internal">All downloads</a>
-            <a href="/product/eliya/user-guide/" class="org-link org-link--internal">User guide</a>
-        </div>
-    </div>
-
-    <!-- Animated watermark (unchanged from prior page) -->
-    <div class="hero-visual" style="position: relative; display: flex; justify-content: center;">
-        <svg class="eliya-svg-logo" viewBox="0 0 399 391" fill="none" xmlns="http://www.w3.org/2000/svg"
-            style="width: 100%; max-width: 400px;">
-            <g transform="translate(0.5,0.5)">
-                <path d="M 137 360 Q 17 310 27 170" stroke="var(--border-normal)" stroke-width="20" stroke-miterlimit="10" />
-                <path d="M 133 359.5 L 221 359.5" stroke="var(--border-normal)" stroke-width="20" stroke-miterlimit="10" />
-                <path d="M 17 170 L 337 170" stroke="var(--border-normal)" stroke-width="20" stroke-miterlimit="10" />
-                <path d="M 7 382 L 367 382" stroke="var(--border-normal)" stroke-width="15" stroke-miterlimit="10" />
-                <path d="M 217 360 Q 337 310 327 170" stroke="var(--border-normal)" stroke-width="20" stroke-miterlimit="10" />
-                <path d="M 267 330 Q 377 280 387 230 Q 397 180 327 200" stroke="var(--border-normal)" stroke-width="20" stroke-miterlimit="10" />
-                <path id="hero-smoke-1" d="M 177 150 L 177 70" stroke="var(--color-rose)" stroke-width="20" stroke-miterlimit="10" style="transition: d 0.8s ease-in-out;" />
-                <path id="hero-smoke-2" d="M 137 150 L 137 110" stroke="var(--color-rose)" stroke-width="20" stroke-miterlimit="10" style="transition: d 0.8s ease-in-out;" />
-                <path id="hero-smoke-3" d="M 217 150 L 217 10" stroke="var(--color-rose)" stroke-width="20" stroke-miterlimit="10" style="transition: d 0.8s ease-in-out;" />
-            </g>
-        </svg>
-    </div>
-</section>
-
-<script>
-    document.addEventListener('DOMContentLoaded', () => {
-        const b1 = document.getElementById('hero-smoke-1');
-        const b2 = document.getElementById('hero-smoke-2');
-        const b3 = document.getElementById('hero-smoke-3');
-        const paths = [
-            ['M 177 150 L 177 70', 'M 137 150 L 137 110', 'M 217 150 L 217 10'],
-            ['M 177 150 L 177 10', 'M 137 150 L 137 60', 'M 217 150 L 217 110']
-        ];
-        let currentIdx = 0;
-        setInterval(() => {
-            currentIdx = (currentIdx + 1) % paths.length;
-            const set = paths[currentIdx];
-            b1.setAttribute('d', set[0]);
-            b2.setAttribute('d', set[1]);
-            b3.setAttribute('d', set[2]);
-        }, 1500);
-    });
-</script>
 
 <!-- Feature cards -->
 <section class="product-features">

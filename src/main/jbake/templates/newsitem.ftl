@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<#include "header.ftl">
+<#include "/header.ftl">
 </head>
 <body>
 <div class="container">
     <nav style="padding-top: 3rem;">
-        <div class="nav-brand"><#include "brand.ftl"></div>
+        <div class="nav-brand"><#include "/brand/asymm-brand.ftl"></div>
     </nav>
 </div>
 
@@ -30,6 +30,6 @@
     </article>
 </div>
 
-<#include "menu.ftl">
+<#include "/menu/menu.ftl">
 </body>
 </html>

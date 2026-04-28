@@ -27,7 +27,7 @@
     --accent-asymmetric: var(--color-rose-light);
     --accent-brand-hover: var(--color-rose);
     --accent-brand-hover: var(--color-rose);
-    --border-subtle: rgba(0, 0, 0, 0.06);
+    --border-subtle: #E6E6E6;
     --border-medium: rgba(0, 0, 0, 0.03);
     --border-normal: #666666;
 
@@ -37,6 +37,115 @@
 
     --layout-max-width: 1440px;
     --transition-smooth: all 0.5s cubic-bezier(0.25, 0.8, 0.25, 1);
+
+    /* ============================================================
+       Typography tokens — naming: --t-<property>-<specific>
+       Sizes, line-heights, letter-spacings, weights are all
+       centrally defined here. Eight presets below consume them.
+       ============================================================ */
+
+    /* Sizes (--t-size-*) */
+    --t-size-display-xl: clamp(2.5rem, 4vw, 4.2rem);  /* hero h1 */
+    --t-size-display-l:  3rem;                        /* page h1 */
+    --t-size-display-m:  2.2rem;                      /* section h2 */
+    --t-size-display-s:  1.4rem;                      /* card / sub-section h3 */
+    --t-size-body:       1.1rem;                      /* long-form prose */
+    --t-size-ui:         1rem;                        /* card / form / nav text */
+    --t-size-caption:    0.85rem;                     /* meta, captions, code inline */
+    --t-size-kicker:     0.8rem;                      /* uppercase labels, badges */
+
+    /* Line-heights (--t-lh-*) */
+    --t-lh-tight:    1.1;   /* display xl/l */
+    --t-lh-snug:     1.2;   /* display m/s */
+    --t-lh-relaxed:  1.7;   /* body / ui prose */
+    --t-lh-meta:     1.4;   /* caption / kicker */
+
+    /* Letter-spacings (--t-ls-*) */
+    --t-ls-display: -0.02em;  /* display headings */
+    --t-ls-kicker:   0.1em;   /* uppercase labels */
+
+    /* Weights (--t-weight-*) */
+    --t-weight-light:    300;  /* display headings */
+    --t-weight-regular:  400;  /* body, ui, caption, h3 */
+    --t-weight-medium:   500;  /* kicker, CTAs */
+
+    /* ============================================================
+       Spacing tokens — single dimension, two-segment names.
+       ============================================================ */
+
+    --space-xs:  0.5rem;   /* tight UI gaps */
+    --space-sm:  1rem;     /* heading→body separation */
+    --space-md:  1.5rem;   /* paragraph default (most common) */
+    --space-lg:  2rem;     /* section breaks within a block */
+    --space-xl:  3rem;     /* lead-paragraph + major rhythm */
+}
+
+/* ============================================================
+   Eight typography presets. Existing selectors @extend the
+   appropriate preset to inherit the typography skeleton, then
+   add their own colour / family / margin overrides per use.
+   These classes are also usable directly in HTML on new
+   elements (`<h1 class="t-display-xl">`).
+   ============================================================ */
+
+.t-display-xl {
+    font-family: var(--font-display);
+    font-size: var(--t-size-display-xl);
+    font-weight: var(--t-weight-light);
+    line-height: var(--t-lh-tight);
+    letter-spacing: var(--t-ls-display);
+}
+
+.t-display-l {
+    font-family: var(--font-display);
+    font-size: var(--t-size-display-l);
+    font-weight: var(--t-weight-light);
+    line-height: var(--t-lh-tight);
+    letter-spacing: var(--t-ls-display);
+}
+
+.t-display-m {
+    font-family: var(--font-body);
+    font-size: var(--t-size-display-m);
+    font-weight: var(--t-weight-medium);
+    line-height: var(--t-lh-snug);
+    letter-spacing: var(--t-ls-display);
+    color: var(--text-secondary);
+}
+
+.t-display-s {
+    font-family: var(--font-body);
+    font-size: var(--t-size-display-s);
+    font-weight: var(--t-weight-medium);
+    line-height: var(--t-lh-snug);
+    color: var(--text-secondary);
+}
+
+.t-body {
+    font-size: var(--t-size-body);
+    font-weight: var(--t-weight-regular);
+    line-height: var(--t-lh-relaxed);
+}
+
+.t-ui {
+    font-size: var(--t-size-ui);
+    font-weight: var(--t-weight-regular);
+    line-height: var(--t-lh-relaxed);
+}
+
+.t-caption {
+    font-size: var(--t-size-caption);
+    font-weight: var(--t-weight-regular);
+    line-height: var(--t-lh-meta);
+}
+
+.t-kicker {
+    font-family: var(--font-body);
+    font-size: var(--t-size-kicker);
+    font-weight: var(--t-weight-medium);
+    line-height: var(--t-lh-meta);
+    letter-spacing: var(--t-ls-kicker);
+    text-transform: uppercase;
 }
 
 /* Reset */
@@ -91,7 +200,7 @@ body {
     height: 100%;
     display: inline-flex;
     align-items: center;
-    padding: 0 1rem;
+    padding: 0 1rem 0 0.2rem;
 }
 
 .ide-status-bar a:hover {
@@ -133,6 +242,75 @@ body {
     /* Optical alignment */
 }
 
+/* Hierarchical submenus on the status bar — open upward, fixed-position to escape
+   the bar's own overflow-x clip. JS sets .submenu left from trigger's bounding rect. */
+.ide-status-bar .has-submenu {
+    position: relative;
+    height: 100%;
+    display: inline-flex;
+    align-items: center;
+    padding: 0;
+}
+.ide-status-bar .status-trigger {
+    background: none;
+    border: 0;
+    color: #F9F7F6;
+    font: inherit;
+    cursor: pointer;
+    padding: 0 1rem;
+    height: 100%;
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+}
+.ide-status-bar .status-trigger:hover,
+.ide-status-bar .has-submenu[data-open="true"] .status-trigger {
+    background-color: rgba(255, 255, 255, 0.05);
+}
+.ide-status-bar .submenu-caret {
+    font-size: 0.7em;
+    opacity: 0.6;
+    transition: transform 0.15s ease;
+}
+.ide-status-bar .has-submenu[data-open="true"] .submenu-caret {
+    transform: rotate(180deg);
+}
+.ide-status-bar .submenu {
+    position: fixed;
+    bottom: 35px;
+    left: 0;
+    background-color: var(--surface-inverted);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-bottom: 0;
+    list-style: none;
+    margin: 0;
+    padding: 0.4rem 0;
+    width: 220px;
+    display: none;
+    z-index: 1001;
+    box-shadow: 0 -4px 12px rgba(0, 0, 0, 0.3);
+}
+.ide-status-bar .has-submenu[data-open="true"] .submenu {
+    display: block;
+}
+.ide-status-bar .submenu li a {
+    display: block;
+    padding: 0.5rem 1rem;
+    color: #F9F7F6;
+    font-size: 0.8rem;
+    height: auto;
+    white-space: nowrap;
+}
+.ide-status-bar .submenu li a:hover {
+    background-color: rgba(255, 255, 255, 0.08);
+}
+
+/* Mobile drawer indented children for hierarchy */
+.drawer-link--indent {
+    padding-left: 2rem;
+    opacity: 0.85;
+}
+
 a {
     text-decoration: none;
     color: inherit;
@@ -169,23 +347,18 @@ ul {
 }
 
 .asymm-meta h2 {
-    font-size: 0.75rem;
-    font-family: var(--font-code);
-    /* text-transform: uppercase; */
-    letter-spacing: 0.15em;
-    color: var(--color-rose);
-    margin: 0 0 1.5rem 0;
+    @extend .t-display-m;
+    margin: 0 0 var(--space-md) 0;
     border-bottom: 1px solid var(--border-subtle);
-    padding-bottom: 0.5rem;
+    padding-bottom: var(--space-xs);
 }
 
 .asymm-meta-data {
-    font-family: var(--font-body);
-    font-size: 1rem;
+    @extend .t-ui;
     color: var(--text-secondary);
     opacity: 0.7;
-    margin-bottom: 2rem;
-    line-height: 1.8;
+    margin-bottom: var(--space-lg);
+    line-height: 1.7;
 }
 
 .asymm-body {
@@ -231,11 +404,8 @@ form {
 }
 
 .form-group label {
-    font-family: var(--font-body);
-    font-size: 1rem;
-    font-weight: 400;
+    @extend .t-ui;
     color: var(--text-primary);
-    /* letter-spacing: -0.01em; */
 }
 
 .form-group label .required {
@@ -244,40 +414,49 @@ form {
 }
 
 .form-group label .optional {
-    font-size: 0.8rem;
+    @extend .t-caption;
     color: var(--text-secondary);
     opacity: 0.6;
-    font-weight: 300;
 }
 
 .form-control {
-    background: #FFFFFF;
+    @extend .t-ui;
+    font-family: var(--font-body);  /* form elements have UA default — set explicitly */
+    appearance: none;  /* strip OS-native chrome (notably select borders) */
+    background-color: #FFFFFF;
     border: 1px solid var(--border-subtle);
     padding: 0.75rem;
-    font-family: var(--font-body);
-    font-size: 1rem;
     color: var(--text-primary);
-    transition: var(--transition-smooth);
-    border-radius: 2px;
-    width: 100%;
-    font-weight: 300;
+    transition: border-color 0.2s ease, box-shadow 0.2s ease;
     border-radius: 4px;
+    width: 100%;
+    font-weight: var(--t-weight-light);
 }
 
+/* Placeholder appearance for <input>/<textarea> — opacity is fine here
+   because ::placeholder is a sub-element, not the whole field. */
 .form-control::placeholder {
-    font-size: 0.95rem;
     color: var(--text-secondary);
     opacity: 0.4;
-    font-weight: 300;
+    font-weight: var(--t-weight-light);
+}
+
+/* Placeholder-option appearance for <select> — must NOT use element-level
+   opacity, that would also fade the border and chevron. Use a faded text
+   colour instead so border + chevron stay at full intensity. */
+select.form-control:invalid {
+    color: rgba(51, 51, 51, 0.4);  /* text-secondary @ 40% */
+    font-weight: var(--t-weight-light);
 }
 
 .form-control:focus {
     outline: none;
     border-color: var(--color-rose);
-    background: rgba(255, 255, 255, 0.04);
+    background-color: #FFFFFF;
 }
 
-.form-control:invalid:not(:placeholder-shown) {
+input.form-control:invalid:not(:placeholder-shown),
+textarea.form-control:invalid:not(:placeholder-shown) {
     border-color: var(--color-rose);
     box-shadow: 0 0 0 2px rgba(186, 110, 143, 0.1);
 }
@@ -292,10 +471,11 @@ textarea.form-control {
 select.form-control {
     appearance: none;
     cursor: pointer;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 24 24' fill='none' stroke='%23BA6E8F' stroke-width='2' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='16' height='16' viewBox='0 0 24 24' fill='none' stroke='%23C8C8C8' stroke-width='2.5' stroke-linecap='round' stroke-linejoin='round'%3E%3Cpolyline points='6 9 12 15 18 9'%3E%3C/polyline%3E%3C/svg%3E");
     background-repeat: no-repeat;
-    background-position: right 1.25rem center;
-    padding-right: 3rem;
+    background-position: right 1rem center;
+    background-size: 16px 16px;
+    padding-right: 2.75rem;
 }
 
 /* Survey / Structured Form Components */
@@ -317,10 +497,10 @@ select.form-control {
 
 
 .checkbox-label {
+    @extend .t-caption;
     display: flex;
     align-items: center;
     gap: 0.8rem;
-    font-size: 0.95rem;
     color: var(--text-secondary);
     cursor: pointer;
 }
@@ -362,8 +542,8 @@ select.form-control {
 }
 
 .form-submit .org-link {
-    font-size: 1.05rem;
-    font-weight: 500;
+    @extend .t-body;
+    font-weight: var(--t-weight-medium);
     letter-spacing: 0.01em;
 }
 
@@ -387,43 +567,31 @@ select.form-control {
 .page-body h1,
 .asymm-body h1,
 .news-post-header h1 {
-    font-family: var(--font-display);
-    font-size: 3rem;
-    font-weight: 300;
+    @extend .t-display-l;
     color: var(--text-primary);
-    margin: 0rem 0 1rem 0;
-    letter-spacing: -0.03em;
-    line-height: 1.1;
+    margin: 0 0 var(--space-sm) 0;
 }
 
 .page-body h2,
 .asymm-body h2,
 .news-content h2 {
-    font-family: var(--font-display);
-    font-size: 2.2rem;
-    font-weight: 300;
-    color: var(--text-primary);
-    margin: 3.5rem 0 1rem 0;
-    letter-spacing: -0.02em;
+    @extend .t-display-m;
+    margin: var(--space-xl) 0 var(--space-sm) 0;
 }
 
 .page-body h3,
 .asymm-body h3,
 .news-content h3 {
-    font-family: var(--font-display);
-    font-size: 1.4rem;
-    font-weight: 400;
-    color: var(--text-primary);
-    margin: 2rem 0 1rem 0;
+    @extend .t-display-s;
+    margin: var(--space-lg) 0 var(--space-sm) 0;
 }
 
 .page-body p,
 .asymm-body p,
 .news-content p {
-    font-size: 1.1rem;
-    line-height: 1.7;
+    @extend .t-body;
     color: var(--text-secondary);
-    margin-bottom: 1.5rem;
+    margin-bottom: var(--space-md);
 }
 
 .page-body hr {
@@ -455,21 +623,16 @@ select.form-control {
 }
 
 .hero-content h1 {
-    font-family: var(--font-display);
-    font-size: clamp(2.5rem, 4vw, 4.2rem);
-    font-weight: 300;
-    line-height: 1.12;
-    letter-spacing: -0.02em;
-    margin-bottom: 2rem;
+    @extend .t-display-xl;
     color: var(--text-primary);
+    margin: 0 0 var(--space-md) 0;
 }
 
 .hero-content p {
-    font-size: clamp(1rem, 1.3vw, 1.25rem);
-    font-weight: 300;
+    @extend .t-body;
     color: var(--text-secondary);
-    max-width: 480px;
-    line-height: 1.6;
+    max-width: 56ch;
+    margin: 0 0 var(--space-lg) 0;
 }
 
 .hero-visual {
@@ -511,32 +674,22 @@ select.form-control {
 }
 
 .stack-item h3 {
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
+    @extend .t-kicker;
     color: var(--text-secondary);
-    margin-bottom: 1.5rem;
-    font-weight: 500;
-    font-family: var(--font-code);
+    margin-bottom: var(--space-md);
 }
 
 .stack-item h2 {
-    font-family: var(--font-display);
-    font-size: clamp(2.5rem, 4vw, 3.5rem);
-    font-weight: 300;
-    margin-bottom: 2rem;
-    letter-spacing: -0.03em;
+    @extend .t-display-xl;
     color: var(--text-primary);
-    line-height: 1.1;
+    margin-bottom: var(--space-lg);
 }
 
 .stack-item p {
-    font-size: 1.35rem;
-    font-weight: 300;
+    @extend .t-body;
     color: var(--text-secondary);
     max-width: 600px;
-    line-height: 1.6;
-    margin-bottom: 3rem;
+    margin-bottom: var(--space-xl);
 }
 
 /* Ghost Buttons — legacy, kept for compatibility */
@@ -629,8 +782,8 @@ select.form-control {
 
 /* CTA variant — just larger */
 .org-cta {
-    font-size: 1.05rem;
-    font-weight: 500;
+    @extend .t-body;
+    font-weight: var(--t-weight-medium);
     letter-spacing: 0.01em;
 }
 
@@ -699,21 +852,14 @@ select.form-control {
 }
 
 .product-card h3 {
-    font-family: var(--font-display);
-    font-size: 1.6rem;
-    font-weight: 400;
-    color: var(--text-primary);
-    margin-bottom: 1.2rem;
-    letter-spacing: -0.02em;
-    line-height: 1.2;
+    @extend .t-display-s;
+    margin-bottom: var(--space-sm);
 }
 
 .product-card p {
-    font-size: 1.05rem;
-    font-weight: 300;
+    @extend .t-body;
     color: var(--text-secondary);
-    line-height: 1.65;
-    margin-bottom: 1.5rem;
+    margin-bottom: var(--space-md);
     flex-grow: 1;
 }
 
@@ -733,15 +879,6 @@ select.form-control {
     white-space: nowrap;
 }
 
-.product-badge {
-    font-family: var(--font-code);
-    font-size: 0.8rem;
-    color: var(--accent-brand-hover);
-    letter-spacing: 0.02em;
-    margin-bottom: 1.5rem;
-    font-weight: 500;
-}
-
 /* Platform Story */
 .platform-story {
     max-width: 800px;
@@ -750,15 +887,13 @@ select.form-control {
 }
 
 .platform-story p {
-    font-size: 1.3rem;
-    font-weight: 300;
+    @extend .t-body;
     color: var(--text-secondary);
-    line-height: 1.7;
-    margin-bottom: 2rem;
+    margin-bottom: var(--space-lg);
 }
 
 .platform-story-oss {
-    font-size: 1.05rem !important;
+    @extend .t-body;
     color: var(--text-secondary);
     opacity: 0.8;
 }
@@ -782,11 +917,10 @@ select.form-control {
 
 /* Footer */
 footer {
+    @extend .t-caption;
     background: var(--surface-inverted);
     color: var(--text-inverted);
     padding: 5rem 0;
-    font-size: 0.95rem;
-    font-weight: 300;
     text-align: center;
 }
 
@@ -800,23 +934,20 @@ footer {
 
 .footer-brand p {
     max-width: 300px;
-    line-height: 1.6;
+    line-height: 1.7;
 }
 
 .footer-column h4 {
+    @extend .t-kicker;
     color: white;
-    font-size: 0.9rem;
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-bottom: 1.5rem;
-    font-weight: 500;
+    margin-bottom: var(--space-md);
 }
 
 .footer-column a {
+    @extend .t-caption;
     display: block;
     color: #888;
-    margin-bottom: 0.75rem;
-    font-size: 0.9rem;
+    margin-bottom: var(--space-xs);
     transition: color 0.3s;
 }
 
@@ -826,11 +957,11 @@ footer {
 }
 
 .copyright {
+    @extend .t-caption;
     margin-top: 6rem;
-    padding-top: 2rem;
+    padding-top: var(--space-lg);
     border-top: 1px solid rgba(255, 255, 255, 0.05);
     color: #666;
-    font-size: 0.85rem;
     text-align: center;
 }
 
@@ -973,11 +1104,8 @@ footer::before {
 
 /* Inner Pages */
 .page-title {
-    font-family: var(--font-display);
-    font-size: 3rem;
-    margin-bottom: 1rem;
-    font-weight: 300;
-    letter-spacing: -0.03em;
+    @extend .t-display-l;
+    margin-bottom: var(--space-sm);
 }
 
 nav {
@@ -990,9 +1118,7 @@ nav {
 }
 
 .nav-contact {
-    font-size: 0.85rem;
-    font-weight: 400;
-    letter-spacing: 0.02em;
+    @extend .t-caption;
     color: var(--text-primary);
 }
 
@@ -1005,8 +1131,9 @@ nav {
 }
 
 .news-link {
+    /* one-off display variant — 1.5rem display family for inline news teasers */
     font-size: 1.5rem;
-    font-weight: 300;
+    font-weight: var(--t-weight-light);
     font-family: var(--font-display);
     color: var(--text-primary);
 }
@@ -1016,8 +1143,8 @@ nav {
 }
 
 .news-date {
+    @extend .t-caption;
     font-family: var(--font-code);
-    font-size: 0.85rem;
     color: var(--text-secondary);
 }
 
@@ -1044,14 +1171,11 @@ fieldset.survey-section {
 }
 
 legend {
-    font-size: 1.3rem;
-    font-weight: 300;
-    font-family: var(--font-display);
+    @extend .t-display-s;
     border-top: 1px solid var(--border-subtle);
     width: 100%;
-    padding-top: 2.5rem;
-    margin-bottom: 2.5rem;
-    color: var(--text-primary);
+    padding-top: var(--space-lg);
+    margin-bottom: var(--space-lg);
 }
 
 fieldset:first-child legend {
@@ -1064,56 +1188,22 @@ fieldset:first-child legend {
 }
 
 form label {
-    font-size: 1rem;
+    @extend .t-ui;
     color: var(--text-primary);
     display: block;
-    margin-bottom: 0.5rem;
-    font-weight: 400;
+    margin-bottom: var(--space-xs);
 }
 
 form label .optional {
+    @extend .t-caption;
     color: var(--text-secondary);
-    font-size: 0.85rem;
-    font-weight: 400;
 }
 
-input[type="text"],
-input[type="email"],
-textarea,
-select {
-    width: 100%;
-    /* background: transparent; */
-    border: none;
-    border: 1px solid var(--border-subtle);
-    padding: 0.75rem;
-    color: var(--text-primary);
-    font-family: var(--font-body);
-    font-size: 1rem;
-    border-radius: 0;
-    transition: var(--transition-smooth);
-    font-weight: 300;
-    border-radius: 4px;
-}
-
-input:focus,
-textarea:focus,
-select:focus {
-    outline: none;
-    border-color: var(--text-primary);
-}
-
-select:invalid {
-    color: #A0AEC0;
-}
-
+/* Dropdown <option> elements when the menu is open — most browsers render
+   the OPEN dropdown using the OS native widget regardless of CSS, but the
+   options that DO honour CSS get this. */
 select option {
     color: var(--text-primary);
-}
-
-input::placeholder,
-textarea::placeholder {
-    color: #A0AEC0;
-    font-weight: 300;
 }
 
 .checkbox-group {
@@ -1124,14 +1214,14 @@ textarea::placeholder {
 }
 
 .checkbox-label {
+    @extend .t-ui;
     display: flex;
     align-items: flex-start;
     gap: 0.75rem;
-    font-size: 1rem;
     cursor: pointer;
     color: var(--text-secondary);
-    line-height: 1.4;
-    font-weight: 300;
+    line-height: var(--t-lh-meta);  /* tighter than ui's 1.7 — 2-line checkbox labels look better */
+    font-weight: var(--t-weight-light);
 }
 
 .checkbox-label input {
@@ -1143,24 +1233,22 @@ textarea::placeholder {
 }
 
 .btn-primary {
+    @extend .t-caption;
+    font-family: var(--font-body);  /* <button> has UA default — set explicitly */
     background: var(--text-primary);
     color: #fff;
     padding: 1.25rem 3rem;
     border-radius: 100px;
-    font-family: var(--font-body);
-    font-size: 0.95rem;
-    font-weight: 400;
     border: none;
     cursor: pointer;
     transition: opacity 0.3s;
-    margin-top: 2rem;
+    margin-top: var(--space-lg);
 }
 
 form .form-note {
-    font-size: 0.95rem;
+    @extend .t-caption;
     margin: 0rem;
     color: var(--text-secondary);
-    font-weight: 300;
     opacity: 0.6;
 }
 
@@ -1177,10 +1265,8 @@ form .form-note {
 
 .form-message h3,
 .survey-message h3 {
-    font-family: var(--font-display);
-    font-size: 1.4rem;
-    margin-bottom: 0.5rem;
-    color: var(--text-primary);
+    @extend .t-display-s;
+    margin-bottom: var(--space-xs);
 }
 
 .form-message.success,
@@ -1324,26 +1410,22 @@ form .form-note {
     margin-bottom: 4rem;
 }
 
-.section-intro h2 {
-    font-size: 2.2rem;
-    margin-bottom: 1rem;
-    line-height: 1.2;
+.section-intro h2,
+.section-title {
+    @extend .t-display-m;
+    margin: 0 0 var(--space-sm) 0;
 }
 
 .section-intro p {
+    @extend .t-body;
     color: var(--text-secondary);
-    font-size: 1.1rem;
-    line-height: 1.6;
 }
 
 .section-kicker {
-    font-size: 0.85rem;
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
+    @extend .t-kicker;
     color: var(--text-secondary);
-    margin-bottom: 1.5rem;
+    margin-bottom: var(--space-md);
     display: block;
-    font-weight: 500;
 }
 
 /* Products Bento */
@@ -1358,10 +1440,10 @@ form .form-note {
 }
 
 .market-context>p:first-child {
+    @extend .t-body;
     color: var(--text-secondary);
-    line-height: 1.6;
     max-width: 100%;
-    margin-bottom: 3.5rem;
+    margin-bottom: var(--space-xl);
 }
 
 .market-image-wrapper {
@@ -1407,15 +1489,14 @@ form .form-note {
 
 /* Product inline terminal */
 .inline-terminal {
+    @extend .t-caption;
     background: var(--color-base);
-    padding: 1rem 1.25rem;
-    margin: 1.5rem 0;
+    padding: var(--space-sm) 1.25rem;
+    margin: var(--space-md) 0;
     overflow-x: auto;
-    line-height: 1.4;
     border: 1px dashed var(--border-normal);
     border-radius: 4px;
     font-family: var(--font-code);
-    font-size: 0.9rem;
     color: var(--text-primary);
     display: flex;
     justify-content: space-between;
@@ -1442,7 +1523,7 @@ form .form-note {
 }
 
 .inline-terminal:hover .copy-btn {
-    background: var(--color-sand);
+    background: var(--color-sand-light);
     color: var(--surface-inverted);
 }
 
@@ -1471,6 +1552,100 @@ form .form-note {
 .bento-watermark-eliya {
     height: 100%;
     transition: transform 0.6s ease-in-out;
+}
+
+.bento-watermark-eliya .eliya-svg-logo {
+    width: auto;
+    height: 100%;
+    max-width: none;
+}
+
+/* ============================================================
+   Eliya brand-mark — cup + animated smoke.
+   Markup lives in templates/eliya-branding.ftl OR can be inlined
+   directly in content HTML using the same class names.
+   Parameters: theme (color/mono/watermark), trigger (auto/hover),
+   rounds (infinite|N) via inline style="--eliya-rounds:N".
+   ============================================================ */
+.eliya-svg-logo {
+    width: 100%;
+    max-width: 400px;
+    display: block;
+}
+.eliya-svg-logo .eliya-cup-stroke {
+    stroke: var(--border-normal);
+    stroke-width: 20;
+    stroke-miterlimit: 10;
+    fill: none;
+}
+.eliya-svg-logo .eliya-cup-base {
+    stroke-width: 15;
+}
+.eliya-svg-logo .eliya-smoke {
+    stroke-miterlimit: 10;
+    fill: none;
+}
+.eliya-svg-logo .eliya-smoke-1 { stroke-width: 18; }
+.eliya-svg-logo .eliya-smoke-2 { stroke-width: 14; }
+.eliya-svg-logo .eliya-smoke-3 { stroke-width: 16; }
+
+/* Theme variants */
+.eliya-svg-logo--color .eliya-smoke {
+    stroke: var(--color-rose);
+}
+.eliya-svg-logo--mono .eliya-smoke {
+    stroke: var(--text-primary);
+    opacity: 0.55;
+}
+.eliya-svg-logo--watermark .eliya-cup-stroke,
+.eliya-svg-logo--watermark .eliya-smoke {
+    stroke: #e6e6e6;
+}
+
+/* Trigger: auto — autoplay continuously */
+.eliya-svg-logo--auto .eliya-smoke-1 {
+    animation: eliya-smoke-1-anim 1.5s ease-in-out var(--eliya-rounds, infinite);
+}
+.eliya-svg-logo--auto .eliya-smoke-2 {
+    animation: eliya-smoke-2-anim 1.5s ease-in-out var(--eliya-rounds, infinite);
+    animation-delay: 0.15s;
+}
+.eliya-svg-logo--auto .eliya-smoke-3 {
+    animation: eliya-smoke-3-anim 1.5s ease-in-out var(--eliya-rounds, infinite);
+    animation-delay: 0.3s;
+}
+
+/* Trigger: hover — animate when .eliya-trigger-parent ancestor is hovered */
+.eliya-trigger-parent:hover .eliya-svg-logo--hover .eliya-smoke-1 {
+    animation: eliya-smoke-1-anim 1.5s ease-in-out var(--eliya-rounds, 1);
+}
+.eliya-trigger-parent:hover .eliya-svg-logo--hover .eliya-smoke-2 {
+    animation: eliya-smoke-2-anim 1.5s ease-in-out var(--eliya-rounds, 1);
+    animation-delay: 0.15s;
+}
+.eliya-trigger-parent:hover .eliya-svg-logo--hover .eliya-smoke-3 {
+    animation: eliya-smoke-3-anim 1.5s ease-in-out var(--eliya-rounds, 1);
+    animation-delay: 0.3s;
+}
+
+/* Straight-line smoke that grows tall at 50% and returns to rest at 100% */
+@keyframes eliya-smoke-1-anim {
+    0%, 100% { d: path('M 177 150 L 177 70'); }
+    50%      { d: path('M 177 150 L 177 10'); }
+}
+@keyframes eliya-smoke-2-anim {
+    0%, 100% { d: path('M 137 150 L 137 110'); }
+    50%      { d: path('M 137 150 L 137 60'); }
+}
+@keyframes eliya-smoke-3-anim {
+    0%, 100% { d: path('M 217 150 L 217 10'); }
+    50%      { d: path('M 217 150 L 217 110'); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .eliya-svg-logo .eliya-smoke {
+        animation: none !important;
+    }
 }
 
 .bento-watermark.is-dialing {
@@ -1503,14 +1678,18 @@ form .form-note {
 }
 
 .bento-content h3 {
-    margin: 1rem 0 0.5rem 0;
-    font-size: 1.6rem;
+    @extend .t-display-s;
+    margin: var(--space-sm) 0 var(--space-xs) 0;
 }
 
-.bento-content p {
+/* Unified card paragraph rule — extends UI preset; .market-context > p:first-child
+   overrides margin-bottom (lead-paragraph treatment) where used. */
+.bento-content p,
+.product-feature-card p,
+.pipeline-step p {
+    @extend .t-ui;
     color: var(--text-secondary);
-    margin-bottom: 2rem;
-    line-height: 1.6;
+    margin-bottom: var(--space-md);
 }
 
 .bento-seed {
@@ -1519,13 +1698,12 @@ form .form-note {
     opacity: 0.7;
 }
 
-.bento-status {
-    /* font-family: var(--font-code); */
-    font-size: 0.65rem;
+.bento-content .bento-status {
+    /* Scoped under .bento-content so the kicker-preset binding (specificity 0,2,0)
+       beats the .bento-content p rule (0,1,1) which would otherwise win on font-size. */
+    @extend .t-kicker;
     color: var(--color-rose);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
-    margin-bottom: 2rem !important;
+    margin-bottom: var(--space-lg);
 }
 
 .product-badge {
@@ -1591,11 +1769,7 @@ form .form-note {
     margin-bottom: 1rem;
 }
 
-.pipeline-step p {
-    color: var(--text-secondary);
-    font-size: 0.95rem;
-    line-height: 1.6;
-}
+/* .pipeline-step p — see unified card paragraph rule above */
 
 .pipeline-connector {
     flex: 0 0 30px;
@@ -1641,7 +1815,7 @@ form .form-note {
 }
 
 .oss-content p {
-    line-height: 1.6;
+    @extend .t-ui;
     margin: 0;
 }
 
@@ -1678,15 +1852,13 @@ form .form-note {
 }
 
 .stat-label {
-    font-size: 0.85rem;
+    @extend .t-kicker;
     color: var(--text-secondary);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
 }
 
 .stats-source {
-    margin-top: 2.5rem;
-    font-size: 0.8rem;
+    @extend .t-caption;
+    margin-top: var(--space-lg);
     color: var(--text-secondary);
     opacity: 0.6;
     text-align: center;
@@ -1746,24 +1918,21 @@ form .form-note {
 }
 
 .news-entry-date {
-    font-family: var(--font-body);
-    font-size: 0.85rem;
+    @extend .t-kicker;
     color: var(--color-rose);
     display: block;
-    margin-bottom: 0.5rem;
-    text-transform: uppercase;
+    margin-bottom: var(--space-xs);
 }
 
 h2.news-entry-title {
-    font-size: 1.6rem;
+    @extend .t-display-s;
     margin: 0.8rem 0;
-    font-family: var(--font-display);
 }
 
 .news-entry-summary {
+    @extend .t-ui;
     color: var(--text-secondary);
-    line-height: 1.6;
-    margin-bottom: 1.5rem;
+    margin-bottom: var(--space-md);
 }
 
 .news-content {
@@ -1807,21 +1976,12 @@ h2.news-entry-title {
 }
 
 .news-post-meta {
-    font-family: var(--font-body);
-    font-size: 0.85rem;
+    @extend .t-kicker;
     color: var(--color-rose);
-    text-transform: uppercase;
-    letter-spacing: 0.05em;
 }
 
-/* --- Product Page Specifics (Eliya) --- */
-.product-hero {
-    padding: 8rem 0 6rem 0;
-    position: relative;
-    overflow: hidden;
-}
-
-.product-hero-badge {
+/* --- Hero badge (status pill above the hero h1; renamed from .product-hero-badge) --- */
+.hero-badge {
     display: inline-flex;
     align-items: center;
     gap: 0.5rem;
@@ -1836,26 +1996,11 @@ h2.news-entry-title {
     letter-spacing: 0.05em;
 }
 
-.product-hero-badge .dot {
+.hero-badge .dot {
     width: 6px;
     height: 6px;
-    background: var(--color-rose);
+    background: var(--color-olive);
     border-radius: 50%;
-}
-
-.product-title {
-    font-size: 4.5rem;
-    line-height: 1;
-    margin-bottom: 1.5rem;
-    font-weight: 800;
-}
-
-.product-subtitle {
-    font-size: 1.4rem;
-    color: var(--text-secondary);
-    max-width: 700px;
-    line-height: 1.4;
-    margin-bottom: 3rem;
 }
 
 /* Feature Grid */
@@ -1879,16 +2024,11 @@ h2.news-entry-title {
 }
 
 .product-feature-card h3 {
-    font-size: 1.25rem;
-    margin-bottom: 1rem;
-    color: var(--text-primary);
+    @extend .t-display-s;
+    margin-bottom: var(--space-sm);
 }
 
-.product-feature-card p {
-    font-size: 1rem;
-    line-height: 1.6;
-    color: var(--text-secondary);
-}
+/* .product-feature-card p — see unified card paragraph rule above */
 
 /* Install Tabs */
 .install-section {
@@ -1949,32 +2089,30 @@ h2.news-entry-title {
 }
 
 .technical-inset h3 {
+    @extend .t-display-s;
     color: var(--color-rose);
-    margin-bottom: 1.5rem;
+    margin-bottom: var(--space-md);
 }
 
 .technical-inset p {
+    @extend .t-body;
     opacity: 0.8;
-    line-height: 1.7;
 }
 
 /* Clinical Table */
 .clinical-table {
+    @extend .t-caption;
     width: 100%;
     border-collapse: collapse;
     margin: 4rem 0;
-    font-size: 0.95rem;
 }
 
 .clinical-table th {
+    @extend .t-kicker;
     text-align: left;
     padding: 1.2rem;
     border-bottom: 1px solid var(--border-normal);
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    font-size: 0.75rem;
     color: var(--text-secondary);
-    font-family: var(--font-body);
 }
 
 .clinical-table td {
@@ -2031,20 +2169,24 @@ h2.news-entry-title {
 }
 
 .page-header h1 {
-    margin: 0 0 1rem 0;
+    @extend .t-display-l;
+    margin: 0 0 var(--space-sm) 0;
 }
 
 .page-header p {
+    @extend .t-body;
+    color: var(--text-secondary);
+    margin: 0;
     max-width: 65ch;
 }
 
 /* Terminal-style breadcrumb — matches .ide-status-bar typography */
 .eliya-breadcrumb {
+    @extend .t-caption;
     font-family: var(--font-code);
-    font-size: 0.85rem;
     opacity: 0.75;
-    margin-bottom: 2.5rem;
-    padding-bottom: 1rem;
+    margin-bottom: var(--space-lg);
+    padding-bottom: var(--space-sm);
     border-bottom: 1px solid var(--border-subtle);
     display: flex;
     flex-wrap: wrap;
@@ -2105,20 +2247,18 @@ h2.news-entry-title {
 }
 
 .page-toc {
+    @extend .t-caption;
     position: sticky;
     top: 2rem;
     font-family: var(--font-code);
-    font-size: 0.8rem;
-    padding-left: 1rem;
+    padding-left: var(--space-sm);
     border-left: 1px solid var(--border-subtle);
     max-height: calc(100vh - 4rem);
     overflow-y: auto;
 }
 
 .page-toc .toc-label {
-    text-transform: uppercase;
-    letter-spacing: 0.1em;
-    font-size: 0.7rem;
+    @extend .t-kicker;
     opacity: 0.5;
     margin-bottom: 0.8rem;
     display: block;
@@ -2182,9 +2322,9 @@ h2.news-entry-title {
 }
 
 .eliya-terminal-panel pre {
+    @extend .t-caption;
     font-family: var(--font-code);
-    font-size: 0.85rem;
-    line-height: 1.7;
+    line-height: var(--t-lh-relaxed);  /* multi-line code wants reading leading, override caption's 1.4 */
     color: var(--surface-base);
     opacity: 0.92;
     margin: 0;

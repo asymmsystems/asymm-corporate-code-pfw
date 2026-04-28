@@ -1,5 +1,5 @@
-<#include "header.ftl">
-<#include "menu.ftl">
+<#include "/header.ftl">
+<#include "/menu/menu.ftl">
 
 <div class="container" style="padding-top: 4rem; padding-bottom: 8rem; min-height: 70vh;">
     <article class="page-body">
@@ -33,6 +33,6 @@
 
     </article>
 </div>
-<#include "menu.ftl">
+<#include "/menu/menu.ftl">
 </body>
 </html>

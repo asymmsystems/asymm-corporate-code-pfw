@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<#include "header.ftl">
+<#include "/header.ftl">
 </head>
 <body>
 
 <#if content.hero_title??>
-<#include "hero.ftl">
+<#include "/hero.ftl">
 </#if>
 
 ${content.body}
 
 
-<#include "menu.ftl">
+<#include "/menu/menu.ftl">
 </body>
 </html>
