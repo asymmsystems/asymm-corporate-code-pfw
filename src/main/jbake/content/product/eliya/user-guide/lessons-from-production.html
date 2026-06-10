@@ -104,7 +104,7 @@ Total: reserved=4194304KB, committed=2891024KB<br>
     <h3>Eliya's response</h3>
     <ul>
         <li>GC logging enabled by default — you see variance, not just averages</li>
-        <li>JFR continuous recording captures every individual pause as a structured event</li>
+        <li>JFR continuous (Phase 2) recording captures every individual pause as a structured event</li>
         <li>The <code>-XX:+UseZGC</code> opt-in pattern is documented in the
             <a href="/product/eliya/user-guide/flags-reference.html" class="org-link org-link--inline org-link--internal">flags reference</a>
             for sub-millisecond pause guarantees across a wide range of heap sizes (Generational ZGC
@@ -138,7 +138,7 @@ Total: reserved=4194304KB, committed=2891024KB<br>
 
     <h3>Eliya's response</h3>
     <ul>
-        <li>JFR continuous recording captures the actual thread states (blocked on socket I/O is
+        <li>JFR continuous (Phase 2) recording captures the actual thread states (blocked on socket I/O is
             distinguishable from blocked on JVM internals like GC pauses or lock contention).</li>
         <li>The 24-hour rolling buffer means the recording covers the incident window without
             manual intervention.</li>
@@ -195,7 +195,7 @@ Total: reserved=4194304KB, committed=2891024KB<br>
             under <code>${ELIYA_DIAGNOSTIC_PATH}/${service}/${replica}/heap/</code>.</li>
         <li>The crash log path points to
             <code>${ELIYA_DIAGNOSTIC_PATH}/${service}/${replica}/crash/</code>.</li>
-        <li>JFR continuous recording with <code>dumponexit=true</code> flushes to disk on any
+        <li>JFR continuous (Phase 2) recording with <code>dumponexit=true</code> flushes to disk on any
             termination &mdash; including a fatal crash where the JVM has the chance to write before
             exiting.</li>
         <li>When operators mount <code>${ELIYA_DIAGNOSTIC_PATH}</code> as a persistent volume, all
