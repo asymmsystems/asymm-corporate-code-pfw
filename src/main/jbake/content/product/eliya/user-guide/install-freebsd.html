@@ -1,88 +1,10 @@
 title=Install Eliya on FreeBSD (Research Preview)
-description=Eliya FreeBSD Research Preview — the only vendor-backed OpenJDK build for FreeBSD.
+description=Eliya FreeBSD Research Preview — community-supported research build with production-grade support demand-gated by customer signal.
 type=page
 toc=true
 status=published
+body_template=/content/product/eliya/user-guide/install-freebsd.html
 ~~~~~~
 
-<nav class="eliya-breadcrumb" aria-label="Breadcrumb"><span class="crumb-collapse" role="button" tabindex="0" onclick="this.parentElement.classList.toggle(&apos;expanded&apos;)">~ / &hellip;</span><span class="crumb-hidden"><span class="crumb-sep">/</span><a href="/">asymm</a></span><span class="crumb-hidden"><span class="crumb-sep">/</span>product</span><span class="crumb-sep">/</span><a href="/product/eliya.html">eliya</a><span class="crumb-sep">/</span><a href="/product/eliya/user-guide/">user-guide</a><span class="crumb-sep">/</span><span class="crumb-leaf">install-freebsd</span></nav>
-
-<header class="page-header">
-    <span class="section-kicker">User guide</span>
-    <h1>Install on FreeBSD</h1>
-    <div class="product-hero-badge" style="margin-top: 1rem;">
-        <span class="dot"></span>
-        Research Preview — not production supported
-    </div>
-    <p style="max-width: 60ch; margin-top: 1.5rem;">Eliya ships a FreeBSD build because no
-        other vendor does — it's a signature of Asymm Systems' commitment to JVM infrastructure
-        engineering. The FreeBSD build is honestly labelled as a Research Preview: one manual quarterly
-        release, community-supported, no CVE SLA.</p>
-</header>
-
-<section class="technical-inset" style="margin-bottom: 4rem;">
-    <div style="max-width: 800px; margin: 0 auto;">
-        <h3>Read this first</h3>
-        <ul style="line-height: 1.8; margin-top: 1rem;">
-            <li>No commercial support. No SLA. Issues via GitHub only.</li>
-            <li>Security patches best-effort — target one quarterly manual rebuild per CPU window.</li>
-            <li>Not published to SDKman. Install via direct download only.</li>
-            <li>Built on top of the <a href="https://github.com/battleblow/openjdk25" class="org-link org-link--inline org-link--external">battleblow OpenJDK BSD port</a>
-                — community patches that live outside upstream OpenJDK.</li>
-            <li>If your workload needs enterprise JDK support on FreeBSD, use the FreeBSD ports tree's
-                <code>openjdk25</code> package instead. Eliya FreeBSD is a curiosity / research build.</li>
-        </ul>
-    </div>
-</section>
-
-<section style="margin-bottom: 5rem;">
-    <h2 class="section-title">Download the Preview archive</h2>
-    <p style="max-width: 70ch; font-style: italic; margin-bottom: 1.5rem;">
-        Planned late 2026 — first Preview archive pending.
-    </p>
-
-    <div class="inline-terminal" style="max-width: 700px; margin-bottom: 1rem;"
-        onclick="copyToClipboard('fetch https://github.com/asymmsystems/eliya-jdk/releases/download/v25.0.2-preview/eliya-jdk-25.0.2-freebsd-amd64.tar.gz');" title="Click to copy">
-        <code>fetch https://github.com/asymmsystems/eliya-jdk/releases/download/v25.0.2-preview/eliya-jdk-25.0.2-freebsd-amd64.tar.gz</code>
-        <span class="copy-btn">Copy</span>
-    </div>
-
-    <div class="inline-terminal" style="max-width: 700px; margin-bottom: 1rem;"
-        onclick="copyToClipboard('sudo tar -xzf eliya-jdk-25.0.2-freebsd-amd64.tar.gz -C /usr/local');" title="Click to copy">
-        <code>sudo tar -xzf eliya-jdk-25.0.2-freebsd-amd64.tar.gz -C /usr/local</code>
-        <span class="copy-btn">Copy</span>
-    </div>
-
-    <div class="inline-terminal" style="max-width: 700px;"
-        onclick="copyToClipboard('setenv JAVA_HOME /usr/local/java-25.0.2-eliya; setenv PATH $JAVA_HOME/bin:$PATH');" title="Click to copy">
-        <code>setenv JAVA_HOME /usr/local/java-25.0.2-eliya; setenv PATH $JAVA_HOME/bin:$PATH</code>
-        <span class="copy-btn">Copy</span>
-    </div>
-</section>
-
-<section style="margin-bottom: 5rem;">
-    <h2 class="section-title">Verify</h2>
-    <div class="inline-terminal" style="max-width: 500px;"
-        onclick="copyToClipboard('java -XX:+UseEliyaDefaults -version');" title="Click to copy">
-        <code>java -XX:+UseEliyaDefaults -version</code>
-        <span class="copy-btn">Copy</span>
-    </div>
-
-    <p style="max-width: 70ch; margin-top: 1.5rem;">The version string will include the
-        <code>-preview</code> suffix to make the Preview status visible in every log line.</p>
-</section>
-
-<section style="margin-bottom: 5rem;">
-    <h2 class="section-title">Known caveats</h2>
-    <ul style="max-width: 70ch; line-height: 1.8;">
-        <li>AWT / Swing / JavaFX are unsupported on FreeBSD (as with most JDK BSD ports).</li>
-        <li>Some HotSpot features (ZGC, Shenandoah) may have platform-specific caveats from the BSD
-            patchset. Test before relying.</li>
-        <li>JFR works. <code>jcmd</code> works. Standard server workloads (Netty, Spring Boot, gRPC)
-            work.</li>
-    </ul>
-</section>
-
-<div style="margin-top: 5rem; text-align: center;">
-    <a href="/product/eliya/user-guide/" class="org-link org-link--internal">← user guide</a>
-</div>
+<#-- Body lives at templates/content/product/eliya/user-guide/install-freebsd.html
+     so it can <#include "/macro/waitlist.ftl"> for the production-support waitlist. -->

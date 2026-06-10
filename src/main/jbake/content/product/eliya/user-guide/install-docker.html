@@ -1,104 +1,11 @@
 title=Install Eliya with Docker
-description=Multi-arch OCI images on GitHub Container Registry. Slim and full variants.
+description=Multi-arch OCI images on GitHub Container Registry. Slim and full variants, multi-stage build patterns, volume-mount guidance for diagnostic artefacts.
 type=page
 toc=true
 status=published
+body_template=/content/product/eliya/user-guide/install-docker.html
 ~~~~~~
 
-<nav class="eliya-breadcrumb" aria-label="Breadcrumb"><span class="crumb-collapse" role="button" tabindex="0" onclick="this.parentElement.classList.toggle(&apos;expanded&apos;)">~ / &hellip;</span><span class="crumb-hidden"><span class="crumb-sep">/</span><a href="/">asymm</a></span><span class="crumb-hidden"><span class="crumb-sep">/</span>product</span><span class="crumb-sep">/</span><a href="/product/eliya.html">eliya</a><span class="crumb-sep">/</span><a href="/product/eliya/user-guide/">user-guide</a><span class="crumb-sep">/</span><span class="crumb-leaf">install-docker</span></nav>
-
-<header class="page-header">
-    <span class="section-kicker">User guide</span>
-    <h1>Install with Docker</h1>
-    <p style="max-width: 60ch;">Eliya publishes multi-arch OCI images (amd64 + arm64) to
-        GitHub Container Registry. Use them as a base for your Java application containers or for
-        standalone JVM execution.</p>
-</header>
-
-<section style="margin-bottom: 5rem;">
-    <h2 class="section-title">Pull the image</h2>
-    <p style="max-width: 70ch; font-style: italic; margin-bottom: 1.5rem;">
-        Planned 2026 — container images are a Phase 1 deliverable.
-    </p>
-
-    <div class="inline-terminal" style="max-width: 600px;"
-        onclick="copyToClipboard('docker pull ghcr.io/asymmsystems/eliya:25-lts');" title="Click to copy">
-        <code>docker pull ghcr.io/asymmsystems/eliya:25-lts</code>
-        <span class="copy-btn">Copy</span>
-    </div>
-</section>
-
-<section style="margin-bottom: 5rem;">
-    <h2 class="section-title">Available tags</h2>
-    <table class="clinical-table">
-        <thead>
-            <tr>
-                <th>Tag</th>
-                <th>Base image</th>
-                <th>Purpose</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td><code>25-lts</code></td>
-                <td>debian:12</td>
-                <td>Latest 25 LTS; moves with each CPU</td>
-            </tr>
-            <tr>
-                <td><code>25.0.2</code></td>
-                <td>debian:12</td>
-                <td>Pinned version — does not move</td>
-            </tr>
-            <tr>
-                <td><code>25-lts-slim</code></td>
-                <td>debian:12-slim</td>
-                <td>Minimal runtime; headless only</td>
-            </tr>
-            <tr>
-                <td><code>25.0.2-slim</code></td>
-                <td>debian:12-slim</td>
-                <td>Pinned slim variant</td>
-            </tr>
-        </tbody>
-    </table>
-</section>
-
-<section style="margin-bottom: 5rem;">
-    <h2 class="section-title">Use as a base image</h2>
-
-    <div class="inline-terminal" style="max-width: 700px; cursor: default; font-size: 0.95rem;">
-        <code>FROM ghcr.io/asymmsystems/eliya:25-lts-slim<br>
-<br>
-COPY target/myapp.jar /app/myapp.jar<br>
-WORKDIR /app<br>
-<br>
-ENV JAVA_OPTS="-XX:+UseEliyaDefaults"<br>
-ENTRYPOINT ["sh", "-c", "java $JAVA_OPTS -jar myapp.jar"]</code>
-    </div>
-
-    <p style="max-width: 70ch; margin-top: 1.5rem;">The image sets <code>JAVA_HOME</code>
-        and puts <code>$JAVA_HOME/bin</code> on the <code>PATH</code>. <code>asymm --info</code> is
-        available inside the container.</p>
-</section>
-
-<section style="margin-bottom: 5rem;">
-    <h2 class="section-title">Quick smoke test</h2>
-    <div class="inline-terminal" style="max-width: 700px;"
-        onclick="copyToClipboard('docker run --rm ghcr.io/asymmsystems/eliya:25-lts java -XX:+UseEliyaDefaults -version');" title="Click to copy">
-        <code>docker run --rm ghcr.io/asymmsystems/eliya:25-lts java -XX:+UseEliyaDefaults -version</code>
-        <span class="copy-btn">Copy</span>
-    </div>
-</section>
-
-<section class="technical-inset">
-    <div style="max-width: 800px; margin: 0 auto;">
-        <h3>Multi-arch support</h3>
-        <p>Images support <code>linux/amd64</code> and <code>linux/arm64</code>
-            via the manifest list. Docker and Kubernetes automatically pick the correct architecture at
-            pull time. No explicit arch selection required for the common case.</p>
-    </div>
-</section>
-
-<div style="margin-top: 5rem; text-align: center;">
-    <a href="/product/eliya/user-guide/" class="org-link org-link--internal">← user guide</a>
-</div>
+<#-- Body lives at templates/content/product/eliya/user-guide/install-docker.html
+     so it can <#include "/macro/release.ftl"> and pull version coordinates from
+     one source of truth. -->

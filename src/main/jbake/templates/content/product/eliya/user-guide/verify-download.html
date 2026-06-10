@@ -1,0 +1,105 @@
+<#include "/macro/release.ftl">
+
+<header class="page-header">
+    <span class="section-kicker">User guide</span>
+    <h1>Verify your download</h1>
+    <p style="max-width: 60ch">Every Eliya release ships with <code>SHA256SUMS.txt</code>
+        (checksums) and <code>SHA256SUMS.txt.asc</code> (detached GPG signature) on
+        GitHub Releases. Download both, then verify &mdash; don't run a JDK whose
+        integrity you haven't confirmed.</p>
+</header>
+
+<section>
+    <h3>Download the checksum and signature files</h3>
+    <p>Place these alongside the Eliya archive you downloaded (same working directory):</p>
+
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('curl -LO https://github.com/asymmsystems/eliya-jdk/releases/download/v${eliyaVersion}/SHA256SUMS.txt')" aria-label="Copy command">
+        <code>curl -LO https://github.com/asymmsystems/eliya-jdk/releases/download/v${eliyaVersion}/SHA256SUMS.txt</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('curl -LO https://github.com/asymmsystems/eliya-jdk/releases/download/v${eliyaVersion}/SHA256SUMS.txt.asc')" aria-label="Copy command">
+        <code>curl -LO https://github.com/asymmsystems/eliya-jdk/releases/download/v${eliyaVersion}/SHA256SUMS.txt.asc</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+
+    <p>Both files live next to the archives on the GitHub Release page and apply to
+        <em>every</em> archive in that release &mdash; one checksum file covers Linux,
+        Docker, and any other per-platform tarball.</p>
+
+
+    <h3>One-command verification</h3>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('sha256sum -c SHA256SUMS.txt &amp;&amp; gpg --verify SHA256SUMS.txt.asc')" aria-label="Copy command">
+        <code>sha256sum -c SHA256SUMS.txt && gpg --verify SHA256SUMS.txt.asc</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+
+    <p>Both checks must succeed. If either
+        fails, do not use the archive &mdash; re-download and verify again; if it still fails, report it to
+        <a href="mailto:security@asymm.systems" class="org-link org-link--inline org-link--external">security@asymm.systems</a>.</p>
+
+
+    <h3>First-time setup: import the Asymm key</h3>
+    <p>The first time you verify an Eliya
+        release, import the Asymm Systems signing key:</p>
+
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('curl -sSL https://key.asymm.systems/eliya-signing-key.asc | gpg --import')" aria-label="Copy command">
+        <code>curl -sSL https://key.asymm.systems/eliya-signing-key.asc | gpg --import</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+
+    <p>Or fetch it straight from the domain via <strong>Web Key Directory</strong> (WKD) &mdash;
+        GnuPG resolves the key over HTTPS from <code>openpgpkey.asymm.systems</code>, so the key
+        is served under Asymm's own TLS-secured domain:</p>
+
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('gpg --locate-keys eliya@asymm.systems')" aria-label="Copy command">
+        <code>gpg --locate-keys eliya@asymm.systems</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+
+    <p>Then confirm the fingerprint matches the one published
+        below and on the
+        <a href="/product/eliya/security.html" class="org-link org-link--inline org-link--internal">security page</a>:</p>
+
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('gpg --fingerprint eliya@asymm.systems')" aria-label="Copy command">
+        <code>gpg --fingerprint eliya@asymm.systems</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+
+
+    <h3>Key fingerprint</h3>
+    <p>The canonical Eliya signing-key fingerprint is published here, on the
+        <a href="/product/eliya/security.html" class="org-link org-link--inline org-link--internal">security page</a>,
+        at <code>key.asymm.systems</code>, via Web Key Directory at <code>openpgpkey.asymm.systems</code>,
+        and on public OpenPGP keyservers (<code>keys.openpgp.org</code>, <code>keyserver.ubuntu.com</code>).
+        Cross-verify it across at least two of these independent channels before trusting the imported
+        key &mdash; the publication is intentional (fingerprints are public identifiers by design),
+        and multi-channel agreement is what makes it trustworthy.</p>
+
+    <div class="inline-terminal inline-terminal--static">
+        <code>076D E547 397A 5D27 EECE&nbsp;&nbsp;E0B3 07A9 0689 B71A 158F</code>
+    </div>
+
+    <p>Primary key, Ed25519, created 2026-05-19. This is the
+        <em>certify</em> key; release signatures are made by its dedicated signing
+        subkey, which <code>gpg --verify</code> resolves automatically &mdash; you
+        verify against this one published fingerprint.</p>
+</section>
+
+<section class="aside-box">
+    <h3>Why two-step verification?</h3>
+    <p>SHA256 proves the archive wasn't corrupted in transit.
+        GPG signature proves <em>Asymm Systems signed this exact SHA256SUMS file</em> &mdash;
+        which means an attacker who replaced both the archive and the checksum file on a mirror
+        still can't forge the signature without the signing key.</p>
+    <p>SHA256 alone is not enough. Always run the GPG step.</p>
+</section>
+
+<div class="page-back-nav">
+    <a href="/product/eliya/user-guide/" class="org-link org-link--internal org-link--back">user guide</a>
+</div>

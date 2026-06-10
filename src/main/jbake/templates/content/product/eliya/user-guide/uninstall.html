@@ -1,0 +1,194 @@
+<#include "/macro/release.ftl">
+
+<header class="page-header">
+    <span class="section-kicker">User guide</span>
+    <h1>Uninstall</h1>
+    <p style="max-width: 60ch">Removing Eliya is a runtime swap in reverse. Application code and
+        data are unaffected. For compliance-conscious deployments, read the
+        <a href="#before-you-uninstall" class="org-link org-link--inline org-link--internal">diagnostic-data section</a>
+        before starting &mdash; diagnostic artifacts (JFR recordings, heap dumps, GC logs, crash
+        logs) are NOT removed automatically by uninstall.</p>
+</header>
+
+<section>
+    <h3 id="before-you-uninstall">Before you uninstall &mdash; diagnostic data</h3>
+    <p>Eliya's <code>EliyaProfile=Production</code> writes diagnostic artifacts (JFR recordings,
+        heap dumps, GC logs, crash logs) to <code>/var/log/eliya/</code> by default. For
+        compliance-conscious deployments this data may be regulatory evidence that must be retained
+        beyond the JDK's lifetime.</p>
+
+    <p><strong>Diagnostic data is NOT automatically removed during uninstall.</strong> The commands
+        below remove the Eliya binaries; the diagnostic directory remains intact unless explicitly
+        deleted.</p>
+
+    <p>If your environment requires retention of diagnostic artifacts for audit purposes, verify
+        the data is preserved before uninstall and archive to long-term storage if needed:</p>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('ls -la /var/log/eliya/')" aria-label="Copy command">
+        <code>ls -la /var/log/eliya/</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('tar czf eliya-diagnostics-backup-$(date +%Y%m%d).tar.gz /var/log/eliya/')" aria-label="Copy command">
+        <code>tar czf eliya-diagnostics-backup-$(date +%Y%m%d).tar.gz /var/log/eliya/</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+
+    <p>If your environment requires explicit deletion as part of decommissioning (and retention
+        requirements have already been met):</p>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('sudo rm -rf /var/log/eliya/')" aria-label="Copy command">
+        <code>sudo rm -rf /var/log/eliya/</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+
+    <p>For environments operating under PCI&nbsp;DSS, HIPAA, SOX, or similar frameworks, consult
+        your compliance team before deleting diagnostic data. Some frameworks require retention for
+        1&ndash;7 years depending on the artifact type.</p>
+
+
+    <h3>SDKman</h3>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('sdk uninstall java ${eliyaVersion}-eliya')" aria-label="Copy command">
+        <code>sdk uninstall java ${eliyaVersion}-eliya</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+
+
+    <h3>tar.gz archive</h3>
+    <p>Remove the extracted directory. If you registered it with <code>update-alternatives</code>,
+        deregister first:</p>
+
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('sudo update-alternatives --remove java /opt/java-${eliyaVersion}-eliya/bin/java')" aria-label="Copy command">
+        <code>sudo update-alternatives --remove java /opt/java-${eliyaVersion}-eliya/bin/java</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('sudo rm -rf /opt/java-${eliyaVersion}-eliya')" aria-label="Copy command">
+        <code>sudo rm -rf /opt/java-${eliyaVersion}-eliya</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+
+    <p>Also unset or edit any shell profile lines exporting <code>JAVA_HOME</code> that pointed at
+        the Eliya install path. The <code>asymm</code> CLI lives at
+        <code>${r"${JAVA_HOME}"}/bin/asymm</code> on tar.gz installs, so removing the install
+        directory cleans it up automatically.</p>
+
+
+    <h3>.deb package</h3>
+    <p>Remove package files (configuration preserved):</p>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('sudo apt-get remove eliya-jdk')" aria-label="Copy command">
+        <code>sudo apt-get remove eliya-jdk</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+
+    <p>Remove package files <strong>and</strong> configuration:</p>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('sudo apt-get purge eliya-jdk')" aria-label="Copy command">
+        <code>sudo apt-get purge eliya-jdk</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+
+    <p><code>update-alternatives</code> deregistration and the <code>/usr/bin/asymm</code> symlink
+        removal happen automatically with either command. On <code>purge</code> (not
+        <code>remove</code>), the <code>eliya-diagnostics</code> system group is also removed.
+        Service accounts that were added to that group as part of Eliya integration are not
+        modified &mdash; they remain members of a now-deleted group, which is harmless but worth
+        noting if you audit group memberships post-uninstall.</p>
+
+
+    <h3>.rpm package</h3>
+    <p>Standard removal:</p>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('sudo rpm -e eliya-jdk')" aria-label="Copy command">
+        <code>sudo rpm -e eliya-jdk</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+
+    <p>On RHEL / Fedora / CentOS with dependency cleanup:</p>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('sudo dnf autoremove eliya-jdk')" aria-label="Copy command">
+        <code>sudo dnf autoremove eliya-jdk</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+
+    <p><code>update-alternatives</code> deregistration and the <code>/usr/bin/asymm</code> symlink
+        removal happen automatically. The <code>eliya-diagnostics</code> system group is removed
+        by the postuninstall script; service accounts added to that group are not modified.</p>
+
+
+    <h3>Docker</h3>
+    <p>Stop and remove containers using the image first &mdash; <code>docker rmi</code> fails if
+        running containers reference it:</p>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('docker ps -a --filter &quot;ancestor=ghcr.io/asymmsystems/eliya:25-lts&quot; --format &quot;{{.ID}}&quot; | xargs -r docker rm -f')" aria-label="Copy command">
+        <code>docker ps -a --filter "ancestor=ghcr.io/asymmsystems/eliya:25-lts" --format "{{.ID}}" | xargs -r docker rm -f</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+
+    <p>Then remove the image:</p>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('docker rmi ghcr.io/asymmsystems/eliya:25-lts')" aria-label="Copy command">
+        <code>docker rmi ghcr.io/asymmsystems/eliya:25-lts</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+
+    <p><strong>Note on diagnostic volumes.</strong> If you used the sidecar pattern or mounted
+        <code>/var/log/eliya</code> as a volume, that volume is NOT removed by removing the image.
+        Diagnostic data persists. Remove explicitly only if retention requirements have been met:</p>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('docker volume ls --filter &quot;name=eliya-diagnostics&quot;')" aria-label="Copy command">
+        <code>docker volume ls --filter "name=eliya-diagnostics"</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('docker volume rm eliya-diagnostics')" aria-label="Copy command">
+        <code>docker volume rm eliya-diagnostics</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+
+    <p>For Kubernetes deployments, the image cache on nodes is removed by the node's image
+        garbage collection on its own schedule. To force removal across a cluster, follow your
+        platform's image cleanup procedure.</p>
+
+
+    <h3>After uninstall &mdash; application-side cleanup</h3>
+    <p>Eliya's uninstall doesn't touch application-side configuration that references Eliya.
+        Check for:</p>
+    <ul>
+        <li>systemd unit files referencing <code>/opt/java-${eliyaVersion}-eliya/bin/java</code></li>
+        <li><code>JAVA_HOME</code> exports in shell profiles, application startup scripts, CI/CD
+            configuration</li>
+        <li>Maven Toolchain definitions referencing Eliya</li>
+        <li>Application configuration files referencing diagnostic paths</li>
+        <li>Environment files (e.g., <code>/etc/default/&lt;service&gt;</code>) setting
+            <code>ELIYA_SERVICE_NAME</code> or <code>ELIYA_REPLICA_NAME</code></li>
+    </ul>
+    <p>Update these references to point to the replacement JDK before restarting services.</p>
+
+
+    <h3>Uninstall scenarios</h3>
+    <p>If you're switching to a different OpenJDK distribution (Corretto, Temurin, Zulu, etc.),
+        uninstall is reversible &mdash; your applications run on the replacement JDK without code
+        changes since Eliya is built from the same upstream source.</p>
+    <p>If you're rolling back the Eliya adoption decision entirely (returning to your previous
+        JDK), this is the same procedure as the migration in reverse &mdash; see
+        <a href="/product/eliya/migration.html" class="org-link org-link--inline org-link--internal">Migration guide &mdash; Rollback</a>.</p>
+    <p>Either way, application code and data are unaffected. Eliya is a runtime; uninstall is a
+        runtime swap.</p>
+
+
+    <h3>Future considerations</h3>
+    <p>Phase 2 will add bundled diagnostic tooling (Eclipse MAT headless, async-profiler) and a
+        FIPS-validated variant (<code>eliya-jdk-fips</code> package). Uninstall procedures for
+        these ship with the corresponding variant.</p>
+    <p>Phase 4 compliance profile activation may create additional diagnostic artifacts.
+        Operators uninstalling a Phase 4 Eliya in compliance-active deployments should consult
+        the compliance-profile documentation for any framework-specific retention requirements.</p>
+</section>
+
+<div class="page-back-nav">
+    <a href="/product/eliya/user-guide/" class="org-link org-link--internal org-link--back">user guide</a>
+</div>

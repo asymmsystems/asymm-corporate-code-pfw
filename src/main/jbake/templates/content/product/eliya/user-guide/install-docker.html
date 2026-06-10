@@ -1,0 +1,849 @@
+<#include "/macro/release.ftl">
+
+<header class="page-header">
+    <span class="section-kicker">User guide</span>
+    <h1>Install with Docker</h1>
+    <p style="max-width: 70ch">Eliya publishes multi-arch OCI images (amd64 + arm64) to GitHub
+        Container Registry. Use them as a base for your Java application containers, as a builder
+        image in multi-stage Dockerfiles, or as a diagnostic image for inspecting JVMs running in
+        other containers.</p>
+</header>
+
+<section>
+    <h3>Pull the image</h3>
+    <p>Phase 1 &mdash; target Q3 2026.</p>
+
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('docker pull ghcr.io/asymmsystems/eliya:25-lts')" aria-label="Copy command">
+        <code>docker pull ghcr.io/asymmsystems/eliya:25-lts</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+
+
+    <h3>Available tags</h3>
+    <p>Pick the tag based on your operational policy:</p>
+
+    <ul class="checklist">
+        <li><span class="check-yes" aria-hidden="true">&#10003;</span>
+            <code>25-lts</code> is a moving tag: Asymm pushes a new image to it on each quarterly
+            CPU. A deployment-time pull (CI/CD redeploy, Kubernetes rolling update with
+            <code>imagePullPolicy: Always</code>, or explicit <code>docker pull</code>) is required
+            to pick up the new image. With the default <code>imagePullPolicy: IfNotPresent</code>,
+            a pod that already has the old image will keep running it indefinitely. To ensure
+            each pod restart picks up the latest CPU, set <code>imagePullPolicy: Always</code> on
+            the container spec, or pin to a specific <code>${eliyaVersion}</code> tag and bump
+            explicitly on each CPU.</li>
+        <li><span class="check-yes" aria-hidden="true">&#10003;</span>
+            <code>${eliyaVersion}</code> for environments that pin to a specific version &mdash;
+            the tag is immutable, so <code>docker pull</code> returns the same image every time.</li>
+        <li><span class="check-yes" aria-hidden="true">&#10003;</span>
+            <code>-slim</code> variants for headless server workloads &mdash; smaller base
+            (Debian slim) with no fontconfig/freetype/X11. Default recommendation for application
+            containers.</li>
+        <li><span class="check-yes" aria-hidden="true">&#10003;</span>
+            Full (non-slim) variants when your application uses AWT or Java2D for server-side
+            rendering (PDF generation, chart images, font-metric calculations) &mdash; the full
+            Debian base provides the native <code>fontconfig</code>, <code>freetype</code>, and
+            X11 libraries those paths call into. Also the right choice for diagnostic sidecar
+            containers (see
+            <a href="#diagnostic-patterns" class="org-link org-link--inline org-link--internal">Production diagnostic patterns</a>).</li>
+    </ul>
+
+    <p>Per ADR-00014, Eliya ships images on two orthogonal axes: <strong>base image</strong>
+        (Debian full vs slim vs distroless) and <strong>Java content</strong> (full JDK vs Eliya JRE).
+        Four published tag families per Eliya release. <code>-jre*</code> variants ship Wave 7
+        (after the first signed Linux GA lands on the storefront repo).</p>
+
+    <table class="clinical-table">
+        <thead>
+            <tr>
+                <th>Tag</th>
+                <th>Base image</th>
+                <th>Java content</th>
+                <th>Size (approx)</th>
+                <th>When to use</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code>25-lts</code> / <code>${eliyaVersion}</code></td>
+                <td><code>debian:12</code></td>
+                <td>Full JDK</td>
+                <td>~270 MB</td>
+                <td>Server-side AWT/Java2D rendering; multi-stage builder images; diagnostic
+                    sidecars needing <code>jcmd</code>/<code>jmap</code></td>
+                <td>Available</td>
+            </tr>
+            <tr>
+                <td><code>25-lts-slim</code> / <code>${eliyaVersion}-slim</code></td>
+                <td><code>debian:12-slim</code></td>
+                <td>Full JDK</td>
+                <td>~230 MB</td>
+                <td>Headless apps that still need <code>javac</code>/<code>jlink</code> at runtime
+                    (rare); slim-base CI runners</td>
+                <td>Available</td>
+            </tr>
+            <tr>
+                <td><code>25-lts-jre</code> / <code>${eliyaVersion}-jre</code></td>
+                <td><code>debian:12-slim</code></td>
+                <td>Eliya JRE</td>
+                <td>~110 MB</td>
+                <td><strong>Recommended default for application containers</strong> &mdash; production
+                    headless servers</td>
+                <td>Coming Q4 2026 (Wave 7)</td>
+            </tr>
+            <tr>
+                <td><code>25-lts-jre-distroless</code> / <code>${eliyaVersion}-jre-distroless</code></td>
+                <td><code>gcr.io/distroless/java-base:nonroot</code></td>
+                <td>Eliya JRE</td>
+                <td>~80 MB</td>
+                <td>Hardened production: no shell, no package manager, minimal CVE attack surface.
+                    For compliance-conscious deployments.</td>
+                <td>Coming Q4 2026 (Wave 7)</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p>The <strong>Eliya JRE</strong> is jlinked from the JDK at build time per
+        <a href="https://openjdk.org/jeps/220" class="org-link org-link--inline org-link--external">JEP 220</a>
+        with the Java SE aggregator (full standard library) + production-server essentials
+        (<code>jdk.unsupported</code>, <code>jdk.crypto.cryptoki</code>, <code>jdk.jfr</code>,
+        <code>jdk.management.agent</code>, <code>jdk.attach</code>, <code>jdk.naming.dns</code>,
+        <code>jdk.localedata</code>, <code>jdk.zipfs</code>) per ADR-00014 sec.2.2. Compatible
+        with any standard-Java-SE application; the Production-profile observability (JFR + JMX)
+        works on the JRE image, not just the JDK.</p>
+
+    <p><strong>JavaFX is not bundled.</strong> If your application uses JavaFX, add OpenJFX as
+        an explicit Maven/Gradle dependency or use a JDK distribution that bundles it
+        (e.g. BellSoft Liberica Full). Eliya stays aligned with upstream OpenJDK 25's module
+        set; JavaFX has been a separate project since JDK 11.</p>
+
+
+    <h3>Why Debian?</h3>
+    <p>Eliya's Docker base image uses Debian 12 because of JDK runtime correctness, not because
+        of toolchain richness.</p>
+
+    <p><strong>glibc vs musl.</strong> The JDK has known compatibility issues on musl libc
+        (used by Alpine): DNS resolution edge cases, thread stack size defaults that differ from
+        glibc, some JNI native libraries that fail to load without glibc symbols, and performance
+        characteristics that disadvantage allocation-heavy Java workloads. Upstream OpenJDK
+        treats the musl port (JEP 386) as a separate platform with its own caveats, not as
+        equivalent to glibc Linux. For a JDK distribution positioned for compliance-conscious
+        production, the glibc base is the safer default.</p>
+
+    <p><strong>Per-arch glibc floor.</strong> Eliya pins glibc per architecture
+        to match upstream OpenJDK's reference build: <strong>x86_64
+        &ge; glibc 2.12</strong> (Oracle Linux 6.4 sysroot) and
+        <strong>aarch64 &ge; glibc 2.17</strong> (Oracle Linux 7.6 sysroot).
+        The x86_64 floor is deliberately wider than Temurin's unified 2.17,
+        so an x86_64 Eliya container runs on every glibc &ge; 2.12 host -
+        including older RHEL / CentOS / SLES bases when corporate policy
+        requires them. Full reach matrix is on the <a href="install-linux.html">Linux install guide</a>.</p>
+
+    <p><strong>Predictable operations.</strong> Most Linux production deployments are
+        Debian/Ubuntu or RHEL-derived. Operators inspecting an Eliya container find the same
+        <code>ps</code>, <code>top</code>, <code>kill</code>, <code>bash</code>, and package
+        management conventions they use on host systems &mdash; no busybox flag differences or
+        musl-specific surprises. This matters less for routine work (JDK tools like
+        <code>jcmd</code>, <code>jstack</code>, and the <code>asymm</code> CLI come from the JDK
+        and work regardless of base image) and more for the small fraction of incidents that
+        require below-the-JVM investigation &mdash; <code>strace</code>, <code>lsof</code>,
+        <code>gdb</code>, and the like. For workloads that need AWT/Java2D rendering on the slim
+        image, install the runtime libs explicitly:
+        <code>apt-get install -y fontconfig libfreetype6</code>.</p>
+
+    <p><strong>Predictable lifecycle.</strong> Debian 12 (bookworm) enters Long Term Support on
+        2026-06-10 and is supported through 2028-06-30 for <code>amd64</code> and
+        <code>arm64</code> &mdash; both architectures Eliya targets. The Debian LTS team
+        continues security updates during this window. ELTS (Extended LTS) is a commercial
+        offering from Freexian, not an official Debian project, and is not load-bearing for
+        Eliya's support story. Eliya tracks Debian's release cycle and will migrate base images
+        to Debian 13 (trixie) when it stabilises.</p>
+
+    <p><strong>An Alpine variant is not planned.</strong> A distroless Eliya variant is Phase 2
+        demand-gated; the details and trade-offs are below.</p>
+
+    <h4>Why no Alpine, and what about distroless?</h4>
+    <p>Distroless is a separate question from Debian vs Alpine. A distroless image contains only
+        the JDK and its runtime dependencies &mdash; no shell, no package manager, no diagnostic
+        utilities. The image starts from an effectively empty filesystem (<code>FROM scratch</code>)
+        and adds only the binaries and libraries the application strictly needs. Like all
+        containers, distroless images share the host's Linux kernel; the "minimal" refers to the
+        userspace filesystem, not the kernel.</p>
+
+    <p>Distroless reduces attack surface significantly: an attacker who achieves remote code
+        execution in the container cannot drop into a shell, install tools, or perform
+        reconnaissance with standard utilities. For some compliance frameworks, this matters.</p>
+
+    <p>But distroless is not universal. The standard distroless Java pattern assumes the
+        application:</p>
+    <ul class="checklist">
+        <li><span class="check-yes" aria-hidden="true">&#10003;</span>
+            Is self-contained in a JAR or directory tree.</li>
+        <li><span class="check-yes" aria-hidden="true">&#10003;</span>
+            Does not shell out to external commands (no <code>ProcessBuilder</code> to
+            <code>git</code>, <code>imagemagick</code>, etc.).</li>
+        <li><span class="check-yes" aria-hidden="true">&#10003;</span>
+            Does not need fontconfig or imaging libraries at runtime.</li>
+        <li><span class="check-yes" aria-hidden="true">&#10003;</span>
+            Does not need locale support beyond UTF-8.</li>
+        <li><span class="check-yes" aria-hidden="true">&#10003;</span>
+            Does not need custom CA certificate handling beyond what the JDK provides.</li>
+        <li><span class="check-yes" aria-hidden="true">&#10003;</span>
+            Does not require in-container diagnostic capability.</li>
+    </ul>
+
+    <p>Many modern Java microservices fit these constraints; many enterprise Java applications
+        do not. Operators adopting distroless typically pair it with the sidecar pattern (where
+        diagnostic tooling lives in a separate container) and validate their specific application
+        thoroughly before production rollout.</p>
+
+    <p>A distroless Eliya variant is Phase 2 demand-gated. It requires engineering work beyond a
+        single Dockerfile &mdash; supply-chain control over the included libraries, validation
+        against representative Java application classes, and documentation of application-fit
+        constraints. If your environment requires this level of minimisation (or a Red Hat UBI
+        variant for procurement), sign up at
+        <a href="/product/eliya/downloads.html#waitlist" class="org-link org-link--inline org-link--internal">downloads</a>
+        &mdash; your demand signal helps prioritise the engineering work.</p>
+
+
+    <h3>Use as a base image</h3>
+    <p>The common pattern is to use Eliya's slim image as the runtime base for your application
+        container. The example below shows a minimal Dockerfile that runs a fat JAR with the
+        <code>EliyaProfile=Production</code> profile active by default:</p>
+
+    <div class="inline-terminal inline-terminal--static">
+        <code>FROM ghcr.io/asymmsystems/eliya:25-lts-slim<br>
+<br>
+COPY target/myapp.jar /app/myapp.jar<br>
+WORKDIR /app<br>
+<br>
+ENV JAVA_TOOL_OPTIONS="-XX:EliyaProfile=Production"<br>
+ENTRYPOINT ["java", "-jar", "myapp.jar"]</code>
+    </div>
+
+    <p>The image sets <code>JAVA_HOME</code> and puts <code>$JAVA_HOME/bin</code> on the
+        <code>PATH</code>, so <code>java</code>, <code>javac</code>, <code>jcmd</code>, and the
+        <code>asymm</code> CLI all resolve directly. <code>JAVA_TOOL_OPTIONS</code> is read
+        automatically by the JVM, so the entrypoint is a clean <code>java -jar</code> with no
+        shell wrapper.</p>
+
+
+    <h3>Why direct exec (not <code>sh -c</code>)</h3>
+    <p>The entrypoint uses direct exec &mdash; <code>ENTRYPOINT ["java", "-jar", "myapp.jar"]</code>
+        &mdash; rather than wrapping in a shell &mdash;
+        <code>ENTRYPOINT ["sh", "-c", "java -jar myapp.jar"]</code>. This matters for forensic
+        data capture during orchestrated shutdowns.</p>
+
+    <p>When Kubernetes or Docker stops a container, it sends <code>SIGTERM</code> to PID 1 (the
+        process the container was started with). The JVM is designed to handle <code>SIGTERM</code>
+        cleanly: it triggers shutdown hooks, which include flushing in-memory JFR buffers to disk
+        and writing a final heap dump on exit if configured.</p>
+
+    <p>If you wrap the entrypoint in <code>sh -c</code>, the shell becomes PID 1 instead of the
+        JVM. The shell receives <code>SIGTERM</code> but doesn't propagate it to the Java
+        process. The JVM gets killed by <code>SIGKILL</code> after the grace period &mdash; too
+        late for the shutdown hooks to fire. Result: the JFR events captured immediately before
+        the shutdown &mdash; precisely the data most likely to explain why the orchestrator
+        killed the container &mdash; never reach disk. Heap-dump-on-exit (if configured) also
+        doesn't fire.</p>
+
+    <p>Direct exec keeps the JVM as PID 1. <code>SIGTERM</code> reaches the JVM. Shutdown hooks
+        run. JFR data flushes to disk. The forensic evidence survives the restart.</p>
+
+    <p>This is why <code>EliyaProfile=Production</code> sets <code>dumponexit=true</code> on the
+        JFR recording: the design assumes the JVM will receive its shutdown signals cleanly. The
+        entrypoint pattern matters.</p>
+
+
+    <h3>The <code>asymm</code> CLI inside the container</h3>
+    <p>Every Eliya image bundles the <code>asymm</code> CLI on <code>$PATH</code>. The Phase 1
+        commands (<code>asymm eliya info</code>, <code>verify</code>, <code>doctor</code>,
+        <code>versions</code>, <code>schedule</code>, plus the <code>version</code> commands)
+        are documented in the
+        <a href="/product/eliya/user-guide/cli.html" class="org-link org-link--inline org-link--internal">asymm CLI reference</a>
+        &mdash; the same surface, same behaviour, inside or outside a container.</p>
+
+    <p>Phase 2 will add diagnostic tooling subcommands (<code>asymm eliya analyze-heap</code>,
+        <code>asymm eliya profile</code>, <code>asymm eliya jfr</code> family) that wrap Eclipse
+        MAT headless and async-profiler &mdash; both Phase 2 bundled tools. Phase 3 will add
+        Asymm Forensics subcommands. Three operational patterns for running these tools against
+        a containerised JVM are documented below under
+        <a href="#diagnostic-patterns" class="org-link org-link--inline org-link--internal">Production diagnostic patterns</a>.</p>
+
+
+    <h3>Multi-stage builds</h3>
+    <p>For cases that need a JDK at build time (Maven, Gradle, <code>javac</code>)
+        but only a JRE at runtime, use Eliya's full image as the builder stage and the slim image
+        as the runtime stage:</p>
+
+    <div class="inline-terminal inline-terminal--static">
+        <code># Stage 1: build the application<br>
+FROM ghcr.io/asymmsystems/eliya:25-lts AS builder<br>
+WORKDIR /build<br>
+COPY pom.xml .<br>
+COPY mvnw .<br>
+COPY .mvn ./.mvn<br>
+COPY src ./src<br>
+RUN chmod +x mvnw &amp;&amp; ./mvnw clean package -DskipTests<br>
+<br>
+# Stage 2: run the application<br>
+FROM ghcr.io/asymmsystems/eliya:25-lts-slim<br>
+COPY --from=builder /build/target/myapp.jar /app/myapp.jar<br>
+WORKDIR /app<br>
+ENV JAVA_TOOL_OPTIONS="-XX:EliyaProfile=Production"<br>
+ENTRYPOINT ["java", "-jar", "myapp.jar"]</code>
+    </div>
+
+    <p>The final image contains only the slim runtime plus your application JAR. Build artifacts,
+        Maven cache, and source files don't ship to runtime. The <code>chmod +x mvnw</code>
+        step protects against the Maven wrapper losing its executable bit on cross-platform
+        checkouts (typically Windows-originated commits).</p>
+
+    <p>If you use <code>jlink</code> to produce a minimal custom runtime image, the slim Eliya
+        image is the right runtime base &mdash; <code>jlink</code> output works the same way it
+        does with upstream OpenJDK.</p>
+
+
+    <h3>Mount diagnostic paths</h3>
+    <p>By default, <code>EliyaProfile=Production</code> writes diagnostic artifacts (JFR
+        recordings, heap dumps, GC logs, crash logs) to <code>/var/log/eliya/</code> inside the
+        container. For these to survive container restarts and be inspectable from the host,
+        mount the path as a volume.</p>
+
+    <p><strong>Docker:</strong></p>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('docker run -d --name my-app -v /host/eliya-diagnostics:/var/log/eliya ghcr.io/asymmsystems/eliya:25-lts-slim')" aria-label="Copy command">
+        <code>docker run -d --name my-app \<br>
+&nbsp;&nbsp;-v /host/eliya-diagnostics:/var/log/eliya \<br>
+&nbsp;&nbsp;ghcr.io/asymmsystems/eliya:25-lts-slim</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+
+    <p><strong>docker-compose:</strong></p>
+    <div class="inline-terminal inline-terminal--static">
+        <code>services:<br>
+&nbsp;&nbsp;my-app:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;image: my-app:latest<br>
+&nbsp;&nbsp;&nbsp;&nbsp;environment:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ELIYA_SERVICE_NAME: my-app<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;JAVA_TOOL_OPTIONS: "-XX:EliyaProfile=Production"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;volumes:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- eliya-diagnostics:/var/log/eliya<br>
+<br>
+volumes:<br>
+&nbsp;&nbsp;eliya-diagnostics:</code>
+    </div>
+
+    <p>By default, Docker stores the named volume in <code>/var/lib/docker/volumes/</code>. For
+        host-visible paths, use a bind mount instead:</p>
+    <div class="inline-terminal inline-terminal--static">
+        <code>volumes:<br>
+&nbsp;&nbsp;- ./eliya-diagnostics:/var/log/eliya</code>
+    </div>
+
+    <p><strong>Kubernetes:</strong></p>
+    <div class="inline-terminal inline-terminal--static">
+        <code>apiVersion: v1<br>
+kind: Pod<br>
+spec:<br>
+&nbsp;&nbsp;containers:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;- name: my-app<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;image: my-app:latest<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;env:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- name: ELIYA_SERVICE_NAME<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value: my-app<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;volumeMounts:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- name: eliya-diagnostics<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mountPath: /var/log/eliya<br>
+&nbsp;&nbsp;volumes:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;- name: eliya-diagnostics<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;persistentVolumeClaim:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;claimName: eliya-diagnostics-pvc</code>
+    </div>
+
+    <p>Diagnostic paths use a three-level layout that gives both service grouping and per-replica
+        attribution by default:</p>
+    <div class="inline-terminal inline-terminal--static">
+        <code>/var/log/eliya/${r"${service_name}"}/${r"${replica_name}"}/${r"${category}"}/</code>
+    </div>
+
+    <p><strong>Service name resolution:</strong> <code>ELIYA_SERVICE_NAME</code> env var &rarr;
+        <code>-Deliya.service.name=</code> system property &rarr; <code>HOSTNAME</code> &rarr;
+        literal <code>default</code>.</p>
+
+    <p><strong>Replica name resolution:</strong> <code>ELIYA_REPLICA_NAME</code> env var &rarr;
+        <code>-Deliya.replica.name=</code> system property &rarr; <code>HOSTNAME</code> &rarr;
+        suppressed when equal to service name.</p>
+
+    <p>In Kubernetes, the orchestrator-provided <code>HOSTNAME</code> (pod name) becomes the
+        replica subdirectory automatically. A deployment with three replicas of
+        <code>billing-service</code> produces:</p>
+    <div class="inline-terminal inline-terminal--static">
+        <code>/var/log/eliya/billing-service/billing-service-7d4b9c-xk29p/jfr/<br>
+/var/log/eliya/billing-service/billing-service-7d4b9c-mk44q/jfr/<br>
+/var/log/eliya/billing-service/billing-service-7d4b9c-zr88l/jfr/</code>
+    </div>
+
+    <p>Each pod gets its own subdirectory. Per-replica attribution is filesystem-encoded &mdash;
+        auditors and engineers can list <code>/var/log/eliya/billing-service/</code> to see the
+        full replica history; each subdirectory's name identifies the pod that produced its
+        contents. With <code>docker compose up --scale my-app=3</code>, each container instance
+        receives a distinct <code>HOSTNAME</code> from the Docker runtime, so the same per-replica
+        attribution applies.</p>
+
+    <p>For multiple distinct services sharing the same volume, each service gets its own
+        top-level subdirectory: <code>/var/log/eliya/billing-service/</code>,
+        <code>/var/log/eliya/order-service/</code>, etc.</p>
+
+    <p><strong>Replica suppression.</strong> When the resolved replica name equals the resolved
+        service name (e.g. bare-metal multi-JVM hosts where <code>HOSTNAME</code> matches
+        <code>ELIYA_SERVICE_NAME</code> for each systemd service, or single-JVM hosts where
+        service falls through to <code>HOSTNAME</code>), the replica level is suppressed and
+        paths collapse to two levels (<code>/var/log/eliya/billing-service/jfr/</code>). This
+        avoids redundant <code>${r"${service}"}/${r"${service}"}/</code> nesting on hosts where
+        the hostname carries no per-replica information.</p>
+
+    <p>For deployments wanting deterministic replica names across pod restarts (uncommon, but
+        useful for stateful workloads), set <code>ELIYA_REPLICA_NAME</code> explicitly &mdash; in
+        Kubernetes, <code>valueFrom: fieldRef: fieldPath: metadata.name</code> works.</p>
+
+    <p>For full path strategy documentation including all resolution scenarios, see
+        <a href="/product/eliya/user-guide/flags-reference.html#diagnostic-paths" class="org-link org-link--inline org-link--internal">flags reference &sect;Diagnostic paths</a>.</p>
+
+
+    <h3 id="diagnostic-patterns">Production diagnostic patterns</h3>
+    <p>Eliya supports three operational patterns for diagnosing running JVMs in containerised
+        environments. Pick the one that matches your security posture and operational tooling.</p>
+
+    <p>For environments running APM alongside Eliya, the patterns below complement (rather than
+        replace) APM dashboards. APM tools capture distributed traces and real-time metrics;
+        Eliya captures forensic artefacts on disk that APM structurally cannot produce. See
+        <a href="/research/jvm-forensics-vs-apm.html" class="org-link org-link--inline org-link--internal">JVM forensics vs APM</a>
+        for the architectural distinction.</p>
+
+    <h4>1. Interactive exec &mdash; development and small-scale production</h4>
+    <p>The simplest pattern: enter the running container, run diagnostic commands directly.
+        Suitable for development, staging, and production environments without strict
+        app-container minimisation requirements.</p>
+
+    <p><strong>Docker:</strong></p>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('docker exec -it my-app asymm eliya info')" aria-label="Copy command">
+        <code>docker exec -it my-app asymm eliya info</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('docker exec -it my-app asymm eliya doctor')" aria-label="Copy command">
+        <code>docker exec -it my-app asymm eliya doctor</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('docker exec my-app jcmd 1 GC.heap_dump /var/log/eliya/heap.hprof')" aria-label="Copy command">
+        <code>docker exec my-app jcmd 1 GC.heap_dump /var/log/eliya/heap.hprof</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+
+    <p><strong>Kubernetes:</strong></p>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('kubectl exec -it &lt;pod-name&gt; -- asymm eliya info')" aria-label="Copy command">
+        <code>kubectl exec -it &lt;pod-name&gt; -- asymm eliya info</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('kubectl exec &lt;pod-name&gt; -- jcmd 1 GC.heap_dump /var/log/eliya/heap.hprof')" aria-label="Copy command">
+        <code>kubectl exec &lt;pod-name&gt; -- jcmd 1 GC.heap_dump /var/log/eliya/heap.hprof</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('kubectl cp &lt;pod-name&gt;:/var/log/eliya/heap.hprof ./heap.hprof')" aria-label="Copy command">
+        <code>kubectl cp &lt;pod-name&gt;:/var/log/eliya/heap.hprof ./heap.hprof</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+
+    <p>Works because the Eliya image includes the <code>asymm</code> CLI and standard JDK tooling
+        (<code>jcmd</code>, <code>jstack</code>, <code>jmap</code>, <code>jfr</code>) on every
+        container. The trade-off: the application container ships these tools as part of its
+        runtime, increasing the image surface area.</p>
+
+    <h4>2. Ephemeral diagnostic containers &mdash; recommended for production incident response</h4>
+    <p>For Kubernetes 1.23+ clusters (the typical production cluster as of 2024+), the right
+        pattern for occasional diagnostic access is ephemeral containers &mdash;
+        on-demand diagnostic containers injected into a running pod for the duration of an
+        investigation, then removed. This avoids the cost of an always-running diagnostic
+        sidecar while preserving the security posture benefit (the app container ships no
+        diagnostic tooling).</p>
+
+    <p>When an incident occurs, inject an Eliya diagnostic container into the target pod:</p>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('kubectl debug -it my-app-7d4b9c-xk29p --image=ghcr.io/asymmsystems/eliya:25-lts --target=app -- bash')" aria-label="Copy command">
+        <code>kubectl debug -it my-app-7d4b9c-xk29p --image=ghcr.io/asymmsystems/eliya:25-lts --target=app -- bash</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+
+    <p><code>--target=app</code> shares the PID namespace with the named container, so the
+        ephemeral container can see and inspect the application's JVM via standard JDK tools.
+        Inside the ephemeral container, find the JVM PID and run diagnostic commands:</p>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('pgrep -f java')" aria-label="Copy command">
+        <code>pgrep -f java</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('asymm eliya info')" aria-label="Copy command">
+        <code>asymm eliya info</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('jcmd &lt;jvm-pid&gt; VM.flags')" aria-label="Copy command">
+        <code>jcmd &lt;jvm-pid&gt; VM.flags</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('jcmd &lt;jvm-pid&gt; GC.heap_dump /var/log/eliya/heap.hprof')" aria-label="Copy command">
+        <code>jcmd &lt;jvm-pid&gt; GC.heap_dump /var/log/eliya/heap.hprof</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('jcmd &lt;jvm-pid&gt; JFR.dump filename=/var/log/eliya/jfr-snapshot.jfr')" aria-label="Copy command">
+        <code>jcmd &lt;jvm-pid&gt; JFR.dump filename=/var/log/eliya/jfr-snapshot.jfr</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+
+    <p>When you exit, the ephemeral container is removed; the original pod is unchanged
+        and no restart is required. The diagnostic session shows up in the pod's event timeline
+        with a timestamp, giving a clean audit trail.</p>
+
+    <p><strong>Requirements:</strong></p>
+    <ul class="checklist">
+        <li><span class="check-yes" aria-hidden="true">&#10003;</span>
+            Kubernetes 1.23+ (ephemeral containers reached stable in 1.25).</li>
+        <li><span class="check-yes" aria-hidden="true">&#10003;</span>
+            RBAC permission for the <code>pods/ephemeralcontainers</code> resource.</li>
+        <li><span class="check-yes" aria-hidden="true">&#10003;</span>
+            The Eliya image must be reachable from the cluster &mdash; typically pre-cached on
+            nodes via image-pull policy or pre-pulled by a DaemonSet.</li>
+    </ul>
+
+    <p><strong>Benefits over an always-on sidecar:</strong> zero baseline resource cost (no idle
+        container consuming memory per pod), no deployment-manifest changes, human-initiated
+        diagnostic access with auditable creation events. <strong>Trade-off:</strong> requires
+        Kubernetes 1.23+ and the appropriate RBAC; clusters that don't support ephemeral
+        containers fall back to the always-on sidecar pattern below.</p>
+
+    <h4>3. Always-on diagnostic sidecar &mdash; for scheduled tasks or restricted clusters</h4>
+    <p>The always-on sidecar pattern runs a diagnostic Eliya container alongside each application
+        pod for the lifetime of the pod. Prefer the ephemeral-containers pattern above for
+        incident-driven diagnostics; reach for the always-on sidecar when:</p>
+    <ul class="checklist">
+        <li><span class="check-yes" aria-hidden="true">&#10003;</span>
+            Your cluster doesn't support ephemeral containers (Kubernetes &lt;1.23 or policy
+            restrictions).</li>
+        <li><span class="check-yes" aria-hidden="true">&#10003;</span>
+            You need scheduled diagnostic tasks &mdash; periodic heap dumps, JFR
+            rotation, continuous analysis on a cron schedule.</li>
+        <li><span class="check-yes" aria-hidden="true">&#10003;</span>
+            Your operational model requires pre-provisioned diagnostic surfaces
+            rather than ad-hoc engineer access (sealed compliance environments,
+            multi-tenant production where <code>kubectl debug</code> RBAC is restricted).</li>
+    </ul>
+
+    <p><strong>Resource cost:</strong> ~100&ndash;150 MB memory and negligible CPU per pod for
+        an idle Eliya sidecar. A service with 10 replicas pays ~1.5 GB always-on for occasional
+        diagnostic capability. For incident-driven diagnostics in clusters that support
+        ephemeral containers, the ephemeral pattern is cheaper and cleaner.</p>
+
+    <p>The sidecar uses the full Eliya image (<code>25-lts</code>, not
+        <code>25-lts-slim</code>). The full image's <code>fontconfig</code> and
+        <code>freetype</code> libraries are needed when Phase 2 diagnostic tools generate visual
+        reports &mdash; flame graphs from async-profiler, leak-suspects HTML from Eclipse MAT,
+        and JFR rendering from headless analysis. For Phase 1 sidecars running only
+        <code>jcmd</code>, <code>jstack</code>, and <code>asymm eliya</code> commands, the slim
+        image would also work, but using the full image future-proofs the deployment as the
+        bundled tooling expands in Phase 2.</p>
+
+    <p>Example Kubernetes pod spec:</p>
+    <div class="inline-terminal inline-terminal--static">
+        <code>apiVersion: v1<br>
+kind: Pod<br>
+metadata:<br>
+&nbsp;&nbsp;name: my-app<br>
+spec:<br>
+&nbsp;&nbsp;shareProcessNamespace: true<br>
+&nbsp;&nbsp;containers:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;- name: app<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;image: my-app:latest<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;env:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- name: ELIYA_SERVICE_NAME<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value: my-app<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- name: JAVA_TOOL_OPTIONS<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;value: "-XX:EliyaProfile=Production"<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;volumeMounts:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- name: eliya-diagnostics<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mountPath: /var/log/eliya<br>
+&nbsp;&nbsp;&nbsp;&nbsp;- name: eliya-sidecar<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;image: ghcr.io/asymmsystems/eliya:25-lts<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;command: ["sleep", "infinity"]<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;volumeMounts:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- name: eliya-diagnostics<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mountPath: /var/log/eliya<br>
+&nbsp;&nbsp;volumes:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;- name: eliya-diagnostics<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;emptyDir: {}</code>
+    </div>
+
+    <p>The sidecar container does nothing by default. Operators exec into the sidecar to run
+        diagnostic commands against the shared volume or the live application JVM:</p>
+
+    <p><strong>Inspect Eliya configuration via the asymm CLI:</strong></p>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('kubectl exec -it my-app -c eliya-sidecar -- asymm eliya info')" aria-label="Copy command">
+        <code>kubectl exec -it my-app -c eliya-sidecar -- asymm eliya info</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('kubectl exec -it my-app -c eliya-sidecar -- asymm eliya doctor')" aria-label="Copy command">
+        <code>kubectl exec -it my-app -c eliya-sidecar -- asymm eliya doctor</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+
+    <p><strong>With <code>shareProcessNamespace: true</code>, capture artefacts from the live
+        JVM:</strong></p>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('kubectl exec -it my-app -c eliya-sidecar -- jcmd 1 VM.flags')" aria-label="Copy command">
+        <code>kubectl exec -it my-app -c eliya-sidecar -- jcmd 1 VM.flags</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('kubectl exec -it my-app -c eliya-sidecar -- jcmd 1 GC.heap_dump /var/log/eliya/my-app/heap.hprof')" aria-label="Copy command">
+        <code>kubectl exec -it my-app -c eliya-sidecar -- jcmd 1 GC.heap_dump /var/log/eliya/my-app/heap.hprof</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('kubectl exec -it my-app -c eliya-sidecar -- jcmd 1 Thread.print &gt; /tmp/threads.txt')" aria-label="Copy command">
+        <code>kubectl exec -it my-app -c eliya-sidecar -- jcmd 1 Thread.print &gt; /tmp/threads.txt</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+
+    <p><strong>Copy a captured artifact out for offline analysis:</strong></p>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('kubectl cp my-app:/var/log/eliya/my-app/heap.hprof ./heap.hprof -c eliya-sidecar')" aria-label="Copy command">
+        <code>kubectl cp my-app:/var/log/eliya/my-app/heap.hprof ./heap.hprof -c eliya-sidecar</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+
+    <p><strong>About <code>shareProcessNamespace: true</code>.</strong> By default in Kubernetes,
+        each container in a pod has its own PID namespace &mdash; the sidecar's <code>ps aux</code>
+        sees only the sidecar's own processes (the <code>sleep infinity</code>), not the
+        application JVM in the other container. With <code>shareProcessNamespace: true</code> set
+        at the pod level, all containers in the pod share one PID namespace; the sidecar can now
+        see the JVM and target it with <code>jcmd &lt;jvm-pid&gt;</code>. Find the JVM in the
+        shared namespace with <code>pgrep -f java</code> first &mdash; under shared-namespace,
+        the JVM is not PID 1 (the sidecar's sleep process or whichever container started first is
+        PID 1).</p>
+
+    <table class="clinical-table">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Without shareProcessNamespace (default)</th>
+                <th>With shareProcessNamespace: true</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Sidecar <code>ps aux</code></td>
+                <td>Sees only sidecar's own processes</td>
+                <td>Sees app's JVM in the listing</td>
+            </tr>
+            <tr>
+                <td><code>jcmd &lt;pid&gt; VM.flags</code> against app's JVM</td>
+                <td>Cannot target the JVM</td>
+                <td>Works</td>
+            </tr>
+            <tr>
+                <td><code>jstack</code> / <code>jmap</code> against app's JVM</td>
+                <td>Not possible</td>
+                <td>Works</td>
+            </tr>
+            <tr>
+                <td>Sidecar usefulness</td>
+                <td>Post-incident artefact analysis on the shared volume only</td>
+                <td>Live JVM inspection + artefact analysis</td>
+            </tr>
+            <tr>
+                <td>Process isolation between containers</td>
+                <td>Strong</td>
+                <td>Weakened (containers can see each other's processes)</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p>The trade-off is intentional for diagnostic sidecars &mdash; the whole point of the
+        sidecar is to inspect the app's JVM &mdash; but it's worth understanding that the trust
+        boundary has widened. Without <code>shareProcessNamespace</code>, the sidecar is still
+        useful for offline analysis of heap dumps, JFR recordings, and GC logs that landed on
+        the shared volume; it just can't talk to the live JVM.</p>
+
+    <p>Use the always-on sidecar pattern when its niche fits: scheduled diagnostic
+        tasks (periodic heap dumps, JFR rotation, custom analysis scripts) and
+        sealed compliance environments where ephemeral containers are disabled
+        by policy. For ad-hoc incident response in clusters that support it, prefer ephemeral
+        containers above.</p>
+
+    <p><strong>Phase 1 vs Phase 2 in this pattern.</strong> Today, the sidecar runs Phase 1
+        tools: standard JDK utilities and the seven Phase 1 <code>asymm eliya</code> commands.
+        Heap analysis on captured dumps happens offline using Eclipse MAT or similar tools.
+        Phase 2 will bundle Eclipse MAT (headless) and async-profiler in the Eliya image and
+        add <code>asymm eliya analyze-heap</code>, <code>asymm eliya profile</code>, and
+        <code>asymm eliya jfr</code> family commands. The sidecar pattern doesn't change between
+        phases &mdash; the same pod spec works; the available diagnostic commands inside the
+        sidecar expand as Phase 2 ships.</p>
+
+    <p><strong>Phase 2 with distroless app container.</strong> When the distroless Eliya variant
+        ships (Phase 2 demand-gated), this pattern lets you split the two containers'
+        image sources:</p>
+    <div class="inline-terminal inline-terminal--static">
+        <code>containers:<br>
+&nbsp;&nbsp;- name: app<br>
+&nbsp;&nbsp;&nbsp;&nbsp;image: ghcr.io/asymmsystems/eliya:25-lts-distroless&nbsp;&nbsp;# Phase 2<br>
+&nbsp;&nbsp;&nbsp;&nbsp;# no shell, no diagnostic tools, just runs the JVM<br>
+&nbsp;&nbsp;- name: eliya-sidecar<br>
+&nbsp;&nbsp;&nbsp;&nbsp;image: ghcr.io/asymmsystems/eliya:25-lts&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# full diagnostic toolchain<br>
+&nbsp;&nbsp;&nbsp;&nbsp;# unchanged</code>
+    </div>
+
+    <p>The distroless app container has no diagnostic surface area; all diagnostics happen in
+        the parallel Debian-based sidecar. In Phase 1, both containers use the same Debian-based
+        image (with the slim variant for the app, full for the sidecar).</p>
+
+    <h4>4. JMX over secure channel &mdash; legacy enterprise</h4>
+    <p>Some traditional deployments expose the JVM's Management Extensions (JMX) over a secure
+        port, allowing remote inspection from tools like VisualVM, JConsole, or JDK Mission
+        Control (JMC) on engineer workstations. Some compliance frameworks specifically require
+        JMX-style remote management endpoints for audit and inventory purposes.</p>
+
+    <p>Eliya supports JMX through standard upstream OpenJDK mechanisms &mdash; no Eliya-specific
+        configuration required. Enable JMX in a containerised deployment by setting the standard
+        flags in <code>JAVA_TOOL_OPTIONS</code>:</p>
+
+    <div class="inline-terminal inline-terminal--static">
+        <code>ENV JAVA_TOOL_OPTIONS="\<br>
+&nbsp;&nbsp;-XX:EliyaProfile=Production \<br>
+&nbsp;&nbsp;-Dcom.sun.management.jmxremote.port=9010 \<br>
+&nbsp;&nbsp;-Dcom.sun.management.jmxremote.rmi.port=9010 \<br>
+&nbsp;&nbsp;-Dcom.sun.management.jmxremote.authenticate=true \<br>
+&nbsp;&nbsp;-Dcom.sun.management.jmxremote.password.file=/etc/jmx/jmxremote.password \<br>
+&nbsp;&nbsp;-Dcom.sun.management.jmxremote.access.file=/etc/jmx/jmxremote.access \<br>
+&nbsp;&nbsp;-Dcom.sun.management.jmxremote.ssl=true \<br>
+&nbsp;&nbsp;-Dcom.sun.management.jmxremote.ssl.config.file=/etc/jmx/jmxssl.properties \<br>
+&nbsp;&nbsp;-Djava.rmi.server.hostname=&lt;external-hostname&gt;"<br>
+<br>
+EXPOSE 9010</code>
+    </div>
+
+    <p>The <code>jmxssl.properties</code> file contains standard Java SSL system properties
+        (<code>javax.net.ssl.keyStore</code>, <code>javax.net.ssl.keyStorePassword</code>,
+        <code>javax.net.ssl.trustStore</code>, etc.). It's a Java configuration file, not an
+        Eliya file &mdash; refer to Oracle's JMX documentation for the full format.</p>
+
+    <p><strong>Critical compliance guidance:</strong></p>
+    <ul class="checklist">
+        <li><span class="check-yes" aria-hidden="true">&#10003;</span>
+            JMX over TLS with authentication is acceptable for compliance audits and remote
+            management.</li>
+        <li><span class="check-no" aria-hidden="true">&#10007;</span>
+            JMX without authentication (<code>jmxremote.authenticate=false</code>) is a critical
+            exposure &mdash; never enable in production.</li>
+        <li><span class="check-no" aria-hidden="true">&#10007;</span>
+            JMX without TLS (<code>jmxremote.ssl=false</code>) leaks credentials and management
+            traffic in cleartext &mdash; never enable in production.</li>
+        <li><span class="check-yes" aria-hidden="true">&#10003;</span>
+            Password and access files must be readable only by the JVM process user
+            (<code>chmod 400</code>); JMX startup fails otherwise.</li>
+        <li><span class="check-yes" aria-hidden="true">&#10003;</span>
+            <code>java.rmi.server.hostname</code> must match the externally-reachable hostname
+            for clients behind NAT or in Kubernetes.</li>
+    </ul>
+
+    <p>For most Eliya deployments, the sidecar pattern above is preferable to JMX because it
+        does not expose a remote management endpoint at all. JMX remains documented because some
+        enterprise environments require it for compliance audit, inventory, or established
+        tooling integration.</p>
+
+    <h4>Choosing a pattern</h4>
+    <table class="clinical-table">
+        <thead>
+            <tr>
+                <th>Pattern</th>
+                <th>Best for</th>
+                <th>Trade-off</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Interactive exec</td>
+                <td>Development, staging, small production</td>
+                <td>App container ships diagnostic tools</td>
+            </tr>
+            <tr>
+                <td>Ephemeral diagnostic containers</td>
+                <td>Production incident response (recommended)</td>
+                <td>Requires Kubernetes 1.23+ with appropriate RBAC</td>
+            </tr>
+            <tr>
+                <td>Always-on diagnostic sidecar</td>
+                <td>Scheduled diagnostic tasks; clusters without ephemeral container support</td>
+                <td>Continuous resource cost (~100&ndash;150 MB per pod); sidecar uses full image</td>
+            </tr>
+            <tr>
+                <td>JMX over secure channel</td>
+                <td>Legacy enterprise; frameworks requiring remote management endpoints</td>
+                <td>Remote management surface area; TLS + auth configuration burden</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p><strong>Recommendation:</strong> ephemeral diagnostic containers for production incident
+        response; always-on sidecar for scheduled diagnostic tasks or clusters that can't run
+        ephemeral containers; interactive exec for development; JMX where the environment
+        specifically requires it.</p>
+
+
+    <h3>Quick smoke test</h3>
+    <p>Confirm the image launches and the JVM recognises Eliya's <code>EliyaProfile</code> flag:</p>
+
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard(&quot;docker run --rm ghcr.io/asymmsystems/eliya:25-lts java -XX:+PrintFlagsFinal -version 2&gt;&amp;1 | grep -E '(EliyaProfile|UseEliya)'&quot;)" aria-label="Copy command">
+        <code>docker run --rm ghcr.io/asymmsystems/eliya:25-lts java -XX:+PrintFlagsFinal -version 2&gt;&amp;1 | grep -E '(EliyaProfile|UseEliya)'</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+
+    <p>Expected output (Phase 1, no profile set on this invocation):</p>
+    <div class="inline-terminal inline-terminal--static">
+        <code>ccstr     EliyaProfile        = None    {product} {default}<br>
+bool      EliyaConflictCheck  = true    {product} {default}</code>
+    </div>
+
+    <p>Verify the asymm CLI is functional:</p>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('docker run --rm ghcr.io/asymmsystems/eliya:25-lts asymm eliya info')" aria-label="Copy command">
+        <code>docker run --rm ghcr.io/asymmsystems/eliya:25-lts asymm eliya info</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+
+    <p>This confirms the image launches, the asymm CLI is present, and the CLI reports the JVM's
+        current state correctly.</p>
+</section>
+
+<section class="aside-box">
+    <h3>Multi-arch support</h3>
+    <p>Images support <code>linux/amd64</code> and <code>linux/arm64</code> via the manifest
+        list. Docker and Kubernetes automatically pick the correct architecture at pull time.
+        No explicit arch selection required for the common case.</p>
+</section>
+
+<div class="page-back-nav">
+    <a href="/product/eliya/user-guide/" class="org-link org-link--internal org-link--back">user guide</a>
+</div>

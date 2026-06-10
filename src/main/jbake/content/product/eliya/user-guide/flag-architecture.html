@@ -1,0 +1,410 @@
+title=Eliya flag architecture
+description=Two-layer flag taxonomy with dual syntax — Layer 1 capabilities (boolean) and Layer 2 profile (enum).
+type=page
+toc=true
+status=published
+~~~~~~
+
+<header class="page-header">
+    <span class="section-kicker">User guide</span>
+    <h1>Flag architecture</h1>
+    <p style="max-width: 60ch">Eliya's flags are organised into two layers
+        with distinct purposes. This page explains the taxonomy &mdash;
+        what each layer does, why the syntaxes differ, and when to reach
+        for which.</p>
+</header>
+
+<section>
+    <h3>Two layers, two syntaxes</h3>
+    <p>Eliya's flag namespace is split into two layers
+        that match different concerns. The two layers use different
+        Hotspot flag syntaxes that match their semantic structure &mdash;
+        same pattern Hotspot itself uses (<code>-XX:NativeMemoryTracking=summary</code>
+        for enums, <code>-XX:+HeapDumpOnOutOfMemoryError</code> for toggles).
+        Capabilities give fine-grained control; the profile gives a curated
+        combination. Each layer is documented below.</p>
+
+    <h3>Layer 1 — Capabilities</h3>
+    <p>Each capability flag activates a single,
+        narrowly-scoped technical concern. Capabilities are composable
+        &mdash; you set multiple capability flags to assemble custom
+        configurations. Capability flags use boolean syntax:</p>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('-XX:+UseEliyaObservability -XX:+UseEliyaSecurityStrict -XX:+UseEliyaAudit')" aria-label="Copy command">
+        <code>-XX:+UseEliyaObservability -XX:+UseEliyaSecurityStrict -XX:+UseEliyaAudit</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+    <p><strong>Note.</strong> The capability flag names above are
+        <strong>reserved namespace</strong> &mdash; <code>UseEliyaObservability</code>,
+        <code>UseEliyaDiagnostics</code>, <code>UseEliyaOperational</code>,
+        and <code>UseEliyaTooling</code> become operational in Phase 2;
+        <code>UseEliyaSecurityStrict</code> and <code>UseEliyaAudit</code>
+        in Phase 4. Phase 1 ships the profile flag only; the example is shown
+        here to illustrate the boolean syntax pattern.</p>
+
+    <p>Capabilities are what
+        the JVM actually does. They are the source of truth.</p>
+
+    <h3>Layer 2 — Profile</h3>
+    <p>A single profile selector specifies which
+        curated combination is active. Profiles are mutually exclusive
+        by design &mdash; only one profile can be active at a time.
+        <code>EliyaProfile</code> is an enum-valued flag holding a single
+        value at runtime; the JVM cannot be in a state of "two profiles
+        active simultaneously." When customer demand requires the union of
+        two frameworks (e.g., PCI&nbsp;DSS + HIPAA for healthcare payment
+        processing), Eliya ships an explicit combined profile (e.g.,
+        <code>EliyaProfile=Healthcare-Payment</code>) with the documented
+        union of capabilities, rather than allowing operators to stack two
+        profile values. Profile flag uses enum-value syntax:</p>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('-XX:EliyaProfile=Production')" aria-label="Copy command">
+        <code>-XX:EliyaProfile=Production</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+    <p>Profiles serve compliance
+        officers and engineers who want known-good combinations rather than
+        building from primitives. Each profile activates a documented set of
+        underlying capabilities plus framework-specific settings.</p>
+
+
+    <h3>Phase 1 — what's available today</h3>
+    <p>Phase 1 ships a single profile and reserves
+        the capability namespace for Phase 2. The profile is the canonical
+        way to activate Eliya's defaults; capability flags are documented
+        but not yet carved out as separate booleans.</p>
+
+    <h4>Available now</h4>
+    <table class="clinical-table" >
+        <thead>
+            <tr>
+                <th>Flag</th>
+                <th>Layer</th>
+                <th>Effect</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code>-XX:EliyaProfile=Production</code></td>
+                <td>Layer 2 — profile</td>
+                <td>Activates production-readiness defaults: JFR continuous recording, heap dump on OOM, native memory tracking, GC logging, crash log path, container awareness, diagnostic VM options.</td>
+            </tr>
+            <tr>
+                <td><code>-XX:EliyaProfile=None</code></td>
+                <td>Layer 2 — profile</td>
+                <td>Explicit no-profile (default). Compose capabilities directly when they ship in Phase 2.</td>
+            </tr>
+            <tr>
+                <td><code>-XX:+EliyaConflictCheck</code></td>
+                <td>Control flag</td>
+                <td>Enable startup-time detection of flag conflicts (default: enabled). Three-tier response: silent / warning / fatal.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p>Full
+        per-component breakdown of what <code>EliyaProfile=Production</code>
+        activates: see the
+        <a href="/product/eliya/user-guide/flags-reference.html" class="org-link org-link--inline org-link--internal">flags reference</a>.</p>
+
+
+    <h3>Reserved namespace (Phase 2 + Phase 4)</h3>
+    <p>The following capability flags and profile
+        values are reserved. They are not implemented in Phase 1, but the
+        namespace is locked so future work cannot collide with these names.</p>
+
+    <h4>Layer 1 capabilities (Phase 2 + Phase 4)</h4>
+    <table class="clinical-table" >
+        <thead>
+            <tr>
+                <th>Capability flag</th>
+                <th>Phase</th>
+                <th>Purpose</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code>UseEliyaObservability</code></td>
+                <td>Phase 2</td>
+                <td>Continuous data collection (JFR, GC logs, NMT)</td>
+            </tr>
+            <tr>
+                <td><code>UseEliyaDiagnostics</code></td>
+                <td>Phase 2</td>
+                <td>Incident-time artifact capture (heap dumps, crash logs)</td>
+            </tr>
+            <tr>
+                <td><code>UseEliyaOperational</code></td>
+                <td>Phase 2</td>
+                <td>Operational policy (ExitOnOOM, container support)</td>
+            </tr>
+            <tr>
+                <td><code>UseEliyaTooling</code></td>
+                <td>Phase 2</td>
+                <td>Foundation flags for diagnostic tools</td>
+            </tr>
+            <tr>
+                <td><code>UseEliyaSecurityBaseline</code></td>
+                <td>Phase 4</td>
+                <td>Modest security hardening beyond upstream</td>
+            </tr>
+            <tr>
+                <td><code>UseEliyaSecurityStrict</code></td>
+                <td>Phase 4</td>
+                <td>Aggressive security hardening</td>
+            </tr>
+            <tr>
+                <td><code>UseEliyaAudit</code></td>
+                <td>Phase 4</td>
+                <td>Audit-grade logging extensions</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h4>Layer 2 profile values (Phase 4 demand-gated)</h4>
+    <table class="clinical-table" >
+        <thead>
+            <tr>
+                <th>Profile value</th>
+                <th>Purpose</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code>EliyaProfile=PCIDSS</code></td>
+                <td>PCI DSS-aligned compliance settings</td>
+            </tr>
+            <tr>
+                <td><code>EliyaProfile=HIPAA</code></td>
+                <td>HIPAA-aligned compliance settings</td>
+            </tr>
+            <tr>
+                <td><code>EliyaProfile=SOX</code></td>
+                <td>SOX-aligned compliance settings</td>
+            </tr>
+            <tr>
+                <td><code>EliyaProfile=FedRAMP</code></td>
+                <td>FedRAMP-aligned compliance settings</td>
+            </tr>
+            <tr>
+                <td><code>EliyaProfile=GDPR</code></td>
+                <td>GDPR-aligned data handling settings</td>
+            </tr>
+            <tr>
+                <td><code>EliyaProfile=ISO27001</code></td>
+                <td>ISO 27001-aligned settings</td>
+            </tr>
+            <tr>
+                <td><code>EliyaProfile=SOC2</code></td>
+                <td>SOC 2-aligned settings</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p>Phase 4 profile values
+        produce a startup error in Phase 1:
+        <code>"Profile '&lt;Value&gt;' is reserved for Phase 4. Currently
+        available: None, Production."</code></p>
+
+    <h4>Combined profiles</h4>
+    <p>Some regulated industries require the union of multiple compliance
+        frameworks &mdash; healthcare payment processors need PCI&nbsp;DSS +
+        HIPAA, financial SaaS providers need SOC&nbsp;2 + ISO&nbsp;27001,
+        defence contractors need FedRAMP + CMMC. For these cases, Eliya
+        ships <strong>explicit combined profile values</strong> rather than
+        allowing operators to stack two profile flags. Example combined
+        values (Phase 4 demand-gated, naming illustrative):</p>
+    <table class="clinical-table">
+        <thead>
+            <tr>
+                <th>Combined profile value</th>
+                <th>Component frameworks</th>
+                <th>Typical audience</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code>EliyaProfile=Healthcare-Payment</code></td>
+                <td>PCI DSS + HIPAA</td>
+                <td>Healthcare payment processors</td>
+            </tr>
+            <tr>
+                <td><code>EliyaProfile=Financial-SaaS</code></td>
+                <td>SOC 2 + ISO 27001</td>
+                <td>Financial services SaaS providers</td>
+            </tr>
+            <tr>
+                <td><code>EliyaProfile=Federal-Defense</code></td>
+                <td>FedRAMP + CMMC</td>
+                <td>Defence contractors handling federal workloads</td>
+            </tr>
+        </tbody>
+    </table>
+    <p>Each combined profile activates the documented union of capabilities
+        from its component frameworks plus any framework-specific JVM
+        settings the combination requires. The auditor sees one profile name
+        in <code>asymm eliya info</code> output, the capability list is
+        documented, and compliance attribution is unambiguous. Combined
+        profiles are designed by Asymm Systems based on customer demand
+        rather than left to ad-hoc stacking.</p>
+
+    <p>Demand signal for Phase 4:
+        join the early-access list on the
+        <a href="/product/eliya/security.html#waitlist" class="org-link org-link--inline org-link--internal">security page</a>
+        and tell us which framework (or combination) your auditor requires.</p>
+
+
+    <h3>Conflict detection &mdash; three response tiers</h3>
+    <p>Eliya checks flag combinations at JVM startup
+        and responds in one of three tiers depending on the conflict's
+        severity. Default behaviour is <strong>checking enabled</strong>; opt
+        out via <code>-XX:-EliyaConflictCheck</code> only when experimenting
+        with flag combinations or running CI matrix tests where intentional
+        invalid combinations are part of the test plan. Leave enabled in
+        production.</p>
+
+    <p><strong>Note on examples.</strong> The tier examples below illustrate
+        the conflict-detection framework using capability flags
+        (<code>UseEliyaObservability</code>, <code>UseEliyaSecurityStrict</code>)
+        and profile values (<code>PCIDSS</code>) that are reserved for Phase
+        2 and Phase 4. The framework itself is implemented in Phase 1; the
+        capability flags it references begin shipping in Phase 2. Phase 1
+        ships the profile flag (<code>EliyaProfile=Production</code>) and
+        the conflict-check control flag only.</p>
+
+    <h4>Tier 1 — Silent resolution</h4>
+    <p>User explicit command-line settings override
+        profile-implied defaults. This is established Hotspot override
+        semantics &mdash; no warning issued.</p>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('java -XX:EliyaProfile=Production -XX:-UseEliyaObservability -jar app.jar')" aria-label="Copy command">
+        <code>java -XX:EliyaProfile=Production -XX:-UseEliyaObservability -jar app.jar</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+    <p>Profile
+        activates observability; user explicit <code>-UseEliyaObservability</code>
+        wins. Intentional override; no warning.</p>
+
+    <h4>Tier 2 — Warning</h4>
+    <p>Suspicious-but-legal combinations produce a
+        warning to stderr. The JVM continues normally.</p>
+    <div class="inline-terminal inline-terminal--static">
+        <code>java -XX:EliyaProfile=Production -XX:+UseEliyaObservability -jar app.jar<br>
+<br>
+[Eliya] Warning: EliyaProfile=Production already activates UseEliyaObservability;<br>
+&nbsp;&nbsp;explicit flag is redundant.</code>
+    </div>
+
+    <h4>Tier 3 — Fatal exit</h4>
+    <p>Genuinely incompatible combinations cause
+        JVM startup to fail with a descriptive error. Compliance environments
+        require fail-fast on misconfiguration; the alternative (silent
+        misbehaviour discovered during a production incident) is operationally
+        worse than refusing to start.</p>
+    <div class="inline-terminal inline-terminal--static">
+        <code>java -XX:EliyaProfile=PCIDSS -XX:-UseEliyaSecurityStrict -jar app.jar<br>
+<br>
+[Eliya] Fatal: EliyaProfile=PCIDSS requires UseEliyaSecurityStrict;<br>
+&nbsp;&nbsp;cannot proceed with explicit -UseEliyaSecurityStrict. Either drop the<br>
+&nbsp;&nbsp;profile (-XX:EliyaProfile=None), remove the explicit negation, or<br>
+&nbsp;&nbsp;compose underlying capabilities directly without the profile shortcut.</code>
+    </div>
+
+
+    <h3>Why two layers, why dual syntax</h3>
+
+    <h4>Why two layers</h4>
+    <p>Single-layer alternatives fail in different
+        ways. Capabilities-only is hostile to non-expert users; nobody
+        wants to research five flags to deploy production-ready Eliya.
+        Profiles-only is hostile to advanced users; latency-sensitive
+        teams might want diagnostics without observability, and a
+        pre-built-only menu denies them control. Two layers serve both
+        audiences with the same architecture.</p>
+
+    <h4>Why dual syntax</h4>
+    <p>The syntax matches the semantics:</p>
+    <ul>
+        <li>"Is observability enabled?" &mdash; boolean question &rarr;
+            <code>+/-</code> syntax</li>
+        <li>"Which profile is active?" &mdash; enumeration question &rarr;
+            <code>=</code> syntax</li>
+    </ul>
+    <p>This produces three real
+        benefits beyond aesthetic match:</p>
+    <ol>
+        <li><strong>Profile state is single-valued.</strong>
+            <code>EliyaProfile</code> is a <code>ccstr</code> flag, so the
+            runtime state holds exactly one value. If duplicate arguments
+            appear on the command line, the parser takes the last one
+            (typical Hotspot value-flag behaviour). No state in the JVM
+            represents "two profiles active simultaneously," which means
+            Eliya's conflict detection can focus on profile-plus-capability
+            conflicts rather than profile-vs-profile.</li>
+        <li><strong>Visual layer distinction is immediate.</strong> Anyone
+            scanning JVM args knows from the syntax alone whether they're
+            looking at a capability or a profile.</li>
+        <li><strong>Native Hotspot compilation.</strong> Both flag forms
+            map to standard Hotspot macros in <code>globals.hpp</code> &mdash;
+            no custom parser, no macro hacking. Same C++ compilation path
+            as <code>UseG1GC</code> and <code>NativeMemoryTracking</code>.</li>
+    </ol>
+
+    <h3>Diagnostic path layout</h3>
+    <p>When the <code>Production</code> profile is active (or when Phase 2 capability flags that
+        activate diagnostic output are set), Eliya constructs filesystem paths from three resolved
+        components:</p>
+    <div class="inline-terminal inline-terminal--static">
+        <code>${ELIYA_DIAGNOSTIC_PATH}/${service_name}/${replica_name}/${category}/</code>
+    </div>
+
+    <p><strong>Base path</strong> &mdash; configurable: <code>ELIYA_DIAGNOSTIC_PATH</code>
+        env var &rarr; platform default (Linux: <code>/var/log/eliya</code>).</p>
+
+    <p><strong>Service name</strong> &mdash; logical service identity:
+        <code>ELIYA_SERVICE_NAME</code> &rarr; <code>-Deliya.service.name=</code> &rarr;
+        <code>HOSTNAME</code> &rarr; literal <code>default</code>.</p>
+
+    <p><strong>Replica name</strong> &mdash; per-instance identity:
+        <code>ELIYA_REPLICA_NAME</code> &rarr; <code>-Deliya.replica.name=</code> &rarr;
+        <code>HOSTNAME</code> &rarr; suppressed when equal to <code>${service_name}</code>.</p>
+
+    <p><strong>Category</strong> &mdash; Eliya-controlled, one of: <code>jfr</code>,
+        <code>heap</code>, <code>crash</code>, <code>gc</code>.</p>
+
+    <h4>The suppression rule</h4>
+    <p>When the resolved replica name equals the resolved service name, the replica level is
+        suppressed and the path collapses to two levels (<code>${base}/${service}/${category}/</code>).
+        Two specific cases:</p>
+    <ol>
+        <li><strong>Bare-metal multi-JVM hosts.</strong> Three systemd services on
+            <code>myserver01</code>, each setting <code>ELIYA_SERVICE_NAME</code> to its service
+            name. <code>HOSTNAME</code> is <code>myserver01</code> for all of them. Without
+            suppression, paths would include redundant <code>/myserver01/myserver01/</code>
+            nesting that adds no attribution value.</li>
+        <li><strong>Single-JVM bare-metal.</strong> Nothing configured. Service falls through to
+            <code>HOSTNAME</code>. Replica also resolves to <code>HOSTNAME</code>. They match.
+            Suppression collapses to a single <code>${hostname}/</code> level.</li>
+    </ol>
+    <p>In Kubernetes deployments, <code>HOSTNAME</code> is the pod name (unique per pod), and
+        you typically set <code>ELIYA_SERVICE_NAME</code> to the service-level name. These
+        differ, so suppression doesn't apply and three-level paths result.</p>
+
+    <h4>Why three levels</h4>
+    <p>The layout encodes compliance metadata in the filesystem itself: <strong>service
+        grouping</strong> (compliance queries scoped to a service return a single tree),
+        <strong>per-replica attribution</strong> (each subdirectory's name identifies the
+        pod/container/unit that produced its contents), <strong>lifetime disambiguation</strong>
+        (PID-bearing filenames within each replica directory distinguish multiple JVM processes
+        across the replica's lifetime), and <strong>tool compatibility</strong> (flat
+        per-replica layout works with <code>logrotate</code>, <code>fluentd</code>,
+        <code>vector</code>, <code>journald</code>, and standard audit-pipeline tooling).</p>
+
+    <p>For deployment-by-deployment effective path examples (Kubernetes single- and multi-replica,
+        bare-metal multi-JVM, docker-compose scale, explicit replica naming), see
+        <a href="/product/eliya/user-guide/flags-reference.html#diagnostic-paths" class="org-link org-link--inline org-link--internal">flags reference &mdash; diagnostic paths</a>.</p>
+</section>
+
+<div class="page-back-nav">
+    <a href="/product/eliya/user-guide/" class="org-link org-link--internal org-link--back">user guide</a>
+</div>

@@ -1,105 +1,368 @@
 title=Eliya troubleshooting
-description=Common Eliya issues and diagnostic commands.
+description=Common Eliya issues and diagnostic commands. Per the May 2026 strategy revision — EliyaProfile=Production activates observability only; security configuration is inherited from upstream JDK 25 unchanged.
 type=page
 toc=true
 status=published
 ~~~~~~
-
-<nav class="eliya-breadcrumb" aria-label="Breadcrumb"><span class="crumb-collapse" role="button" tabindex="0" onclick="this.parentElement.classList.toggle(&apos;expanded&apos;)">~ / &hellip;</span><span class="crumb-hidden"><span class="crumb-sep">/</span><a href="/">asymm</a></span><span class="crumb-hidden"><span class="crumb-sep">/</span>product</span><span class="crumb-sep">/</span><a href="/product/eliya.html">eliya</a><span class="crumb-sep">/</span><a href="/product/eliya/user-guide/">user-guide</a><span class="crumb-sep">/</span><span class="crumb-leaf">troubleshooting</span></nav>
 
 <header class="page-header">
     <span class="section-kicker">User guide</span>
     <h1>Troubleshooting</h1>
 </header>
 
-<section style="margin-bottom: 5rem;">
-    <h2 class="section-title">The <code>asymm</code> CLI</h2>
-    <p style="max-width: 70ch;">Eliya ships a small diagnostic helper at
-        <code>$JAVA_HOME/bin/asymm</code>. Use it to confirm which runtime you're on and to print
-        build metadata.</p>
+<section>
+    <h3>The <code>asymm</code> CLI</h3>
+    <p>Eliya ships a small diagnostic helper at
+        <code>/usr/bin/asymm</code> (symlinked from <code>${JAVA_HOME}/bin/asymm</code> by RPM/DEB
+        postinstall scripts; available directly at <code>${JAVA_HOME}/bin/asymm</code> on tar.gz
+        installs). Use it to confirm which runtime you're on and to print build metadata.</p>
 
-    <div class="inline-terminal" style="max-width: 500px; margin-top: 1.5rem;"
-        onclick="copyToClipboard('asymm --info');" title="Click to copy">
-        <code>asymm --info</code>
-        <span class="copy-btn">Copy</span>
-    </div>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('asymm version')" aria-label="Copy command">
+        <code>asymm version</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('asymm eliya info')" aria-label="Copy command">
+        <code>asymm eliya info</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('asymm eliya doctor')" aria-label="Copy command">
+        <code>asymm eliya doctor</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
 
-    <p style="max-width: 70ch; margin-top: 1.5rem;">Output includes JDK version, vendor,
-        build date, platform, and which Eliya features are active. Attach this output to any issue you
-        file on GitHub.</p>
-</section>
+    <p>Output includes JDK version, vendor, build
+        date, platform, diagnostic configuration, container detection, GC ergonomic selection, and
+        JFR status. Attach this output to any issue you file on GitHub.</p>
 
-<section style="margin-bottom: 5rem;">
-    <h2 class="section-title">Common issues</h2>
+    <p>Full CLI reference:
+        <a href="/product/eliya/user-guide/cli.html" class="org-link org-link--inline org-link--internal">asymm CLI</a>.</p>
 
-    <h3>TLS handshake fails with "protocol disabled" or "no cipher suites in common"</h3>
-    <p style="max-width: 70ch;">Eliya disables SSLv3, TLS 1.0, TLS 1.1, and weak cipher
-        suites by default. A legacy peer insisting on these will fail to negotiate. Either upgrade the
-        peer (correct fix) or opt out of hardening for this JVM invocation:</p>
-    <div class="inline-terminal" style="max-width: 700px; margin-top: 1rem;"
-        onclick="copyToClipboard('java -Djava.security.properties==/path/to/vanilla-java.security -jar app.jar');" title="Click to copy">
-        <code>java -Djava.security.properties==/path/to/vanilla-java.security -jar app.jar</code>
-        <span class="copy-btn">Copy</span>
-    </div>
 
-    <h3>"Unrecognized VM option 'UseEliyaDefaults'"</h3>
-    <p style="max-width: 70ch;">You're running a non-Eliya JVM. Confirm with
-        <code>java -version</code> — the version string must include "Eliya". If not, check
-        <code>JAVA_HOME</code>, your <code>PATH</code>, and SDKman's current version
+    <h3>Common issues</h3>
+
+    <h4>TLS handshake fails with "protocol disabled" or "no cipher suites in common"</h4>
+    <p>Upstream JDK 25 disables SSLv3, TLS 1.0, TLS 1.1, and weak cipher
+        suites &mdash; Eliya inherits this unchanged. A legacy peer requiring these protocols will fail
+        to negotiate. Either upgrade the peer (correct fix) or override with:</p>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('java -Djava.security.properties==/path/to/legacy-java.security -jar app.jar')" aria-label="Copy command">
+        <code>java -Djava.security.properties==/path/to/legacy-java.security -jar app.jar</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+    <p>The double <code>==</code> overrides; a single
+        <code>=</code> appends. Use only when legacy interoperability is genuinely required.</p>
+
+    <h4>"Unrecognized VM option 'EliyaProfile'"</h4>
+    <p>Three possible causes:</p>
+    <p><strong>1. Non-Eliya JVM.</strong> You're running a non-Eliya OpenJDK distribution.
+        Confirm with <code>java -version</code> &mdash; the version string must include "Eliya". If
+        not, check <code>JAVA_HOME</code>, your <code>PATH</code>, and SDKman's current version
         (<code>sdk current java</code>).</p>
+    <p><strong>2. Pre-rename JVM args.</strong> If you're migrating from a pre-public-release
+        build of Eliya, the flag form changed in May 2026:</p>
+    <ul>
+        <li>Old: <code>-XX:+UseEliyaDefaults</code> (boolean toggle)</li>
+        <li>New: <code>-XX:EliyaProfile=Production</code> (enum-value selector)</li>
+    </ul>
+    <p>The rename is complete &mdash; Phase 1 ships only the <code>EliyaProfile</code> form. Scripts
+        or documents referencing <code>-XX:+UseEliyaDefaults</code> predate the public release and
+        need updating.</p>
+    <p><strong>3. Pre-Phase-1 build.</strong> If you're running an alpha/preview Eliya build
+        that predates the May 2026 strategy revision, upgrade to the Phase 1 GA release. Phase 1
+        ships the <code>EliyaProfile</code> flag declaration; earlier internal builds may not.</p>
+    <p>Verify which case applies:</p>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('java -version')" aria-label="Copy command">
+        <code>java -version</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('asymm eliya info')" aria-label="Copy command">
+        <code>asymm eliya info</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
 
-    <h3><code>SHA256SUMS.txt</code> verification fails</h3>
-    <p style="max-width: 70ch;">Re-download both the archive and the
+    <h4>"Profile '&lt;X&gt;' is reserved for Phase 4"</h4>
+    <p>If JVM startup fails with
+        <code>[Eliya] Fatal: Profile '&lt;X&gt;' is reserved for Phase 4. Currently available:
+        None, Production.</code>, you've attempted to use a Phase 4 compliance profile in a Phase 1
+        build.</p>
+    <p>Phase 1 ships only two profile values:</p>
+    <ul>
+        <li><code>EliyaProfile=None</code> (default; no Eliya defaults applied)</li>
+        <li><code>EliyaProfile=Production</code> (observability defaults)</li>
+    </ul>
+    <p>Phase 4 will add compliance-aligned profile values (<code>PCIDSS</code>, <code>HIPAA</code>,
+        <code>SOX</code>, <code>FedRAMP</code>, <code>GDPR</code>, <code>ISO27001</code>,
+        <code>SOC2</code>) plus combined profiles (<code>Healthcare-Payment</code>,
+        <code>Financial-SaaS</code>, etc.) when customer demand justifies. Phase 4 is demand-gated
+        &mdash; sign up on the
+        <a href="/product/eliya/security.html#waitlist" class="org-link org-link--inline org-link--internal">security page</a>
+        to signal demand for a specific framework or combination.</p>
+    <p>For now, use <code>EliyaProfile=Production</code> to activate Eliya's Phase 1 observability
+        defaults.</p>
+
+    <h4><code>SHA256SUMS.txt</code> verification fails</h4>
+    <p>Re-download both the archive and the
         <code>SHA256SUMS.txt</code> from the same GitHub Release page. If the re-download still fails,
-        do not run the archive — report to
+        do not run the archive &mdash; report to
         <a href="mailto:security@asymm.systems" class="org-link org-link--inline org-link--external">security@asymm.systems</a>.</p>
 
-    <h3>GC pauses exceed 50 ms despite <code>-XX:+UseEliyaDefaults</code></h3>
-    <p style="max-width: 70ch;">The 50 ms target is aspirational — G1 can exceed it under
-        heavy allocation pressure, large live sets, or tight heap sizing. Diagnose with:</p>
-    <div class="inline-terminal" style="max-width: 700px; margin-top: 1rem;"
-        onclick="copyToClipboard('java -XX:+UseEliyaDefaults -Xlog:gc* -jar app.jar');" title="Click to copy">
-        <code>java -XX:+UseEliyaDefaults -Xlog:gc* -jar app.jar</code>
-        <span class="copy-btn">Copy</span>
-    </div>
-    <p style="max-width: 70ch; margin-top: 1rem;">Usual fixes: larger heap
-        (<code>-Xmx</code>), profile allocation hot spots, or swap to Shenandoah or ZGC for sub-10 ms
-        pauses at the cost of throughput.</p>
+    <h4>GC pauses are higher than expected</h4>
+    <p><code>-XX:EliyaProfile=Production</code> does not change GC selection or
+        tuning. JDK 25's automatic ergonomics select G1 for typical server workloads with a 200&nbsp;ms
+        default pause target. If you need lower pause times, diagnose first with the JFR data Eliya
+        is already recording:</p>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('jcmd &lt;pid&gt; JFR.dump filename=/tmp/diagnostic.jfr')" aria-label="Copy command">
+        <code>jcmd &lt;pid&gt; JFR.dump filename=/tmp/diagnostic.jfr</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('jfr view gc-pauses /tmp/diagnostic.jfr')" aria-label="Copy command">
+        <code>jfr view gc-pauses /tmp/diagnostic.jfr</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+    <p>If consistent low pause time is required, opt
+        into Generational ZGC:</p>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('java -XX:EliyaProfile=Production -XX:+UseZGC -Xms16g -Xmx16g -jar app.jar')" aria-label="Copy command">
+        <code>java -XX:EliyaProfile=Production -XX:+UseZGC -Xms16g -Xmx16g -jar app.jar</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+    <p>See the
+        <a href="/product/eliya/user-guide/flags-reference.html" class="org-link org-link--inline org-link--internal">flags reference</a>
+        for trade-offs between G1, ZGC, and Shenandoah.</p>
 
-    <h3>SDKman says version not found</h3>
-    <p style="max-width: 70ch;">Run <code>sdk update</code> to refresh the candidate
+    <h4>SDKman says version not found</h4>
+    <p>Run <code>sdk update</code> to refresh the candidate
         metadata. If still not found 24 hours after a new Eliya release, check the
         <a href="https://github.com/asymmsystems/eliya-jdk/releases" class="org-link org-link--inline org-link--external">releases page</a>
         and file an issue.</p>
 
-    <h3>Eliya runs but applications behave differently than on Corretto/Zulu</h3>
-    <p style="max-width: 70ch;">The most likely cause is the hardened
-        <code>java.security</code> — check TLS negotiation and cipher suite selection. Second most
-        likely: <code>-XX:+UseEliyaDefaults</code> is set and G1 tuning is interacting with your
-        allocation profile differently from the default 200 ms target. See the
-        <a href="/product/eliya/migration.html" class="org-link org-link--inline org-link--internal">migration guide</a>
-        for behavioural parity details.</p>
-</section>
+    <h4>Flag conflict detection failed JVM startup</h4>
+    <p>If JVM startup fails with <code>[Eliya] Fatal: ...</code>, a profile
+        flag and an explicit capability negation produced an unrecoverable conflict. Read the
+        error message &mdash; it identifies the conflicting flags and suggests resolution.</p>
+    <p>Common pattern: profile + <code>-XX:-Use&lt;Capability&gt;</code>
+        for a capability the profile requires. Three resolutions:</p>
+    <ul>
+        <li>Remove the explicit negation</li>
+        <li>Drop the profile (<code>-XX:EliyaProfile=None</code>) and compose capabilities directly</li>
+        <li>Use a different profile that doesn't require the negated capability</li>
+    </ul>
+    <p>If you're experimenting with flag combinations or running CI matrix tests,
+        disable conflict checking with <code>-XX:-EliyaConflictCheck</code>. Default is
+        checking enabled.</p>
+    <p>For the full taxonomy and the three-tier conflict response model, see
+        <a href="/product/eliya/user-guide/flag-architecture.html" class="org-link org-link--inline org-link--internal">flag architecture</a>.</p>
 
-<section style="margin-bottom: 5rem;">
-    <h2 class="section-title">Filing an issue</h2>
-    <p style="max-width: 70ch;">Non-security issues: open a GitHub issue on
+    <h4>Heap dump not found at expected path</h4>
+    <p>If <code>-XX:EliyaProfile=Production</code> activates and
+        <code>-XX:+HeapDumpOnOutOfMemoryError</code> fires but the heap dump isn't where you
+        expect, verify the resolved path matches the three-level layout. Paths include service
+        name and (usually) replica name:
+        <code>${ELIYA_DIAGNOSTIC_PATH}/${service}/${replica}/heap/java_pid&lt;PID&gt;.hprof</code>.</p>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('docker exec -it my-app asymm eliya info')" aria-label="Copy command">
+        <code>docker exec -it my-app asymm eliya info</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+    <p>Look at the <code>Diagnostic Configuration</code> section. Each path component is annotated
+        with its resolution source in parentheses:</p>
+    <div class="inline-terminal inline-terminal--static">
+        <code>ELIYA_DIAGNOSTIC_PATH:  /var/log/eliya (default)<br>
+ELIYA_SERVICE_NAME:     billing-service (from env)<br>
+ELIYA_REPLICA_NAME:     billing-service-7d4b9c-xk29p (from HOSTNAME)<br>
+Resolved heap path:     /var/log/eliya/billing-service/billing-service-7d4b9c-xk29p/heap/</code>
+    </div>
+    <p>If a component resolved unexpectedly (for example,
+        <code>ELIYA_SERVICE_NAME (from HOSTNAME)</code> when you expected it to come from the env
+        var), check whether the env var is actually set in the JVM process's environment &mdash;
+        orchestration platforms sometimes drop env vars that work in shells. If the path doesn't
+        exist, the JVM creates it on first write; if permissions prevent writing,
+        <code>asymm eliya doctor</code> flags the failure explicitly.</p>
+    <p>Full path strategy:
+        <a href="/product/eliya/user-guide/flags-reference.html#diagnostic-paths" class="org-link org-link--inline org-link--internal">flags reference &sect;Diagnostic paths</a>.</p>
+
+
+    <h4>JFR recordings not appearing</h4>
+    <p>Two common causes:</p>
+    <p><strong>Path permissions.</strong> The JVM process must have write permission to
+        <code>${ELIYA_DIAGNOSTIC_PATH}/${service}/${replica}/jfr/</code>. For
+        container deployments using the default <code>/var/log/eliya/</code>, ensure the mounted
+        volume is writable by the JVM user. For bare-metal RPM/DEB installs, the JVM service
+        account must be a member of the <code>eliya-diagnostics</code> group (set by package
+        post-install scripts).</p>
+    <p><strong>Path resolution mismatch.</strong> Run <code>asymm eliya info</code> and check the
+        <code>Diagnostic Configuration</code> section. If the resolved JFR path differs from your
+        expectation, your service or replica resolution chain is producing a different value than
+        you assumed &mdash; check whether <code>ELIYA_SERVICE_NAME</code> /
+        <code>ELIYA_REPLICA_NAME</code> are set, or whether <code>HOSTNAME</code> is what you
+        thought.</p>
+
+
+    <h4>Multiple replicas writing to the same directory</h4>
+    <p>If <code>/var/log/eliya/${service}/</code> contains mixed artifacts from multiple
+        replicas without per-replica subdirectories, the replica name resolved to the same value
+        as the service name &mdash; triggering the suppression rule. This is intentional for
+        bare-metal multi-JVM hosts (where <code>HOSTNAME</code> is the host, identical for all
+        services) but unintended in container deployments.</p>
+    <p>Check whether <code>HOSTNAME</code> is being set correctly in your containers (it should be
+        the container ID or pod name, not the host name). If your runtime doesn't set
+        <code>HOSTNAME</code> per container, set <code>ELIYA_REPLICA_NAME</code> explicitly:</p>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('docker run -e ELIYA_REPLICA_NAME=$(hostname) ...')" aria-label="Copy command">
+        <code>docker run -e ELIYA_REPLICA_NAME=$(hostname) ...</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+    <p>Or in Kubernetes, use the downward API:</p>
+    <div class="inline-terminal inline-terminal--static">
+        <code>env:<br>
+&nbsp;&nbsp;- name: ELIYA_REPLICA_NAME<br>
+&nbsp;&nbsp;&nbsp;&nbsp;valueFrom:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fieldRef:<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;fieldPath: metadata.name</code>
+    </div>
+
+
+    <h4>Eliya behaves differently than Corretto / Zulu / Temurin</h4>
+    <p>If <code>-XX:EliyaProfile=Production</code> is set, observability defaults
+        are active &mdash; JFR recording to disk, heap dumps configured, GC logs written. Disk write
+        activity will be higher than a vanilla JVM. This is by design &mdash; Eliya prioritises diagnostic
+        data availability over filesystem inactivity.</p>
+    <p>Other behavioural differences should not occur.
+        Eliya inherits upstream OpenJDK 25's Java APIs, JIT, GC, and security configuration
+        unchanged. If you observe an unexpected behavioural difference between Eliya and another
+        OpenJDK 25 distribution, please file an issue with <code>asymm eliya info</code> output
+        attached &mdash; that is a bug we want to know about.</p>
+
+
+    <h4>Process memory exceeds JVM heap configuration</h4>
+    <p>If <code>ps</code> shows the JVM process using significantly more memory than
+        <code>-Xmx</code>, the excess is in native memory regions (Metaspace, code cache, thread
+        stacks, DirectByteBuffers, or JNI allocations) &mdash; not the Java heap.</p>
+    <p>Eliya's <code>EliyaProfile=Production</code> activates NMT summary mode by default.
+        Capture a baseline early:</p>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('jcmd &lt;pid&gt; VM.native_memory baseline')" aria-label="Copy command">
+        <code>jcmd &lt;pid&gt; VM.native_memory baseline</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+    <p>Later, after memory has grown, capture the diff:</p>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('jcmd &lt;pid&gt; VM.native_memory summary.diff')" aria-label="Copy command">
+        <code>jcmd &lt;pid&gt; VM.native_memory summary.diff</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+    <p>The output shows which native memory region grew. Common patterns:</p>
+    <ul>
+        <li><strong>Metaspace growth</strong> &rarr; classloader leak (frequent in apps that
+            redeploy classes without restart)</li>
+        <li><strong>Code cache pressure</strong> &rarr; JIT compilation pressure, frequent
+            deoptimisation</li>
+        <li><strong>Internal / Symbol growth</strong> &rarr; JVM internal data structures, possibly
+            too many threads</li>
+        <li><strong>DirectByteBuffer or JNI growth</strong> &rarr; application or library leak in
+            native code</li>
+    </ul>
+    <p>For deeper analysis, Phase 2 will bundle <code>asymm eliya analyze-heap</code> and the full
+        async-profiler suite for native allocation tracing. For Phase 1, the NMT summary plus diff
+        is the canonical entry point for native memory diagnosis &mdash; APM tools don't have this
+        visibility.</p>
+
+
+    <h4>Performance overhead seems higher than expected</h4>
+    <p>Eliya's observability defaults add ~1&ndash;2% CPU steady-state overhead. If you observe
+        higher overhead, measure each component.</p>
+    <p><strong>Baseline benchmark</strong> (Eliya without observability):</p>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('java -jar app.jar')" aria-label="Copy command">
+        <code>java -jar app.jar</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+    <p><strong>With Eliya observability:</strong></p>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('java -XX:EliyaProfile=Production -jar app.jar')" aria-label="Copy command">
+        <code>java -XX:EliyaProfile=Production -jar app.jar</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+    <p><strong>With JFR specifically disabled</strong> (subtraction pattern):</p>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('java -XX:EliyaProfile=Production -XX:-FlightRecorder -jar app.jar')" aria-label="Copy command">
+        <code>java -XX:EliyaProfile=Production -XX:-FlightRecorder -jar app.jar</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+    <p>If the JFR-disabled benchmark approaches the baseline, JFR is the dominant cost. For
+        workloads where JFR's overhead is unacceptable (extreme allocation rates, sub-millisecond
+        latency requirements), disable JFR while keeping other Eliya defaults. The
+        <a href="/product/eliya/user-guide/flags-reference.html" class="org-link org-link--inline org-link--internal">flags reference</a>
+        documents the subtraction pattern.</p>
+
+
+    <h4>Running Eliya alongside an APM agent</h4>
+    <p>Eliya coexists with APM agents (AppDynamics, Dynatrace, New Relic, Elastic APM, Datadog APM)
+        using the standard <code>-javaagent:</code> mechanism. Two coexistence issues to watch for.</p>
+    <p><strong>JFR conflict with Datadog Continuous Profiler or similar.</strong> Some APM tools
+        also start JFR recordings. If both Eliya and an APM agent try to start JFR recordings, the
+        second will fail with <code>Recording already in progress</code>. Resolutions:</p>
+    <ul>
+        <li>Let the APM agent manage JFR (disable Eliya's JFR via <code>-XX:-FlightRecorder</code>
+            after <code>-XX:EliyaProfile=Production</code>).</li>
+        <li>Let Eliya manage JFR (disable the APM agent's JFR; consult APM vendor docs).</li>
+        <li>Use both but coordinate: APM tools that feed JFR into their own pipeline (Datadog
+            Continuous Profiler) can work with Eliya's JFR configuration &mdash; verify with the
+            vendor.</li>
+    </ul>
+    <p><strong>Memory overhead combined.</strong> Eliya's observability defaults add ~1&ndash;2%
+        CPU and ~13&ndash;26 MB memory. APM agents add another 50&ndash;300 MB memory and
+        2&ndash;10% CPU depending on the vendor. On containers with tight memory limits, the
+        combination may exceed budgets. Measure both independently and combined before committing.</p>
+    <p>For the full coexistence story, see
+        <a href="/research/jvm-forensics-vs-apm.html" class="org-link org-link--inline org-link--internal">JVM forensics vs APM</a>.</p>
+
+
+    <h3>Looking forward</h3>
+    <p>Phase 2 will expand the troubleshooting toolkit:</p>
+    <ul>
+        <li><strong>Bundled Eclipse MAT (headless)</strong> for offline heap analysis without
+            Internet access &mdash; useful in air-gapped environments.</li>
+        <li><strong>Bundled async-profiler</strong> for hardware-counter and wall-clock profiling
+            beyond what JFR alone provides.</li>
+        <li><strong><code>asymm eliya analyze-heap</code></strong>,
+            <strong><code>asymm eliya profile</code></strong>, and
+            <strong><code>asymm eliya jfr</code></strong> subcommands wrapping the bundled tools.</li>
+    </ul>
+    <p>Phase 3 will add Asymm Forensics for cross-artifact correlation &mdash; analysing JFR + heap
+        dumps + thread dumps + GC logs + crash logs together rather than as separate analyses. Local
+        execution, no SaaS dependency.</p>
+    <p>Phase 4 will add compliance-aligned profiles (PCI DSS, HIPAA, SOX, FedRAMP, etc.) plus
+        combined profiles for industries needing multiple frameworks.</p>
+    <p>The Phase 1 troubleshooting flow on this page remains the foundation across all phases.
+        Phase 2/3/4 capabilities are additive.</p>
+
+
+    <h3>Filing an issue</h3>
+    <p>Non-security issues: open a GitHub issue on
         <a href="https://github.com/asymmsystems/eliya-jdk/issues" class="org-link org-link--inline org-link--external">asymmsystems/eliya-jdk</a>.
         Include:</p>
-    <ul style="max-width: 70ch; line-height: 1.8; margin-top: 1rem;">
-        <li><code>asymm --info</code> output</li>
+    <ul>
+        <li><code>asymm eliya info</code> output</li>
         <li><code>java -version</code></li>
         <li>OS, architecture, container image if applicable</li>
         <li>Full command line (flags, JAR path)</li>
         <li>Minimal reproducer if possible</li>
     </ul>
 
-    <p style="max-width: 70ch; margin-top: 1.5rem;">Security issues: email
+    <p>Security issues: email
         <a href="mailto:security@asymm.systems" class="org-link org-link--inline org-link--external">security@asymm.systems</a>
-        — see the
+        &mdash; see the
         <a href="/product/eliya/security.html" class="org-link org-link--inline org-link--internal">security page</a>.</p>
 </section>
 
-<div style="margin-top: 5rem; text-align: center;">
-    <a href="/product/eliya/user-guide/" class="org-link org-link--internal">← user guide</a>
+<div class="page-back-nav">
+    <a href="/product/eliya/user-guide/" class="org-link org-link--internal org-link--back">user guide</a>
 </div>

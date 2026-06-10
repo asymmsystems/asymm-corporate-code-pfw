@@ -14,13 +14,22 @@ Includes the Eliya JDK microsite at `/product/eliya/*` (per
 
 ## Build
 
-Generate the static site (with CSS minification, HTML compression, and clean URLs):
+Generate the static site (CSS minification + HTML compression). Internal hrefs keep `.html` so
+`target/site/` is browsable directly with any plain local file server:
 
 ```bash
 ./mvnw clean process-resources
 ```
 
-Output is written to `target/site/`.
+Production build: same pipeline plus `clean-urls.sh` (strips `.html` from internal hrefs for
+Cloudflare Pages, which serves `/page` → `page.html` natively):
+
+```bash
+./mvnw -Pproduction clean process-resources
+```
+
+CI workflows (preview / production / validate) all activate `-Pproduction`. Output is always
+written to `target/site/`.
 
 For a quick unoptimised build (JBake only — skips minify / compress / clean-urls):
 
@@ -37,8 +46,9 @@ Run a local dev server with live reload:
 ```
 
 Then open <http://localhost:8020> in the browser. Source files keep `.html` in hrefs so the dev
-server resolves them as-is; the `clean-urls.sh` script strips `.html` only during production builds
-(Cloudflare Pages then natively serves `/page` → `page.html`).
+server resolves them as-is. If you build with `./mvnw clean process-resources` (no profile) and
+serve `target/site/` via any static file server, links also work because `.html` is preserved by
+default. Only `-Pproduction` strips `.html`.
 
 ## Repository Layout
 

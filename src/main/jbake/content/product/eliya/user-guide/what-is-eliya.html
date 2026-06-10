@@ -1,97 +1,209 @@
 title=What is Eliya?
-description=Eliya's positioning, relationship to upstream OpenJDK, and telecom optimisations.
+description=Eliya's positioning, what each phase delivers, and the observability and operational-readiness defaults that distinguish it from Corretto, Temurin, and Zulu.
 type=page
 toc=true
 status=published
 ~~~~~~
-
-<nav class="eliya-breadcrumb" aria-label="Breadcrumb"><span class="crumb-collapse" role="button" tabindex="0" onclick="this.parentElement.classList.toggle(&apos;expanded&apos;)">~ / &hellip;</span><span class="crumb-hidden"><span class="crumb-sep">/</span><a href="/">asymm</a></span><span class="crumb-hidden"><span class="crumb-sep">/</span>product</span><span class="crumb-sep">/</span><a href="/product/eliya.html">eliya</a><span class="crumb-sep">/</span><a href="/product/eliya/user-guide/">user-guide</a><span class="crumb-sep">/</span><span class="crumb-leaf">what-is-eliya</span></nav>
 
 <header class="page-header">
     <span class="section-kicker">User guide</span>
     <h1>What is Eliya?</h1>
 </header>
 
-<section style="max-width: 70ch; line-height: 1.8;">
+<section>
+    <p>Eliya JDK is the forensic-grade JVM platform from Asymm Systems for compliance-conscious
+        production environments across BFSI, healthcare, government, telecom, and other
+        standards-driven industries. It is distributed under GPLv2 with the Classpath Exception
+        &mdash; the same licence as upstream OpenJDK.</p>
 
-<p>Eliya JDK is an OpenJDK distribution built and maintained by Asymm Systems. It is
-distributed under GPLv2 with the Classpath Exception — the same licence as upstream OpenJDK.</p>
+    <h3>What Eliya provides</h3>
 
-<p>Eliya exists to do three things:</p>
-<ol>
-    <li><strong>Ship upstream OpenJDK unchanged in essence.</strong> Eliya builds from the same source tree
-        (<code>openjdk/jdk25u</code>), publishes on the same quarterly CPU cadence, and preserves API
-        semantics. If your application runs on upstream OpenJDK 25, it runs on Eliya.</li>
-    <li><strong>Activate telecom-optimised runtime defaults behind a single flag.</strong>
-        <code>-XX:+UseEliyaDefaults</code> enables a curated profile (G1GC with 50 ms pause targets,
-        string deduplication, compressed oops, tiered compilation) tuned for request-processing workloads
-        like telecom API gateways and BSS components. Off by default — TCK compliance preserved.</li>
-    <li><strong>Harden security defaults, always on.</strong> Eliya modifies <code>java.security</code> in
-        the overlay to disable SSLv3, TLS 1.0, and TLS 1.1, block weak cipher suites (RC4, DES, 3DES,
-        MD5), and enforce 2048-bit minimum key sizes. Active on every JVM invocation — no flags
-        required.</li>
-</ol>
+    <p><strong>Today (Phase 1).</strong> Pre-configured production observability and
+        operational-readiness. A single flag <code>-XX:EliyaProfile=Production</code> activates a
+        curated baseline of Java Flight Recorder, heap dumps, GC logging, native memory tracking,
+        and exit-on-OOM. The profile is opt-in, not a coercive policy. See
+        <a href="/product/eliya/user-guide/flags-reference.html" class="org-link org-link--inline org-link--internal">flags reference</a>
+        for the exact capabilities activated.</p>
 
-<h3>What Eliya is not</h3>
+    <p><strong>Phase 2 (post-seed, target H2 2026).</strong> Local-only bundled diagnostic tooling
+        (Eclipse MAT headless, async-profiler), a FIPS-validated build variant
+        (<code>eliya-jdk-fips</code>) for regulated procurement, capability-flag carve-outs for
+        fine-grained control, macOS aarch64 support (demand-gated), native
+        <code>.deb</code> / <code>.rpm</code> packages.</p>
 
-<p>Eliya is not a fork of OpenJDK in the sense of diverging from upstream. It is a
-branded build with a minimal, merge-safe source patch (the UseEliyaDefaults flag) and configuration
-overlays. Every quarterly upstream CPU flows into Eliya within two weeks.</p>
+    <p><strong>Phase 3 (post-Series A funding, target 2027).</strong> Asymm Forensics &mdash; a JVM
+        diagnostic platform that cross-correlates JFR recordings, heap dumps, thread dumps, GC
+        logs, and crash artifacts to generate compliance-aligned audit reports. Local execution,
+        no SaaS dependency. Windows x64 ships alongside.</p>
 
-<p>Eliya is not a proprietary JVM. HotSpot is the underlying VM; no custom JIT,
-custom GC, or ahead-of-time compiler is layered on top. If you need those, see Azul Platform Prime or
-BellSoft Liberica NIK.</p>
+    <p><strong>Phase 4 (demand-gated).</strong> Compliance-aligned profile values
+        (<code>EliyaProfile=PCIDSS</code>, <code>=HIPAA</code>, <code>=SOX</code>,
+        <code>=FedRAMP</code>, <code>=GDPR</code>, <code>=ISO27001</code>, <code>=SOC2</code>)
+        plus combined profiles for industries spanning multiple frameworks
+        (<code>=Healthcare-Payment</code> for PCI&nbsp;DSS + HIPAA, <code>=Financial-SaaS</code>
+        for SOC&nbsp;2 + ISO&nbsp;27001, <code>=Federal-Defense</code> for FedRAMP + CMMC). Each
+        profile ships when at least 5 enterprise prospects have signed up with that specific
+        framework requirement. The flag namespace is reserved today; implementations ship as
+        customers ask for them.</p>
 
-<p>Eliya is not required for Dial. Dial targets JDK 25+ from any vendor — Corretto,
-Temurin, Zulu, Oracle, Liberica, or Eliya. Eliya is the recommended runtime because of the telecom
-optimisations, but never mandatory.</p>
+    <p>Full trajectory and demand-gating mechanics:
+        <a href="/product/eliya/roadmap.html" class="org-link org-link--inline org-link--internal">roadmap</a>.</p>
 
-<h3>Relationship to upstream OpenJDK</h3>
+    <p>Across all phases, one principle holds: <strong>Eliya runs entirely inside your
+        perimeter.</strong> No SaaS dependencies, no telemetry, no phone-home. Diagnostic
+        data &mdash; JFR recordings, heap dumps, GC logs, crash artifacts &mdash; stays on
+        your hardware. The Phase 2 bundled tools follow the same principle: local execution
+        only.</p>
 
-<table class="clinical-table" style="margin-top: 1.5rem;">
-    <thead>
-        <tr>
-            <th>Layer</th>
-            <th>Source</th>
-        </tr>
-    </thead>
-    <tbody>
-        <tr>
-            <td>Java APIs, compiler, standard library</td>
-            <td>Upstream <code>openjdk/jdk25u</code> — unchanged</td>
-        </tr>
-        <tr>
-            <td>HotSpot VM</td>
-            <td>Upstream — unchanged except the UseEliyaDefaults flag definition</td>
-        </tr>
-        <tr>
-            <td>GC defaults</td>
-            <td>Upstream defaults unless <code>-XX:+UseEliyaDefaults</code> is set</td>
-        </tr>
-        <tr>
-            <td><code>java.security</code></td>
-            <td>Eliya overlay — hardened</td>
-        </tr>
-        <tr>
-            <td><code>asymm</code> CLI (<code>bin/asymm</code>)</td>
-            <td>Eliya overlay — diagnostic helper</td>
-        </tr>
-        <tr>
-            <td>Overlay config (<code>conf/eliya/</code>)</td>
-            <td>Eliya overlay — inspectable references</td>
-        </tr>
-    </tbody>
-</table>
+    <h3>Why use Eliya instead of Corretto, Temurin, or Zulu?</h3>
 
-<h3>Who Eliya is for</h3>
+    <p>All four are honest OpenJDK builds. Eliya's distinct contribution is production-grade
+        diagnostic, observability, and compliance tooling that runs entirely inside the
+        perimeter &mdash; Phase 1 ships the observability defaults; later phases add the
+        bundled tooling and compliance framework alignment that no other OpenJDK distribution
+        offers without SaaS dependencies.</p>
 
-<p>Eliya is built with telecom workloads in mind — BSS/OSS components, TMF
-Open-API gateways, request-heavy services where tail latency matters more than peak throughput. It is a
-reasonable default for any Linux server Java workload. It is not positioned for desktop or Windows
-deployments.</p>
+    <table class="clinical-table">
+        <thead>
+            <tr>
+                <th>Capability</th>
+                <th>Corretto</th>
+                <th>Temurin</th>
+                <th>Zulu</th>
+                <th>Eliya</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>JDK 25 LTS</td>
+                <td>&#10003;</td>
+                <td>&#10003;</td>
+                <td>&#10003;</td>
+                <td>&#10003;</td>
+            </tr>
+            <tr>
+                <td>TCK-certified</td>
+                <td>&#10003;</td>
+                <td>&#10003;</td>
+                <td>&#10003;</td>
+                <td>based on TCK-certified upstream<sup>1</sup></td>
+            </tr>
+            <tr>
+                <td>JFR continuous recording by default</td>
+                <td>&mdash;</td>
+                <td>&mdash;</td>
+                <td>&mdash;</td>
+                <td>&#10003; (Phase 1)</td>
+            </tr>
+            <tr>
+                <td>Heap dump on OOM by default</td>
+                <td>&mdash;</td>
+                <td>&mdash;</td>
+                <td>&mdash;</td>
+                <td>&#10003; (Phase 1)</td>
+            </tr>
+            <tr>
+                <td>NMT by default</td>
+                <td>&mdash;</td>
+                <td>&mdash;</td>
+                <td>&mdash;</td>
+                <td>&#10003; (Phase 1)</td>
+            </tr>
+            <tr>
+                <td>GC logging by default</td>
+                <td>&mdash;</td>
+                <td>&mdash;</td>
+                <td>&mdash;</td>
+                <td>&#10003; (Phase 1)</td>
+            </tr>
+            <tr>
+                <td>Bundled local diagnostic tooling (MAT, async-profiler)</td>
+                <td>&mdash;</td>
+                <td>&mdash;</td>
+                <td>&mdash;</td>
+                <td>&#10003; (Phase 2)</td>
+            </tr>
+            <tr>
+                <td>FIPS-validated build variant</td>
+                <td>&mdash;</td>
+                <td>&mdash;</td>
+                <td>&mdash;</td>
+                <td>&#10003; (Phase 2)</td>
+            </tr>
+            <tr>
+                <td>Compliance-aligned profile flags (PCIDSS, HIPAA, SOX, FedRAMP, &hellip;)</td>
+                <td>&mdash;</td>
+                <td>&mdash;</td>
+                <td>&mdash;</td>
+                <td>&#10003; (Phase 4, demand-gated)</td>
+            </tr>
+            <tr>
+                <td>Quarterly CPU within 2 weeks of upstream</td>
+                <td>typical, no formal commitment</td>
+                <td>typical, no formal commitment</td>
+                <td>typical, no formal commitment</td>
+                <td>&#10003; committed</td>
+            </tr>
+            <tr>
+                <td>Three-level diagnostic path layout (per-replica audit attribution)</td>
+                <td>&mdash;</td>
+                <td>&mdash;</td>
+                <td>&mdash;</td>
+                <td>&#10003; (Phase 1)</td>
+            </tr>
+            <tr>
+                <td>Cross-correlation forensic platform (no SaaS)</td>
+                <td>&mdash;</td>
+                <td>&mdash;</td>
+                <td>&mdash;</td>
+                <td>&#10003; (Phase 3 &mdash; Asymm Forensics)</td>
+            </tr>
+            <tr>
+                <td>Local execution, no telemetry, no phone-home</td>
+                <td>&#10003;</td>
+                <td>&#10003;</td>
+                <td>&#10003;</td>
+                <td>&#10003; (architectural commitment across all phases)</td>
+            </tr>
+        </tbody>
+    </table>
 
+    <p><sup>1</sup> Self-certification under the OpenJDK Community TCK License Agreement (OCTLA)
+        is a Phase 2 deliverable. See
+        <a href="/product/eliya/security.html" class="org-link org-link--inline org-link--internal">TCK compliance</a>.</p>
+
+    <p>If your team already configures observability flags themselves and has no plans to
+        adopt compliance-aligned profile flags or Asymm Forensics, Eliya offers less marginal
+        value in Phase 1 &mdash; Temurin or Corretto remains a fine pick. Eliya's strategic
+        value compounds across phases: configured-by-default observability now, bundled local
+        diagnostic tooling next, compliance-aligned profiles when customer demand triggers
+        each framework, and Asymm Forensics when Phase 3 delivers.</p>
+
+    <p>Eliya runs alongside APM tools (AppDynamics, Dynatrace, New Relic, Elastic APM, Datadog)
+        via the standard <code>-javaagent:</code> API. For the architectural distinction
+        between observability platforms and forensic-grade JVM artefacts, and the
+        incident-response use cases Eliya addresses that APM structurally cannot, see
+        <a href="/research/jvm-forensics-vs-apm.html" class="org-link org-link--inline org-link--internal">JVM forensics vs APM</a>.
+        For the vendor-by-vendor JDK comparison, see
+        <a href="/research/choosing-a-jdk-2026.html" class="org-link org-link--inline org-link--internal">Choosing a JDK in 2026</a>.</p>
+
+    <h3>Where to go next</h3>
+    <ul>
+        <li><a href="/product/eliya/user-guide/quick-start.html" class="org-link org-link--inline org-link--internal">Quick start</a>
+            &mdash; zero to a running Eliya with observability defaults in five steps.</li>
+        <li><a href="/product/eliya/user-guide/flags-reference.html" class="org-link org-link--inline org-link--internal">Flags reference</a>
+            &mdash; the precise breakdown of what <code>EliyaProfile=Production</code> activates,
+            with performance impact and override semantics.</li>
+        <li><a href="/product/eliya/integrations.html" class="org-link org-link--inline org-link--internal">Integrations</a>
+            &mdash; Maven / Gradle toolchains, Kubernetes patterns, service mesh, logging stacks,
+            CI/CD, APM coexistence, cryptographic providers.</li>
+        <li><a href="/product/eliya/roadmap.html" class="org-link org-link--inline org-link--internal">Roadmap</a>
+            &mdash; consolidated Phase 1 to Phase 4 trajectory with demand-gating mechanics.</li>
+        <li><a href="/product/eliya/user-guide/lessons-from-production.html" class="org-link org-link--inline org-link--internal">Lessons from production</a>
+            &mdash; the four recurring production patterns that motivated these defaults.</li>
+    </ul>
 </section>
 
-<div style="margin-top: 5rem; text-align: center;">
-    <a href="/product/eliya/user-guide/" class="org-link org-link--internal">← user guide</a>
+<div class="page-back-nav">
+    <a href="/product/eliya/user-guide/" class="org-link org-link--internal org-link--back">user guide</a>
 </div>

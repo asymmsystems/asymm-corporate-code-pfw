@@ -14,9 +14,11 @@
 
     <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <jbake.version>2.6.7</jbake.version>
-        <jbake.plugin.version>0.3.4</jbake.plugin.version>
+        <jbake.version>2.7.0-rc.7</jbake.version>
+        <jbake.plugin.version>2.7.0-rc.7</jbake.plugin.version>
         <freemarker.version>2.3.33</freemarker.version>
+        <sass.plugin.version>1.5.0</sass.plugin.version>
+        <dart.sass.version>1.83.0</dart.sass.version>
         <minify.plugin.version>1.7.11</minify.plugin.version>
         <htmlcompressor.plugin.version>2.1.1</htmlcompressor.plugin.version>
         <skip.optimize>false</skip.optimize>
@@ -24,6 +26,32 @@
 
     <build>
         <plugins>
+            <!-- SCSS → CSS compile (Dart Sass via cleydyr plugin). Runs before JBake
+                 copies assets, so JBake sees the freshly-generated assets/css/style.css.
+                 Replaces the old Ruby-Sass-via-JRuby plugin to drop deprecation noise
+                 and avoid sun.misc.Unsafe / sun.nio.ch reflection issues on JDK 21+. -->
+            <plugin>
+                <groupId>io.github.cleydyr</groupId>
+                <artifactId>dart-sass-maven-plugin</artifactId>
+                <version>${sass.plugin.version}</version>
+                <configuration>
+                    <version>${dart.sass.version}</version>
+                </configuration>
+                <executions>
+                    <execution>
+                        <id>compile-scss</id>
+                        <phase>generate-resources</phase>
+                        <goals><goal>compile-sass</goal></goals>
+                        <configuration>
+                            <inputFolder>${project.basedir}/src/main/scss</inputFolder>
+                            <outputFolder>${project.basedir}/src/main/jbake/assets/css</outputFolder>
+                            <style>EXPANDED</style>
+                            <noSourceMap>true</noSourceMap>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
             <plugin>
                 <groupId>org.jbake</groupId>
                 <artifactId>jbake-maven-plugin</artifactId>
@@ -113,25 +141,38 @@
                 </executions>
             </plugin>
 
-            <!-- Clean URLs: strip .html from href links for Cloudflare Pages -->
-            <plugin>
-                <groupId>org.codehaus.mojo</groupId>
-                <artifactId>exec-maven-plugin</artifactId>
-                <version>3.1.0</version>
-                <executions>
-                    <execution>
-                        <id>clean-urls</id>
-                        <phase>process-resources</phase>
-                        <goals><goal>exec</goal></goals>
-                        <configuration>
-                            <executable>${project.basedir}/scripts/clean-urls.sh</executable>
-                            <arguments>
-                                <argument>${project.build.directory}/site</argument>
-                            </arguments>
-                        </configuration>
-                    </execution>
-                </executions>
-            </plugin>
         </plugins>
     </build>
+
+    <profiles>
+        <!-- Production-only: strip .html from internal hrefs for Cloudflare Pages.
+             Default (no profile) builds keep .html so target/site/ is browsable
+             with a plain local file server. CI deploys activate this profile via
+             ./mvnw -Pproduction clean process-resources. -->
+        <profile>
+            <id>production</id>
+            <build>
+                <plugins>
+                    <plugin>
+                        <groupId>org.codehaus.mojo</groupId>
+                        <artifactId>exec-maven-plugin</artifactId>
+                        <version>3.1.0</version>
+                        <executions>
+                            <execution>
+                                <id>clean-urls</id>
+                                <phase>process-resources</phase>
+                                <goals><goal>exec</goal></goals>
+                                <configuration>
+                                    <executable>${project.basedir}/scripts/clean-urls.sh</executable>
+                                    <arguments>
+                                        <argument>${project.build.directory}/site</argument>
+                                    </arguments>
+                                </configuration>
+                            </execution>
+                        </executions>
+                    </plugin>
+                </plugins>
+            </build>
+        </profile>
+    </profiles>
 </project>

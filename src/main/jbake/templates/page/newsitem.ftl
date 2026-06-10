@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<#include "header.ftl">
+<#include "/partial/header.ftl">
 </head>
 <body>
 <div class="container">
     <nav style="padding-top: 3rem;">
-        <div class="nav-brand"><#include "brand.ftl"></div>
+        <div class="nav-brand"><#include "/partial/brand/asymm-brand.ftl"></div>
     </nav>
 </div>
 
@@ -25,11 +25,11 @@
             </div>
             
             <hr class="section-divider" style="margin: 4rem 0;">
-            <p><a href="/registry.html" class="org-link org-link--inline org-link--internal">Back to Registry</a></p>
+            <p><a href="/registry.html" class="org-link org-link--inline org-link--internal org-link--back">Back to Registry</a></p>
         </div>
     </article>
 </div>
 
-<#include "menu.ftl">
+<#include "/partial/menu/menu.ftl">
 </body>
 </html>

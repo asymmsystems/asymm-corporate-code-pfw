@@ -1,34 +1,47 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<#include "header.ftl">
+<#include "/partial/header.ftl">
 </head>
 <body>
-<div class="container">
-    <nav style="padding-top: 3rem;">
-        <div class="nav-brand"><#include "brand.ftl"></div>
-    </nav>
-</div>
+<#include "/macro/breadcrumb.ftl">
+<#include "/partial/menu/menu-data.ftl">
 
 <#assign hasToc = (content.toc!'false')?string == 'true'>
 
-<div class="container" style="padding-top: 4rem; padding-bottom: 8rem; min-height: 70vh;">
-    <#if hasToc>
-    <div class="page-with-toc">
-        <article class="page-body" id="page-body">
-            ${content.body}
-        </article>
-        <aside class="page-toc" id="page-toc" aria-label="Table of contents">
-            <span class="toc-label">On this page</span>
-            <ul id="page-toc-list"></ul>
-        </aside>
-    </div>
-    <#else>
-    <article class="page-body">
-        ${content.body}
-    </article>
-    </#if>
+<div class="container">
+    <nav style="padding-top: 3rem;">
+        <div class="nav-brand"><#include "/partial/brand/asymm-brand.ftl"></div>
+    </nav>
+    <@renderBreadcrumbForUri uri=(content.uri!"") leaf=(content.breadcrumb_leaf!"") />
 </div>
+
+<#-- body_template lets a content file declare an FTL body file (under
+     templates/content/) that uses macros; falls back to ${content.body}
+     for plain HTML/markdown content. See ADR-00001 §"Implementation Notes". -->
+<#macro pageBody>
+    <#if content.body_template??>
+        <#include "${content.body_template}">
+    <#else>
+        ${content.body}
+    </#if>
+</#macro>
+
+<#-- Article sits inside .container so its contents (header, p, lists,
+     tables) align with the brand/breadcrumb above. Alt-bg is scoped to
+     .home-body / .microsite-body, so .page-body has no need for
+     full-bleed sections. The TOC, when present, is a fixed sidebar. -->
+<div class="container">
+    <article class="page-body page-body--breadcrumb<#if hasToc> page-body--toc</#if>" id="page-body">
+        <@pageBody/>
+    </article>
+</div>
+<#if hasToc>
+<aside class="page-toc" id="page-toc" aria-label="Table of contents">
+    <span class="toc-label">On this page</span>
+    <ul id="page-toc-list"></ul>
+</aside>
+</#if>
 
 <#if hasToc>
 <script>
@@ -87,6 +100,6 @@
 </script>
 </#if>
 
-<#include "menu.ftl">
+<#include "/partial/menu/menu.ftl">
 </body>
 </html>

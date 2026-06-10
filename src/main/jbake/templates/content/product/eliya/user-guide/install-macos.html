@@ -1,0 +1,66 @@
+<#include "/macro/waitlist.ftl">
+<#include "/macro/release.ftl">
+
+<header class="page-header">
+    <span class="section-kicker">User guide</span>
+    <h1>Install on macOS</h1>
+    <p style="max-width: 60ch">Eliya targets Linux servers — macOS support is Phase 2. SDKman
+        provides Eliya for Linux today; macOS users can run Eliya in Linux-based Docker containers
+        in the meantime, or wait for the Phase 2 native aarch64 binary.</p>
+</header>
+
+<section>
+    <h3>Today: run Eliya in Docker</h3>
+    <p>Until the Phase 2 macOS aarch64 binary ships, the recommended path on macOS is to run
+        Eliya inside a Linux-based Docker container. On Apple Silicon, prefer the
+        <code>linux/arm64</code> variant &mdash; Eliya's multi-arch image manifest serves it
+        natively, no emulation involved. Docker Desktop can also run <code>linux/amd64</code>
+        images via Rosetta 2 emulation, but not every syscall behaves identically under
+        emulation; for production-shape workloads on Apple Silicon, the native arm64 path is
+        the right default.</p>
+
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('docker run --rm -it ghcr.io/asymmsystems/eliya:25-lts java -XX:EliyaProfile=Production -version')" aria-label="Copy command">
+        <code>docker run --rm -it ghcr.io/asymmsystems/eliya:25-lts java -XX:EliyaProfile=Production -version</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+
+    <p>Full Docker walkthrough:
+        <a href="/product/eliya/user-guide/install-docker.html" class="org-link org-link--inline org-link--internal">Install with Docker</a>.</p>
+
+
+    <h3>SDKman (Phase 2)</h3>
+    <p>SDKman is the recommended path on macOS once the macOS aarch64
+        binary ships in Phase 2. Today, SDKman serves Linux — macOS users should use Docker (above)
+        in the interim.</p>
+
+    <p>
+        When the Phase 2 binary lands, the install command will be:</p>
+
+    <button type="button" class="inline-terminal inline-terminal--static">
+        <code>sdk install java ${eliyaVersion}-eliya</code>
+    </button>
+</section>
+
+<section id="waitlist" class="alt-bg">
+    <h3>Native aarch64 binary &mdash; Phase 2</h3>
+    <p>Eliya is server-first. macOS support exists for developers running Dial workflows
+        locally against the Eliya runtime, not because macOS is a production target. Native
+        aarch64 builds for Apple Silicon are a Phase 2 demand-gated deliverable; native
+        <code>.pkg</code> installers and a Homebrew tap follow if demand signal warrants them.</p>
+
+    <p>If you'd use a native macOS binary, join the early-access list. Your signup is a
+        meaningful demand signal that influences Phase 2 prioritisation.</p>
+
+    <@renderWaitlistForm
+        formspree_url="https://formspree.io/f/mnjwnwjp"
+        product_tag="macos"
+        product_label="macOS"
+        heading="Get notified when the macOS aarch64 binary is available"
+        body="Native aarch64 builds for Apple Silicon are a Phase 2 demand-gated deliverable. We'll email you the moment the binary ships."
+        submit_label="Notify me about macOS support" />
+</section>
+
+<div class="page-back-nav">
+    <a href="/product/eliya/user-guide/" class="org-link org-link--internal org-link--back">user guide</a>
+</div>

@@ -1,60 +1,8 @@
 title=Install Eliya on macOS
-description=Install Eliya JDK on macOS via SDKman. Native PKG deferred to Phase 2.
+description=Eliya targets Linux servers — macOS support is Phase 2 (post-seed, demand-gated). Today, run Eliya in Linux-based Docker containers; native macOS aarch64 binary is the Phase 2 deliverable.
 type=page
 status=published
+body_template=/content/product/eliya/user-guide/install-macos.html
 ~~~~~~
 
-<nav class="eliya-breadcrumb" aria-label="Breadcrumb"><span class="crumb-collapse" role="button" tabindex="0" onclick="this.parentElement.classList.toggle(&apos;expanded&apos;)">~ / &hellip;</span><span class="crumb-hidden"><span class="crumb-sep">/</span><a href="/">asymm</a></span><span class="crumb-hidden"><span class="crumb-sep">/</span>product</span><span class="crumb-sep">/</span><a href="/product/eliya.html">eliya</a><span class="crumb-sep">/</span><a href="/product/eliya/user-guide/">user-guide</a><span class="crumb-sep">/</span><span class="crumb-leaf">install-macos</span></nav>
-
-<header class="page-header">
-    <span class="section-kicker">User guide</span>
-    <h1>Install on macOS</h1>
-    <p style="max-width: 60ch;">Eliya targets Linux servers — macOS support is
-        developer-experience only, via SDKman. Native <code>.pkg</code> installers are a Phase 2
-        (post-seed) item, demand-gated.</p>
-</header>
-
-<section style="margin-bottom: 5rem;">
-    <h2 class="section-title">Install via SDKman</h2>
-    <p style="max-width: 70ch; margin-bottom: 1.5rem;">SDKman is the recommended path on
-        macOS. Works on both Intel and Apple Silicon (via Rosetta 2 today; native aarch64 builds are on
-        the Phase 1 roadmap).</p>
-
-    <div class="inline-terminal" style="max-width: 600px;"
-        onclick="copyToClipboard('sdk install java 25.0.2-eliya');" title="Click to copy">
-        <code>sdk install java 25.0.2-eliya</code>
-        <span class="copy-btn">Copy</span>
-    </div>
-
-    <p style="margin-top: 1.5rem; font-size: 0.95rem;">
-        Don't have SDKman?
-        <a href="https://sdkman.io/install" class="org-link org-link--inline org-link--external">sdkman.io/install</a>.
-        SDKman runs natively in zsh, bash, and fish.
-    </p>
-</section>
-
-<section style="margin-bottom: 5rem;">
-    <h2 class="section-title">Verify</h2>
-    <div class="inline-terminal" style="max-width: 500px;"
-        onclick="copyToClipboard('java -version');" title="Click to copy">
-        <code>java -version</code>
-        <span class="copy-btn">Copy</span>
-    </div>
-
-    <p style="margin-top: 1.5rem;">Expected: <code>OpenJDK Runtime Environment Eliya
-        (build 25.0.2+1-Eliya)</code>.</p>
-</section>
-
-<section class="technical-inset">
-    <div style="max-width: 800px; margin: 0 auto;">
-        <h3>Positioning note</h3>
-        <p>Eliya is server-first. macOS developer support exists so you can run
-            Dial locally against the Eliya runtime, not because macOS is a production target. Native
-            aarch64 builds for Apple Silicon are planned for Phase 1 (2026). Native <code>.pkg</code>
-            installers and a Homebrew tap are Phase 2 items, only if demand signal warrants them.</p>
-    </div>
-</section>
-
-<div style="margin-top: 5rem; text-align: center;">
-    <a href="/product/eliya/user-guide/" class="org-link org-link--internal">← user guide</a>
-</div>
+<#-- Body lives at templates/content/product/eliya/user-guide/install-macos.html. -->

@@ -1,46 +1,158 @@
 title=Eliya license
-description=Eliya JDK is distributed under GPLv2 with the Classpath Exception — same as upstream OpenJDK.
+description=Eliya JDK is distributed under GPLv2 with the Classpath Exception — same as upstream OpenJDK. Trademark policy, redistribution scenarios, Phase 2 bundled-component licensing, TCK certification, export controls.
 type=page
+toc=true
 status=published
 ~~~~~~
-
-<nav class="eliya-breadcrumb" aria-label="Breadcrumb"><span class="crumb-collapse" role="button" tabindex="0" onclick="this.parentElement.classList.toggle(&apos;expanded&apos;)">~ / &hellip;</span><span class="crumb-hidden"><span class="crumb-sep">/</span><a href="/">asymm</a></span><span class="crumb-hidden"><span class="crumb-sep">/</span>product</span><span class="crumb-sep">/</span><a href="/product/eliya.html">eliya</a><span class="crumb-sep">/</span><a href="/product/eliya/user-guide/">user-guide</a><span class="crumb-sep">/</span><span class="crumb-leaf">license</span></nav>
 
 <header class="page-header">
     <span class="section-kicker">User guide</span>
     <h1>License</h1>
 </header>
 
-<section style="max-width: 70ch; line-height: 1.8;">
+<section>
 
 <h3>Summary</h3>
-<p>Eliya JDK is distributed under the <strong>GNU General Public License,
-version 2, with the Classpath Exception</strong> — the same licence as upstream OpenJDK. This
-combination permits production use, commercial use, redistribution, and linking from proprietary
-applications without those applications becoming GPL-licensed.</p>
+<p>Eliya JDK is distributed under the <strong>GNU General Public License, version 2, with the
+    Classpath Exception</strong> &mdash; the same licence as upstream OpenJDK. This combination
+    permits production use, commercial use, redistribution, and linking from proprietary
+    applications without those applications becoming GPL-licensed.</p>
+
 
 <h3>What you can do</h3>
 <ul>
     <li>Use Eliya in production, including commercial products.</li>
-    <li>Run Eliya as the JVM for proprietary applications — the Classpath Exception means your
+    <li>Run Eliya as the JVM for proprietary applications &mdash; the Classpath Exception means your
         application does not become GPL by virtue of running on Eliya.</li>
     <li>Redistribute Eliya unchanged.</li>
     <li>Modify Eliya (source is public); modifications must be redistributed under the same licence
         if distributed.</li>
 </ul>
 
+
 <h3>What you must do</h3>
+
+<h4>For internal use only (most common case)</h4>
 <ul>
-    <li>If you redistribute Eliya (modified or not), include the licence text and preserve
-        copyright notices.</li>
-    <li>If you modify and redistribute Eliya's source code, publish the modifications under
-        GPLv2+CE.</li>
+    <li>No source disclosure required if you use Eliya inside your organisation without
+        redistributing it.</li>
+    <li>Modifications you make to Eliya for internal use stay private.</li>
 </ul>
 
+<h4>If you redistribute Eliya binaries (unmodified)</h4>
+<ul>
+    <li>Include the GPLv2+CE licence text with the distribution.</li>
+    <li>Preserve copyright notices.</li>
+    <li>Make the corresponding source code available (typically by pointing to the public Eliya
+        repository).</li>
+</ul>
+
+<h4>If you redistribute Eliya binaries (modified)</h4>
+<ul>
+    <li>All of the above, plus</li>
+    <li>Publish your source code modifications under GPLv2+CE.</li>
+    <li>Make modified source code available to recipients of the modified binaries.</li>
+</ul>
+
+
+<h3>Eliya's contributions to the source</h3>
+<p>Eliya's source patches (additions to <code>globals.hpp</code> and <code>arguments.cpp</code>
+    implementing the <code>EliyaProfile</code> and <code>EliyaConflictCheck</code> flags plus the
+    three-level diagnostic path layout) are licensed under GPLv2+CE, the same licence as the
+    upstream OpenJDK source they modify. Copyright on these patches is held by Asymm Systems
+    (Pvt) Ltd.</p>
+<p>For the precise enumeration of Eliya's source contributions, see
+    <a href="/product/eliya/user-guide/diff-from-upstream.html" class="org-link org-link--inline org-link--internal">Differences from upstream</a>.</p>
+
+
 <h3>Trademark</h3>
-<p>"Eliya" and "Eliya JDK" are product names of Asymm Systems (Pvt) Ltd.
-Redistributions must not use the "Eliya" or "Asymm" marks in a way that implies endorsement by or
-affiliation with Asymm Systems without prior written permission.</p>
+<p>"Eliya" and "Eliya JDK" are product names of Asymm Systems (Pvt) Ltd. "Asymm" and the Asymm
+    Systems wordmark are trademarks of Asymm Systems (Pvt) Ltd.</p>
+
+<h4>Permitted uses (no permission required)</h4>
+<ul>
+    <li><strong>Nominative use</strong> &mdash; referencing Eliya by name in factual statements
+        ("Our service runs on Eliya JDK", "We migrated from Corretto to Eliya").</li>
+    <li><strong>Editorial reference</strong> &mdash; articles, blog posts, conference talks
+        discussing Eliya.</li>
+    <li><strong>Comparative reference</strong> &mdash; comparative analysis with other JDK
+        distributions, subject to truth-in-advertising principles.</li>
+    <li><strong>Internal documentation</strong> &mdash; your organisation's runbooks, architecture
+        diagrams, compliance documents referencing Eliya.</li>
+</ul>
+
+<h4>Uses requiring permission</h4>
+<ul>
+    <li>Distributing modified versions under the "Eliya" name.</li>
+    <li>Using "Eliya" or "Asymm" in product names, company names, or domain names you control.</li>
+    <li>Using Asymm Systems' logos or wordmarks in marketing materials in ways that imply
+        endorsement or affiliation.</li>
+</ul>
+
+<h4>Forks and modifications</h4>
+<p>Per GPLv2+CE you may fork and modify Eliya for any purpose. The trademark policy requires that
+    distributed forks use a different product name &mdash; for example, "MyCompany JDK based on
+    Eliya" rather than "MyCompany Eliya". This is the same pattern most open-source projects with
+    trademarks follow (Red&nbsp;Hat / CentOS, Eclipse / Adoptium, etc.).</p>
+<p>Questions about specific use cases:
+    <a href="mailto:legal@asymm.systems" class="org-link org-link--inline org-link--external">legal@asymm.systems</a>.</p>
+
+
+<h3>Compatibility certification</h3>
+<p>Eliya 25.0.x is built from TCK-certified upstream OpenJDK 25 source. The upstream OpenJDK 25
+    codebase has passed the Java SE 25 Technology Compatibility Kit; Eliya's source patches are
+    minimal and confined to diagnostic flag declarations and helpers that don't affect Java SE
+    specification compliance.</p>
+<p>Eliya self-certification (independent TCK run of the Eliya binary itself) is a Phase 2
+    deliverable, following the same pattern most OpenJDK distributions adopt &mdash; TCK
+    self-certification typically lags GA by 3&ndash;6 months.</p>
+
+
+<h3>Bundled components in future phases</h3>
+<p>Phase 1 ships only the Eliya JDK itself, distributed under GPLv2+CE.</p>
+<p>Phase 2 will bundle additional diagnostic tooling with the JDK distribution. Each bundled
+    component retains its own licence:</p>
+<ul>
+    <li><strong>Eclipse MAT (headless)</strong> &mdash; Eclipse Public License 2.0 (EPL-2.0).</li>
+    <li><strong>async-profiler</strong> &mdash; Apache License 2.0.</li>
+</ul>
+<p>These licences are compatible with redistribution alongside Eliya's GPLv2+CE-licensed JDK. The
+    Eliya distribution will include each component's licence text and copyright notices in the
+    appropriate directories.</p>
+<p>Phase 2's FIPS-validated variant (<code>eliya-jdk-fips</code>) will bundle a FIPS-validated
+    provider distributed under a separate commercial licence. Customers of the FIPS variant will
+    receive explicit licensing terms covering the bundled FIPS components.</p>
+<p>Phase 3 (Asymm Forensics) and Phase 4 (compliance profile values) maintain GPLv2+CE for the
+    Eliya JDK itself. Commercial components introduced in those phases (the Asymm Forensics
+    commercial layer, compliance-profile maintenance subscriptions) are subject to separate Asymm
+    commercial licensing terms.</p>
+
+
+<h3>Patent grants</h3>
+<p>Eliya inherits the patent grants from GPLv2+CE and the OpenJDK contributor agreements. Asymm
+    Systems' contributions to Eliya are covered by the same patent grant provisions.</p>
+<p>For enterprises requiring explicit patent indemnification beyond the default GPLv2+CE
+    provisions, Phase 2+ commercial support contracts will include explicit patent indemnification
+    terms. Until then, Eliya users receive the standard open-source patent grants.</p>
+
+
+<h3>Contributing back to upstream</h3>
+<p>When Eliya makes patches that benefit the broader OpenJDK community, those patches are
+    submitted back to upstream OpenJDK following the OpenJDK contribution process. Phase 1 source
+    patches are Eliya-specific (the <code>EliyaProfile</code> flag namespace and three-level
+    diagnostic path layout) and are not upstream candidates; future patches that benefit upstream
+    will be contributed back and tracked in the project changelog.</p>
+
+
+<h3>Export controls</h3>
+<p>Eliya, as a software distribution, may be subject to export control laws in the jurisdictions
+    where it is distributed and used. The Eliya distribution itself contains cryptographic
+    functionality inherited from upstream OpenJDK, which is generally classified under standard
+    mass-market software export classifications.</p>
+<p>Customers in jurisdictions with specific export control requirements (US Department of Commerce
+    sanctions, EU dual-use regulations, etc.) should evaluate their own compliance obligations.
+    Asymm Systems does not provide legal advice on export compliance.</p>
+
 
 <h3>Full license text</h3>
 <p>
@@ -52,6 +164,6 @@ affiliation with Asymm Systems without prior written permission.</p>
 
 </section>
 
-<div style="margin-top: 5rem; text-align: center;">
-    <a href="/product/eliya/user-guide/" class="org-link org-link--internal">← user guide</a>
+<div class="page-back-nav">
+    <a href="/product/eliya/user-guide/" class="org-link org-link--internal org-link--back">user guide</a>
 </div>
