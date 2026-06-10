@@ -9,7 +9,7 @@ status=published
     <span class="section-kicker">User guide</span>
     <h1>The <code>asymm</code> CLI</h1>
     <p style="max-width: 60ch">A small, focused command-line tool installed alongside Eliya at
-        <code>${JAVA_HOME}/bin/asymm</code> (and symlinked from <code>/usr/bin/asymm</code> when
+        <code><#noparse>${JAVA_HOME}</#noparse>/bin/asymm</code> (and symlinked from <code>/usr/bin/asymm</code> when
         installed via <code>.deb</code> / <code>.rpm</code>). The unified entry point for Asymm
         Systems products &mdash; Eliya today, Dial and Forensics in future phases.</p>
 </header>
@@ -233,7 +233,7 @@ OpenJDK 64-Bit Server VM (build 25.0.3+9-Eliya-25.0.3, mixed mode, sharing)
 
 
     <h3>Platform note</h3>
-    <p>The Phase 1 <code>asymm</code> binary ships at <code>${JAVA_HOME}/bin/asymm</code> on Linux
+    <p>The Phase 1 <code>asymm</code> binary ships at <code><#noparse>${JAVA_HOME}</#noparse>/bin/asymm</code> on Linux
         x86_64 and aarch64 (Phase 1 targets). The <code>.deb</code> and <code>.rpm</code> packages
         also symlink it to <code>/usr/bin/asymm</code> for PATH convenience. Phase 2 macOS support
         targets <code>/usr/local/bin/asymm</code>. Phase 3 Windows support targets

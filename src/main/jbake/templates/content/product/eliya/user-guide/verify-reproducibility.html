@@ -94,7 +94,7 @@ find . -type f -exec sha256sum {} + | sort  # per-file listing</code>
             <tr>
                 <td><strong>1. Build-embedded timestamps</strong></td>
                 <td>Build date strings burned into version banners, JAR manifests, class files</td>
-                <td><code>--with-source-date=${SOURCE_DATE_EPOCH}</code> sourced from <code>git log HEAD</code> time in <code>scripts/common.sh</code>; identical inputs produce identical timestamps</td>
+                <td><code>--with-source-date=<#noparse>${SOURCE_DATE_EPOCH}</#noparse></code> sourced from <code>git log HEAD</code> time in <code>scripts/common.sh</code>; identical inputs produce identical timestamps</td>
             </tr>
             <tr>
                 <td><strong>2. Archive metadata</strong></td>
