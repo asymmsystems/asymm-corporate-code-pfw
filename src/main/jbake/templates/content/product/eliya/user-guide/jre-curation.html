@@ -1,0 +1,186 @@
+<#include "/macro/release.ftl">
+
+<header class="page-header">
+    <span class="section-kicker">User guide</span>
+    <h1>JRE curation — what's in the Eliya JRE and why</h1>
+    <p style="max-width: 60ch">The Eliya JRE is ~48&nbsp;MB. Standard JREs from other vendors are
+        ~140&nbsp;MB. Yet the Eliya JRE includes more functionality (Flight Recorder, JMX, jcmd attach,
+        PKCS#11). This page explains how — and why we made these choices.</p>
+</header>
+
+<section>
+    <h2 class="section-title">JDK vs JRE — the structural picture</h2>
+
+    <h3>The JDK</h3>
+    <p>The Java Development Kit is the full distribution: HotSpot (the JVM, in <code>libjvm.so</code>),
+        the standard Java class library (<code>java.*</code> modules), the JDK tooling modules
+        (<code>jdk.*</code> — Flight Recorder, JMX/RMI agent, jcmd attach, PKCS#11, the javac compiler,
+        javadoc, jlink itself, etc.), and the CLI tools in <code>bin/</code> (<code>java</code>,
+        <code>javac</code>, <code>jcmd</code>, <code>jlink</code>, etc.). A typical JDK is ~280&nbsp;MB.</p>
+
+    <h3>What "Java SE" actually means as a module</h3>
+    <p>Java SE is the standardised Java surface — the API portfolio in the Java Language Specification
+        plus the Java Platform Specification. As a module, Java SE is named <code>java.se</code> in
+        OpenJDK: an aggregator that <code>requires</code> every other <code>java.*</code> module
+        (<code>java.base</code>, <code>java.compiler</code>, <code>java.datatransfer</code>,
+        <code>java.desktop</code>, <code>java.logging</code>, <code>java.management</code>,
+        <code>java.net.http</code>, <code>java.rmi</code>, <code>java.sql</code>, <code>java.xml</code>,
+        and the rest of the SE module set). That is what <code>--add-modules java.se</code> to
+        <code>jlink</code> gives you, and it is the API portfolio every "Java SE 25 compliant runtime"
+        must expose.</p>
+
+    <h3>The gap: <code>jdk.*</code> modules are NOT in Java SE</h3>
+    <p>The JDK also ships modules that are <em>outside</em> the Java SE specification — JDK tooling
+        modules with the <code>jdk.*</code> prefix:</p>
+
+    <table class="clinical-table" style="max-width: 800px">
+        <thead>
+            <tr><th>Module</th><th>What it provides</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><code>jdk.unsupported</code></td><td><code>sun.misc.Unsafe</code>, <code>sun.misc.Signal</code> — "load-bearing" for the JVM ecosystem (Netty, Caffeine, Hazelcast, Lucene rely on it)</td></tr>
+            <tr><td><code>jdk.jfr</code></td><td>Flight Recorder — continuous low-overhead profiling, the standard JVM observability primitive</td></tr>
+            <tr><td><code>jdk.management.agent</code></td><td>JMX/RMI agent — for Prometheus exporters and monitoring tools</td></tr>
+            <tr><td><code>jdk.attach</code></td><td>The Attach API for <code>jcmd</code>, <code>jconsole</code>, or any tool to attach to a running JVM</td></tr>
+            <tr><td><code>jdk.crypto.cryptoki</code></td><td>SunPKCS11 — HSM / hardware-token crypto access</td></tr>
+            <tr><td><code>jdk.naming.dns</code></td><td>DNS SPI for JNDI</td></tr>
+            <tr><td><code>jdk.localedata</code></td><td>Non-en_US locale resources (i18n)</td></tr>
+            <tr><td><code>jdk.zipfs</code></td><td>The <code>jar:</code> NIO Path provider</td></tr>
+        </tbody>
+    </table>
+
+    <p>A <em>Java SE-compliant</em> JRE — i.e. <code>jlink --add-modules java.se</code> — does not
+        include any of these. They are JDK tooling modules outside the Java SE specification.</p>
+
+    <p>This is the source of the apparent paradox the next section resolves: vendors that ship a "JRE"
+        usually ship <code>java.se</code> only. Their JRE lacks Flight Recorder, JMX, and jcmd attach.
+        The Eliya JRE adds them by default.</p>
+</section>
+
+<section>
+    <h2 class="section-title">What <code>jlink</code> does</h2>
+    <p><code>jlink</code> is the OpenJDK tool that assembles a custom JRE-like runtime image from a
+        chosen set of modules. Inputs:</p>
+    <ul>
+        <li>A module path (where to find module JARs / JMODs)</li>
+        <li>A list of root modules (<code>--add-modules X,Y,Z</code>)</li>
+        <li>Options like <code>--strip-debug</code>, <code>--no-man-pages</code>, <code>--no-header-files</code>,
+            <code>--compress</code></li>
+    </ul>
+    <p><code>jlink</code> traces the transitive <code>requires</code> of the root modules, copies the
+        resulting module closure plus the JVM runtime image, and produces a directory tree that looks
+        like a JRE (<code>bin/java</code>, <code>lib/</code>, <code>conf/</code>). The resulting tree
+        runs independently — it doesn't need a JDK on the host.</p>
+
+    <h3 style="margin-top: 2rem">The <code>--strip-debug</code> flag</h3>
+    <p>The <code>--strip-debug</code> option removes DWARF debug information from the shared libraries.
+        The library code still works; you just can't <code>gdb</code> into HotSpot frames. Production
+        runtimes don't need DWARF. Stripping reduces <code>libjvm.so</code> from ~30&nbsp;MB to ~12&nbsp;MB
+        and shrinks the overall runtime by ~50%.</p>
+
+    <h3>The <code>--no-man-pages</code> and <code>--no-header-files</code> flags</h3>
+    <p>These drop <code>man/man1/*.1</code> (the man-page snippets that are mostly redundant with
+        <code>--help</code>) and <code>include/*.h</code> (the JNI header files for native code authors).
+        Production servers don't read man pages from the runtime image; they get them from the OS man
+        database.</p>
+</section>
+
+<section>
+    <h2 class="section-title">Eliya's curation — the 10 modules</h2>
+    <p>The Eliya JRE includes:</p>
+
+    <table class="clinical-table" style="max-width: 800px">
+        <thead>
+            <tr><th>Module</th><th>Why included</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><code>java.se</code></td><td>The Java SE aggregator — pulls in every standard Java SE module</td></tr>
+            <tr><td><code>java.net.http</code></td><td>HTTP/2 client (explicit; also pulled via <code>java.se</code>, listed for visibility)</td></tr>
+            <tr><td><code>jdk.unsupported</code></td><td>Effectively required by the JVM ecosystem (Netty, Caffeine, Hazelcast, …)</td></tr>
+            <tr><td><code>jdk.crypto.cryptoki</code></td><td>Forward-looking: HSM-backed crypto needed for Phase 4 hardware-token work</td></tr>
+            <tr><td><code>jdk.jfr</code></td><td>Flight Recorder — the OpenJDK community has standardised on JFR for production profiling. Operators expect <code>jcmd &lt;pid&gt; JFR.start</code> to work without switching to the JDK.</td></tr>
+            <tr><td><code>jdk.management.agent</code></td><td>JMX/RMI agent — Prometheus exporters, monitoring agents, and operational tools attach via JMX</td></tr>
+            <tr><td><code>jdk.attach</code></td><td>The Attach API — local <code>jcmd</code> works without it; remote / external tool attach requires it</td></tr>
+            <tr><td><code>jdk.naming.dns</code></td><td>DNS SPI for JNDI</td></tr>
+            <tr><td><code>jdk.localedata</code></td><td>Non-en_US locales — i18n surface for production servers handling international data</td></tr>
+            <tr><td><code>jdk.zipfs</code></td><td>The <code>jar:</code> NIO Path provider — tools that walk into ZIP/JAR archives via NIO</td></tr>
+        </tbody>
+    </table>
+
+    <p style="margin-top: 1.5rem">Combined with <code>--strip-debug</code>, <code>--no-man-pages</code>,
+        and <code>--no-header-files</code>, the resulting image is ~48&nbsp;MB.</p>
+</section>
+
+<section>
+    <h2 class="section-title">The size paradox, resolved</h2>
+    <p>Eliya's JRE has 9 EXTRA modules on top of the standard <code>java.se</code> set. Yet the binary
+        is ~3× SMALLER than standard JREs. Two effects drive the difference:</p>
+
+    <ol>
+        <li><strong><code>--strip-debug</code></strong> drops DWARF debug symbols from <code>libjvm.so</code>
+            and ~30 other shared libraries. Other vendors ship with debug symbols intact (so users can
+            attach gdb and walk JVM frames). Eliya strips them — production runtimes don't need this;
+            JVM hackers use the JDK. This is the dominant size win: ~70&nbsp;MB reduction.</li>
+        <li><strong><code>--no-man-pages</code></strong> and <strong><code>--no-header-files</code></strong>
+            save another ~5-10&nbsp;MB.</li>
+    </ol>
+
+    <p>The 9 extra <code>jdk.*</code> modules add ~5-10&nbsp;MB collectively. Net: +5-10&nbsp;MB modules,
+        −75-80&nbsp;MB stripped = ~50% smaller image with MORE functionality.</p>
+</section>
+
+<section>
+    <h2 class="section-title">Trade-offs</h2>
+    <p>Every choice has costs. Eliya's JRE choices and their trade-offs:</p>
+
+    <table class="clinical-table" style="max-width: 900px">
+        <thead>
+            <tr><th>Choice</th><th>Cost</th></tr>
+        </thead>
+        <tbody>
+            <tr><td><code>--strip-debug</code></td><td>Can't <code>gdb</code> into HotSpot from a stripped JRE. Mitigation: install the Eliya JDK alongside if you need to debug, or use the JDK download.</td></tr>
+            <tr><td>Include <code>jdk.jfr</code>, <code>jdk.management.agent</code>, <code>jdk.attach</code></td><td>~5-7&nbsp;MB heavier than a Java-SE-only JRE; some consumers don't need diagnostics. Mitigation: future Eliya variants (Docker <code>-slim</code>, <code>-jre-distroless</code>) can omit these.</td></tr>
+            <tr><td>Include <code>jdk.localedata</code></td><td>~10&nbsp;MB i18n resources for non-en_US locales. Many server deployments only need en_US. Mitigation: the future <code>-slim</code> variant drops this.</td></tr>
+            <tr><td>Include <code>jdk.crypto.cryptoki</code></td><td>~1&nbsp;MB PKCS#11 provider. Not all deployments use HSMs. Mitigation: low marginal cost; left in.</td></tr>
+            <tr><td><code>--no-man-pages</code>, <code>--no-header-files</code></td><td>JNI code authors who compile against the runtime image need separate headers. Mitigation: use the Eliya JDK for native dev.</td></tr>
+        </tbody>
+    </table>
+</section>
+
+<section>
+    <h2 class="section-title">The non-Eliya alternative — <code>jlink</code> your own</h2>
+    <p>The architectural beauty of <code>jlink</code> is that any user can produce their own custom runtime
+        image from any vendor's JDK. Customers don't <em>need</em> the Eliya JRE — they could run:</p>
+
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('$JAVA_HOME/bin/jlink --module-path $JAVA_HOME/jmods --add-modules java.se,jdk.jfr,jdk.management.agent,jdk.attach,jdk.crypto.cryptoki --strip-debug --no-man-pages --no-header-files --output ./custom-jre')" aria-label="Copy command">
+        <code>$JAVA_HOME/bin/jlink --module-path $JAVA_HOME/jmods --add-modules java.se,jdk.jfr,jdk.management.agent,jdk.attach,jdk.crypto.cryptoki --strip-debug --no-man-pages --no-header-files --output ./custom-jre</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+
+    <p style="margin-top: 1.5rem">…using the Eliya JDK, the Temurin JDK, the Corretto JDK, or any other vendor's JDK.
+        The result is a runtime they own. Eliya's JRE saves customers that step and provides a curated,
+        signed, reproducible default. The argument for Eliya's JRE is convenience + the
+        reproducibility/signing/audit-trail story attached to it — not <em>"you can't do this yourself"</em>.</p>
+</section>
+
+<section>
+    <h2 class="section-title">Forward-looking</h2>
+    <p>Eliya plans four container variants, each with its own module curation:</p>
+
+    <table class="clinical-table" style="max-width: 900px">
+        <thead>
+            <tr><th>Variant</th><th>Module set</th><th>Target use</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>Full JDK (shipping in 25.0.3)</td><td>Everything in the JDK</td><td>Developer machines, CI builders</td></tr>
+            <tr><td><code>-slim</code> (Phase 2)</td><td>Eliya JRE minus <code>jdk.localedata</code> and other non-server modules</td><td>Container deployments, en_US production</td></tr>
+            <tr><td><code>-jre</code> (Phase 2)</td><td>The Eliya JRE as described on this page</td><td>Container-native applications</td></tr>
+            <tr><td><code>-jre-distroless</code> (Phase 2)</td><td>The Eliya JRE on <code>gcr.io/distroless/base</code> for minimal attack surface</td><td>Security-conscious containers</td></tr>
+        </tbody>
+    </table>
+
+    <p style="margin-top: 1.5rem">When Eliya transitions to JDK 27 (post-Phase 1), the module set will be
+        re-validated against JDK 27's module changes. JDK 27 may add modules (e.g. structured concurrency
+        improvements) we want to include; we may also drop modules whose use case has receded.</p>
+</section>
