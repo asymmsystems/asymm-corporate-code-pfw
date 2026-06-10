@@ -125,7 +125,7 @@
     <h2 class="section-title">What's in the Eliya JRE</h2>
     <p style="max-width: 60ch; margin-bottom: 1.5rem">The Eliya JRE is assembled with <code>jlink</code> from
         the standard Java SE module set plus nine commonly-needed production-diagnostic modules, and built
-        with <code>--strip-debug</code> for smaller binaries (~48&nbsp;MB vs ~140&nbsp;MB for standard JREs).
+        with <code>--strip-debug</code> for a smaller extracted footprint (~48&nbsp;MB compressed download / ~95&nbsp;MB extracted, vs ~140&nbsp;MB extracted for standard <code>java.se</code>-only JREs).
         The added <code>jdk.*</code> modules are part of every OpenJDK distribution but are not in the
         standard Java SE module set that other vendors' JREs ship — bundling them by default matches the
         canonical server/CLI deployment pattern.</p>
