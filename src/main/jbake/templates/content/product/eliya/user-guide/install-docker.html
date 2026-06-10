@@ -12,21 +12,9 @@
 <section>
     <h3>Pull the image</h3>
 
-    <aside style="background: #fff7ed; border-left: 4px solid #f59e0b; padding: 1rem 1.5rem; margin-bottom: 1.5rem; max-width: 700px">
-        <p style="margin: 0; font-size: 0.95rem"><strong>Docker images for the first signed GA
-            (25.0.3) are queued for publication.</strong> First signed GA shipped 2026-06-10 as
-            <code>.tar.gz</code> / <code>.deb</code> / <code>.rpm</code> on the
-            <a href="https://github.com/asymmsystems/eliya-jdk/releases/tag/eliya-jdk-25.0.3" class="org-link org-link--inline org-link--external">GitHub Release page</a>;
-            multi-arch OCI images on GitHub Container Registry follow shortly. Until they are
-            published, install via
-            <a href="/product/eliya/downloads.html" class="org-link org-link--inline org-link--internal">direct download</a>
-            and build your own container image from the <code>.tar.gz</code> per the
-            <a href="#use-as-base">Use as a base image</a> section below.</p>
-    </aside>
-
     <button type="button" class="inline-terminal"
-        onclick="copyToClipboard('docker pull ghcr.io/asymmsystems/eliya:25-lts')" aria-label="Copy command">
-        <code>docker pull ghcr.io/asymmsystems/eliya:25-lts</code>
+        onclick="copyToClipboard('docker pull ghcr.io/asymmsystems/eliya-jdk:25-lts')" aria-label="Copy command">
+        <code>docker pull ghcr.io/asymmsystems/eliya-jdk:25-lts</code>
         <span class="copy-btn" aria-hidden="true">Copy</span>
     </button>
 
@@ -84,7 +72,7 @@
                 <td>~270 MB</td>
                 <td>Server-side AWT/Java2D rendering; multi-stage builder images; diagnostic
                     sidecars needing <code>jcmd</code>/<code>jmap</code></td>
-                <td>Queued (publish-pending)</td>
+                <td>Available</td>
             </tr>
             <tr>
                 <td><code>25-lts-slim</code> / <code>${eliyaVersion}-slim</code></td>
@@ -93,7 +81,7 @@
                 <td>~230 MB</td>
                 <td>Headless apps that still need <code>javac</code>/<code>jlink</code> at runtime
                     (rare); slim-base CI runners</td>
-                <td>Queued (publish-pending)</td>
+                <td>Available</td>
             </tr>
             <tr>
                 <td><code>25-lts-jre</code> / <code>${eliyaVersion}-jre</code></td>
@@ -226,7 +214,7 @@
         <code>EliyaProfile=Production</code> profile active by default:</p>
 
     <div class="inline-terminal inline-terminal--static">
-        <code>FROM ghcr.io/asymmsystems/eliya:25-lts-slim<br>
+        <code>FROM ghcr.io/asymmsystems/eliya-jdk:25-lts-slim<br>
 <br>
 COPY target/myapp.jar /app/myapp.jar<br>
 WORKDIR /app<br>
@@ -292,7 +280,7 @@ ENTRYPOINT ["java", "-jar", "myapp.jar"]</code>
 
     <div class="inline-terminal inline-terminal--static">
         <code># Stage 1: build the application<br>
-FROM ghcr.io/asymmsystems/eliya:25-lts AS builder<br>
+FROM ghcr.io/asymmsystems/eliya-jdk:25-lts AS builder<br>
 WORKDIR /build<br>
 COPY pom.xml .<br>
 COPY mvnw .<br>
@@ -301,7 +289,7 @@ COPY src ./src<br>
 RUN chmod +x mvnw &amp;&amp; ./mvnw clean package -DskipTests<br>
 <br>
 # Stage 2: run the application<br>
-FROM ghcr.io/asymmsystems/eliya:25-lts-slim<br>
+FROM ghcr.io/asymmsystems/eliya-jdk:25-lts-slim<br>
 COPY --from=builder /build/target/myapp.jar /app/myapp.jar<br>
 WORKDIR /app<br>
 ENV JAVA_TOOL_OPTIONS="-XX:EliyaProfile=Production"<br>
@@ -326,10 +314,10 @@ ENTRYPOINT ["java", "-jar", "myapp.jar"]</code>
 
     <p><strong>Docker:</strong></p>
     <button type="button" class="inline-terminal"
-        onclick="copyToClipboard('docker run -d --name my-app -v /host/eliya-diagnostics:/var/log/eliya ghcr.io/asymmsystems/eliya:25-lts-slim')" aria-label="Copy command">
+        onclick="copyToClipboard('docker run -d --name my-app -v /host/eliya-diagnostics:/var/log/eliya ghcr.io/asymmsystems/eliya-jdk:25-lts-slim')" aria-label="Copy command">
         <code>docker run -d --name my-app \<br>
 &nbsp;&nbsp;-v /host/eliya-diagnostics:/var/log/eliya \<br>
-&nbsp;&nbsp;ghcr.io/asymmsystems/eliya:25-lts-slim</code>
+&nbsp;&nbsp;ghcr.io/asymmsystems/eliya-jdk:25-lts-slim</code>
         <span class="copy-btn" aria-hidden="true">Copy</span>
     </button>
 
@@ -489,8 +477,8 @@ spec:<br>
 
     <p>When an incident occurs, inject an Eliya diagnostic container into the target pod:</p>
     <button type="button" class="inline-terminal"
-        onclick="copyToClipboard('kubectl debug -it my-app-7d4b9c-xk29p --image=ghcr.io/asymmsystems/eliya:25-lts --target=app -- bash')" aria-label="Copy command">
-        <code>kubectl debug -it my-app-7d4b9c-xk29p --image=ghcr.io/asymmsystems/eliya:25-lts --target=app -- bash</code>
+        onclick="copyToClipboard('kubectl debug -it my-app-7d4b9c-xk29p --image=ghcr.io/asymmsystems/eliya-jdk:25-lts --target=app -- bash')" aria-label="Copy command">
+        <code>kubectl debug -it my-app-7d4b9c-xk29p --image=ghcr.io/asymmsystems/eliya-jdk:25-lts --target=app -- bash</code>
         <span class="copy-btn" aria-hidden="true">Copy</span>
     </button>
 
@@ -595,7 +583,7 @@ spec:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- name: eliya-diagnostics<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;mountPath: /var/log/eliya<br>
 &nbsp;&nbsp;&nbsp;&nbsp;- name: eliya-sidecar<br>
-&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;image: ghcr.io/asymmsystems/eliya:25-lts<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;image: ghcr.io/asymmsystems/eliya-jdk:25-lts<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;command: ["sleep", "infinity"]<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;volumeMounts:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;- name: eliya-diagnostics<br>
@@ -719,10 +707,10 @@ spec:<br>
     <div class="inline-terminal inline-terminal--static">
         <code>containers:<br>
 &nbsp;&nbsp;- name: app<br>
-&nbsp;&nbsp;&nbsp;&nbsp;image: ghcr.io/asymmsystems/eliya:25-lts-jre-distroless&nbsp;&nbsp;# Wave 7 (Q4 2026)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;image: ghcr.io/asymmsystems/eliya-jdk:25-lts-jre-distroless&nbsp;&nbsp;# Wave 7 (Q4 2026)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;# no shell, no diagnostic tools, just runs the JVM<br>
 &nbsp;&nbsp;- name: eliya-sidecar<br>
-&nbsp;&nbsp;&nbsp;&nbsp;image: ghcr.io/asymmsystems/eliya:25-lts&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# full diagnostic toolchain<br>
+&nbsp;&nbsp;&nbsp;&nbsp;image: ghcr.io/asymmsystems/eliya-jdk:25-lts&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# full diagnostic toolchain<br>
 &nbsp;&nbsp;&nbsp;&nbsp;# unchanged</code>
     </div>
 
@@ -827,8 +815,8 @@ EXPOSE 9010</code>
     <p>Confirm the image launches and the JVM recognises Eliya's <code>EliyaProfile</code> flag:</p>
 
     <button type="button" class="inline-terminal"
-        onclick="copyToClipboard(&quot;docker run --rm ghcr.io/asymmsystems/eliya:25-lts java -XX:+PrintFlagsFinal -version 2&gt;&amp;1 | grep -E '(EliyaProfile|UseEliya)'&quot;)" aria-label="Copy command">
-        <code>docker run --rm ghcr.io/asymmsystems/eliya:25-lts java -XX:+PrintFlagsFinal -version 2&gt;&amp;1 | grep -E '(EliyaProfile|UseEliya)'</code>
+        onclick="copyToClipboard(&quot;docker run --rm ghcr.io/asymmsystems/eliya-jdk:25-lts java -XX:+PrintFlagsFinal -version 2&gt;&amp;1 | grep -E '(EliyaProfile|UseEliya)'&quot;)" aria-label="Copy command">
+        <code>docker run --rm ghcr.io/asymmsystems/eliya-jdk:25-lts java -XX:+PrintFlagsFinal -version 2&gt;&amp;1 | grep -E '(EliyaProfile|UseEliya)'</code>
         <span class="copy-btn" aria-hidden="true">Copy</span>
     </button>
 
@@ -840,8 +828,8 @@ bool      EliyaConflictCheck  = true    {product} {default}</code>
 
     <p>Verify the asymm CLI is functional:</p>
     <button type="button" class="inline-terminal"
-        onclick="copyToClipboard('docker run --rm ghcr.io/asymmsystems/eliya:25-lts asymm eliya info')" aria-label="Copy command">
-        <code>docker run --rm ghcr.io/asymmsystems/eliya:25-lts asymm eliya info</code>
+        onclick="copyToClipboard('docker run --rm ghcr.io/asymmsystems/eliya-jdk:25-lts asymm eliya info')" aria-label="Copy command">
+        <code>docker run --rm ghcr.io/asymmsystems/eliya-jdk:25-lts asymm eliya info</code>
         <span class="copy-btn" aria-hidden="true">Copy</span>
     </button>
 
