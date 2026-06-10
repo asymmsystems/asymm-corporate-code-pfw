@@ -8,13 +8,14 @@
 </header>
 
 <section>
-    <h3>1. Install via SDKman</h3>
-    <p>SDKman is the recommended path on Linux developer machines. SDKman registration is pending
-        (target Q2 2026); until then, install via tar.gz from
-        <a href="https://github.com/asymmsystems/eliya-jdk/releases" class="org-link org-link--inline org-link--external">GitHub Releases</a>
-        or use the
-        <a href="/product/eliya/user-guide/install-linux.html" class="org-link org-link--inline org-link--internal">Linux install guide</a>
-        for production servers (DEB/RPM packages target Q4 2026). Once SDKman registration is live:</p>
+    <h3>1. Install via SDKMAN! (once registered) or direct download (today)</h3>
+    <p>SDKMAN! is the recommended path on Linux developer machines, but registration is in progress
+        (PR <a href="https://github.com/sdkman/sdkman-db-migrations/pull/783" class="org-link org-link--inline org-link--external">sdkman/sdkman-db-migrations#783</a>).
+        For installation today, use the
+        <a href="https://github.com/asymmsystems/eliya-jdk/releases" class="org-link org-link--inline org-link--external">GitHub Release tar.gz</a>,
+        the <code>.deb</code> / <code>.rpm</code> packages on the same Release page, or follow the
+        <a href="/product/eliya/user-guide/install-linux.html" class="org-link org-link--inline org-link--internal">Linux install guide</a>.
+        Once SDKMAN! registration completes:</p>
     <button type="button" class="inline-terminal"
         onclick="copyToClipboard('sdk install java ${eliyaVersion}-eliya')" aria-label="Copy command">
         <code>sdk install java ${eliyaVersion}-eliya</code>

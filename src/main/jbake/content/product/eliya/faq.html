@@ -214,7 +214,8 @@ status=published
     In short: <strong>observability defaults</strong> behind <code>-XX:EliyaProfile=Production</code>
     (JFR with default profile, heap-dump-on-OOM, exit-on-OOM, Native Memory Tracking, GC logging
     always-on, crash log paths, container awareness, diagnostic options unlocked for accurate
-    sampling), an <code>asymm</code> diagnostic CLI, and first-class SDKman distribution. Eliya
+    sampling), an <code>asymm</code> diagnostic CLI, and SDKMAN! distribution (registration in progress;
+    PR <a href="https://github.com/sdkman/sdkman-db-migrations/pull/783" class="org-link org-link--inline org-link--external">#783</a>). Eliya
     does NOT modify <code>java.security</code> — upstream JDK 25 defaults are already correct;
     duplicating them would be performative. The flag deliberately does not set GC choice or
     tuning — JDK 25's automatic ergonomics handle that. Everything else is upstream OpenJDK.</p>

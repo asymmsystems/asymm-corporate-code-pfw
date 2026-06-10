@@ -35,9 +35,10 @@ status=published
     </div>
 
     <h3 style="margin-top: 1.5rem">Gradle toolchain auto-provisioning</h3>
-    <p>Gradle's JVM toolchain auto-provisioning resolves Eliya via SDKman or the JAVA_HOME path you
-        configured. The standard <code>java.toolchain</code> block works without Eliya-specific
-        syntax.</p>
+    <p>Gradle's JVM toolchain auto-provisioning resolves Eliya via SDKMAN! (once registration completes
+        &mdash; <a href="https://github.com/sdkman/sdkman-db-migrations/pull/783" class="org-link org-link--inline org-link--external">PR #783</a>;
+        until then, point Gradle at the JAVA_HOME path where you installed Eliya manually).
+        The standard <code>java.toolchain</code> block works without Eliya-specific syntax.</p>
 
     <h3 style="margin-top: 1.5rem">Paketo Buildpacks (Spring Boot)</h3>
     <p>Paketo's default Java buildpack uses Liberica. To swap to Eliya, set the
