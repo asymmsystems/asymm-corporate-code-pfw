@@ -11,7 +11,18 @@
 
 <section>
     <h3>Pull the image</h3>
-    <p>Phase 1 &mdash; target Q3 2026.</p>
+
+    <aside style="background: #fff7ed; border-left: 4px solid #f59e0b; padding: 1rem 1.5rem; margin-bottom: 1.5rem; max-width: 700px">
+        <p style="margin: 0; font-size: 0.95rem"><strong>Docker images for the first signed GA
+            (25.0.3) are queued for publication.</strong> First signed GA shipped 2026-06-10 as
+            <code>.tar.gz</code> / <code>.deb</code> / <code>.rpm</code> on the
+            <a href="https://github.com/asymmsystems/eliya-jdk/releases/tag/eliya-jdk-25.0.3" class="org-link org-link--inline org-link--external">GitHub Release page</a>;
+            multi-arch OCI images on GitHub Container Registry follow shortly. Until they are
+            published, install via
+            <a href="/product/eliya/downloads.html" class="org-link org-link--inline org-link--internal">direct download</a>
+            and build your own container image from the <code>.tar.gz</code> per the
+            <a href="#use-as-base">Use as a base image</a> section below.</p>
+    </aside>
 
     <button type="button" class="inline-terminal"
         onclick="copyToClipboard('docker pull ghcr.io/asymmsystems/eliya:25-lts')" aria-label="Copy command">
@@ -73,7 +84,7 @@
                 <td>~270 MB</td>
                 <td>Server-side AWT/Java2D rendering; multi-stage builder images; diagnostic
                     sidecars needing <code>jcmd</code>/<code>jmap</code></td>
-                <td>Available</td>
+                <td>Queued (publish-pending)</td>
             </tr>
             <tr>
                 <td><code>25-lts-slim</code> / <code>${eliyaVersion}-slim</code></td>
@@ -82,7 +93,7 @@
                 <td>~230 MB</td>
                 <td>Headless apps that still need <code>javac</code>/<code>jlink</code> at runtime
                     (rare); slim-base CI runners</td>
-                <td>Available</td>
+                <td>Queued (publish-pending)</td>
             </tr>
             <tr>
                 <td><code>25-lts-jre</code> / <code>${eliyaVersion}-jre</code></td>
@@ -161,8 +172,9 @@
         Eliya's support story. Eliya tracks Debian's release cycle and will migrate base images
         to Debian 13 (trixie) when it stabilises.</p>
 
-    <p><strong>An Alpine variant is not planned.</strong> A distroless Eliya variant is Phase 2
-        demand-gated; the details and trade-offs are below.</p>
+    <p><strong>An Alpine variant is not planned.</strong> A distroless Eliya variant ships
+        Wave 7 (target Q4 2026) per the published tag matrix above; the details and trade-offs
+        are below.</p>
 
     <h4>Why no Alpine, and what about distroless?</h4>
     <p>Distroless is a separate question from Debian vs Alpine. A distroless image contains only
@@ -199,13 +211,13 @@
         diagnostic tooling lives in a separate container) and validate their specific application
         thoroughly before production rollout.</p>
 
-    <p>A distroless Eliya variant is Phase 2 demand-gated. It requires engineering work beyond a
-        single Dockerfile &mdash; supply-chain control over the included libraries, validation
-        against representative Java application classes, and documentation of application-fit
-        constraints. If your environment requires this level of minimisation (or a Red Hat UBI
-        variant for procurement), sign up at
+    <p>A distroless Eliya variant ships Wave 7 (target Q4 2026), after the first signed Linux GA
+        lands on the storefront repo. Beyond a single Dockerfile, it requires supply-chain control
+        over the included libraries, validation against representative Java application classes,
+        and documentation of application-fit constraints. If your environment requires this level
+        of minimisation (or a Red Hat UBI variant for procurement), sign up at
         <a href="/product/eliya/downloads.html#waitlist" class="org-link org-link--inline org-link--internal">downloads</a>
-        &mdash; your demand signal helps prioritise the engineering work.</p>
+        &mdash; your demand signal helps Wave 7 prioritisation.</p>
 
 
     <h3>Use as a base image</h3>
@@ -701,13 +713,13 @@ spec:<br>
         phases &mdash; the same pod spec works; the available diagnostic commands inside the
         sidecar expand as Phase 2 ships.</p>
 
-    <p><strong>Phase 2 with distroless app container.</strong> When the distroless Eliya variant
-        ships (Phase 2 demand-gated), this pattern lets you split the two containers'
+    <p><strong>Wave 7 (Q4 2026) with distroless app container.</strong> When the distroless Eliya
+        variant ships (Wave 7, target Q4 2026), this pattern lets you split the two containers'
         image sources:</p>
     <div class="inline-terminal inline-terminal--static">
         <code>containers:<br>
 &nbsp;&nbsp;- name: app<br>
-&nbsp;&nbsp;&nbsp;&nbsp;image: ghcr.io/asymmsystems/eliya:25-lts-distroless&nbsp;&nbsp;# Phase 2<br>
+&nbsp;&nbsp;&nbsp;&nbsp;image: ghcr.io/asymmsystems/eliya:25-lts-jre-distroless&nbsp;&nbsp;# Wave 7 (Q4 2026)<br>
 &nbsp;&nbsp;&nbsp;&nbsp;# no shell, no diagnostic tools, just runs the JVM<br>
 &nbsp;&nbsp;- name: eliya-sidecar<br>
 &nbsp;&nbsp;&nbsp;&nbsp;image: ghcr.io/asymmsystems/eliya:25-lts&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# full diagnostic toolchain<br>

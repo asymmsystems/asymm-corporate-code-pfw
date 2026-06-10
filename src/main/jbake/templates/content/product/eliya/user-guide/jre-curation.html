@@ -3,9 +3,12 @@
 <header class="page-header">
     <span class="section-kicker">User guide</span>
     <h1>JRE curation — what's in the Eliya JRE and why</h1>
-    <p style="max-width: 60ch">The Eliya JRE is ~48&nbsp;MB. Standard JREs from other vendors are
-        ~140&nbsp;MB. Yet the Eliya JRE includes more functionality (Flight Recorder, JMX, jcmd attach,
-        PKCS#11). This page explains how — and why we made these choices.</p>
+    <p style="max-width: 60ch">The Eliya JRE downloads as a ~48&nbsp;MB tarball and extracts to
+        ~95&nbsp;MB. It includes the standard <code>java.se</code> module set <em>plus</em> nine
+        additional <code>jdk.*</code> modules (Flight Recorder, JMX, jcmd attach, PKCS#11, DNS SPI,
+        and a few others). Standard <code>java.se</code>-only JREs from vendors that still ship one
+        extract to ~140&nbsp;MB despite having fewer modules. This page explains how the size
+        difference is achieved, and why we chose this module set.</p>
 </header>
 
 <section>
@@ -108,25 +111,34 @@
     </table>
 
     <p style="margin-top: 1.5rem">Combined with <code>--strip-debug</code>, <code>--no-man-pages</code>,
-        and <code>--no-header-files</code>, the resulting image is ~48&nbsp;MB.</p>
+        and <code>--no-header-files</code>, the resulting image is ~48&nbsp;MB compressed
+        (~95&nbsp;MB extracted).</p>
 </section>
 
 <section>
     <h2 class="section-title">The size paradox, resolved</h2>
-    <p>Eliya's JRE has 9 EXTRA modules on top of the standard <code>java.se</code> set. Yet the binary
-        is ~3× SMALLER than standard JREs. Two effects drive the difference:</p>
+    <p>Eliya's JRE has 9 extra modules on top of the standard <code>java.se</code> set. Yet the
+        extracted image is ~30% smaller than standard <code>java.se</code>-only JREs (~95&nbsp;MB
+        vs ~140&nbsp;MB extracted). Three effects drive the difference:</p>
 
     <ol>
         <li><strong><code>--strip-debug</code></strong> drops DWARF debug symbols from <code>libjvm.so</code>
-            and ~30 other shared libraries. Other vendors ship with debug symbols intact (so users can
-            attach gdb and walk JVM frames). Eliya strips them — production runtimes don't need this;
-            JVM hackers use the JDK. This is the dominant size win: ~70&nbsp;MB reduction.</li>
+            and the other shared libraries. Other vendors typically ship with debug symbols intact (so
+            users can attach gdb and walk JVM frames). Eliya strips them — production runtimes don't
+            need this; JVM hackers use the JDK. This is the dominant size win: ~50&nbsp;MB extracted-
+            footprint reduction.</li>
         <li><strong><code>--no-man-pages</code></strong> and <strong><code>--no-header-files</code></strong>
             save another ~5-10&nbsp;MB.</li>
+        <li><strong><code>--compress</code></strong> applies module compression at jlink time, so the
+            extracted image and the download tarball both benefit.</li>
     </ol>
 
-    <p>The 9 extra <code>jdk.*</code> modules add ~5-10&nbsp;MB collectively. Net: +5-10&nbsp;MB modules,
-        −75-80&nbsp;MB stripped = ~50% smaller image with MORE functionality.</p>
+    <p>The 9 extra <code>jdk.*</code> modules add ~5-10&nbsp;MB collectively. Net: +5-10&nbsp;MB
+        modules, −55-60&nbsp;MB stripped/compressed = ~30% smaller extracted image with more
+        functionality. The compressed download size (~48&nbsp;MB) is comparable to other vendors'
+        <code>java.se</code>-only JRE downloads (~50&nbsp;MB) because download tarballs are already
+        gzip-compressed; the size win is in the extracted footprint, which is what matters in a
+        container image.</p>
 </section>
 
 <section>
