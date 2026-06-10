@@ -1,5 +1,5 @@
 title=asymm CLI reference
-description=The unified Asymm Systems command-line tool. Phase 1 ships with diagnostic subcommands for Eliya; expands as Asymm ships additional products.
+description=The unified Asymm Systems command-line tool. Phase 1 ships three commands; Phase 2+ subcommands listed here are reserved namespace, not yet implemented.
 type=page
 toc=true
 status=published
@@ -9,29 +9,42 @@ status=published
     <span class="section-kicker">User guide</span>
     <h1>The <code>asymm</code> CLI</h1>
     <p style="max-width: 60ch">A small, focused command-line tool installed alongside Eliya at
-        <code>/usr/bin/asymm</code>. The unified entry point for Asymm Systems products — Eliya
-        today, Dial and Forensics in future phases.</p>
+        <code><#noparse>${JAVA_HOME}</#noparse>/bin/asymm</code> (and symlinked from <code>/usr/bin/asymm</code> when
+        installed via <code>.deb</code> / <code>.rpm</code>). The unified entry point for Asymm
+        Systems products &mdash; Eliya today, Dial and Forensics in future phases.</p>
 </header>
 
 <section>
+    <aside style="background: #fff7ed; border-left: 4px solid #f59e0b; padding: 1rem 1.5rem; margin-bottom: 1.5rem; max-width: 700px">
+        <p style="margin: 0; font-size: 0.95rem"><strong>Phase 1 (today) ships three commands:</strong>
+            <code>asymm --info</code> (default), <code>asymm --version</code>, <code>asymm --help</code>.
+            The Phase 2 and Phase 3 subcommand families listed below are <strong>reserved namespace</strong> &mdash;
+            documented as the design roadmap, not currently implemented in the shipped <code>bin/asymm</code>
+            binary. The Phase 1 binary is intentionally minimal so customers can verify their install
+            and read vendor metadata; deeper diagnostics today route through standard JDK tooling
+            (<code>jcmd</code>, <code>jstack</code>, <code>jmap</code>, JDK Mission Control).</p>
+    </aside>
+
     <h3>Design philosophy</h3>
     <ol>
         <li><strong>Multi-product, not Eliya-specific.</strong> The pattern <code>asymm &lt;product&gt; &lt;command&gt;</code>
             scales as Asymm Systems ships additional products (Eliya, Dial, Forensics). The CLI is
             the unified entry point.</li>
-        <li><strong>Wrap real functionality, never simulate it.</strong> Every command in the CLI
-            wraps a genuinely useful operation. No placeholder commands that print "Coming Soon."</li>
-        <li><strong>Phase-aligned scope.</strong> The Phase 1 CLI ships only commands that work
-            today. Phase 2 and Phase 3 commands are documented as roadmap, not stubbed in Phase 1
-            builds.</li>
+        <li><strong>Wrap real functionality, never simulate it.</strong> Every shipped command in the
+            CLI wraps a genuinely useful operation. Phase 1 ships only commands that work today;
+            Phase 2 and Phase 3 commands appear below as design documentation, not stubs.</li>
+        <li><strong>Phase-aligned scope.</strong> Reserved-namespace commands are documented so the
+            roadmap is legible to engineers evaluating Eliya for multi-year deployments. They are
+            not present in the Phase 1 binary.</li>
     </ol>
 
 
-    <h3>Phase 1 commands (current)</h3>
-    <p>Each command wraps an existing operation — no new engineering
-        primitives required.</p>
+    <h3>Phase 1 commands (shipped today)</h3>
+    <p>The current Phase 1 <code>bin/asymm</code> binary supports three flag-style commands. All
+        three are short, do one thing, and exit. No subcommand tree, no Phase 1 <code>asymm
+        eliya &hellip;</code> dispatch.</p>
 
-    <table class="clinical-table" >
+    <table class="clinical-table">
         <thead>
             <tr>
                 <th>Command</th>
@@ -40,292 +53,156 @@ status=published
         </thead>
         <tbody>
             <tr>
-                <td><code>asymm</code></td>
-                <td>Top-level help with installed Asymm products</td>
+                <td><code>asymm</code> (no args; alias <code>asymm --info</code> or <code>-i</code>)</td>
+                <td>Print vendor metadata + JDK version banner + build info + Eliya feature summary.
+                    The default behaviour when invoked with no arguments.</td>
             </tr>
             <tr>
-                <td><code>asymm version</code></td>
-                <td>CLI version + installed Asymm products</td>
+                <td><code>asymm --version</code> (or <code>-v</code>)</td>
+                <td>Fork+exec the sibling <code>java -version</code>. Output is the standard Java
+                    version banner.</td>
             </tr>
             <tr>
-                <td><code>asymm eliya</code></td>
-                <td>Eliya subcommand help</td>
-            </tr>
-            <tr>
-                <td><code>asymm eliya version</code></td>
-                <td>Eliya JDK version, build info, vendor strings</td>
-            </tr>
-            <tr>
-                <td><code>asymm eliya info</code></td>
-                <td>Diagnostic environment info &mdash; JAVA_HOME, <code>ELIYA_DIAGNOSTIC_PATH</code>, <code>ELIYA_SERVICE_NAME</code> / <code>ELIYA_REPLICA_NAME</code> resolution with the three-level path layout, container detection, GC selection, JFR status</td>
-            </tr>
-            <tr>
-                <td><code>asymm eliya verify</code></td>
-                <td>Verify Eliya installation integrity against published checksums</td>
-            </tr>
-            <tr>
-                <td><code>asymm eliya doctor</code></td>
-                <td>Configuration sanity check — diagnostic paths writable, log directories exist, JFR can write to expected paths</td>
-            </tr>
-            <tr>
-                <td><code>asymm eliya versions</code></td>
-                <td>List Eliya versions with LTS status, upstream base, support windows</td>
-            </tr>
-            <tr>
-                <td><code>asymm eliya versions --lts</code></td>
-                <td>Filter to LTS-only versions</td>
-            </tr>
-            <tr>
-                <td><code>asymm eliya schedule</code></td>
-                <td>Show Eliya release schedule with quarterly CPU targets</td>
-            </tr>
-            <tr>
-                <td><code>asymm eliya schedule --upcoming</code></td>
-                <td>Show only upcoming (not yet shipped) releases</td>
-            </tr>
-            <tr>
-                <td><code>asymm eliya schedule --full</code></td>
-                <td>Show full schedule — shipped + upcoming</td>
+                <td><code>asymm --help</code> (or <code>-h</code>)</td>
+                <td>Print usage. Unknown flags also print usage with exit code 1.</td>
             </tr>
         </tbody>
     </table>
 
 
-    <h3>Example outputs</h3>
-
-    <h3><code>asymm version</code></h3>
+    <h3>Phase 1 example output: <code>asymm</code> (default <code>--info</code>)</h3>
     <div class="eliya-terminal-panel">
-        <span class="terminal-prompt">$ asymm version</span>
+        <span class="terminal-prompt">$ asymm</span>
 <pre>
-asymm CLI 1.0.0 (Asymm Systems Pvt Ltd)
-Installed products:
-  eliya  25.0.3 (OpenJDK 25.0.3+9-Eliya)
+Eliya - Built by Asymm Systems (Pvt) Ltd
+https://asymm.systems/product/eliya
+
+JDK Version:
+openjdk version "25.0.3" 2026-04-21
+OpenJDK Runtime Environment (build 25.0.3+9-Eliya-25.0.3)
+OpenJDK 64-Bit Server VM (build 25.0.3+9-Eliya-25.0.3, mixed mode, sharing)
+
+Build Info:
+  Vendor:    Asymm Systems
+  Base:      OpenJDK 25 LTS
+  Platform:  Linux-x86_64
+  Built:     2026-06-10T08:34:17Z
+
+Eliya Features:
+  java.security:           bit-identical to upstream OpenJDK (ADR-00001 sec.3)
+  Production profile:      -XX:EliyaProfile=Production activates observability defaults
+  Phase 4 profiles:        PCIDSS/HIPAA/SOX/FedRAMP/GDPR/ISO27001/SOC2 reserved (not active in Phase 1)
+
+Eliya source tree: src/eliya/hotspot/... (ADR-00009 mirror layout)
+See PATCHES.md for the full Eliya footprint over upstream OpenJDK.
 </pre>
     </div>
 
-    <h3><code>asymm eliya info</code></h3>
+    <h3>Phase 1 example output: <code>asymm --version</code></h3>
+    <p>The <code>--version</code> command fork+execs the sibling <code>java -version</code>, so the
+        output is identical to running <code>java -version</code> directly:</p>
     <div class="eliya-terminal-panel">
-        <span class="terminal-prompt">$ asymm eliya info</span>
+        <span class="terminal-prompt">$ asymm --version</span>
 <pre>
-Eliya JDK Information
-─────────────────────────────────────────────────
-JDK version:        25.0.3+9-Eliya
-JAVA_HOME:          /usr/lib/jvm/eliya-25
-Vendor:             Asymm Systems
-Vendor URL:         https://asymm.systems/product/eliya
-
-Diagnostic Configuration
-─────────────────────────────────────────────────
-ELIYA_DIAGNOSTIC_PATH:  /var/log/eliya (default)
-ELIYA_SERVICE_NAME:     billing-service (from env)
-ELIYA_REPLICA_NAME:     billing-service-7d4b9c-xk29p (from HOSTNAME)
-Resolved JFR path:      /var/log/eliya/billing-service/billing-service-7d4b9c-xk29p/jfr/
-Resolved heap path:     /var/log/eliya/billing-service/billing-service-7d4b9c-xk29p/heap/
-Resolved crash path:    /var/log/eliya/billing-service/billing-service-7d4b9c-xk29p/crash/
-Resolved GC log path:   /var/log/eliya/billing-service/billing-service-7d4b9c-xk29p/gc/
-Replica suppression:    not applied (replica != service)
-
-Container Detection
-─────────────────────────────────────────────────
-UseContainerSupport:    enabled
-Container memory:       4096 MB (cgroup v2)
-Container CPU:          2 cores
-ActiveProcessorCount:   2
-
-GC Configuration (default ergonomic selection)
-─────────────────────────────────────────────────
-Selected collector:     G1 GC
-MaxGCPauseMillis:       200ms (default)
-
-Eliya Flag Architecture
-─────────────────────────────────────────────────
-Active profile:         Production (via -XX:EliyaProfile=Production)
-Active capabilities:    (Phase 2 — not yet carved out)
-Conflict detection:     enabled (via EliyaConflictCheck)
-
-JFR Status
-─────────────────────────────────────────────────
-JFR enabled by default: yes (when -XX:EliyaProfile=Production set)
-Default settings:       default
-Default max age:        24h
-Default max size:       250m
-Default dump on exit:   yes
-</pre>
-    </div>
-
-    <h3><code>asymm eliya verify</code></h3>
-    <div class="eliya-terminal-panel">
-        <span class="terminal-prompt">$ asymm eliya verify</span>
-<pre>
-Verifying Eliya installation at /usr/lib/jvm/eliya-25...
-
-<span class="term-ok">✓</span> Binary checksum matches published value
-<span class="term-ok">✓</span> GPG signature verified against Asymm Systems release key
-<span class="term-ok">✓</span> All bundled files (45 files) match release manifest
-<span class="term-ok">✓</span> No unexpected files in installation directory
-
-Installation integrity: PASSED
-Signed by:              Eliya Releases (Asymm Systems) &lt;eliya@asymm.systems&gt;
-Signature timestamp:    2026-04-17 14:23:01 UTC
-</pre>
-    </div>
-
-    <h3><code>asymm eliya doctor</code></h3>
-    <div class="eliya-terminal-panel">
-        <span class="terminal-prompt">$ asymm eliya doctor</span>
-<pre>
-Running Eliya configuration checks...
-
-<span class="term-ok">✓</span> JAVA_HOME is set and points to a valid Eliya installation
-<span class="term-ok">✓</span> EliyaProfile is set to: Production
-<span class="term-ok">✓</span> /var/log/eliya exists and is writable
-<span class="term-ok">✓</span> /var/log/eliya/billing-service can be created (eliya-diagnostics group, g+w)
-<span class="term-ok">✓</span> /var/log/eliya/billing-service/billing-service-7d4b9c-xk29p can be created
-<span class="term-ok">✓</span> JFR can write to /var/log/eliya/billing-service/billing-service-7d4b9c-xk29p/jfr/
-<span class="term-ok">✓</span> Heap dump path is writable
-<span class="term-ok">✓</span> Crash log path is writable
-<span class="term-ok">✓</span> GC log path is writable
-<span class="term-ok">✓</span> Container support is enabled
-
-Service name resolved from: ELIYA_SERVICE_NAME environment variable
-Replica name resolved from: HOSTNAME environment variable
-Replica suppression: not applied (replica != service)
-
-10 checks passed, 0 warnings, 0 failures.
+openjdk version "25.0.3" 2026-04-21
+OpenJDK Runtime Environment (build 25.0.3+9-Eliya-25.0.3)
+OpenJDK 64-Bit Server VM (build 25.0.3+9-Eliya-25.0.3, mixed mode, sharing)
 </pre>
     </div>
 
 
-    <h3>Phase 2 roadmap (planned)</h3>
-    <p>Documented as roadmap for Phase 2 (post-seed). Wrappers around
-        the bundled tools (Eclipse MAT, async-profiler) and JFR conveniences.</p>
+    <h3>Phase 2 roadmap (reserved namespace; not yet implemented)</h3>
+    <p>The Phase 2 release (target post-seed, est. H2 2026) adds bundled local diagnostic tools
+        (Eclipse MAT headless, async-profiler) and wraps them under the <code>asymm eliya</code>
+        subcommand tree. The commands below are <strong>design documentation</strong> for that
+        roadmap; the Phase 1 binary does <strong>not</strong> dispatch to any <code>asymm
+        eliya &hellip;</code> subcommand. Phase 2 ships a new <code>bin/asymm</code> binary that
+        does.</p>
 
-    <table class="clinical-table" >
+    <p>Today, the same operations are available through standard JDK tooling: <code>jcmd</code>
+        for JFR/heap/GC operations, <code>jmap</code> for heap dumps, <code>jstack</code> for
+        thread dumps, JDK Mission Control (or the <code>jfr</code> CLI) for JFR analysis. The Phase 2
+        wrappers reduce keystrokes; they don't enable anything new.</p>
+
+    <table class="clinical-table">
         <thead>
             <tr>
-                <th>Command</th>
+                <th>Phase 2 (reserved namespace)</th>
                 <th>Wraps</th>
                 <th>Purpose</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td><code>asymm eliya profile &lt;pid&gt;</code></td>
+                <td><code>asymm eliya info</code></td>
+                <td>Native diagnostic introspection</td>
+                <td>Print resolved JAVA_HOME, <code>ELIYA_DIAGNOSTIC_PATH</code>, three-level path
+                    resolution (<code>ELIYA_SERVICE_NAME</code> / <code>ELIYA_REPLICA_NAME</code>),
+                    container detection, GC selection, JFR status</td>
+            </tr>
+            <tr>
+                <td><code>asymm eliya doctor</code></td>
+                <td>Native preflight checker</td>
+                <td>Configuration sanity check &mdash; diagnostic paths writable, log directories
+                    exist, JFR can write to expected paths, GC log path is writable, container
+                    support enabled</td>
+            </tr>
+            <tr>
+                <td><code>asymm eliya verify</code></td>
+                <td><code>sha256sum</code> + <code>gpg --verify</code></td>
+                <td>Verify Eliya installation integrity against published checksums + Asymm signing
+                    key (today this is two commands; see
+                    <a href="/product/eliya/user-guide/verify-download.html" class="org-link org-link--inline org-link--internal">verify your download</a>)</td>
+            </tr>
+            <tr>
+                <td><code>asymm eliya versions [--lts]</code></td>
+                <td>Local + remote release metadata</td>
+                <td>List Eliya versions with LTS status, upstream base, support windows</td>
+            </tr>
+            <tr>
+                <td><code>asymm eliya schedule [--upcoming] [--full]</code></td>
+                <td>Local lifecycle calendar</td>
+                <td>Show Eliya release schedule with quarterly CPU targets (today this is on the
+                    <a href="/product/eliya/lifecycle.html" class="org-link org-link--inline org-link--internal">lifecycle page</a>)</td>
+            </tr>
+            <tr>
+                <td><code>asymm eliya profile &lt;pid&gt;</code> [<code>--hw-counters</code> | <code>--wall</code> | <code>--ttsp</code> | <code>--alloc</code>]</td>
                 <td>JFR or async-profiler (auto-selected)</td>
-                <td>CPU profiling with sensible defaults</td>
+                <td>CPU profiling with sensible defaults; hardware counters, wall-clock, time-to-safepoint, or allocation profiling</td>
             </tr>
             <tr>
-                <td><code>asymm eliya profile --hw-counters &lt;pid&gt;</code></td>
-                <td>async-profiler</td>
-                <td>Hardware performance counter analysis</td>
-            </tr>
-            <tr>
-                <td><code>asymm eliya profile --wall &lt;pid&gt;</code></td>
-                <td>async-profiler</td>
-                <td>Wall-clock thread profiling</td>
-            </tr>
-            <tr>
-                <td><code>asymm eliya profile --ttsp &lt;pid&gt;</code></td>
-                <td>async-profiler</td>
-                <td>Time-to-safepoint sampling</td>
-            </tr>
-            <tr>
-                <td><code>asymm eliya profile --alloc &lt;pid&gt;</code></td>
-                <td>JFR</td>
-                <td>Memory allocation profiling</td>
-            </tr>
-            <tr>
-                <td><code>asymm eliya analyze-heap &lt;hprof&gt;</code></td>
+                <td><code>asymm eliya analyze-heap &lt;hprof&gt;</code> [<code>--duplicates</code> | <code>--histogram</code> | <code>--oql</code>]</td>
                 <td>Eclipse MAT headless</td>
-                <td>Leak Suspects HTML report</td>
+                <td>Leak Suspects HTML report, duplicate object analysis, class histogram with retained size, or custom OQL query</td>
             </tr>
             <tr>
-                <td><code>asymm eliya analyze-heap --duplicates &lt;hprof&gt;</code></td>
-                <td>Eclipse MAT headless</td>
-                <td>Duplicate object analysis</td>
+                <td><code>asymm eliya jfr [start|dump|stop|scrub] &lt;pid&gt;</code></td>
+                <td><code>jcmd &lt;pid&gt; JFR.*</code></td>
+                <td>Ad-hoc JFR recording start, dump, stop; <code>scrub</code> sanitises a JFR
+                    recording for sharing</td>
             </tr>
             <tr>
-                <td><code>asymm eliya analyze-heap --histogram &lt;hprof&gt;</code></td>
-                <td>Eclipse MAT headless</td>
-                <td>Class histogram with retained size</td>
-            </tr>
-            <tr>
-                <td><code>asymm eliya analyze-heap --oql 'SELECT...' &lt;hprof&gt;</code></td>
-                <td>Eclipse MAT headless</td>
-                <td>Custom OQL query</td>
-            </tr>
-            <tr>
-                <td><code>asymm eliya jfr start &lt;pid&gt;</code></td>
-                <td><code>jcmd &lt;pid&gt; JFR.start</code></td>
-                <td>Start ad-hoc JFR recording</td>
-            </tr>
-            <tr>
-                <td><code>asymm eliya jfr dump &lt;pid&gt;</code></td>
-                <td><code>jcmd &lt;pid&gt; JFR.dump</code></td>
-                <td>Dump current JFR recording</td>
-            </tr>
-            <tr>
-                <td><code>asymm eliya jfr stop &lt;pid&gt;</code></td>
-                <td><code>jcmd &lt;pid&gt; JFR.stop</code></td>
-                <td>Stop JFR recording</td>
-            </tr>
-            <tr>
-                <td><code>asymm eliya jfr scrub &lt;recording&gt;</code></td>
-                <td>JFR file rewriter</td>
-                <td>Sanitise JFR recording for sharing</td>
+                <td><code>asymm eliya install-mat-gui</code> / <code>install-jitwatch</code> / <code>install-jol</code></td>
+                <td>On-demand fetcher</td>
+                <td>Engineer-workstation installers for the full Eclipse MAT GUI, JITWatch, and Java
+                    Object Layout. Phase 2 bundles the headless variants by default; these installers
+                    are opt-in to keep default install lean.</td>
             </tr>
         </tbody>
     </table>
 
-    <p><strong>Optional tool installers.</strong> Phase 2 bundles Eclipse MAT (headless) and
-        async-profiler by default. Engineers wanting the full Eclipse MAT GUI (for interactive
-        heap analysis on workstations), JITWatch (for JIT compilation visualisation), or JOL (for
-        object layout inspection) can install these on-demand rather than carrying them in the
-        default Eliya distribution. Keeping the default install lean preserves image size and
-        attack surface; opt-in installers keep the option open.</p>
 
-    <table class="clinical-table" >
+    <h3>Phase 3 roadmap (reserved namespace; Asymm Forensics)</h3>
+    <p>The Phase 3 release (target post-Series-A) introduces <strong>Asymm Forensics</strong>, a
+        cross-correlation diagnostic platform that ingests JFR, heap, thread, GC, and crash
+        artefacts to produce unified incident reports. The <code>asymm forensics</code> subcommand
+        tree below is design documentation for that release; not implemented in Phase 1 or Phase 2
+        binaries.</p>
+
+    <table class="clinical-table">
         <thead>
             <tr>
-                <th>Command</th>
-                <th>Installs</th>
-                <th>Use case</th>
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td><code>asymm eliya install-mat-gui</code></td>
-                <td>Eclipse MAT (full GUI build, large)</td>
-                <td>Interactive heap analysis on engineer workstations</td>
-            </tr>
-            <tr>
-                <td><code>asymm eliya install-jitwatch</code></td>
-                <td>JITWatch</td>
-                <td>JIT compilation visualisation</td>
-            </tr>
-            <tr>
-                <td><code>asymm eliya install-jol</code></td>
-                <td>Java Object Layout</td>
-                <td>Object layout inspection</td>
-            </tr>
-        </tbody>
-    </table>
-
-    <p><strong>Platform note.</strong> The <code>asymm</code> CLI ships at
-        <code>/usr/bin/asymm</code> (symlinked from <code>${JAVA_HOME}/bin/asymm</code>) on Linux.
-        Phase 2 macOS support uses <code>/usr/local/bin/asymm</code>. Phase 3 Windows support uses
-        <code>%PROGRAMFILES%\Asymm\eliya\bin\asymm.exe</code>. All platforms share the same command
-        structure documented above.</p>
-
-
-    <h3>Phase 3 roadmap (Asymm Forensics)</h3>
-    <p>Documented as roadmap for Phase 3 (post-Series-A). Invoke the
-        Asymm Forensics product for cross-correlation diagnostic analysis.</p>
-
-    <table class="clinical-table" >
-        <thead>
-            <tr>
-                <th>Command</th>
+                <th>Phase 3 (reserved namespace)</th>
                 <th>Purpose</th>
             </tr>
         </thead>
@@ -335,64 +212,45 @@ Replica suppression: not applied (replica != service)
                 <td>Cross-artifact correlation analysis</td>
             </tr>
             <tr>
-                <td><code>asymm forensics ingest --jfr &lt;recording&gt;</code></td>
-                <td>Add JFR recording to analysis</td>
-            </tr>
-            <tr>
-                <td><code>asymm forensics ingest --heap &lt;hprof&gt;</code></td>
-                <td>Add heap dump to analysis</td>
-            </tr>
-            <tr>
-                <td><code>asymm forensics ingest --threads &lt;jstack&gt;</code></td>
-                <td>Add thread dump to analysis</td>
-            </tr>
-            <tr>
-                <td><code>asymm forensics ingest --gc-log &lt;path&gt;</code></td>
-                <td>Add GC log to analysis</td>
-            </tr>
-            <tr>
-                <td><code>asymm forensics ingest --crash &lt;hs_err&gt;</code></td>
-                <td>Add crash log to analysis</td>
+                <td><code>asymm forensics ingest [--jfr | --heap | --threads | --gc-log | --crash] &lt;file&gt;</code></td>
+                <td>Add an artefact to the analysis bundle (JFR recording, heap dump, jstack output, GC log, or crash log)</td>
             </tr>
             <tr>
                 <td><code>asymm forensics report</code></td>
                 <td>Generate cross-correlation report</td>
             </tr>
             <tr>
-                <td><code>asymm forensics report --compliance pci-dss</code></td>
-                <td>PCI DSS-aligned audit report</td>
-            </tr>
-            <tr>
-                <td><code>asymm forensics report --compliance hipaa</code></td>
-                <td>HIPAA Technical Safeguards report</td>
-            </tr>
-            <tr>
-                <td><code>asymm forensics report --compliance sox</code></td>
-                <td>SOX IT general controls report</td>
+                <td><code>asymm forensics report --compliance [pci-dss | hipaa | sox | fedramp | gdpr | iso27001 | soc2]</code></td>
+                <td>Compliance-aligned audit report. PCI&nbsp;DSS, HIPAA, and SOX are the initial three; FedRAMP, GDPR, ISO&nbsp;27001, SOC&nbsp;2 follow as Phase 4 profiles ship.</td>
             </tr>
         </tbody>
     </table>
 
     <p>The compliance report variants ship aligned with Eliya's Phase 4 profile namespace as
-        those profiles ship. PCI&nbsp;DSS, HIPAA, and SOX are the initial three (highest demand
-        based on early Phase 4 waitlist signals); FedRAMP, GDPR, ISO&nbsp;27001, SOC&nbsp;2, and
-        combined-profile reports (Healthcare-Payment, Financial-SaaS, Federal-Defense, etc.) follow
-        as customer demand justifies. See
+        those profiles ship. See
         <a href="/product/eliya/user-guide/flag-architecture.html" class="org-link org-link--inline org-link--internal">flag architecture</a>
         for the Phase 4 profile namespace.</p>
 
 
+    <h3>Platform note</h3>
+    <p>The Phase 1 <code>asymm</code> binary ships at <code><#noparse>${JAVA_HOME}</#noparse>/bin/asymm</code> on Linux
+        x86_64 and aarch64 (Phase 1 targets). The <code>.deb</code> and <code>.rpm</code> packages
+        also symlink it to <code>/usr/bin/asymm</code> for PATH convenience. Phase 2 macOS support
+        targets <code>/usr/local/bin/asymm</code>. Phase 3 Windows support targets
+        <code>%PROGRAMFILES%\Asymm\eliya\bin\asymm.exe</code>. All platforms share the same command
+        structure documented above as Phase 2 and Phase 3 subcommand trees ship.</p>
+
+
     <h3>Versioning and compatibility</h3>
-    <p>The <code>asymm</code> CLI follows
-        independent SemVer:</p>
+    <p>The <code>asymm</code> CLI follows independent SemVer; CLI version is decoupled from Eliya
+        version (a user on Eliya 25.0.5 might have <code>asymm</code> 1.3 if Phase 2 tooling has
+        matured).</p>
     <ul>
-        <li><code>asymm</code> 1.x supports Eliya 25.0.x (Phase 1)</li>
-        <li><code>asymm</code> 1.1+ supports Phase 2 diagnostic subcommands</li>
+        <li><code>asymm</code> 1.x covers Phase 1 (current; <code>--info</code>, <code>--version</code>, <code>--help</code> only)</li>
+        <li><code>asymm</code> 1.1+ adds Phase 2 <code>asymm eliya</code> subcommand tree as Phase 2 ships</li>
         <li><code>asymm</code> 2.x will accompany Asymm Forensics general availability</li>
         <li>Backward-compatible commands within major versions; breaking changes require a major version bump</li>
     </ul>
-    <p>CLI version is decoupled from Eliya version. A
-        user with Eliya 25.0.5 might have <code>asymm</code> 1.3 if Phase 2 tooling has matured.</p>
 
     <p><strong>Release cadence.</strong> The <code>asymm</code> CLI releases alongside Eliya CPUs
         by default (quarterly), with patch versions (1.0.x &rarr; 1.0.y) for CLI-specific bug

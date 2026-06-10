@@ -1,0 +1,181 @@
+<#include "/macro/release.ftl">
+
+<header class="page-header">
+    <span class="section-kicker">User guide</span>
+    <h1>Verify reproducibility</h1>
+    <p style="max-width: 70ch">Compliance auditors and supply-chain reviewers can take the
+        published Eliya source, run the documented build, and produce a tarball that is
+        <strong>byte-for-byte identical</strong> to the one Asymm signed and published. This page
+        documents the build-twice ceremony, the five reproducibility layers Eliya eliminates, and
+        the exact commands to run.</p>
+</header>
+
+<section>
+    <h2 class="section-title">Why reproducibility matters</h2>
+    <p>A signed release proves the signing key was used; it does NOT prove the binary corresponds
+        to the published source. Reproducibility closes that gap: if the published source
+        rebuilds bit-identical to the signed binary, then the binary has no patches beyond what
+        the source repository carries. For compliance-conscious deployments, that's the
+        difference between "we trust Asymm" and "we can independently confirm."</p>
+    <p>Eliya is engineered for byte-identical rebuilds, not merely "best-effort similar." The
+        build chain is locked at every layer that would otherwise introduce nondeterminism &mdash;
+        timestamps, archive metadata, toolchain versions, environment paths, even the bundled
+        compression library.</p>
+</section>
+
+<section>
+    <h2 class="section-title">The build-twice ceremony</h2>
+    <p>The verification is a comparison: build Eliya from source twice and confirm the two
+        outputs are byte-identical. Run on the same machine for a within-image rebuild test;
+        run on independent machines (different hardware, different operators, fresh OS) for
+        cross-environment confirmation.</p>
+
+    <h3>Prerequisites</h3>
+    <ul>
+        <li>Docker (the build runs inside a pinned <code>eliya-jdk-buildenv</code> container per
+            ADR-00023; the host needs only Docker + git + standard CLI tools)</li>
+        <li>~30 GB free disk space for the build tree</li>
+        <li>~2-3 hours for one full build on a 4-core machine; ~60 min on 16-core</li>
+        <li>The published mirror repository tag for the release you want to verify
+            (<code>eliya-jdk-25.0.3</code> for the first signed GA)</li>
+    </ul>
+
+    <h3>One-shot recipe</h3>
+    <div class="inline-terminal inline-terminal--static">
+        <code># Clone the platform repo (the orchestration layer):<br>
+git clone https://github.com/asymmsystems/eliya-jdk-platform<br>
+cd eliya-jdk-platform<br>
+git checkout eliya-jdk-25.0.3<br>
+<br>
+# Enter the build environment (pulls the digest-pinned buildenv image):<br>
+make buildenv-shell<br>
+<br>
+# Inside the container, do build A:<br>
+. scripts/env-jdk25.sh<br>
+make dev<br>
+sha256sum build/openjdk-src/build/*/bundles/eliya-jdk-25.0.3-linux-x64.tar.gz<br>
+<br>
+# Record hash A. Then clean and rebuild:<br>
+make clean-all<br>
+make dev<br>
+sha256sum build/openjdk-src/build/*/bundles/eliya-jdk-25.0.3-linux-x64.tar.gz<br>
+<br>
+# Hash B must equal hash A (and equal the published SHA256SUMS.txt entry).</code>
+    </div>
+
+    <h3>If hashes differ &mdash; how to diagnose</h3>
+    <p>Use <code>diffoscope</code> to identify what changed:</p>
+    <div class="inline-terminal inline-terminal--static">
+        <code>diffoscope build-a.tar.gz build-b.tar.gz</code>
+    </div>
+    <p>Or, lighter manual chain:</p>
+    <div class="inline-terminal inline-terminal--static">
+        <code>tar tvf build-a.tar.gz | diff - &lt;(tar tvf build-b.tar.gz)<br>
+find . -type f -exec sha256sum {} + | sort  # per-file listing</code>
+    </div>
+    <p>If your two rebuilds differ but match each other across multiple runs, the difference is
+        introduced by your environment (toolchain drift, host glibc mismatch, missing devkit pin).
+        Confirm the buildenv image digest matches the one published in
+        <code>scripts/env-jdk25.sh</code>. If runs differ from each other, you've found a
+        reproducibility regression in Eliya &mdash; report to
+        <a href="mailto:security@asymm.systems" class="org-link org-link--inline org-link--external">security@asymm.systems</a>.</p>
+</section>
+
+<section>
+    <h2 class="section-title">The five reproducibility layers Eliya eliminates</h2>
+    <p>Without explicit countermeasures, an OpenJDK build embeds nondeterministic state at five
+        layers. Eliya locks each:</p>
+
+    <table class="clinical-table" style="max-width: 800px">
+        <thead>
+            <tr><th>Layer</th><th>What would vary</th><th>Eliya countermeasure</th></tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>1. Build-embedded timestamps</strong></td>
+                <td>Build date strings burned into version banners, JAR manifests, class files</td>
+                <td><code>--with-source-date=<#noparse>${SOURCE_DATE_EPOCH}</#noparse></code> sourced from <code>git log HEAD</code> time in <code>scripts/common.sh</code>; identical inputs produce identical timestamps</td>
+            </tr>
+            <tr>
+                <td><strong>2. Archive metadata</strong></td>
+                <td>tar/gzip headers carry file modification times, owner UIDs, hostname-of-builder</td>
+                <td>Deterministic <code>tar --sort=name --owner=0 --group=0 --numeric-owner</code> + <code>gzip -n</code> (suppresses original filename + timestamp header)</td>
+            </tr>
+            <tr>
+                <td><strong>3. Toolchain / environment drift</strong></td>
+                <td>Different GCC versions, different sysroots, different host glibc produce different machine code</td>
+                <td>Pinned <code>eliya-jdk-buildenv</code> image (by SHA digest, not tag) + GCC 14 devkit + per-arch sysroot (Oracle Linux 6.4 for x86_64, 7.6 for aarch64) per ADR-00023</td>
+            </tr>
+            <tr>
+                <td><strong>4. Build path / user / hostname</strong></td>
+                <td>Debug info embeds the absolute build directory path; <code>__FILE__</code> macros expand to absolute paths</td>
+                <td>Normalised inside the container: build directory is always <code>/work</code>, user is always <code>root</code>, no host-specific paths leak in</td>
+            </tr>
+            <tr>
+                <td><strong>5. Bundled zlib</strong></td>
+                <td>OpenJDK linked against system zlib produces different compressed output if system zlib version differs across hosts</td>
+                <td><code>--with-zlib=bundled</code> forces use of the in-tree zlib copy; DEFLATE output stays stable across buildenv image rebuilds</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p style="margin-top: 1.5rem; font-size: 0.95rem">Each layer is a documented engineering
+        decision with rationale in <a href="https://github.com/asymmsystems/eliya-jdk-platform" class="org-link org-link--inline org-link--external">the build orchestration repository</a>'s
+        <code>scripts/common.sh</code>, <code>scripts/env-jdk25.sh</code>, and the build-system
+        configure flags. The full architectural rationale is in the corresponding internal ADR
+        (ADR-00023 sec.7) and is summarised here in operator-facing terms.</p>
+</section>
+
+<section>
+    <h2 class="section-title">Confirmed reproducibility level (as of first signed GA)</h2>
+    <ul class="checklist">
+        <li><span class="check-yes" aria-hidden="true">&#10003;</span>
+            <strong>Within-image reproducibility</strong>: two clean builds in the same
+            buildenv container produce bit-identical tarballs. Confirmed 2026-06-02 and
+            2026-06-05 (both arches).</li>
+        <li><span class="check-yes" aria-hidden="true">&#10003;</span>
+            <strong>Cross-image-rebuild reproducibility</strong>: two builds across separate
+            buildenv image rebuilds (with <code>docker rmi</code> + <code>make buildenv-image</code>
+            in between) produce bit-identical tarballs. Confirmed 2026-06-05.</li>
+        <li><span class="check-yes" aria-hidden="true">&#10003;</span>
+            <strong>Cross-host reproducibility</strong>: builds on different physical machines
+            (different CPUs, different OS) with the same buildenv image digest produce bit-
+            identical tarballs. Empirical confirmation across multiple operators is the next
+            milestone.</li>
+    </ul>
+</section>
+
+<section>
+    <h2 class="section-title">Comparing against the published binary</h2>
+    <p>After your local build completes, fetch the published <code>SHA256SUMS.txt</code> from the
+        <a href="https://github.com/asymmsystems/eliya-jdk/releases/tag/eliya-jdk-25.0.3" class="org-link org-link--inline org-link--external">GitHub Release page</a>
+        and compare:</p>
+    <div class="inline-terminal inline-terminal--static">
+        <code>curl -sLO https://github.com/asymmsystems/eliya-jdk/releases/download/eliya-jdk-25.0.3/SHA256SUMS.txt<br>
+grep eliya-jdk-25.0.3-linux-x64.tar.gz SHA256SUMS.txt<br>
+# Compare with your local build's sha256sum output. Hashes must match.</code>
+    </div>
+    <p>A match is the proof: the published binary corresponds exactly to the published source. A
+        mismatch is investigative &mdash; either your build chain is missing a pin (check buildenv
+        digest, GCC version, devkit version against the values in
+        <code>scripts/env-jdk25.sh</code>), or there's a reproducibility regression to report.</p>
+</section>
+
+<section>
+    <h2 class="section-title">Related guides</h2>
+    <ul>
+        <li><a href="/product/eliya/user-guide/verify-download.html" class="org-link org-link--inline org-link--internal">Verify your download</a>
+            &mdash; SHA256 + GPG signature ceremony (different goal: proves Asymm signed it; this
+            page proves Asymm built it from the published source)</li>
+        <li><a href="/product/eliya/user-guide/diff-from-upstream.html" class="org-link org-link--inline org-link--internal">Diff from upstream OpenJDK</a>
+            &mdash; what Eliya changes vs upstream (so you know what the reproduced binary
+            contains)</li>
+        <li><a href="/product/eliya/lifecycle.html" class="org-link org-link--inline org-link--internal">Lifecycle &amp; support</a>
+            &mdash; quarterly cadence + the reproducibility commitment carries to every quarterly
+            CPU</li>
+    </ul>
+</section>
+
+<div class="page-back-nav">
+    <a href="/product/eliya/user-guide/" class="org-link org-link--internal org-link--back">user guide</a>
+</div>

@@ -9,22 +9,28 @@ status=published
     <span class="section-kicker">Eliya</span>
     <h1>Lifecycle &amp; support</h1>
     <p style="max-width: 60ch">Eliya aligns with the upstream OpenJDK release and security
-        cadence. LTS versions receive quarterly Critical Patch Updates; Eliya targets publication within
-        two weeks of each upstream CPU.</p>
+        cadence. LTS versions receive quarterly Critical Patch Updates; from Eliya 25.0.4 onward,
+        Eliya targets publication <strong>within ~2-3 calendar days</strong> of each upstream CPU.
+        The first signed GA (25.0.3, published 2026-06-10) was a special case during signing-
+        infrastructure bring-up; subsequent quarterlies follow the tight wall-clock window.</p>
 </header>
 
 <section style="margin-bottom: 5rem">
     <h2 class="section-title">Supported versions</h2>
 
     <div class="eliya-terminal-panel">
-        <span class="terminal-prompt">$ asymm eliya versions --lts</span>
+        <span class="terminal-prompt">$ asymm eliya versions --lts<span style="opacity: 0.6;">  # Phase 2 (reserved namespace; see CLI reference)</span></span>
 <pre>
-  version       upstream          released              lts-support-through    eol-notification
+  version       upstream          first signed GA      lts-support-through    eol-notification
   ────────────────────────────────────────────────────────────────────────────────────────────
-  eliya-25      openjdk-25u       2026-04              2029-09   <span class="term-ok">✓ active</span>     12 months
+  eliya-25      openjdk-25u       2026-06-10           2029-09   <span class="term-ok">✓ active</span>     12 months
   eliya-29      openjdk-29u       2027-09 (planned)    aligned   <span class="term-dim">· planned</span>    —
 </pre>
     </div>
+    <p style="margin-top: 0.5rem; font-size: 0.85rem; opacity: 0.75">The <code>asymm eliya versions</code>
+        subcommand is Phase 2 reserved namespace per the
+        <a href="/product/eliya/user-guide/cli.html" class="org-link org-link--inline org-link--internal">CLI reference</a>;
+        the table content above is the canonical lifecycle data sourced from this page today.</p>
 
     <p style="margin-top: 2rem; font-size: 0.95rem">
         Eliya publishes the latest LTS. JDK&nbsp;21 is not a published target &mdash; anyone needing
@@ -49,21 +55,23 @@ status=published
 <section style="margin-bottom: 5rem">
     <h2 class="section-title">Quarterly CPU calendar</h2>
     <p style="margin-bottom: 1.5rem">OpenJDK publishes Critical Patch Updates on the third
-        Tuesday of January, April, July, and October. Eliya targets publication within two weeks of each
-        upstream release.</p>
+        Tuesday of January, April, July, and October. From Eliya 25.0.4 onward, Eliya targets
+        publication <strong>within ~2-3 calendar days</strong> of each upstream release.</p>
 
     <div class="eliya-terminal-panel">
-        <span class="terminal-prompt">$ asymm eliya schedule --upcoming --full</span>
+        <span class="terminal-prompt">$ asymm eliya schedule --upcoming --full<span style="opacity: 0.6;">  # Phase 2 (reserved namespace; see CLI reference)</span></span>
 <pre>
   quarter     upstream cpu        eliya target          release      status
   ────────────────────────────────────────────────────────────────────────────
-  Q2 2026     2026-04-21          ≤ 2026-05-05          25.0.3       <span class="term-ok">✓ shipped</span>
-  Q3 2026     2026-07-21          ≤ 2026-08-04          25.0.4       <span class="term-pending">· scheduled</span>
-  Q4 2026     2026-10-20          ≤ 2026-11-03          25.0.5       <span class="term-dim">· scheduled</span>
-  Q1 2027     2027-01-19          ≤ 2027-02-02          25.0.6       <span class="term-dim">· scheduled</span>
-  Q2 2027     2027-04-20          ≤ 2027-05-04          25.0.7       <span class="term-dim">· scheduled</span>
-  Q3 2027     2027-07-20          ≤ 2027-08-03          25.0.8       <span class="term-dim">· scheduled</span>
+  Q2 2026     2026-04-21          2026-06-10 *          25.0.3       <span class="term-ok">✓ shipped</span>
+  Q3 2026     2026-07-21          ≤ 2026-07-24          25.0.4       <span class="term-pending">· scheduled</span>
+  Q4 2026     2026-10-20          ≤ 2026-10-23          25.0.5       <span class="term-dim">· scheduled</span>
+  Q1 2027     2027-01-19          ≤ 2027-01-22          25.0.6       <span class="term-dim">· scheduled</span>
+  Q2 2027     2027-04-20          ≤ 2027-04-23          25.0.7       <span class="term-dim">· scheduled</span>
+  Q3 2027     2027-07-20          ≤ 2027-07-23          25.0.8       <span class="term-dim">· scheduled</span>
 
+  <span class="term-dim"># * 25.0.3 was the first signed GA (~50-day delta due to signing-infrastructure</span>
+  <span class="term-dim">#   bring-up); 25.0.4 onward target ~2-3 calendar days per ADR-00027.</span>
   <span class="term-dim"># cron expression (upstream CPU window)</span>
   <span class="term-dim">00 00 15-21 1,4,7,10 tue  # 3rd Tuesday of Jan/Apr/Jul/Oct</span>
 </pre>
