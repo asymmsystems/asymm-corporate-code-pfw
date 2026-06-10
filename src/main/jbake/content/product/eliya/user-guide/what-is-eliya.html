@@ -58,10 +58,12 @@ status=published
     <h3>Why use Eliya instead of Corretto, Temurin, or Zulu?</h3>
 
     <p>All four are honest OpenJDK builds. Eliya's distinct contribution is production-grade
-        diagnostic, observability, and compliance tooling that runs entirely inside the
-        perimeter &mdash; Phase 1 ships the observability defaults; later phases add the
-        bundled tooling and compliance framework alignment that no other OpenJDK distribution
-        offers without SaaS dependencies.</p>
+        diagnostic, operational-readiness, and compliance tooling that runs entirely inside the
+        perimeter &mdash; Phase 1 (shipped 25.0.3) activates six operational-readiness defaults
+        via <code>-XX:EliyaProfile=Production</code>; later phases add continuous observability
+        (Phase 2 per ADR-1 sec.11 2026-06-11), bundled local diagnostic tooling, and compliance
+        framework alignment that few other OpenJDK distributions offer without SaaS
+        dependencies.</p>
 
     <table class="clinical-table">
         <thead>
@@ -89,7 +91,7 @@ status=published
                 <td>based on TCK-certified upstream<sup>1</sup></td>
             </tr>
             <tr>
-                <td>JFR continuous recording by default</td>
+                <td>JFR continuous (Phase 2) recording by default</td>
                 <td>&mdash;</td>
                 <td>&mdash;</td>
                 <td>&mdash;</td>

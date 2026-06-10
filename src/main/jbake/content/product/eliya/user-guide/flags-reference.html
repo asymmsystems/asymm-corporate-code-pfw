@@ -47,7 +47,7 @@ status=published
         </thead>
         <tbody>
             <tr>
-                <td>JFR continuous recording</td>
+                <td>JFR continuous (Phase 2) recording</td>
                 <td><code>-XX:StartFlightRecording=settings=default,disk=true,maxage=24h,maxsize=250m,dumponexit=true,filename=&lt;path&gt;</code></td>
                 <td>24-hour rolling buffer at sub-1% overhead — last day of execution profile already on disk when failure happens, dumped on JVM exit</td>
             </tr>
@@ -393,7 +393,7 @@ status=published
 
     <h3>Combined overhead</h3>
     <p>In typical production workloads, total steady-state overhead is <strong>1-2% CPU</strong>
-        &mdash; roughly <strong>&lt;1% from JFR continuous recording</strong> (the dominant
+        &mdash; roughly <strong>&lt;1% from JFR continuous (Phase 2) recording</strong> (the dominant
         component) plus <strong>&lt;0.5% from NMT summary mode</strong> plus negligible
         contributions from GC logging and the unlocked diagnostic options. The figure varies with
         workload characteristics (allocation rate, GC pressure, lock contention) but stays within

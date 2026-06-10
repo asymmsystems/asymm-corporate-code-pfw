@@ -30,7 +30,7 @@ status=published
     <p>When the user opts into Eliya's defaults, the following are
         activated. None are upstream defaults.</p>
     <ol>
-        <li><strong>JFR continuous recording</strong> &mdash;
+        <li><strong>JFR continuous (Phase 2) recording</strong> &mdash;
             <code>-XX:StartFlightRecording=settings=default,disk=true,maxage=24h,maxsize=250m,dumponexit=true,filename=${ELIYA_DIAGNOSTIC_PATH}/${service_name}/${replica_name}/jfr/recording.jfr</code></li>
         <li><strong>Heap dump on OOM</strong> &mdash;
             <code>-XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=${ELIYA_DIAGNOSTIC_PATH}/${service_name}/${replica_name}/heap/</code></li>

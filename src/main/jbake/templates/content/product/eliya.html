@@ -5,9 +5,13 @@
      Content per eliya-website-content-specification.md (May 2026): hero +
      four cards + "what's actually different" + quick start + phase roadmap +
      persona-routing footer. Positioning: "OpenJDK for Compliance-Conscious
-     Production". EliyaProfile=Production activates observability defaults only —
-     NOT GC tuning, NOT compilation flags. Eliya inherits upstream JDK 25's
-     security configuration unchanged. -->
+     Production". EliyaProfile=Production activates operational-readiness
+     defaults today (Phase 1 shipped 25.0.3: 6 ergonomics - heap dump on OOM
+     with structured path, exit-on-OOM, NMT summary, crash log path, container
+     support reinforced, diagnostic options unlocked); continuous observability
+     (continuous JFR + unified GC logging) Phase 2 ahead per ADR-1 sec.11
+     2026-06-11 dissolution. NOT GC tuning, NOT compilation flags. Eliya
+     inherits upstream JDK 25's security configuration unchanged. -->
 <#include "/macro/cards.ftl">
 <#include "/macro/tables.ftl">
 <#include "/macro/terminal.ftl">
@@ -26,7 +30,7 @@
             <@renderProductCard
                 icon="fa-solid fa-gauge"
                 title="Observability by Design"
-                text="JFR continuous recording, heap dump on OOM, native memory tracking, GC logging &mdash; configured by default via <code>-XX:EliyaProfile=Production</code>. When something fails at 03:00, the last 24 hours of execution profile is already on disk. Performance impact: ~1&ndash;2% steady-state." />
+                text="JFR continuous (Phase 2) recording, heap dump on OOM, native memory tracking, GC logging &mdash; configured by default via <code>-XX:EliyaProfile=Production</code>. When something fails at 03:00, the last 24 hours of execution profile is already on disk. Performance impact: ~1&ndash;2% steady-state." />
             <@renderProductCard
                 icon="fa-solid fa-shield-halved"
                 title="Local-Only Diagnostics"

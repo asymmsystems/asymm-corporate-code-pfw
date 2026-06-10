@@ -282,10 +282,12 @@ status=published
     <p>A BFSI settlement system under regulatory data-egress restrictions: production data
         cannot leave the perimeter; SaaS APM is therefore prohibited. The team historically
         had JConsole for occasional inspection, ad-hoc heap dumps under suspicion of memory
-        pressure, no continuous profiling at all. With Eliya, they now have continuous JFR
-        (24h rolling, sub-1% overhead), automatic heap dumps on OOM with structured paths,
-        GC logs with rotation, NMT summary, crash log generation &mdash; the capability they
-        previously couldn't get without violating data-egress policy.</p>
+        pressure, no continuous profiling at all. With Eliya, they now have automatic heap
+        dumps on OOM with structured paths, NMT summary, crash log generation, container
+        support reinforced, and diagnostic VM options unlocked &mdash; the capability they
+        previously couldn't get without violating data-egress policy. Phase 2 will add
+        continuous JFR (24h rolling, sub-1% overhead) + unified GC logging by default,
+        per ADR-1 sec.11 2026-06-11.</p>
 
 
     <h3>The four-phase compounding</h3>
@@ -294,7 +296,7 @@ status=published
         compounding is the strategic argument.</p>
 
     <p><strong>Phase 1 (current) &mdash; <em>production observability defaults.</em></strong>
-        JFR continuous recording, heap dump on OOM, GC logging with rotation, native memory
+        JFR continuous (Phase 2) recording, heap dump on OOM, GC logging with rotation, native memory
         tracking, exit-on-OOM, predictable crash log paths. Defaults that survive incidents
         and crashes. Activated by <code>-XX:EliyaProfile=Production</code>; off by default,
         opt-in.</p>

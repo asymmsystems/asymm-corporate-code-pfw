@@ -104,7 +104,7 @@ Total: reserved=4194304KB, committed=2891024KB<br>
     <h3>Eliya's response</h3>
     <ul>
         <li>GC logging enabled by default — you see variance, not just averages</li>
-        <li>JFR continuous recording captures every individual pause as a structured event</li>
+        <li>JFR continuous (Phase 2) recording captures every individual pause as a structured event</li>
         <li>The <code>-XX:+UseZGC</code> opt-in pattern is documented in the
             <a href="/product/eliya/user-guide/flags-reference.html" class="org-link org-link--inline org-link--internal">flags reference</a>
             for sub-millisecond pause guarantees across a wide range of heap sizes (Generational ZGC
@@ -138,13 +138,19 @@ Total: reserved=4194304KB, committed=2891024KB<br>
 
     <h3>Eliya's response</h3>
     <ul>
-        <li>JFR continuous recording captures the actual thread states (blocked on socket I/O is
-            distinguishable from blocked on JVM internals like GC pauses or lock contention).</li>
-        <li>The 24-hour rolling buffer means the recording covers the incident window without
-            manual intervention.</li>
-        <li>JFR enabled by default means the data exists when the incident happens &mdash; no "let me
-            start JFR and reproduce" delay.</li>
-        <li>JFR's event taxonomy distinguishes the source of any thread block:
+        <li><strong>Phase 1 today (25.0.3):</strong> Eliya activates heap-dump-on-OOM with a
+            structured path, NMT summary, and unlocked diagnostic VM options &mdash; the post-incident
+            forensic artefacts and the deep flags JFR + async-profiler need are already in place.
+            When the incident happens an operator runs <code>jcmd &lt;pid&gt; JFR.start
+            settings=default duration=10m filename=&lt;path&gt;</code> against the already-running
+            JVM; the unlocked diagnostic options make the deep flags usable in one step rather than
+            requiring a restart.</li>
+        <li><strong>Phase 2 (planned per ADR-1 sec.11 2026-06-11):</strong> Continuous JFR with a
+            24-hour rolling buffer becomes the default under <code>EliyaProfile=Production</code>,
+            eliminating the "start JFR and reproduce" step entirely &mdash; the recording covers the
+            incident window without manual intervention.</li>
+        <li>JFR's event taxonomy (already in the JRE module set today) distinguishes the source of
+            any thread block:
             <ul>
                 <li><code>jdk.SocketRead</code> / <code>jdk.SocketWrite</code> &mdash; blocked on
                     network I/O (likely upstream / downstream issue).</li>
@@ -195,7 +201,7 @@ Total: reserved=4194304KB, committed=2891024KB<br>
             under <code>${ELIYA_DIAGNOSTIC_PATH}/${service}/${replica}/heap/</code>.</li>
         <li>The crash log path points to
             <code>${ELIYA_DIAGNOSTIC_PATH}/${service}/${replica}/crash/</code>.</li>
-        <li>JFR continuous recording with <code>dumponexit=true</code> flushes to disk on any
+        <li>JFR continuous (Phase 2) recording with <code>dumponexit=true</code> flushes to disk on any
             termination &mdash; including a fatal crash where the JVM has the chance to write before
             exiting.</li>
         <li>When operators mount <code>${ELIYA_DIAGNOSTIC_PATH}</code> as a persistent volume, all
