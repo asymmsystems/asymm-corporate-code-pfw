@@ -5,8 +5,10 @@ on:
     branches:
       - develop
 
-env:
-  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: true
+# Only one preview deploy at a time; a newer push supersedes an in-flight one.
+concurrency:
+  group: deploy-preview
+  cancel-in-progress: true
 
 permissions:
   contents: read
@@ -30,10 +32,8 @@ jobs:
         run: ./mvnw -Pproduction clean process-resources --batch-mode --no-transfer-progress
 
       - name: Deploy to Cloudflare Pages (preview)
-        uses: cloudflare/pages-action@v1
+        uses: cloudflare/wrangler-action@v3
         with:
           apiToken: ${{ secrets.CLOUDFLARE_API_TOKEN }}
           accountId: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
-          projectName: asymm-corporate-code-pfw
-          directory: target/site
-          branch: develop
+          command: pages deploy target/site --project-name=asymm-corporate-code-pfw --branch=develop
