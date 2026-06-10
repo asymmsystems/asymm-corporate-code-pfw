@@ -123,15 +123,15 @@
     <p>Stop and remove containers using the image first &mdash; <code>docker rmi</code> fails if
         running containers reference it:</p>
     <button type="button" class="inline-terminal"
-        onclick="copyToClipboard('docker ps -a --filter &quot;ancestor=ghcr.io/asymmsystems/eliya:25-lts&quot; --format &quot;{{.ID}}&quot; | xargs -r docker rm -f')" aria-label="Copy command">
-        <code>docker ps -a --filter "ancestor=ghcr.io/asymmsystems/eliya:25-lts" --format "{{.ID}}" | xargs -r docker rm -f</code>
+        onclick="copyToClipboard('docker ps -a --filter &quot;ancestor=ghcr.io/asymmsystems/eliya-jdk:25-lts&quot; --format &quot;{{.ID}}&quot; | xargs -r docker rm -f')" aria-label="Copy command">
+        <code>docker ps -a --filter "ancestor=ghcr.io/asymmsystems/eliya-jdk:25-lts" --format "{{.ID}}" | xargs -r docker rm -f</code>
         <span class="copy-btn" aria-hidden="true">Copy</span>
     </button>
 
     <p>Then remove the image:</p>
     <button type="button" class="inline-terminal"
-        onclick="copyToClipboard('docker rmi ghcr.io/asymmsystems/eliya:25-lts')" aria-label="Copy command">
-        <code>docker rmi ghcr.io/asymmsystems/eliya:25-lts</code>
+        onclick="copyToClipboard('docker rmi ghcr.io/asymmsystems/eliya-jdk:25-lts')" aria-label="Copy command">
+        <code>docker rmi ghcr.io/asymmsystems/eliya-jdk:25-lts</code>
         <span class="copy-btn" aria-hidden="true">Copy</span>
     </button>
 

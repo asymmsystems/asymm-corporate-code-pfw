@@ -53,7 +53,7 @@ status=published
 
     <h3 style="margin-top: 1.5rem">Kubernetes</h3>
     <p>Eliya's Docker images are multi-arch OCI artifacts on GitHub Container Registry
-        (<code>ghcr.io/asymmsystems/eliya:25-lts</code> and <code>:25-lts-slim</code>). Standard
+        (<code>ghcr.io/asymmsystems/eliya-jdk:25-lts</code> and <code>:25-lts-slim</code>). Standard
         Kubernetes deployment manifests work without modification. Two Kubernetes-specific
         patterns:</p>
     <ul>
@@ -64,7 +64,7 @@ status=published
             control, set <code>ELIYA_REPLICA_NAME</code> via the
             <a href="/product/eliya/user-guide/flag-architecture.html" class="org-link org-link--inline org-link--internal">downward API</a>.</li>
         <li><strong>Ephemeral diagnostic containers.</strong>
-            <code>kubectl debug --image=ghcr.io/asymmsystems/eliya:25-lts --target=app</code>
+            <code>kubectl debug --image=ghcr.io/asymmsystems/eliya-jdk:25-lts --target=app</code>
             attaches a full Eliya runtime to a running pod for incident-driven JFR/heap-dump
             investigation. Requires Kubernetes 1.23+ (stable in 1.25). See the
             <a href="/product/eliya/user-guide/install-docker.html" class="org-link org-link--inline org-link--internal">Docker install guide</a>
@@ -83,7 +83,7 @@ status=published
     <div class="inline-terminal inline-terminal--static">
         <code>services:<br>
 &nbsp;&nbsp;app:<br>
-&nbsp;&nbsp;&nbsp;&nbsp;image: ghcr.io/asymmsystems/eliya:25-lts<br>
+&nbsp;&nbsp;&nbsp;&nbsp;image: ghcr.io/asymmsystems/eliya-jdk:25-lts<br>
 &nbsp;&nbsp;&nbsp;&nbsp;environment:<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;ELIYA_SERVICE_NAME: my-app<br>
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;JAVA_TOOL_OPTIONS: -XX:EliyaProfile=Production<br>
@@ -152,8 +152,8 @@ status=published
     <h3 style="margin-top: 1.5rem">ArgoCD / Flux</h3>
     <p>GitOps deployment patterns reference Eliya container images via the standard
         <code>image:</code> field. The
-        <code>ghcr.io/asymmsystems/eliya:25-lts</code> moving tag works for "latest CPU";
-        <code>ghcr.io/asymmsystems/eliya:25.0.3</code> pins a specific version &mdash; see the
+        <code>ghcr.io/asymmsystems/eliya-jdk:25-lts</code> moving tag works for "latest CPU";
+        <code>ghcr.io/asymmsystems/eliya-jdk:25.0.3</code> pins a specific version &mdash; see the
         <a href="/product/eliya/lifecycle.html" class="org-link org-link--inline org-link--internal">lifecycle page</a>
         for pinning patterns.</p>
 </section>
