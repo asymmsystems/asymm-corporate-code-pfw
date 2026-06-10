@@ -4,16 +4,26 @@
 <header class="page-header">
     <span class="section-kicker">Eliya</span>
     <h1>Downloads</h1>
-    <p style="max-width: 60ch">Eliya ships JDK 25 LTS. The recommended install path is SDKman;
-        direct archives and package formats are linked below. Every release includes <code>SHA256SUMS.txt</code>
-        and a detached GPG signature — see
+    <p style="max-width: 60ch">Eliya ships JDK 25 LTS. Install today via direct archives or package formats
+        (linked below). SDKMAN! support is in onboarding. Every release includes <code>SHA256SUMS.txt</code>
+        and a detached GPG signature &mdash; see
         <a href="/product/eliya/user-guide/verify-download.html" class="org-link org-link--inline org-link--internal">verify your download</a>.</p>
 </header>
 
 <section style="margin-bottom: 5rem">
-    <h2 class="section-title">Recommended: SDKman</h2>
-    <p style="margin-bottom: 1.5rem">One command. Works on any Linux and macOS shell that has
-        SDKman installed. Handles upgrades automatically.</p>
+    <h2 class="section-title">SDKMAN! (in onboarding)</h2>
+
+    <aside style="background: #fff7ed; border-left: 4px solid #f59e0b; padding: 1rem 1.5rem; margin-bottom: 1.5rem; max-width: 700px">
+        <p style="margin: 0; font-size: 0.95rem"><strong>SDKMAN! registration is in progress.</strong>
+            Vendor-onboarding PR is at
+            <a href="https://github.com/sdkman/sdkman-db-migrations/pull/783" class="org-link org-link--inline org-link--external">sdkman/sdkman-db-migrations#783</a>;
+            <code>sdk install java ${eliyaVersion}-eliya</code> will work once that PR merges and Eliya's
+            credentials are issued. For installation today, use the
+            <a href="#direct-downloads" class="org-link org-link--inline org-link--internal">direct downloads</a> below.</p>
+    </aside>
+
+    <p style="margin-bottom: 1.5rem">Once registered, one command. Works on any Linux and macOS shell that has
+        SDKMAN! installed. Handles upgrades automatically.</p>
 
     <button type="button" class="inline-terminal" style="max-width: 600px"
         onclick="copyToClipboard('sdk install java ${eliyaVersion}-eliya')" aria-label="Copy command">
@@ -22,12 +32,12 @@
     </button>
 
     <p style="margin-top: 2rem; font-size: 0.95rem">
-        Don't have SDKman?
-        <a href="https://sdkman.io/install" class="org-link org-link--inline org-link--external">Install SDKman</a>
+        Don't have SDKMAN!?
+        <a href="https://sdkman.io/install" class="org-link org-link--inline org-link--external">Install SDKMAN!</a>
     </p>
 </section>
 
-<section style="margin-bottom: 5rem">
+<section id="direct-downloads" style="margin-bottom: 5rem">
     <h2 class="section-title">Direct downloads</h2>
     <p style="margin-bottom: 2rem">GitHub Releases host every archive, checksum, and signature.
         Tags follow <code>eliya-jdk-25.0.N</code> (brand-first, no <code>v</code> prefix).</p>

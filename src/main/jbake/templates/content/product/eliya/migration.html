@@ -52,8 +52,19 @@
 </section>
 
 <section style="margin-bottom: 5rem">
-    <h2 class="section-title">Side-by-side with SDKman</h2>
-    <p style="margin-bottom: 1.5rem">SDKman lets you install Eliya alongside
+    <h2 class="section-title">Side-by-side with SDKMAN!</h2>
+
+    <aside style="background: #fff7ed; border-left: 4px solid #f59e0b; padding: 1rem 1.5rem; margin-bottom: 1.5rem; max-width: 700px">
+        <p style="margin: 0; font-size: 0.95rem"><strong>SDKMAN! registration is in progress.</strong>
+            Vendor-onboarding PR is at
+            <a href="https://github.com/sdkman/sdkman-db-migrations/pull/783" class="org-link org-link--inline org-link--external">sdkman/sdkman-db-migrations#783</a>;
+            the <code>sdk install java ${eliyaVersion}-eliya</code> command below will work once that PR
+            merges. Until then, install Eliya via
+            <a href="/product/eliya/downloads.html" class="org-link org-link--inline org-link--internal">direct tar.gz / .deb / .rpm</a>
+            and use <code>update-alternatives</code> for side-by-side coexistence with your current JDK.</p>
+    </aside>
+
+    <p style="margin-bottom: 1.5rem">Once SDKMAN! registration is live, SDKMAN! lets you install Eliya alongside
         your current JDK and switch per shell. Safest path &mdash; your existing runtime stays default until you
         explicitly change it.</p>
 
