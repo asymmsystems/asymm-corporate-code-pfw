@@ -5,89 +5,364 @@ toc=true
 status=published
 ~~~~~~
 
-<nav class="eliya-breadcrumb" aria-label="Breadcrumb"><span class="crumb-collapse" role="button" tabindex="0" onclick="this.parentElement.classList.toggle(&apos;expanded&apos;)">~ / &hellip;</span><span class="crumb-hidden"><span class="crumb-sep">/</span><a href="/">asymm</a></span><span class="crumb-hidden"><span class="crumb-sep">/</span>product</span><span class="crumb-sep">/</span><a href="/product/eliya.html">eliya</a><span class="crumb-sep">/</span><span class="crumb-leaf">faq</span></nav>
-
 <header class="page-header">
     <span class="section-kicker">Eliya</span>
     <h1>FAQ</h1>
 </header>
 
-<section style="max-width: 70ch;">
+<section >
+
+<h2 class="section-title" style="margin-top: 0">Performance</h2>
+
+<h3 id="performance-overhead">What's the performance cost of <code>-XX:EliyaProfile=Production</code>?</h3>
+<p ><strong>Short answer:</strong> typically 1-2% CPU overhead in
+    production workloads. Up to 3% in allocation-heavy scenarios. Negligible memory overhead
+    (~10-25 MB total). Disk usage capped at ~1.5 GB rolling.</p>
+<p ><strong>Longer answer:</strong> the flag activates several
+    observability defaults, each with documented overhead:</p>
+<table class="clinical-table" style="margin-top: 1rem">
+    <thead>
+        <tr>
+            <th>Component</th>
+            <th>Typical overhead</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>JFR <code>default</code> profile continuous recording</td>
+            <td>&lt;1% CPU, ~16 MB memory, 250 MB rolling disk</td>
+        </tr>
+        <tr>
+            <td>Native Memory Tracking <code>summary</code> mode</td>
+            <td>&lt;0.5% CPU, ~10 MB memory</td>
+        </tr>
+        <tr>
+            <td>GC logging with rotation</td>
+            <td>Negligible CPU, ~1 GB rolling disk</td>
+        </tr>
+        <tr>
+            <td>Heap dump on OOM</td>
+            <td>Zero overhead until OOM occurs</td>
+        </tr>
+        <tr>
+            <td>Crash log path</td>
+            <td>Zero overhead until JVM crash</td>
+        </tr>
+    </tbody>
+</table>
+<p style="margin-top: 1rem">Combined: 1-2% CPU overhead under normal
+    operation. Full per-component table and validation references on the
+    <a href="/product/eliya/user-guide/flags-reference.html#performance-impact" class="org-link org-link--inline org-link--internal">flags reference performance section</a>.</p>
+
+<h3>How can you be sure this is accurate? Isn't this just marketing?</h3>
+<p >The performance claim is unusually well-validated for the JVM
+    ecosystem:</p>
+<ul style="line-height: 1.9; margin-top: 1rem">
+    <li><strong>Oracle's own benchmarks</strong> documented in JDK Mission Control documentation.</li>
+    <li><strong>Datadog Continuous Profiler</strong>, <strong>New Relic Java Profiler</strong>,
+        and <strong>Microsoft Azure Application Insights</strong> are all built on JFR — these
+        vendors would not have invested if the overhead were operationally meaningful.</li>
+    <li><strong>Microsoft Azure Spring Apps</strong> (formerly Azure Spring Cloud) exposes
+        JFR-based continuous diagnostics as a first-class platform capability.</li>
+    <li><strong>Marcus Hirt</strong>, original JFR architect at Oracle, has consistently
+        positioned JFR as production-grade always-on instrumentation.</li>
+    <li><strong>JDK 11+ ecosystem</strong> has used JFR in production since 2018 (JEP 328) —
+        seven years of hardening.</li>
+</ul>
+
+<h3>Where is the overhead higher than 1-2%?</h3>
+<p >Two workload patterns have higher overhead:</p>
+<p style="margin-top: 1rem"><strong>1. Extreme allocation rates</strong>
+    (sustained &gt;10 million object allocations per second). JFR's allocation events have
+    per-allocation cost. The <code>default</code> profile samples allocations rather than
+    recording all, which mitigates but doesn't eliminate this. Workloads near this threshold:
+    HFT order books, certain log aggregation pipelines, in-memory analytics. Recommendation:
+    benchmark with and without <code>-XX:EliyaProfile=Production</code> before committing.</p>
+<p style="margin-top: 1rem"><strong>2. Tight container resource budgets</strong>
+    (containers with &lt;512 MB heap or &lt;500 MB free disk). JFR's internal buffers (~16 MB)
+    and disk buffer (250 MB) become proportionally larger. Recommendation: increase the
+    container resource budget or opt out by not setting the flag.</p>
+
+<h3>What if my workload is latency-sensitive (HFT, low-latency messaging)?</h3>
+<p >For workloads where every microsecond matters — high-frequency
+    trading, real-time messaging gateways, signalling protocols with strict tail-latency SLAs —
+    measure before committing.</p>
+<p style="margin-top: 1rem">Even latency-sensitive workloads typically see
+    acceptable overhead because JFR's events are emitted from JVM internals using lock-free
+    thread-local buffers. The events do not interrupt application threads or cause stop-the-world
+    pauses.</p>
+<p style="margin-top: 1rem">If measurement shows the overhead is
+    unacceptable for your workload, simply don't set <code>-XX:EliyaProfile=Production</code>. Eliya
+    without the flag is functionally identical to upstream OpenJDK 25.</p>
+
+<h3>What about memory and disk overhead?</h3>
+<p ><strong>Memory:</strong> JFR's internal buffers consume ~8-16 MB
+    regardless of recording duration (the buffers are circular). Native Memory Tracking
+    <code>summary</code> adds ~5-10 MB. Combined: 10-25 MB JVM memory overhead.</p>
+<p style="margin-top: 1rem"><strong>Disk:</strong> Eliya's defaults are
+    bounded — JFR rolling buffer at 250 MB max, GC logs at 1 GB max (10 × 100 MB rotated),
+    heap dumps only on OOM, crash logs only on JVM crash. Steady-state disk usage: ~1.25 GB
+    per JVM under <code>/var/log/eliya/${ELIYA_SERVICE_NAME}/</code>. On systems with limited
+    disk, configure <code>ELIYA_DIAGNOSTIC_PATH</code> to point to a larger volume, or opt out.</p>
+
+<h3>Does this affect GC behaviour or JIT compilation?</h3>
+<p ><strong>No.</strong> <code>-XX:EliyaProfile=Production</code> does not
+    change GC selection, pause targets, region size, IHOP, string deduplication, or any GC
+    tuning parameters. JDK 25's automatic ergonomics handle GC selection — Eliya does not
+    override this.</p>
+<p style="margin-top: 1rem">JIT compiler tier transitions are unchanged
+    from upstream OpenJDK 25. The <code>DebugNonSafepoints</code> flag is enabled (required
+    for accurate JFR sampling), but it does not change JIT compilation decisions or output —
+    it only enables more accurate stack-trace attribution during JFR event collection.</p>
+
+<h3>How does this compare to alternatives?</h3>
+<table class="clinical-table" style="margin-top: 1rem">
+    <thead>
+        <tr>
+            <th>Approach</th>
+            <th>Typical overhead</th>
+            <th>Production-suitability</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>JFR <code>default</code> (Eliya's choice)</td>
+            <td>&lt;1% CPU</td>
+            <td>Designed for always-on</td>
+        </tr>
+        <tr>
+            <td>JFR <code>profile</code> (verbose)</td>
+            <td>1-3% CPU</td>
+            <td>Brief diagnostic sessions only</td>
+        </tr>
+        <tr>
+            <td>async-profiler</td>
+            <td>1-2% CPU</td>
+            <td>Production-safe</td>
+        </tr>
+        <tr>
+            <td>Bytecode-instrumentation APMs (Datadog, New Relic, AppDynamics agents)</td>
+            <td>3-10% CPU</td>
+            <td>Common but measurable</td>
+        </tr>
+        <tr>
+            <td>YourKit / JProfiler (sampling profilers)</td>
+            <td>3-8% CPU</td>
+            <td>Development use only</td>
+        </tr>
+        <tr>
+            <td>BTrace</td>
+            <td>5-15% CPU</td>
+            <td>Not recommended for production</td>
+        </tr>
+    </tbody>
+</table>
+<p style="margin-top: 1rem">JFR sits at the lowest-overhead end of this
+    spectrum, by architectural design.</p>
+
+<h3>Can I disable specific defaults but keep others?</h3>
+<p >Yes. Any flag explicitly set on the command line overrides
+    Eliya's default. Examples:</p>
+<button type="button" class="inline-terminal" style="max-width: 700px; margin-top: 1rem"
+    onclick="copyToClipboard('java -XX:EliyaProfile=Production -XX:-FlightRecorder -jar app.jar')" aria-label="Copy command">
+    <code>java -XX:EliyaProfile=Production -XX:-FlightRecorder -jar app.jar</code>
+    <span class="copy-btn" aria-hidden="true">Copy</span>
+</button>
+<button type="button" class="inline-terminal" style="max-width: 700px; margin-top: 0.5rem"
+    onclick="copyToClipboard('java -XX:EliyaProfile=Production -XX:NativeMemoryTracking=detail -jar app.jar')" aria-label="Copy command">
+    <code>java -XX:EliyaProfile=Production -XX:NativeMemoryTracking=detail -jar app.jar</code>
+    <span class="copy-btn" aria-hidden="true">Copy</span>
+</button>
+<p style="margin-top: 1rem">See the
+    <a href="/product/eliya/user-guide/flags-reference.html" class="org-link org-link--inline org-link--internal">flags reference</a>
+    for full override semantics.</p>
+
+<h3>What's the trade-off in plain language?</h3>
+<p >In exchange for ~1-2% steady-state CPU overhead, you have
+    24 hours of execution profile data already on disk when an incident occurs. The
+    alternative — discovering after an incident that observability data wasn't recorded — is
+    operationally worse than the marginal CPU cost.</p>
+<p style="margin-top: 1rem">For compliance-conscious teams in regulated
+    industries, this trade-off is almost always worth it. For latency-sensitive workloads
+    where every microsecond matters, measure before committing.</p>
+<p style="margin-top: 1rem">If the trade-off doesn't fit your workload,
+    don't set <code>-XX:EliyaProfile=Production</code>. Eliya without the flag is functionally
+    identical to upstream OpenJDK 25.</p>
+
+<h2 class="section-title" style="margin-top: 4rem">General</h2>
 
 <h3>Is Eliya TCK-certified?</h3>
-<p style="line-height: 1.8;">Eliya builds from upstream OpenJDK source and preserves upstream
-    TCK compliance. Asymm Systems has not separately submitted to Oracle's TCK programme. An independent TCK
-    run is planned for JDK 25.0.3 and the result will be published on the
+<p >Eliya is based on TCK-certified upstream OpenJDK 25 and inherits its
+    compatibility properties. Eliya's modifications are limited to a JVM flag
+    (<code>EliyaProfile=Production</code> — observability-only) and packaging — none of which alter Java SE
+    behaviour. Upstream <code>java.security</code> is unchanged. A separate TCK run of the Eliya
+    binary itself is a Phase 2 deliverable; when complete it will be published on the
     <a href="/product/eliya/security.html" class="org-link org-link--inline org-link--internal">security page</a>.</p>
 
 <h3>Can I use Eliya in production?</h3>
-<p style="line-height: 1.8;">Yes. Eliya is distributed under GPLv2 with the Classpath Exception
-    — the same licence as upstream OpenJDK. Production use is explicitly permitted. Telecom workloads are
-    the primary design target.</p>
+<p >Yes. Eliya is distributed under GPLv2 with the Classpath Exception
+    — the same licence as upstream OpenJDK. Production use is explicitly permitted. The audience
+    is compliance-conscious and quality-conscious teams in regulated industries (BFSI, healthcare,
+    public sector, telecom) and any high-throughput Java environment that values engineering
+    quality over convenience.</p>
 
 <h3>How does Eliya differ from OpenJDK?</h3>
-<p style="line-height: 1.8;">See the distribution comparison on the
-    <a href="/product/eliya.html" class="org-link org-link--inline org-link--internal">Eliya overview page</a>.
-    In short: telecom-tuned GC defaults behind <code>-XX:+UseEliyaDefaults</code>, always-on security
-    hardening in <code>java.security</code>, an <code>asymm</code> diagnostic CLI, and first-class SDKman
-    distribution. Everything else is upstream OpenJDK.</p>
+<p >See the
+    <a href="/product/eliya.html" class="org-link org-link--inline org-link--internal">Eliya overview page</a>
+    and the
+    <a href="/product/eliya/user-guide/diff-from-upstream.html" class="org-link org-link--inline org-link--internal">precise diff from upstream</a>.
+    In short: <strong>observability defaults</strong> behind <code>-XX:EliyaProfile=Production</code>
+    (JFR with default profile, heap-dump-on-OOM, exit-on-OOM, Native Memory Tracking, GC logging
+    always-on, crash log paths, container awareness, diagnostic options unlocked for accurate
+    sampling), an <code>asymm</code> diagnostic CLI, and first-class SDKman distribution. Eliya
+    does NOT modify <code>java.security</code> — upstream JDK 25 defaults are already correct;
+    duplicating them would be performative. The flag deliberately does not set GC choice or
+    tuning — JDK 25's automatic ergonomics handle that. Everything else is upstream OpenJDK.</p>
 
 <h3>Should I use Eliya, or one of Corretto / Temurin / Zulu / Liberica?</h3>
-<p style="line-height: 1.8;">Honest answer: most people should use Temurin, Corretto, Zulu,
-    or Liberica. Eliya wins in a narrow niche (low-latency telecom / BSS workloads, Dial users, FreeBSD).
-    We wrote a comprehensive vendor-by-vendor guide that explicitly tells you when <em>not</em> to pick
-    Eliya:
+<p >Honest answer: most people should use Temurin, Corretto, Zulu,
+    or Liberica. Eliya wins in a narrow niche — compliance-conscious teams who cannot send
+    diagnostic data to external SaaS analyzers, teams that want production observability defaults
+    without manual tuning, Dial users, FreeBSD users. We wrote a comprehensive vendor-by-vendor
+    guide that explicitly tells you when <em>not</em> to pick Eliya:
     <a href="/research/choosing-a-jdk-2026.html" class="org-link org-link--inline org-link--internal">Choosing a JDK in 2026 — an honest guide</a>.</p>
 
+<h3>Does Eliya work with APM tools (AppDynamics, Dynatrace, New Relic, Elastic APM, Datadog)?</h3>
+<p>Yes. APM tools that use the Java Agent API coexist with Eliya without conflict:</p>
+<button type="button" class="inline-terminal"
+    onclick="copyToClipboard('java -javaagent:/opt/your-apm-agent.jar -XX:EliyaProfile=Production -jar app.jar')" aria-label="Copy command">
+    <code>java -javaagent:/opt/your-apm-agent.jar -XX:EliyaProfile=Production -jar app.jar</code>
+    <span class="copy-btn" aria-hidden="true">Copy</span>
+</button>
+<p>APM tools and Eliya answer different questions. APM provides distributed tracing,
+    real-time dashboards, and team-wide observability. Eliya provides forensic-grade
+    artefacts on disk (JFR recordings, heap dumps, GC logs, crash logs) that APM tools
+    structurally cannot capture. Most production teams run both. Note that Datadog
+    Continuous Profiler uses JFR under the hood, so Eliya's JFR-by-default activation
+    directly feeds Datadog's pipeline.</p>
+<p>For environments where SaaS APM is prohibited (BFSI, healthcare, public sector under
+    data-egress restrictions), Eliya provides forensic capability previously inaccessible
+    without violating compliance. Self-hosted APM stacks (Elastic APM with on-prem
+    Elasticsearch, OpenTelemetry with self-hosted collectors) align naturally with Eliya's
+    positioning and run alongside without compliance concerns.</p>
+<p>For the architectural distinction, the six specific APM limitations, the ten
+    incident-response use cases, and the four-phase trajectory, see
+    <a href="/research/jvm-forensics-vs-apm.html" class="org-link org-link--inline org-link--internal">JVM forensics vs APM &mdash; why both, when each, and where each stops</a>.</p>
+
 <h3>How long is each Eliya version supported?</h3>
-<p style="line-height: 1.8;">Eliya LTS versions align with upstream OpenJDK LTS support
+<p >Eliya LTS versions align with upstream OpenJDK LTS support
     windows. Eliya 25 LTS is supported through September 2030. See the
     <a href="/product/eliya/lifecycle.html" class="org-link org-link--inline org-link--internal">lifecycle page</a>
     for the full calendar.</p>
 
 <h3>Do I need Eliya to run Dial?</h3>
-<p style="line-height: 1.8;"><strong>No.</strong> Dial targets JDK 25 and above from any vendor
-    — Corretto, Temurin, Zulu, Oracle, Liberica, or Eliya. Eliya is the recommended runtime because of the
-    telecom optimisations, but never required. Asymm Systems does not create vendor lock-in for Dial users.</p>
+<p ><strong>No.</strong> Dial targets JDK 25 and above from any vendor
+    — Corretto, Temurin, Zulu, Oracle, Liberica, or Eliya. Eliya is the recommended runtime because of
+    the observability defaults baked in, but never required. Asymm Systems does not create vendor
+    lock-in for Dial users.</p>
 
 <h3>Why does Eliya only ship JDK 25?</h3>
-<p style="line-height: 1.8;">Eliya is a forward-lean distribution focused on the latest LTS.
+<p >Eliya is a forward-lean distribution focused on the latest LTS.
     Organisations running JDK 21 in production are already on established vendor distributions and would
     not migrate to a new vendor for that version. When JDK 29 LTS lands in September 2027, Eliya will ship
     both 25 and 29.</p>
 
 <h3>How do I report a security issue?</h3>
-<p style="line-height: 1.8;">Email
+<p >Email
     <a href="mailto:security@asymm.systems" class="org-link org-link--inline org-link--external">security@asymm.systems</a>.
     Disclosure policy on the
     <a href="/product/eliya/security.html" class="org-link org-link--inline org-link--internal">security page</a>.</p>
 
 <h3>Is commercial support available?</h3>
-<p style="line-height: 1.8;">Not today. Eliya is a community distribution with a quarterly
+<p >Not today. Eliya is a community distribution with a quarterly
     CPU commitment but no paid support tier. GitHub Issues on
     <a href="https://github.com/asymmsystems/eliya-jdk" class="org-link org-link--inline org-link--external">the public repo</a>
     are the community support channel. Commercial support is a Phase 2 consideration.</p>
 
 <h3>Why no Windows build?</h3>
-<p style="line-height: 1.8;">Eliya is server-first. ODA components and telecom BSS/OSS
-    workloads deploy on Linux. Windows support is demand-gated — if enterprise users request it, the
-    build matrix can be extended, but it's not a default.</p>
+<p >Eliya is server-first. The compliance-conscious workloads Eliya
+    targets — BFSI gateways, healthcare integrations, public-sector platforms, telecom BSS/OSS —
+    deploy on Linux. Windows support is demand-gated — if enterprise users request it, the build
+    matrix can be extended, but it's not a default.</p>
 
-<h3>Why a FreeBSD build? Nobody else does this.</h3>
-<p style="line-height: 1.8;">Exactly. Eliya ships a FreeBSD Research Preview — honestly
+<h3>Does Eliya support CRaC (Coordinated Restore at Checkpoint)?</h3>
+<p >Not as a separate Eliya variant today. CRaC is an OpenJDK Project
+    (<a href="https://openjdk.org/projects/crac/" class="org-link org-link--inline org-link--external">openjdk.org/projects/crac</a>),
+    not yet merged into mainline JDK. BellSoft Liberica and Azul Zulu both ship CRaC variants;
+    Asymm has chosen to <strong>contribute upstream</strong> rather than ship yet-another-variant.
+    The strategic rationale is in
+    <a href="https://github.com/asymmsystems/eliya-jdk/blob/main/docs/08-asymm-forensics-strategy.md#511-phase-3a1--crac-contribution-path" class="org-link org-link--inline org-link--external">Asymm Forensics strategy §5.1.1</a>.</p>
+<p >If you specifically need a CRaC-enabled JDK today, use Liberica or
+    Zulu's CRaC build. If you want to be notified when (or if) Asymm ships an Eliya CRaC variant,
+    join the list below.</p>
+
+<div class="waitlist-form callout-box" style="margin-top: 1.5rem">
+    <h4 style="margin: 0 0 0.75rem 0">Get notified about an Eliya CRaC variant</h4>
+    <p style="margin: 0 0 1.5rem 0; line-height: 1.7">A CRaC variant of Eliya for sub-second JVM
+        startup is a Phase 3+ consideration. Asymm is engaging with the upstream OpenJDK CRaC
+        Project; a separate Eliya CRaC variant build is deferred until demand and engineering
+        capacity warrant. Join the list to register interest — your signup is a meaningful demand
+        signal.</p>
+
+    <form action="https://formspree.io/f/xjglklgw" method="POST">
+        <input type="hidden" name="product_tag" value="crac">
+        <input type="hidden" name="_subject" value="Waitlist signup: crac">
+
+        <div style="margin-bottom: 1rem">
+            <label for="waitlist-email-crac" style="display: block; margin-bottom: 0.4rem; font-size: 0.95rem; font-weight: 600">
+                Email <span aria-hidden="true">*</span>
+                <span class="visually-hidden">(required)</span>
+            </label>
+            <input type="email" id="waitlist-email-crac" name="email" required autocomplete="email"
+                style="width: 100%; padding: 0.65rem 0.85rem; font-family: var(--font-body); font-size: 1rem; border: 1px solid var(--border-normal, #444); border-radius: 4px; background: var(--color-base, #fff); color: var(--text-primary, #000)">
+        </div>
+
+        <div style="margin-bottom: 1rem">
+            <label for="waitlist-usecase-crac" style="display: block; margin-bottom: 0.4rem; font-size: 0.95rem; font-weight: 600">
+                Tell us about your use case
+                <span style="font-weight: 400; color: var(--text-secondary, #666); font-size: 0.9rem">(optional)</span>
+            </label>
+            <textarea id="waitlist-usecase-crac" name="use_case" rows="3"
+                style="width: 100%; padding: 0.65rem 0.85rem; font-family: var(--font-body); font-size: 1rem; border: 1px solid var(--border-normal, #444); border-radius: 4px; background: var(--color-base, #fff); color: var(--text-primary, #000); resize: vertical"></textarea>
+        </div>
+
+        <div style="margin-bottom: 1.25rem; display: flex; align-items: flex-start; gap: 0.6rem">
+            <input type="checkbox" id="waitlist-consent-crac" name="consent" required
+                style="margin-top: 0.25rem; flex-shrink: 0">
+            <label for="waitlist-consent-crac" style="font-size: 0.9rem; line-height: 1.6">
+                I agree to receive product-launch notifications and quarterly progress updates
+                about <strong>crac</strong>. I understand I can unsubscribe at any time via the
+                link in every email.
+            </label>
+        </div>
+
+        <button type="submit" class="org-link--button" style="padding: 0.65rem 1.4rem; font-family: var(--font-body); font-size: 0.95rem; font-weight: 600; cursor: pointer">
+            Notify me about CRaC variant
+        </button>
+
+        <p style="margin: 1.25rem 0 0 0; font-size: 0.85rem; line-height: 1.6; color: var(--text-secondary, #666)">
+            We'll only email you about <strong>crac</strong> progress. One-click unsubscribe in
+            every email; we never share your data. See
+            <a href="/privacy.html" class="org-link org-link--inline org-link--internal">privacy</a>.
+        </p>
+    </form>
+</div>
+
+<h3 style="margin-top: 3rem">Why a FreeBSD build? Nobody else does this.</h3>
+<p >Exactly. Eliya ships a FreeBSD Research Preview — honestly
     labelled, community-supported, no CVE SLA — because Asymm Systems operates at the JVM infrastructure
     level. It's a single quarterly manual build, not a GA product. See the
     <a href="/product/eliya.html" class="org-link org-link--inline org-link--internal">platform matrix</a>
     for scope and caveats.</p>
 
 <h3>How do I contribute?</h3>
-<p style="line-height: 1.8;">The Eliya overlay, CHANGELOG, and PATCHES live in
+<p >The Eliya overlay, CHANGELOG, and PATCHES live in
     <a href="https://github.com/asymmsystems/eliya-jdk" class="org-link org-link--inline org-link--external">the public repo</a>.
     Issues and pull requests are welcome. JVM-level source patches go through the mirror; open an issue
     first to discuss scope.</p>
 
 </section>
 
-<div style="margin-top: 5rem; text-align: center;">
-    <a href="/product/eliya.html" class="org-link org-link--internal">← back to Eliya</a>
+<div style="margin-top: 5rem; text-align: center">
+    <a href="/product/eliya.html" class="org-link org-link--internal org-link--back">back to Eliya</a>
 </div>

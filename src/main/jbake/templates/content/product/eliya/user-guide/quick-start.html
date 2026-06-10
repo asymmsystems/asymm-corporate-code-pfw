@@ -1,0 +1,110 @@
+<#include "/macro/release.ftl">
+
+<header class="page-header">
+    <span class="section-kicker">User guide</span>
+    <h1>Quick start</h1>
+    <p style="max-width: 60ch">Zero to a running Eliya with observability defaults in five
+        steps. About five minutes end-to-end.</p>
+</header>
+
+<section>
+    <h3>1. Install via SDKman</h3>
+    <p>SDKman is the recommended path on Linux developer machines. SDKman registration is pending
+        (target Q2 2026); until then, install via tar.gz from
+        <a href="https://github.com/asymmsystems/eliya-jdk/releases" class="org-link org-link--inline org-link--external">GitHub Releases</a>
+        or use the
+        <a href="/product/eliya/user-guide/install-linux.html" class="org-link org-link--inline org-link--internal">Linux install guide</a>
+        for production servers (DEB/RPM packages target Q4 2026). Once SDKman registration is live:</p>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('sdk install java ${eliyaVersion}-eliya')" aria-label="Copy command">
+        <code>sdk install java ${eliyaVersion}-eliya</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+
+
+    <h3>2. Verify the install</h3>
+    <p>Confirm Eliya is correctly installed and writable diagnostic paths are reachable:</p>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('asymm eliya verify')" aria-label="Copy command">
+        <code>asymm eliya verify</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('asymm eliya doctor')" aria-label="Copy command">
+        <code>asymm eliya doctor</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+    <p><code>verify</code> checks installation integrity against published checksums and the GPG
+        signature. <code>doctor</code> checks that diagnostic paths are writable and configuration is
+        sane. Both should pass before you continue.</p>
+
+
+    <h3>3. Run your application with observability defaults</h3>
+    <p>Add a single flag to your existing JVM command:</p>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('java -XX:EliyaProfile=Production -jar app.jar')" aria-label="Copy command">
+        <code>java -XX:EliyaProfile=Production -jar app.jar</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+    <p>This activates JFR continuous recording (24-hour rolling buffer), heap dump on OOM, Native
+        Memory Tracking summary, GC logging, crash log path configuration, and container support
+        reinforced &mdash; all at ~1&ndash;2% steady-state CPU overhead. No GC tuning, no TLS overlay
+        &mdash; just observability defaults. See
+        <a href="/product/eliya/user-guide/flags-reference.html" class="org-link org-link--inline org-link--internal">flags reference</a>
+        for the full breakdown.</p>
+
+
+    <h3>4. Inspect what Eliya is recording</h3>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('asymm eliya info')" aria-label="Copy command">
+        <code>asymm eliya info</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+    <p>Output shows the resolved diagnostic paths, container detection, GC selection, active flag
+        configuration, and JFR status &mdash; everything Eliya is doing on this JVM. The
+        <code>Diagnostic Configuration</code> section annotates each path component with its
+        resolution source (env var, system property, HOSTNAME, or fallback), so you can verify
+        artifacts will land where you expect.</p>
+
+
+    <h3>5. Find your diagnostic artifacts</h3>
+    <p>Eliya writes artifacts to a three-level filesystem layout
+        (<code>${r"${ELIYA_DIAGNOSTIC_PATH}"}/${r"${service}"}/${r"${replica}"}/${r"${category}"}/</code>),
+        with replica suppression when replica resolves to the same value as service:</p>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('ls /var/log/eliya/$(hostname)/jfr/')" aria-label="Copy command">
+        <code>ls /var/log/eliya/$(hostname)/jfr/</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+    <p>JFR recordings, heap dumps (on OOM), crash logs, and GC logs live in sibling
+        <code>jfr/</code>, <code>heap/</code>, <code>crash/</code>, <code>gc/</code> directories
+        under each replica's path. For Kubernetes, the replica name is the pod name; for bare-metal
+        systemd, the replica name is suppressed and artifacts land directly under the service
+        directory.</p>
+
+
+    <h3>Where to go next</h3>
+    <ul>
+        <li><a href="/product/eliya/user-guide/install-linux.html" class="org-link org-link--inline org-link--internal">Install on Linux</a>
+            &mdash; tar.gz, DEB/RPM, systemd integration for production servers.</li>
+        <li><a href="/product/eliya/user-guide/install-docker.html" class="org-link org-link--inline org-link--internal">Install with Docker</a>
+            &mdash; multi-arch OCI images, sidecar diagnostics, ephemeral debug containers.</li>
+        <li><a href="/product/eliya/user-guide/flags-reference.html" class="org-link org-link--inline org-link--internal">Flags reference</a>
+            &mdash; what <code>EliyaProfile=Production</code> activates, performance impact,
+            override semantics.</li>
+        <li><a href="/product/eliya/migration.html" class="org-link org-link--inline org-link--internal">Migration guide</a>
+            &mdash; switching from Corretto, Temurin, Zulu, or another OpenJDK distribution.</li>
+        <li><a href="/product/eliya/integrations.html" class="org-link org-link--inline org-link--internal">Integrations</a>
+            &mdash; Maven/Gradle toolchains, Kubernetes, service mesh, logging stacks, APM
+            coexistence.</li>
+        <li><a href="/product/eliya/roadmap.html" class="org-link org-link--inline org-link--internal">Roadmap</a>
+            &mdash; Phase 2/3/4 trajectory: FIPS variant, bundled diagnostic tooling, Asymm
+            Forensics, compliance profiles.</li>
+        <li><a href="/product/eliya/user-guide/troubleshooting.html" class="org-link org-link--inline org-link--internal">Troubleshooting</a>
+            &mdash; common issues with concrete diagnostic commands.</li>
+    </ul>
+</section>
+
+<div class="page-back-nav">
+    <a href="/product/eliya/user-guide/" class="org-link org-link--internal org-link--back">user guide</a>
+</div>

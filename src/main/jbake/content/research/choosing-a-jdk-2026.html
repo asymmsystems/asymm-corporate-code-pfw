@@ -8,9 +8,9 @@ status=published
 <header class="page-header">
     <span class="section-kicker">Asymm Research</span>
     <h1>Choosing a JDK in 2026 — an honest guide</h1>
-    <p style="max-width: 60ch;">A vendor-by-vendor comparison of OpenJDK distributions,
+    <p style="max-width: 60ch">A vendor-by-vendor comparison of OpenJDK distributions,
         with platform-specific guidance and an explicit view on where each one actually wins.</p>
-    <p style="max-width: 60ch; font-size: 0.9rem; margin-top: 1rem;">
+    <p style="max-width: 60ch; font-size: 0.9rem; margin-top: 1rem">
         <em>This guide is written by the team behind
         <a href="/product/eliya.html" class="org-link org-link--inline org-link--internal">Eliya JDK</a>.
         We make no effort to hide that we ship our own distribution — but this guide is written to help
@@ -19,10 +19,10 @@ status=published
 </header>
 
 <!-- =============== TL;DR =============== -->
-<section class="technical-inset" style="margin-bottom: 5rem;">
-    <div style="max-width: 800px; margin: 0 auto;">
+<section class="technical-inset" style="margin-bottom: 5rem">
+    <div style="max-width: 800px; margin: 0 auto">
         <h3>TL;DR</h3>
-        <ul style="line-height: 1.9; margin-top: 1rem;">
+        <ul style="line-height: 1.9; margin-top: 1rem">
             <li><strong>Most people, most workloads:</strong> Eclipse Temurin. It's the SDKman default for
                 good reason.</li>
             <li><strong>Running on AWS:</strong> Amazon Corretto.</li>
@@ -38,22 +38,26 @@ status=published
                 Liberica NIK.</li>
             <li><strong>Just want to run Minecraft / IntelliJ / Android Studio:</strong> the bundled
                 runtime. Don't overthink it.</li>
-            <li><strong>Low-latency telecom / BSS workloads:</strong> worth evaluating Eliya JDK for the
-                bundled <code>-XX:+UseEliyaDefaults</code> profile.</li>
+            <li><strong>Building Quarkus native images:</strong> Red Hat Mandrel — the community default
+                for Quarkus native builds.</li>
+            <li><strong>Compliance-conscious production needing forensic-grade JVM diagnostics
+                (BFSI, healthcare, government, regulated industries):</strong> worth evaluating Eliya
+                JDK for the bundled <code>-XX:EliyaProfile=Production</code> observability profile
+                and (Phase 3+) Asymm Forensics platform.</li>
             <li><strong>Whatever you pick, pick LTS.</strong> In 2026 that's JDK 21 or JDK 25.</li>
         </ul>
     </div>
 </section>
 
 <!-- =============== Why the choice matters less =============== -->
-<section style="margin-bottom: 5rem;">
+<section style="margin-bottom: 5rem">
     <h2 class="section-title">The choice matters less than it feels</h2>
-    <p style="max-width: 70ch; line-height: 1.8;">All major OpenJDK distributions — Temurin,
+    <p >All major OpenJDK distributions — Temurin,
         Corretto, Zulu, Liberica, Microsoft Build, Red Hat OpenJDK, SapMachine, Eliya — build from the
         same upstream source and pass the same Technology Compatibility Kit. Swapping between them is an
         operational task, not an application-code task. If your app runs on one, it runs on all of them.</p>
-    <p style="max-width: 70ch; line-height: 1.8; margin-top: 1rem;">The real differences are:</p>
-    <ul style="max-width: 70ch; line-height: 1.8; margin-top: 1rem;">
+    <p style="margin-top: 1rem">The real differences are:</p>
+    <ul style="margin-top: 1rem">
         <li>How long each vendor promises to patch each LTS</li>
         <li>What licence they ship under (almost all are GPLv2+CE; Oracle JDK is the exception)</li>
         <li>Which platforms and architectures they publish binaries for</li>
@@ -61,12 +65,12 @@ status=published
         <li>Whether the vendor bundles extras (JavaFX, native image kit, crypto provider, tuned defaults)</li>
         <li>How aligned the vendor is with your existing infrastructure (AWS / Azure / RHEL / SAP / etc.)</li>
     </ul>
-    <p style="max-width: 70ch; line-height: 1.8; margin-top: 1rem;">Tom Gregory summed it up
+    <p style="margin-top: 1rem">Tom Gregory summed it up
         well: <em>"don't spend too long deliberating over which JDK vendor to go with."</em></p>
 </section>
 
 <!-- =============== Decision dimensions =============== -->
-<section style="margin-bottom: 5rem;">
+<section style="margin-bottom: 5rem">
     <h2 class="section-title">Decision dimensions</h2>
     <table class="clinical-table">
         <thead>
@@ -122,14 +126,14 @@ status=published
 </section>
 
 <!-- =============== Version question =============== -->
-<section style="margin-bottom: 5rem;">
+<section style="margin-bottom: 5rem">
     <h2 class="section-title">Which version? LTS 21 or LTS 25 in 2026</h2>
-    <p style="max-width: 70ch; line-height: 1.8;">Stay on LTS. In 2026 that's JDK 21 LTS
+    <p >Stay on LTS. In 2026 that's JDK 21 LTS
         (released Sep 2023, most deployed in production) or JDK 25 LTS (released Sep 2025, current-latest).
         Non-LTS releases (JDK 22, 23, 24, 26) stop receiving security patches six months after release —
         never run them in production.</p>
 
-    <ul style="max-width: 70ch; line-height: 1.8; margin-top: 1rem;">
+    <ul style="margin-top: 1rem">
         <li><strong>New project, greenfield:</strong> pick JDK 25. Virtual threads are mature, structured
             concurrency is stable, pattern matching is complete, the FFM API is final.</li>
         <li><strong>Existing project on JDK 21:</strong> stay on 21 until you need a 25 feature. Upgrading
@@ -140,14 +144,39 @@ status=published
     </ul>
 </section>
 
+<!-- =============== Why Eliya ships JDK 25 only =============== -->
+<section style="margin-bottom: 5rem">
+    <h2 class="section-title">Why Eliya ships JDK 25 only</h2>
+    <p>Eliya is Asymm Systems' OpenJDK distribution. It targets <strong>JDK 25 LTS exclusively</strong> — not
+        JDK 21, not JDK 26, not a dual-LTS matrix. Three reasons:</p>
+
+    <ul style="margin-top: 1rem">
+        <li><strong>JDK 21 is incumbent territory.</strong> Temurin, Corretto, Zulu and Liberica all ship
+            mature JDK 21 builds with quarterly patches through at least Sep 2028. Adding another JDK 21
+            distribution doesn't move the market — it doubles maintenance cost for no positioning gain.</li>
+        <li><strong>JDK 26 is non-LTS.</strong> Six-month support window. Running a non-LTS release in
+            production is operationally risky regardless of who builds it; Eliya's compliance-conscious
+            audience is the wrong fit for short-window releases. Eliya skips non-LTS entirely.</li>
+        <li><strong>One LTS at a time keeps Phase 2+ commitments fundable.</strong> Bundled diagnostics,
+            FIPS variant, distroless/UBI images, DEB/RPM, macOS aarch64 — the differentiated work — has to
+            outrank version sprawl. The discipline of saying no to JDK 26 frees resourcing for the work
+            that actually distinguishes Eliya.</li>
+    </ul>
+
+    <p style="margin-top: 1rem">Eliya 25 is supported through <strong>September 2029</strong> (four years,
+        aligned with upstream OpenJDK 25u). When JDK 29 LTS lands in September 2027, Eliya 29 ships alongside
+        Eliya 25 — at which point Eliya 25 enters a 24-month overlap before sunset. Until then: one LTS,
+        published quarterly with each upstream CPU.</p>
+</section>
+
 <!-- =============== Vendor-by-vendor =============== -->
-<section style="margin-bottom: 5rem;">
+<section style="margin-bottom: 5rem">
     <h2 class="section-title">Vendor-by-vendor assessment</h2>
 
     <h3>Eclipse Temurin (Adoptium)</h3>
-    <p style="max-width: 70ch; line-height: 1.8;"><strong>When to pick:</strong> default
+    <p ><strong>When to pick:</strong> default
         for almost everything. If you don't have a specific reason to pick otherwise, pick this.</p>
-    <ul style="max-width: 70ch; line-height: 1.8;">
+    <ul >
         <li>Backed by the Eclipse Foundation — the only foundation-governed (non-single-vendor) distribution.</li>
         <li>Members include IBM, Microsoft, Red Hat, Alibaba, Azul, Huawei — broad industry investment.</li>
         <li>SDKman's stamped default. <code>whichjdk.com</code>'s primary recommendation.</li>
@@ -160,9 +189,9 @@ status=published
     </ul>
 
     <h3>Amazon Corretto</h3>
-    <p style="max-width: 70ch; line-height: 1.8;"><strong>When to pick:</strong> anything
+    <p ><strong>When to pick:</strong> anything
         running on AWS. Still a solid default everywhere else.</p>
-    <ul style="max-width: 70ch; line-height: 1.8;">
+    <ul >
         <li>AWS-maintained. Linux, Windows, macOS, Alpine, Amazon Linux 2 binaries.</li>
         <li>Bundled Corretto Crypto Provider optimised for AWS services.</li>
         <li>AWS Lambda SnapStart reduces Java cold-start latency up to 10×.</li>
@@ -172,9 +201,9 @@ status=published
     </ul>
 
     <h3>Azul Zulu</h3>
-    <p style="max-width: 70ch; line-height: 1.8;"><strong>When to pick:</strong> you want
+    <p ><strong>When to pick:</strong> you want
         a Java-focused vendor with long LTS windows and a real commercial support option.</p>
-    <ul style="max-width: 70ch; line-height: 1.8;">
+    <ul >
         <li>Azul is a Java-specialist company — Java is the business, not a side project.</li>
         <li>8-year LTS support (longer than most competitors). Commercial support for Java 6 and 7 available.</li>
         <li>Tiered commercial support: Standard (business hours) vs Premium (24×7×365).</li>
@@ -184,10 +213,10 @@ status=published
     </ul>
 
     <h3>BellSoft Liberica</h3>
-    <p style="max-width: 70ch; line-height: 1.8;"><strong>When to pick:</strong> Spring
+    <p ><strong>When to pick:</strong> Spring
         Boot workloads (Paketo default), applications needing JavaFX bundled, container-heavy deployments,
         or when you want the widest platform matrix.</p>
-    <ul style="max-width: 70ch; line-height: 1.8;">
+    <ul >
         <li>Default JDK in Paketo Buildpacks — meaning every Spring Boot app built with
             <code>spring-boot:build-image</code> runs on Liberica out of the box.</li>
         <li>Recommended by VMware for the Spring Framework.</li>
@@ -201,10 +230,10 @@ status=published
     </ul>
 
     <h3>Oracle JDK</h3>
-    <p style="max-width: 70ch; line-height: 1.8;"><strong>When to pick:</strong> you have a
+    <p ><strong>When to pick:</strong> you have a
         specific reason tied to Oracle support contracts. Otherwise, read the licence carefully before
         defaulting to it.</p>
-    <ul style="max-width: 70ch; line-height: 1.8;">
+    <ul >
         <li>Oracle JDK 17+ is distributed under the No-Fee Terms and Conditions (NFTC) — free for
             production, including commercial use.</li>
         <li>NFTC patch window is narrow: one year after the subsequent LTS release. Third-party vendors
@@ -217,17 +246,17 @@ status=published
     </ul>
 
     <h3>Oracle OpenJDK (jdk.java.net)</h3>
-    <p style="max-width: 70ch; line-height: 1.8;"><strong>When to pick:</strong> don't, for
+    <p ><strong>When to pick:</strong> don't, for
         production. Use it for exploring early-access builds and evaluating non-LTS features.</p>
-    <ul style="max-width: 70ch; line-height: 1.8;">
+    <ul >
         <li>Oracle only provides updates to each release for six months, even for LTS versions.</li>
         <li>Not a long-term-support distribution by any definition that matters in production.</li>
     </ul>
 
     <h3>Microsoft Build of OpenJDK</h3>
-    <p style="max-width: 70ch; line-height: 1.8;"><strong>When to pick:</strong> running
+    <p ><strong>When to pick:</strong> running
         Java workloads on Azure.</p>
-    <ul style="max-width: 70ch; line-height: 1.8;">
+    <ul >
         <li>Free and open-source. Linux, Windows, macOS binaries.</li>
         <li>Quarterly updates for LTS, not JDK 8.</li>
         <li>Commercial support only for Azure customers with an active Azure support plan, and only for
@@ -237,9 +266,9 @@ status=published
     </ul>
 
     <h3>Red Hat build of OpenJDK</h3>
-    <p style="max-width: 70ch; line-height: 1.8;"><strong>When to pick:</strong> already
+    <p ><strong>When to pick:</strong> already
         standardised on Red Hat Enterprise Linux, OpenShift, or Red Hat Middleware.</p>
-    <ul style="max-width: 70ch; line-height: 1.8;">
+    <ul >
         <li>Binaries only on Windows and RHEL.</li>
         <li>OpenJDK entitlement is included in the RHEL subscription — if RHEL retires before the JDK,
             JDK support ends with it.</li>
@@ -248,10 +277,10 @@ status=published
     </ul>
 
     <h3>SAP SapMachine</h3>
-    <p style="max-width: 70ch; line-height: 1.8;"><strong>When to pick:</strong> SAP
+    <p ><strong>When to pick:</strong> SAP
         ecosystem. SapMachine is the default runtime for many SAP applications and SAP Business Technology
         Platform.</p>
-    <ul style="max-width: 70ch; line-height: 1.8;">
+    <ul >
         <li>Free, TCK-verified. Linux, Windows, macOS. All LTS except Java 8.</li>
         <li>4+ years LTS support.</li>
         <li>Commercial support tied to SAP customer contracts in the context of SAP-supported products.</li>
@@ -260,19 +289,23 @@ status=published
     </ul>
 
     <h3>IBM Semeru Runtimes</h3>
-    <p style="max-width: 70ch; line-height: 1.8;"><strong>When to pick:</strong> you
+    <p ><strong>When to pick:</strong> you
         specifically want OpenJ9 (lower memory footprint than HotSpot) or you're on IBM z / Power / AIX /
         z/OS.</p>
-    <ul style="max-width: 70ch; line-height: 1.8;">
+    <ul >
         <li>Built around OpenJ9, an alternative JVM to HotSpot. This is the defining choice — not
             "vanilla OpenJDK."</li>
         <li>Open edition (GPLv2+CE) and certified edition (IBM licence).</li>
         <li>IBM Runtimes for Business is the commercial support offering.</li>
         <li>Excellent enterprise platform coverage.</li>
+        <li><strong>OpenJ9-specific benefit:</strong> lower steady-state memory footprint than HotSpot
+            &mdash; typically 20&ndash;40% reduction for the same workload. For containerised
+            microservices where every replica's memory budget matters, this can translate to meaningful
+            cost savings. Benchmark with your specific workload.</li>
     </ul>
 
     <h3>Regional / specialist builds</h3>
-    <ul style="max-width: 70ch; line-height: 1.8;">
+    <ul >
         <li><strong>Alibaba Dragonwell</strong> — Alibaba Cloud workloads; strong in China-region
             deployments; includes performance patches for large-scale Alibaba use cases.</li>
         <li><strong>Tencent Kona</strong> — Tencent Cloud workloads; similar regional profile.</li>
@@ -280,9 +313,9 @@ status=published
     </ul>
 
     <h3>GraalVM (Oracle) &amp; GraalVM Community</h3>
-    <p style="max-width: 70ch; line-height: 1.8;"><strong>When to pick:</strong> you need
+    <p ><strong>When to pick:</strong> you need
         Ahead-of-Time native compilation (small binary, fast cold start), or polyglot interop.</p>
-    <ul style="max-width: 70ch; line-height: 1.8;">
+    <ul >
         <li>GraalVM is a different category of product — it bundles a JDK with a native-image compiler
             and polyglot runtime.</li>
         <li>Oracle GraalVM ships under a non-free licence for some features; GraalVM Community is
@@ -293,9 +326,9 @@ status=published
     </ul>
 
     <h3>JetBrains Runtime (JBR)</h3>
-    <p style="max-width: 70ch; line-height: 1.8;"><strong>When to pick:</strong> running
+    <p ><strong>When to pick:</strong> running
         IntelliJ IDEA, Android Studio, or other JetBrains IDEs. Not a general-purpose server JDK.</p>
-    <ul style="max-width: 70ch; line-height: 1.8;">
+    <ul >
         <li>Fork of OpenJDK with fixes specific to running the IntelliJ platform.</li>
         <li>Google explicitly recommends using JBR to run Android Studio (don't set
             <code>STUDIO_JDK</code> to override it).</li>
@@ -303,43 +336,102 @@ status=published
     </ul>
 
     <h3>Eliya JDK</h3>
-    <p style="max-width: 70ch; line-height: 1.8;"><strong>When to pick:</strong> a narrow,
-        honest niche. You should choose Eliya only if one or more of these apply:</p>
-    <ul style="max-width: 70ch; line-height: 1.8;">
-        <li>You're running low-latency request-processing workloads (telecom API gateways, BSS
-            components, request-heavy services) where the bundled
-            <code>-XX:+UseEliyaDefaults</code> profile (G1GC with 50 ms pause target, string
-            deduplication, compressed oops, tiered compilation) saves you the work of curating
-            equivalent flags yourself.</li>
-        <li>You want always-on TLS/security hardening in <code>java.security</code> without having to
-            manage it separately.</li>
+    <p><strong>When to pick:</strong> compliance-conscious production where forensic-grade JVM
+        diagnostic data is required, especially in regulated industries with data-egress restrictions
+        that prohibit SaaS APM.</p>
+    <p>Eliya is a Linux-first OpenJDK&nbsp;25 distribution from Asymm Systems (Sri Lanka) positioned for
+        compliance-conscious production environments across BFSI, healthcare, telecom, government,
+        and other standards-driven industries.</p>
+
+    <p><strong>The actual value proposition.</strong> Eliya is a forensic-grade JVM platform across
+        four phases:</p>
+    <ul>
+        <li><strong>Phase 1 (current, Q3 2026 target):</strong> Production observability defaults via
+            <code>-XX:EliyaProfile=Production</code> &mdash; JFR continuous recording (24-hour rolling
+            buffer, sub-1% overhead), heap dump on OOM with structured paths, Native Memory Tracking
+            summary mode, GC logging with rotation, crash log path configuration, container awareness
+            reinforced, diagnostic VM options unlocked. Everything written to a three-level filesystem
+            layout (<code>/var/log/eliya/${service}/${replica}/</code>) for per-replica audit
+            attribution.</li>
+        <li><strong>Phase 2 (post-seed):</strong> Bundled local-only diagnostic tooling.
+            <strong>No other major OpenJDK distribution bundles Eclipse MAT or async-profiler in the
+            JDK itself</strong> &mdash; engineers today install them separately. Eliya bundles both
+            alongside the runtime, sidestepping the "diagnostic tool installation" friction in
+            air-gapped or policy-restricted environments. FIPS-validated variant
+            (<code>eliya-jdk-fips</code>) with a FIPS-validated provider preinstalled for procurement
+            contexts requiring FedRAMP, FISMA, and other federal-aligned frameworks &mdash; sign up
+            on the <a href="/product/eliya/downloads.html#waitlist" class="org-link org-link--inline org-link--internal">downloads waitlist</a>.</li>
+        <li><strong>Phase 3 (post-Series A):</strong> Asymm Forensics &mdash; cross-correlation
+            platform analysing JFR + heap dumps + thread dumps + GC logs + crash logs together. No
+            APM does this. Local execution, no SaaS dependency.</li>
+        <li><strong>Phase 4 (demand-gated):</strong> Compliance-aligned profile values
+            (<code>EliyaProfile=PCIDSS</code>, <code>=HIPAA</code>, <code>=SOX</code>,
+            <code>=FedRAMP</code>, <code>=GDPR</code>, <code>=ISO27001</code>, <code>=SOC2</code>)
+            plus combined profiles (<code>=Healthcare-Payment</code> for PCI&nbsp;DSS + HIPAA,
+            <code>=Financial-SaaS</code> for SOC&nbsp;2 + ISO&nbsp;27001, etc.) designed when customer
+            demand justifies.</li>
+    </ul>
+
+    <p><strong>Things Eliya deliberately does NOT do:</strong></p>
+    <ul>
+        <li>No GC tuning, no string deduplication, no tiered compilation changes &mdash; JDK&nbsp;25's
+            automatic ergonomics handle these better than a distribution can guess.</li>
+        <li>No TLS hardening overlay &mdash; upstream JDK&nbsp;25's <code>java.security</code> already
+            disables weak protocols and ciphers; Eliya doesn't duplicate upstream work.</li>
+        <li>No SaaS telemetry, no phone-home, no data egress &mdash; all diagnostic data stays in
+            your perimeter.</li>
+    </ul>
+
+    <p><strong>TCK status.</strong> Phase 1 ships as "based on TCK-certified upstream OpenJDK&nbsp;25"
+        &mdash; the upstream codebase Eliya is built from is TCK-certified, and Eliya's source patches
+        are minimal and don't affect compatibility behaviours. Eliya self-certification (independent
+        TCK run of the Eliya binary itself) is Phase 2; this is the standard pattern most OpenJDK
+        distributions follow (TCK self-certification typically lags GA by 3&ndash;6 months).</p>
+
+    <p><strong>You should consider Eliya when:</strong></p>
+    <ul>
+        <li>Your environment prohibits SaaS APM due to data-egress restrictions (BFSI settlement
+            systems, healthcare integrations, government workloads, sovereign cloud) and you
+            currently lack the forensic diagnostic data that compliance audits and incident response
+            require.</li>
+        <li>You're already running APM but need the per-replica forensic data capture (HPROF heap
+            dumps, textual thread dumps, JFR recordings) that APM tools structurally cannot produce.</li>
+        <li>You're planning for Phase 4 compliance-profile adoption (PCI&nbsp;DSS, HIPAA, etc.) and
+            want a JDK whose vendor roadmap aligns with your compliance trajectory.</li>
         <li>You're building with <a href="/product/dial.html" class="org-link org-link--inline org-link--internal">Dial</a>
             and want the recommended (but not required) runtime.</li>
-        <li>You want to run an OpenJDK on <strong>FreeBSD</strong> — Eliya ships a Research Preview
-            (community-supported, no CVE SLA); no other major vendor ships FreeBSD binaries at all.</li>
+        <li>You want to run an OpenJDK on <strong>FreeBSD</strong> &mdash; Eliya ships a Research
+            Preview (community-supported, no CVE SLA); no other major vendor ships FreeBSD binaries
+            at all.</li>
     </ul>
-    <p style="max-width: 70ch; line-height: 1.8; margin-top: 1rem;"><strong>You should
-        not pick Eliya if:</strong></p>
-    <ul style="max-width: 70ch; line-height: 1.8;">
-        <li>You need Windows or macOS binaries — Eliya is Linux-first.</li>
-        <li>You need commercial support with an SLA — Eliya is community-distributed today; commercial
-            support is a Phase 2 consideration.</li>
-        <li>You need paid indemnification — use Azul, BellSoft, or Oracle.</li>
-        <li>You need JavaFX bundled — use Liberica Full.</li>
-        <li>You need a JDK for running generic Java applications where Eliya's telecom optimisations are
-            irrelevant — Temurin, Corretto, Zulu, or Liberica will all do the job and have larger
-            operational track records.</li>
+
+    <p><strong>You should NOT pick Eliya if:</strong></p>
+    <ul>
+        <li>You need Windows or macOS binaries today &mdash; Eliya is Linux-first; macOS aarch64 is
+            Phase 2 demand-gated, Windows is Phase 3 demand-gated.</li>
+        <li>You need commercial support with an SLA today &mdash; Eliya is community-distributed in
+            Phase 1; commercial support is a Phase 2 consideration.</li>
+        <li>You need paid indemnification &mdash; use Azul, BellSoft, or Oracle.</li>
+        <li>You need JavaFX bundled &mdash; use Liberica Full.</li>
+        <li>You need a JDK for general workloads where forensic-grade diagnostic data isn't a
+            requirement &mdash; Temurin, Corretto, Zulu, or Liberica are mature general-purpose
+            choices with larger operational track records.</li>
     </ul>
-    <p style="max-width: 70ch; line-height: 1.8; margin-top: 1rem;">Honest summary: Eliya
-        is a new (2026) distribution from a solo-founder company. It builds from upstream OpenJDK 25u
-        with one flag-gated source patch and hardened configuration overlays. The telecom tuning is
-        genuinely useful for the workloads it's tuned for — the credibility is not yet earned for general
-        workloads. If you're in the niche, we'd love to have you. If not, one of the vendors above is a
-        better fit.</p>
+
+    <p style="margin-top: 1rem"><strong>Honest summary.</strong> Eliya is a new (2026) distribution
+        from Asymm Systems with a specific architectural position &mdash; forensic-grade JVM
+        diagnostic data as production default, designed for environments where SaaS APM is prohibited
+        or insufficient. The credibility for general workloads is not yet earned; we're explicit that
+        established distributions are better choices for those. If you're in the compliance-conscious
+        niche, Eliya was designed for you. For the full four-phase trajectory and demand-gating
+        mechanics, see the
+        <a href="/product/eliya/roadmap.html" class="org-link org-link--inline org-link--internal">Eliya roadmap</a>.
+        For the full positioning relative to APM tools, see
+        <a href="/research/jvm-forensics-vs-apm.html" class="org-link org-link--inline org-link--internal">JVM forensics vs APM</a>.</p>
 </section>
 
 <!-- =============== Platform-specific =============== -->
-<section style="margin-bottom: 5rem;">
+<section style="margin-bottom: 5rem">
     <h2 class="section-title">Platform and framework defaults</h2>
     <table class="clinical-table">
         <thead>
@@ -406,9 +498,9 @@ status=published
                 <td>No vendor preference in their docs. Any major LTS build works.</td>
             </tr>
             <tr>
-                <td>Low-latency telecom API gateway, BSS component, TMF Open-API service</td>
+                <td>Compliance-conscious production in regulated industries (BFSI settlement, healthcare integration, government workloads, air-gapped deployments)</td>
                 <td>Eliya JDK (evaluate)</td>
-                <td><code>-XX:+UseEliyaDefaults</code> bundles the tuning you'd otherwise curate yourself. Benchmark against Temurin.</td>
+                <td><code>-XX:EliyaProfile=Production</code> activates forensic-grade observability defaults that survive incidents and crashes. Benchmark against Temurin if observability data isn't a primary requirement.</td>
             </tr>
             <tr>
                 <td>FreeBSD</td>
@@ -420,29 +512,29 @@ status=published
 </section>
 
 <!-- =============== Switching =============== -->
-<section style="margin-bottom: 5rem;">
+<section style="margin-bottom: 5rem">
     <h2 class="section-title">Switching is cheap — benchmark, don't debate</h2>
-    <p style="max-width: 70ch; line-height: 1.8;">Every major distribution is installable
+    <p >Every major distribution is installable
         side-by-side via SDKman in seconds:</p>
-    <div class="inline-terminal" style="max-width: 700px; margin: 1rem 0;"
-        onclick="copyToClipboard('sdk install java 25.0.2-tem &amp;&amp; sdk install java 25.0.2-amzn &amp;&amp; sdk install java 25.0.2-librca');" title="Click to copy">
-        <code>sdk install java 25.0.2-tem && sdk install java 25.0.2-amzn && sdk install java 25.0.2-librca</code>
-        <span class="copy-btn">Copy</span>
-    </div>
-    <p style="max-width: 70ch; line-height: 1.8;">Run your workload under each with
+    <button type="button" class="inline-terminal" style="max-width: 700px; margin: 1rem 0"
+        onclick="copyToClipboard('sdk install java 25.0.3-tem &amp;&amp; sdk install java 25.0.3-amzn &amp;&amp; sdk install java 25.0.3-librca')" aria-label="Copy command">
+        <code>sdk install java 25.0.3-tem && sdk install java 25.0.3-amzn && sdk install java 25.0.3-librca</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+    <p >Run your workload under each with
         production-representative load. Measure tail latency, throughput, allocation rate, and GC pause
         distribution. Pick the one that wins on your actual workload, not the one that sounds best on the
         vendor's marketing page.</p>
-    <p style="max-width: 70ch; line-height: 1.8; margin-top: 1rem;">In our own internal
-        benchmarking for telecom API gateway workloads, the choice between major vendors on the same
-        underlying HotSpot usually matters less than 5% — within noise for many deployments. The tuning
-        flags matter far more than the vendor brand.</p>
+    <p style="margin-top: 1rem">In our own internal benchmarking across request-processing
+        workloads, the choice between major vendors on the same underlying HotSpot usually matters
+        less than 5% &mdash; within noise for many deployments. The tuning flags matter far more than
+        the vendor brand.</p>
 </section>
 
 <!-- =============== References =============== -->
-<section style="margin-bottom: 5rem;">
+<section style="margin-bottom: 5rem">
     <h2 class="section-title">References</h2>
-    <ul style="max-width: 70ch; line-height: 1.9;">
+    <ul style="line-height: 1.9">
         <li><a href="https://whichjdk.com/" class="org-link org-link--inline org-link--external">whichjdk.com</a> — the canonical independent JDK recommendation site</li>
         <li><a href="https://sdkman.io/jdks/" class="org-link org-link--inline org-link--external">sdkman.io/jdks</a> — full list of distributions on SDKman with suffix references</li>
         <li><a href="https://tomgregory.com/which-jdk-version-and-vendor/" class="org-link org-link--inline org-link--external">Tom Gregory: Which JDK version and vendor</a></li>
@@ -457,21 +549,28 @@ status=published
 
 <!-- =============== Footer =============== -->
 <section class="technical-inset">
-    <div style="max-width: 800px; margin: 0 auto;">
+    <div style="max-width: 800px; margin: 0 auto">
         <h3>About this guide</h3>
         <p>Written by the team behind
             <a href="/product/eliya.html" class="org-link org-link--inline org-link--internal">Eliya JDK</a>,
-            a distribution we ship specifically for low-latency telecom workloads. We wrote this guide
-            because most "which JDK should I pick" content online is either (a) produced by a vendor with
-            obvious incentives, or (b) thin and out-of-date. We tried to be honest about our own niche,
-            and to send you to a better fit when Eliya isn't one. If you find an error or a missing
-            distribution, email
+            a distribution we ship specifically for compliance-conscious production in regulated
+            industries where forensic-grade JVM diagnostic data is a requirement. We wrote this guide
+            because most "which JDK should I pick" content online is either (a) produced by a vendor
+            with obvious incentives, or (b) thin and out-of-date. We tried to be honest about our own
+            niche, and to send you to a better fit when Eliya isn't one. If you find an error or a
+            missing distribution, email
             <a href="mailto:research@asymm.systems" class="org-link org-link--inline org-link--external">research@asymm.systems</a>.</p>
-        <p style="font-size: 0.9rem; margin-top: 1rem;">Published April 2026. Eliya JDK is a
-            product of Asymm Systems (Pvt) Ltd.</p>
+        <p style="font-size: 0.9rem; margin-top: 1rem">Published April 2026; substantially revised
+            May 2026 to reflect Eliya's observability-first positioning. Eliya JDK is a product of
+            Asymm Systems (Pvt) Ltd.</p>
+        <p style="margin-top: 1rem">Beyond the JDK-vs-JDK comparison above, Eliya occupies a
+            position no other OpenJDK distribution does: forensic-grade JVM platform with
+            local-only diagnostic data. For how this relates to APM tools (which all JDKs can
+            use), see
+            <a href="/research/jvm-forensics-vs-apm.html" class="org-link org-link--inline org-link--internal">JVM forensics vs APM</a>.</p>
     </div>
 </section>
 
-<div style="margin-top: 5rem; text-align: center;">
-    <a href="/research.html" class="org-link org-link--internal">← Asymm research</a>
+<div style="margin-top: 5rem; text-align: center">
+    <a href="/research.html" class="org-link org-link--internal org-link--back">Asymm research</a>
 </div>

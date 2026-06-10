@@ -1,0 +1,251 @@
+<#-- Eliya product page body. Companion content file at /content/product/eliya.html
+     is frontmatter-only and the wrapper template /page/product/home.ftl
+     <#include>s this file directly. Macros come from /macro/.
+
+     Content per eliya-website-content-specification.md (May 2026): hero +
+     four cards + "what's actually different" + quick start + phase roadmap +
+     persona-routing footer. Positioning: "OpenJDK for Compliance-Conscious
+     Production". EliyaProfile=Production activates observability defaults only —
+     NOT GC tuning, NOT compilation flags. Eliya inherits upstream JDK 25's
+     security configuration unchanged. -->
+<#include "/macro/cards.ftl">
+<#include "/macro/tables.ftl">
+<#include "/macro/terminal.ftl">
+<#include "/macro/section-intro.ftl">
+<#include "/macro/release.ftl">
+
+
+<!-- Why Eliya — lead + four cards -->
+<section>
+    <div class="container">
+        <@renderSectionIntro
+            kicker="Why Eliya"
+            title="Engineered for operational discipline"
+            text="Four core properties define the platform across all four phases &mdash; engineered into Eliya's foundation, not bolted on as configuration or commercial extras." />
+        <div class="product-features" style="margin-top: 3rem;">
+            <@renderProductCard
+                icon="fa-solid fa-gauge"
+                title="Observability by Design"
+                text="JFR continuous recording, heap dump on OOM, native memory tracking, GC logging &mdash; configured by default via <code>-XX:EliyaProfile=Production</code>. When something fails at 03:00, the last 24 hours of execution profile is already on disk. Performance impact: ~1&ndash;2% steady-state." />
+            <@renderProductCard
+                icon="fa-solid fa-shield-halved"
+                title="Local-Only Diagnostics"
+                text="All diagnostic capture and (Phase 2) analysis runs on your infrastructure. No SaaS dependencies, no telemetry, no phone-home. Runs alongside whatever APM you're already using &mdash; Eliya provides forensic data APM tools structurally cannot." />
+            <@renderProductCard
+                icon="fa-solid fa-cube"
+                title="Conservative Engineering"
+                text="Eliya tracks the upstream OpenJDK source tree (<code>openjdk/jdk25u</code>) exactly, preserving API semantics. Based on TCK-certified upstream OpenJDK 25; Phase 2 will publish an independent TCK run of the Eliya binary itself. It is a hardened build, not a diverging fork." />
+            <@renderProductCard
+                icon="fa-solid fa-clock-rotate-left"
+                title="Operational Cadence"
+                text="Security requires velocity. Eliya ships quarterly Critical Patch Updates within two weeks of each upstream OpenJDK release. Critical CVEs target one-week turnaround. GPLv2 with Classpath Exception &mdash; same licence as upstream." />
+        </div>
+    </div>
+</section>
+
+
+<!-- What's actually different from upstream OpenJDK 25 -->
+<section>
+    <div class="container">
+        <@renderSectionIntro
+            kicker="Engineering"
+            title="What's actually different from upstream OpenJDK 25"
+            text="Engineers want a precise diff, not marketing tone. Here's what Eliya changes vs. a vanilla OpenJDK 25 build, and what stays exactly upstream." />
+
+        <div class="diff-grid" style="margin-top: 3rem;">
+            <div class="diff-grid__col diff-grid__col--add">
+                <h3 class="diff-grid__heading">What Eliya gives you</h3>
+                <ul class="diff-grid__list">
+                    <li>One opt-in flag &mdash; <code>-XX:EliyaProfile=Production</code> &mdash; turns
+                        your JVM into a forensic recorder. Every run leaves audit-grade diagnostic
+                        data (JFR, heap dump on OOM, GC logs, native-memory accounting, crash
+                        artifacts) on disk in a predictable per-service path. ~1-2% steady-state
+                        overhead.</li>
+                    <li>A diagnostic CLI on every install: <code>asymm eliya info</code> and
+                        <code>asymm eliya doctor</code> for fast triage. Diagnostic directory
+                        pre-created and writable by the running user.</li>
+                    <li>Quarterly upstream sync within two weeks of every OpenJDK CPU; one-week
+                        target for out-of-cycle critical CVEs.</li>
+                    <li>Honest TCK posture: built on TCK-certified upstream OpenJDK&nbsp;25 today;
+                        independent TCK run of the Eliya binary is a Phase&nbsp;2 deliverable.</li>
+                    <li>Compliance-conscious by design: local execution only, no SaaS dependencies,
+                        no telemetry, no phone-home. Diagnostic data stays on your hardware.</li>
+                    <li>Coexists with your existing APM. JVM forensic capture (HPROF heap dumps,
+                        JFR recordings, structured thread dumps) that APM tools structurally cannot
+                        produce &mdash; runs alongside Datadog, New Relic, Dynatrace, AppDynamics,
+                        and Elastic APM without conflict. See
+                        <a href="/research/jvm-forensics-vs-apm.html" class="org-link org-link--inline org-link--internal">JVM forensics vs APM</a>
+                        for the architectural distinction.</li>
+                    <li>Phased roadmap with named deliverables &mdash; FIPS&nbsp;140-3 variant
+                        (Bouncy Castle FIPS, CMVP cert #4943) and bundled diagnostic tooling
+                        (Eclipse&nbsp;MAT headless, async-profiler) in Phase&nbsp;2;
+                        <a href="/product/forensics.html" class="org-link org-link--inline org-link--internal">Asymm Forensics</a>
+                        cross-correlation platform in Phase&nbsp;3; compliance-aligned profiles
+                        (PCI&nbsp;DSS, HIPAA, SOX, FedRAMP, GDPR, ISO&nbsp;27001, SOC&nbsp;2) plus
+                        combined profiles for industries spanning multiple frameworks
+                        (Healthcare-Payment, Financial-SaaS, Federal-Defense) demand-gated for
+                        Phase&nbsp;4. Full trajectory:
+                        <a href="/product/eliya/roadmap.html" class="org-link org-link--inline org-link--internal">roadmap</a>.</li>
+                </ul>
+            </div>
+            <div class="diff-grid__col diff-grid__col--keep">
+                <h3 class="diff-grid__heading">What stays exactly upstream</h3>
+                <ul class="diff-grid__list">
+                    <li>GC selection &mdash; JDK&nbsp;25 ergonomics decide; Eliya does not pick a
+                        collector or set <code>MaxGCPauseMillis</code>.</li>
+                    <li>JIT, class loader, module system &mdash; identical bytes, identical
+                        behaviour.</li>
+                    <li><code>java.security</code> in the standard build &mdash; bit-identical to
+                        upstream JDK&nbsp;25. SSLv3 / TLS&nbsp;1.0 / TLS&nbsp;1.1 disabled, weak
+                        ciphers blocked, NIST-aligned key sizes &mdash; these are upstream
+                        defaults. Eliya does not duplicate them as &ldquo;hardening&rdquo; because
+                        performative duplication is dishonest. The file is bit-identical to
+                        upstream &mdash; verifiable with <code>diff</code>. Compliance-aligned
+                        profiles (PCI&nbsp;DSS, HIPAA, SOX) are a Phase&nbsp;4 deliverable,
+                        demand-gated by customer signal.</li>
+                    <li>SunJCE provider order in the standard build. The Phase&nbsp;2 FIPS
+                        variant is a separate artifact (<code>eliya-25-fips.tar.gz</code>) with
+                        Bouncy Castle FIPS pre-installed; FIPS is not a configuration toggle on
+                        the standard build.</li>
+                    <li>Java APIs, standard library, runtime semantics &mdash; built from the
+                        same source tree (<code>openjdk/jdk25u</code>). If your application runs
+                        on upstream OpenJDK&nbsp;25, it runs on Eliya unchanged.</li>
+                    <li>GPLv2 with Classpath Exception &mdash; same licence as upstream OpenJDK.</li>
+                </ul>
+            </div>
+        </div>
+
+        <p style="margin-top: 3rem; font-size: 0.95rem;">
+            Full enumeration with exact flag values and patch locations:
+            <a href="/product/eliya/user-guide/diff-from-upstream.html" class="org-link org-link--inline org-link--internal">Differences from upstream OpenJDK&nbsp;25</a>
+        </p>
+    </div>
+</section>
+
+
+
+<!-- Quick start -->
+<section>
+    <div class="container">
+        <@renderSectionIntro
+            kicker="Quick start"
+            title="Install and activate observability"
+            text="Install paths for every deployment shape. Docker image (multi-arch) is ready now; tar.gz from GitHub Releases works on any Linux; DEB / RPM packages for production servers target Q4 2026; SDKman for developer machines is Phase 1 (submission in progress, target Q2 2026)." />
+
+        <div style="max-width: 720px; margin-top: 2rem;">
+            <p class="code-comment"># Run on Docker (multi-arch image)</p>
+            <@renderInlineTerminal command="docker pull ghcr.io/asymmsystems/eliya:25-lts" max_width="100%" />
+
+            <p class="code-comment"># Download directly from GitHub Releases (bare-metal Linux)</p>
+            <@renderInlineTerminal command=eliyaCurlCommand max_width="100%" />
+
+            <p class="code-comment"># Developer machines &mdash; SDKman registration in progress (target Q2 2026)</p>
+            <@renderInlineTerminal command="sdk install java ${eliyaVersion}-eliya" max_width="100%" copyable=false />
+
+            <p class="code-comment"># Activate observability defaults</p>
+            <@renderInlineTerminal command="java -XX:EliyaProfile=Production -jar your-app.jar" max_width="100%" />
+        </div>
+
+        <p style="margin-top: 2rem; font-size: 0.95rem;">
+            Full installation guide:
+            <a href="/product/eliya/user-guide/" class="org-link org-link--inline org-link--internal">User guide</a>
+            &nbsp;·&nbsp;
+            Verify your download:
+            <a href="/product/eliya/user-guide/verify-download.html" class="org-link org-link--inline org-link--internal">Verification</a>
+        </p>
+    </div>
+</section>
+
+
+
+<!-- Phase roadmap -->
+<section>
+    <div class="container">
+        <@renderSectionIntro
+            kicker="Roadmap"
+            title="Phase roadmap"
+            text="Four phases. Phase 1 ships today; Phase 2&ndash;4 are demand-gated &mdash; they ship when customer signups indicate concrete need. Each waitlist is a real demand signal that determines shipping order. Full trajectory and demand-gating mechanics: <a href=\"/product/eliya/roadmap.html\" class=\"org-link org-link--inline org-link--internal\">roadmap page</a>." />
+
+        <div style="margin-top: 3rem;">
+        <#assign roadmapHeaders = ["Phase", "What ships", "When", "Status", "Get notified"]>
+        <#assign roadmapRows = [
+            [
+                "Phase 1",
+                "JFR-by-default observability via <code>-XX:EliyaProfile=Production</code>, Linux x64 + aarch64 binaries, Docker multi-arch images, FreeBSD Research Preview, <code>asymm</code> CLI Phase 1 surface",
+                "Now",
+                "Available",
+                "<span class=\"meta-muted\">&mdash;</span>"
+            ],
+            [
+                "Phase 2",
+                "Bundled diagnostic tools (Eclipse MAT headless, async-profiler), FIPS variant build (Bouncy Castle FIPS, CMVP cert #4943), <code>.deb</code> / <code>.rpm</code> packages, hosted apt/yum repositories, macOS aarch64 binary (demand-gated), expanded <code>asymm eliya</code> CLI surface",
+                "Target H2 2026 (post-seed)",
+                "Demand-gated",
+                "<a href=\"/product/eliya/downloads.html#waitlist\" class=\"org-link org-link--inline org-link--internal\">Notify me about Phase 2 deliverables</a>"
+            ],
+            [
+                "Phase 3",
+                "<a href=\"/product/forensics.html\" class=\"org-link org-link--inline org-link--internal\">Asymm Forensics</a> &mdash; JVM diagnostic forensics platform with cross-correlation analysis (JFR + heap + thread + GC + crash artifacts analysed together), ML-based pattern detection, compliance reporting (PCI&nbsp;DSS, HIPAA, SOX), and <a href=\"/product/dial.html\" class=\"org-link org-link--inline org-link--internal\">Dial</a>-aware analysis. Windows x64 ships alongside.",
+                "Target 2027 (post-Series&nbsp;A)",
+                "Planned",
+                "<a href=\"/product/forensics.html\" class=\"org-link org-link--inline org-link--internal\">Notify me about Asymm Forensics</a>"
+            ],
+            [
+                "Phase 4",
+                "Compliance-aligned profile values &mdash; <code>EliyaProfile=PCIDSS</code>, <code>=HIPAA</code>, <code>=SOX</code>, <code>=FedRAMP</code>, <code>=GDPR</code>, <code>=ISO27001</code>, <code>=SOC2</code> &mdash; plus combined profiles for industries spanning multiple frameworks (<code>Healthcare-Payment</code> for PCI&nbsp;DSS + HIPAA, <code>Financial-SaaS</code> for SOC&nbsp;2 + ISO&nbsp;27001, <code>Federal-Defense</code> for FedRAMP + CMMC)",
+                "Demand-gated",
+                "Demand-gated",
+                "<a href=\"/product/eliya/security.html#waitlist\" class=\"org-link org-link--inline org-link--internal\">Notify me about compliance profiles</a>"
+            ]
+        ]>
+        <@renderClinicalTable headers=roadmapHeaders rows=roadmapRows />
+        </div>
+    </div>
+</section>
+
+
+
+<!-- Persona-routing footer -->
+<section>
+    <div class="container">
+        <@renderSectionIntro
+            kicker="Read on"
+            title="Pick your starting point"
+            text="Different roles ask different questions first. Pick the path that matches yours — the rest will keep." />
+        <div class="product-features" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); margin-top: 3rem;">
+            <div class="product-feature-card">
+                <h3>Engineer &uarr;</h3>
+                <ul style="margin: 0.75rem 0 0 0; padding-left: 1.2rem; line-height: 1.9;">
+                    <li><a href="/product/eliya/user-guide/quick-start.html" class="org-link org-link--inline org-link--internal">Quick start</a></li>
+                    <li><a href="/product/eliya/user-guide/flags-reference.html" class="org-link org-link--inline org-link--internal">Flags reference</a></li>
+                    <li><a href="/product/eliya/user-guide/flag-architecture.html" class="org-link org-link--inline org-link--internal">Flag architecture</a></li>
+                    <li><a href="/product/eliya/user-guide/diff-from-upstream.html" class="org-link org-link--inline org-link--internal">Differences from upstream</a></li>
+                    <li><a href="https://github.com/asymmsystems/eliya-jdk" class="org-link org-link--inline org-link--external">GitHub source</a></li>
+                </ul>
+            </div>
+            <div class="product-feature-card">
+                <h3>Operator &uarr;</h3>
+                <ul style="margin: 0.75rem 0 0 0; padding-left: 1.2rem; line-height: 1.9;">
+                    <li><a href="/product/eliya/user-guide/" class="org-link org-link--inline org-link--internal">Install guides</a></li>
+                    <li><a href="/product/eliya/user-guide/troubleshooting.html" class="org-link org-link--inline org-link--internal">Troubleshooting</a></li>
+                    <li><a href="/product/eliya/lifecycle.html" class="org-link org-link--inline org-link--internal">Lifecycle</a></li>
+                    <li><a href="/product/eliya/user-guide/lessons-from-production.html" class="org-link org-link--inline org-link--internal">Lessons from production</a></li>
+                    <li><a href="/product/eliya/integrations.html" class="org-link org-link--inline org-link--internal">Integrations</a></li>
+                    <li><a href="/product/eliya/downloads.html" class="org-link org-link--inline org-link--internal">Downloads</a></li>
+                </ul>
+            </div>
+            <div class="product-feature-card">
+                <h3>Decider &uarr;</h3>
+                <ul style="margin: 0.75rem 0 0 0; padding-left: 1.2rem; line-height: 1.9;">
+                    <li><a href="/research/choosing-a-jdk-2026.html" class="org-link org-link--inline org-link--internal">Choosing a JDK in 2026</a></li>
+                    <li><a href="/research/jvm-forensics-vs-apm.html" class="org-link org-link--inline org-link--internal">JVM forensics vs APM</a></li>
+                    <li><a href="/product/eliya/roadmap.html" class="org-link org-link--inline org-link--internal">Roadmap</a></li>
+                    <li><a href="/product/eliya/security.html" class="org-link org-link--inline org-link--internal">Security</a></li>
+                    <li><a href="/product/eliya/user-guide/license.html" class="org-link org-link--inline org-link--internal">License</a></li>
+                    <li><a href="/product/eliya/security.html#patch-commitment" class="org-link org-link--inline org-link--internal">Patch commitment</a></li>
+                </ul>
+            </div>
+        </div>
+    </div>
+</section>
+

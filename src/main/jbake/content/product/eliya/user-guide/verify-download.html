@@ -2,75 +2,9 @@ title=Verify your Eliya download
 description=Verify Eliya JDK archives with SHA256 checksums and GPG signatures.
 type=page
 status=published
+body_template=/content/product/eliya/user-guide/verify-download.html
 ~~~~~~
 
-<nav class="eliya-breadcrumb" aria-label="Breadcrumb"><span class="crumb-collapse" role="button" tabindex="0" onclick="this.parentElement.classList.toggle(&apos;expanded&apos;)">~ / &hellip;</span><span class="crumb-hidden"><span class="crumb-sep">/</span><a href="/">asymm</a></span><span class="crumb-hidden"><span class="crumb-sep">/</span>product</span><span class="crumb-sep">/</span><a href="/product/eliya.html">eliya</a><span class="crumb-sep">/</span><a href="/product/eliya/user-guide/">user-guide</a><span class="crumb-sep">/</span><span class="crumb-leaf">verify-download</span></nav>
-
-<header class="page-header">
-    <span class="section-kicker">User guide</span>
-    <h1>Verify your download</h1>
-    <p style="max-width: 60ch;">Every Eliya release ships with <code>SHA256SUMS.txt</code>
-        (checksums) and <code>SHA256SUMS.txt.asc</code> (detached GPG signature). Verify both — don't run
-        a JDK whose integrity you haven't confirmed.</p>
-</header>
-
-<section style="margin-bottom: 5rem;">
-    <h2 class="section-title">One-command verification</h2>
-    <div class="inline-terminal" style="max-width: 700px;"
-        onclick="copyToClipboard('sha256sum -c SHA256SUMS.txt &amp;&amp; gpg --verify SHA256SUMS.txt.asc');" title="Click to copy">
-        <code>sha256sum -c SHA256SUMS.txt && gpg --verify SHA256SUMS.txt.asc</code>
-        <span class="copy-btn">Copy</span>
-    </div>
-
-    <p style="max-width: 70ch; margin-top: 1.5rem;">Both commands must succeed. If either
-        fails, do not use the archive — re-download and verify again; if it still fails, report it to
-        <a href="mailto:security@asymm.systems" class="org-link org-link--inline org-link--external">security@asymm.systems</a>.</p>
-</section>
-
-<section style="margin-bottom: 5rem;">
-    <h2 class="section-title">First-time setup: import the Asymm key</h2>
-    <p style="max-width: 70ch; margin-bottom: 1.5rem;">The first time you verify an Eliya
-        release, import the Asymm Systems signing key:</p>
-
-    <div class="inline-terminal" style="max-width: 700px; margin-bottom: 1rem;"
-        onclick="copyToClipboard('curl -sSL https://jdk.asymm.systems/eliya-signing-key.asc | gpg --import');" title="Click to copy">
-        <code>curl -sSL https://jdk.asymm.systems/eliya-signing-key.asc | gpg --import</code>
-        <span class="copy-btn">Copy</span>
-    </div>
-
-    <p style="max-width: 70ch;">Then confirm the fingerprint matches the one published
-        below and on the
-        <a href="/product/eliya/security.html" class="org-link org-link--inline org-link--internal">security page</a>:</p>
-
-    <div class="inline-terminal" style="max-width: 700px;"
-        onclick="copyToClipboard('gpg --fingerprint fahim@asymm.systems');" title="Click to copy">
-        <code>gpg --fingerprint fahim@asymm.systems</code>
-        <span class="copy-btn">Copy</span>
-    </div>
-</section>
-
-<section style="margin-bottom: 5rem;">
-    <h2 class="section-title">Key fingerprint</h2>
-    <p style="max-width: 70ch;">The canonical fingerprint will be published here and on
-        the security page once the first Eliya release is signed. Do not trust an imported key whose
-        fingerprint doesn't match the published value.</p>
-
-    <div class="inline-terminal" style="max-width: 700px; cursor: default; font-style: italic; margin-top: 1rem;">
-        <code>(published with first Eliya release)</code>
-    </div>
-</section>
-
-<section class="technical-inset">
-    <div style="max-width: 800px; margin: 0 auto;">
-        <h3>Why two-step verification?</h3>
-        <p>SHA256 proves the archive wasn't corrupted in transit.
-            GPG signature proves <em>Asymm Systems signed this exact SHA256SUMS file</em> —
-            which means an attacker who replaced both the archive and the checksum file on a mirror
-            still can't forge the signature without the signing key.</p>
-        <p style="margin-top: 1rem;">SHA256 alone is not enough. Always run the GPG step.</p>
-    </div>
-</section>
-
-<div style="margin-top: 5rem; text-align: center;">
-    <a href="/product/eliya/user-guide/" class="org-link org-link--internal">← user guide</a>
-</div>
+<#-- Body lives at templates/content/product/eliya/user-guide/verify-download.html
+     so it can <#include "/macro/release.ftl"> and pull the GitHub Release URL
+     and current version from one source of truth. -->

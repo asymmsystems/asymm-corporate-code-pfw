@@ -1,6 +1,6 @@
 <#assign uri = (content.uri)!"">
-<#include "/menu/menu-data.ftl">
-<#include "/menu/menu-render.ftl">
+<#include "/partial/menu/menu-data.ftl">
+<#include "/partial/menu/menu-render.ftl">
 
 <#-- Resolve current items: first matching context wins, else default -->
 <#assign currentItems = menuDefault>
@@ -14,7 +14,7 @@
 <div class="ide-status-bar">
     <!-- Desktop -->
     <div class="status-left desktop-only">
-        <a href="/" class="status-item" style="color: #BA6E8F; font-family: 'Alegreya', serif; font-size: 1.5rem; font-weight: 600; padding: 0 1.2rem; letter-spacing: 0.05em; padding-bottom: 3px;">
+        <a href="/" class="status-item" style="color: #BA6E8F; font-family: 'Alegreya', serif; font-size: 1.5rem; font-weight: 600; padding: 0.7rem; margin-top: -0.2rem; letter-spacing: 0.05em;">
             [ }
         </a>
         <a href="/product/eliya.html" class="status-item">
@@ -26,11 +26,16 @@
     </div>
     <div class="status-right desktop-only">
         <@renderStatusItems items=currentItems />
+        <#-- Sitewide meta items — present on every page regardless of context.
+             Mobile mirrors live in the drawer footer below. Each is a single
+             source of truth shared between desktop bar and mobile drawer. -->
+        <a href="/privacy.html" class="status-item status-item--meta" aria-label="Privacy policy">Privacy</a>
+        <span class="status-item status-item--meta" aria-hidden="true">&copy; 2026 Asymm</span>
     </div>
 
     <!-- Mobile -->
     <div class="mobile-status-bar mobile-only">
-        <a href="/" class="status-item" style="color: #BA6E8F; font-family: 'Alegreya', serif; font-size: 1.5rem; font-weight: 600; padding: 0 1.2rem; letter-spacing: 0.05em; padding-bottom: 3px;">
+        <a href="/" class="status-item" style="color: #BA6E8F; font-family: 'Alegreya', serif; font-size: 1.5rem; font-weight: 600; padding: 0 1.2rem; letter-spacing: 0.05em;">
             [ }
         </a>
         <button class="terminal-toggle" id="terminal-toggle" aria-label="Toggle Navigation">
@@ -91,6 +96,22 @@
         // Status-bar hierarchical submenus (hover + click + keyboard)
         const submenus = document.querySelectorAll('.ide-status-bar .has-submenu');
         if (submenus.length) {
+            const VIEWPORT_PAD = 8; // px gap from window edge when flipping
+            const positionSubmenu = (el) => {
+                const trigger = el.querySelector('.status-trigger');
+                const submenu = el.querySelector('.submenu');
+                const triggerRect = trigger.getBoundingClientRect();
+                const submenuWidth = submenu.offsetWidth;
+                const viewportWidth = window.innerWidth;
+                // If left-aligning would overflow the right edge, right-align to the trigger.
+                let left;
+                if (triggerRect.left + submenuWidth + VIEWPORT_PAD > viewportWidth) {
+                    left = Math.max(VIEWPORT_PAD, triggerRect.right - submenuWidth);
+                } else {
+                    left = triggerRect.left;
+                }
+                submenu.style.left = left + 'px';
+            };
             let closeTimer = null;
             const closeAll = () => submenus.forEach(s => {
                 s.dataset.open = 'false';
@@ -98,11 +119,10 @@
             });
             const open = (el) => {
                 closeAll();
-                const trigger = el.querySelector('.status-trigger');
-                const submenu = el.querySelector('.submenu');
-                submenu.style.left = trigger.getBoundingClientRect().left + 'px';
                 el.dataset.open = 'true';
-                trigger.setAttribute('aria-expanded', 'true');
+                el.querySelector('.status-trigger').setAttribute('aria-expanded', 'true');
+                // Position AFTER setting data-open so the submenu is display:block and offsetWidth is real.
+                positionSubmenu(el);
             };
             submenus.forEach(el => {
                 el.addEventListener('mouseenter', () => { clearTimeout(closeTimer); open(el); });
@@ -118,21 +138,30 @@
             });
             window.addEventListener('resize', () => {
                 submenus.forEach(s => {
-                    if (s.dataset.open === 'true') {
-                        s.querySelector('.submenu').style.left =
-                            s.querySelector('.status-trigger').getBoundingClientRect().left + 'px';
-                    }
+                    if (s.dataset.open === 'true') positionSubmenu(s);
                 });
             });
         }
     });
 
-    function copyToClipboard(text) {
+    function copyToClipboard(text, ev) {
+        // Capture the button synchronously — by the time the clipboard
+        // promise resolves, the original click event is gone.
+        const e = ev || window.event;
+        const btn = (e && e.currentTarget) ||
+                    (e && e.target && e.target.closest('.inline-terminal'));
+        const indicator = btn && btn.querySelector('.copy-btn');
+        const original = indicator ? indicator.innerText : null;
         navigator.clipboard.writeText(text).then(() => {
-            const btn = event.target;
-            const originalText = btn.innerText;
-            btn.innerText = 'Copied!';
-            setTimeout(() => { btn.innerText = originalText; }, 2000);
+            if (!indicator) return;
+            indicator.innerText = '✓ Copied';
+            indicator.classList.add('copy-btn--success');
+            setTimeout(() => {
+                indicator.innerText = original;
+                indicator.classList.remove('copy-btn--success');
+            }, 1800);
+        }).catch(err => {
+            console.error('Copy to clipboard failed:', err);
         });
     }
 </script>

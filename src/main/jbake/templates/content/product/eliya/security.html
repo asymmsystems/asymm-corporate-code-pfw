@@ -1,0 +1,322 @@
+<#include "/macro/waitlist.ftl">
+
+<header class="page-header">
+    <span class="section-kicker">Eliya</span>
+    <h1>Security</h1>
+    <p style="max-width: 60ch">Eliya inherits upstream OpenJDK 25's security configuration unchanged.
+        A clear disclosure process and a quarterly CPU commitment aligned with upstream.</p>
+</header>
+
+<section style="margin-bottom: 5rem">
+    <h2 class="section-title">Reporting a vulnerability</h2>
+    <p >Email
+        <a href="mailto:security@asymm.systems" class="org-link org-link--inline org-link--external">security@asymm.systems</a>.
+        Responsible disclosure policy: acknowledgement within 72 hours, remediation target within 30 days
+        for high-severity issues. Public advisories are published after fixes ship.</p>
+
+    <p style="margin-top: 1rem">Do not file security issues as GitHub Issues
+        on the public repo. Upstream OpenJDK vulnerabilities should be reported to
+        <a href="https://openjdk.org/groups/vulnerability/report" class="org-link org-link--inline org-link--external">the OpenJDK Vulnerability Group</a>;
+        Eliya-specific issues (patches, packaging, configuration) come to us.</p>
+</section>
+
+<section style="margin-bottom: 5rem">
+    <h2 class="section-title">Release signing &amp; key fingerprint</h2>
+    <p>Every Eliya release ships a detached GPG signature
+        (<code>SHA256SUMS.txt.asc</code>) over the checksum manifest. The
+        canonical Eliya signing-key fingerprint is:</p>
+
+    <div class="inline-terminal inline-terminal--static">
+        <code>076D E547 397A 5D27 EECE&nbsp;&nbsp;E0B3 07A9 0689 B71A 158F</code>
+    </div>
+
+    <p style="margin-top: 1rem">Ed25519, UID
+        <code>Eliya Releases (Asymm Systems) &lt;eliya@asymm.systems&gt;</code>,
+        created 2026-05-19. This same value is published at
+        <code>key.asymm.systems</code>, via Web Key Directory at
+        <code>openpgpkey.asymm.systems</code>, and on the public keyservers
+        <code>keys.openpgp.org</code> and <code>keyserver.ubuntu.com</code>.
+        Cross-verify it across at least two independent channels before trusting
+        the key. The fingerprint shown is the <em>certify</em> primary key;
+        release signatures are produced by its dedicated signing subkey, which
+        <code>gpg --verify</code> selects automatically. Step-by-step
+        instructions are on the
+        <a href="/product/eliya/user-guide/verify-download.html" class="org-link org-link--inline org-link--internal">verify-download page</a>.</p>
+</section>
+
+<section style="margin-bottom: 5rem">
+    <h2 class="section-title">Security inheritance from upstream</h2>
+    <p >Eliya inherits upstream OpenJDK 25's security configuration unchanged.
+        This is deliberate — JDK 25's <code>java.security</code> defaults already implement modern
+        best practices:</p>
+
+    <table class="clinical-table" style="margin-top: 1.5rem">
+        <thead>
+            <tr>
+                <th>Category</th>
+                <th>Upstream JDK 25 default (inherited)</th>
+                <th>Rationale</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>TLS protocols</td>
+                <td>SSLv3, TLS 1.0, TLS 1.1 disabled</td>
+                <td>Known-broken protocols; disabled upstream since JDK 8u181 (2018)</td>
+            </tr>
+            <tr>
+                <td>Minimum key sizes</td>
+                <td>RSA 2048, DSA 2048, DH 2048, EC 224</td>
+                <td>NIST guidance post-2024</td>
+            </tr>
+            <tr>
+                <td>Weak cipher suites</td>
+                <td>RC4, DES, 3DES, MD5 blocked</td>
+                <td>No legitimate production use case</td>
+            </tr>
+            <tr>
+                <td>Ephemeral DH</td>
+                <td>2048-bit enforced</td>
+                <td>Forward secrecy at modern strength</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p style="margin-top: 1.5rem">Eliya does not duplicate these defaults to
+        claim differentiation it has not earned. If you <code>diff</code> Eliya's
+        <code>conf/security/java.security</code> against upstream OpenJDK 25, the result is empty for
+        security configuration:</p>
+
+    <button type="button" class="inline-terminal" style="max-width: 700px; margin-top: 1rem"
+        onclick="copyToClipboard('diff $JAVA_HOME/conf/security/java.security &lt;upstream-jdk-25&gt;/conf/security/java.security')" aria-label="Copy command">
+        <code>diff $JAVA_HOME/conf/security/java.security &lt;upstream-jdk-25&gt;/conf/security/java.security</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+
+    <p style="margin-top: 1.5rem"><strong>Eliya's contribution to operational
+        security is observability</strong>, not duplicated <code>java.security</code> overlays. JFR
+        continuous recording, heap dump on OOM, GC logging, and crash log artifacts produce
+        audit-ready diagnostic trails for incident review. Those are activated by
+        <code>-XX:EliyaProfile=Production</code>.</p>
+
+    <p style="margin-top: 1.5rem"><strong>Audit trail and diagnostic data attribution.</strong>
+        Eliya's diagnostic path layout is designed as filesystem-encoded audit metadata. The
+        three-level path <code>${r"${ELIYA_DIAGNOSTIC_PATH}"}/${r"${service_name}"}/${r"${replica_name}"}/${r"${category}"}/</code>
+        provides service-level grouping (compliance queries scoped to a service return all
+        artifacts under one tree), per-replica attribution (each subdirectory's name identifies
+        the specific pod, container, or systemd unit that produced its contents), and lifetime
+        disambiguation (PID-bearing filenames within each replica directory distinguish multiple
+        JVM processes across the replica's lifetime). For regulated workloads, this preserves the
+        chain of custody from incident to artifact to producing replica without requiring
+        correlation with external systems. For full path strategy and resolution algorithm, see
+        <a href="/product/eliya/user-guide/flags-reference.html#diagnostic-paths" class="org-link org-link--inline org-link--internal">flags reference &sect;Diagnostic paths</a>.</p>
+
+    <p style="margin-top: 1.5rem">For environments where SaaS APM is prohibited by data-egress
+        policy (BFSI settlement systems, healthcare integrations under HIPAA, government and
+        defence deployments, sovereign-cloud workloads under data-localisation laws), Eliya
+        provides forensic capture capability previously inaccessible without violating
+        compliance. The architectural distinction between APM observability platforms and
+        local-only JVM forensics is documented in
+        <a href="/research/jvm-forensics-vs-apm.html" class="org-link org-link--inline org-link--internal">JVM forensics vs APM</a>.</p>
+
+    <p style="margin-top: 1.5rem; font-size: 0.95rem">
+        Full enumeration of how Eliya's binary differs from a vanilla OpenJDK 25 build:
+        <a href="/product/eliya/user-guide/diff-from-upstream.html" class="org-link org-link--inline org-link--internal">Differences from upstream OpenJDK 25</a>.
+    </p>
+
+    <h3 style="margin-top: 2.5rem">If you need vanilla <code>java.security</code> (rare)</h3>
+    <p >If a specific deployment genuinely needs to roll back to a different
+        security configuration (legacy interoperability), use:</p>
+    <button type="button" class="inline-terminal" style="max-width: 700px; margin-top: 1rem"
+        onclick="copyToClipboard('java -Djava.security.properties==/path/to/vanilla-java.security -jar app.jar')" aria-label="Copy command">
+        <code>java -Djava.security.properties==/path/to/vanilla-java.security -jar app.jar</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+    <p style="margin-top: 1rem">The double <code>==</code> overrides; a single
+        <code>=</code> appends. Not recommended for general use.</p>
+</section>
+
+<section id="patch-commitment" style="margin-bottom: 5rem">
+    <h2 class="section-title">Patch commitment</h2>
+    <ul >
+        <li><strong>Quarterly CPU:</strong> Eliya publishes within two weeks of each upstream OpenJDK CPU
+            (third Tuesday of January, April, July, October).</li>
+        <li><strong>CVE-triggered rebuild:</strong> If upstream releases an out-of-cycle patch for a
+            critical CVE, Eliya targets one week to ship.</li>
+        <li><strong>No SLA:</strong> Eliya does not today offer commercial support SLAs. The target windows
+            above are commitments, not contractual guarantees. Enterprise support is a Phase 2
+            consideration.</li>
+    </ul>
+
+    <p style="margin-top: 1.5rem; font-size: 0.95rem">
+        See the
+        <a href="/product/eliya/lifecycle.html" class="org-link org-link--inline org-link--internal">lifecycle page</a>
+        for the forward CPU calendar.
+    </p>
+</section>
+
+<section style="margin-bottom: 5rem">
+    <h2 class="section-title">Advisories</h2>
+    <p >Each Eliya release documents the upstream CVEs it addresses
+        plus any Eliya-specific patches. Canonical advisory list:
+        <a href="https://github.com/asymmsystems/eliya-jdk/blob/main/PATCHES.md" class="org-link org-link--inline org-link--external">PATCHES.md on GitHub</a>.</p>
+</section>
+
+<section style="margin-bottom: 5rem">
+    <h2 class="section-title">FIPS 140-3 variant — Phase 2</h2>
+    <p >A FIPS 140-3 compliant Eliya variant
+        (<code>eliya-25-fips.tar.gz</code>) is a Phase 2 deliverable. The standard
+        <code>eliya-25.tar.gz</code> distribution ships with SunJCE (not FIPS-validated). The FIPS
+        variant will ship with the Bouncy Castle FIPS provider (CMVP cert #4943) pre-installed and
+        registered, with <code>java.security</code> configured for FIPS-mode operation.</p>
+
+    <p style="margin-top: 1.5rem">If your organisation requires FIPS-validated
+        cryptography for procurement (BFSI, healthcare, government), join the early access list to
+        be notified when the FIPS variant is available.</p>
+
+    <@renderWaitlistForm
+        formspree_url="https://formspree.io/f/mgodvdvb"
+        product_tag="fips"
+        heading="Get notified when the FIPS variant is available"
+        body="A FIPS 140-3 compliant Eliya variant (<code>eliya-25-fips.tar.gz</code>) with Bouncy Castle FIPS provider pre-installed is a Phase 2 deliverable. If your organisation requires FIPS-validated cryptography (BFSI, healthcare, government procurement), join the list to be notified when the FIPS variant ships."
+        submit_label="Notify me about FIPS variant" />
+</section>
+
+<section style="margin-bottom: 5rem">
+    <h2 class="section-title">Security roadmap</h2>
+    <p >Eliya's security posture is phased. Phase 1 (today) is
+        upstream-aligned. Phases 2&ndash;4 add deliverables for customers with specific
+        requirements. Full trajectory and demand-gating mechanics:
+        <a href="/product/eliya/roadmap.html" class="org-link org-link--inline org-link--internal">roadmap</a>.</p>
+
+    <table class="clinical-table" style="margin-top: 1.5rem">
+        <thead>
+            <tr>
+                <th>Phase</th>
+                <th>Deliverable</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Phase 1</td>
+                <td>Standard build bit-identical to upstream JDK 25</td>
+                <td>Shipping</td>
+            </tr>
+            <tr>
+                <td>Phase 1</td>
+                <td>Audit-grade observability via <code>-XX:EliyaProfile=Production</code></td>
+                <td>Shipping</td>
+            </tr>
+            <tr>
+                <td>Phase 2</td>
+                <td>Bundled local diagnostic tools (Eclipse MAT, async-profiler) &mdash; keeps forensic capability inside the security perimeter</td>
+                <td>Post-seed (target H2 2026)</td>
+            </tr>
+            <tr>
+                <td>Phase 2</td>
+                <td>FIPS 140-3 variant (separate artifact, Bouncy Castle FIPS)</td>
+                <td>Post-seed (target H2 2026)</td>
+            </tr>
+            <tr>
+                <td>Phase 3</td>
+                <td><a href="/product/forensics.html" class="org-link org-link--inline org-link--internal">Asymm Forensics</a> &mdash; cross-correlation analysis, compliance audit reports</td>
+                <td>Post-Series A funding (target 2027)</td>
+            </tr>
+            <tr>
+                <td>Phase 4</td>
+                <td>Compliance profile values (PCI&nbsp;DSS, HIPAA, SOX, FedRAMP, GDPR, ISO&nbsp;27001, SOC&nbsp;2) + combined profiles (Healthcare-Payment, Financial-SaaS, Federal-Defense)</td>
+                <td>Demand-gated</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3 style="margin-top: 2.5rem">Phase 4 &mdash; compliance-aligned profiles</h3>
+    <p>Compliance-aligned profiles activate stricter-than-upstream defaults via opt-in profile
+        values. Phase 4 will expand the <code>EliyaProfile</code> enum with framework-aligned
+        values:</p>
+    <ul>
+        <li><code>-XX:EliyaProfile=PCIDSS</code> &mdash; PCI DSS Section 10-aligned settings</li>
+        <li><code>-XX:EliyaProfile=HIPAA</code> &mdash; HIPAA Technical Safeguards-aligned</li>
+        <li><code>-XX:EliyaProfile=SOX</code> &mdash; SOX IT general controls-aligned</li>
+        <li><code>-XX:EliyaProfile=FedRAMP</code> &mdash; FedRAMP-aligned settings</li>
+        <li><code>-XX:EliyaProfile=GDPR</code> &mdash; GDPR data-handling-aligned</li>
+        <li><code>-XX:EliyaProfile=ISO27001</code> &mdash; ISO&nbsp;27001-aligned settings</li>
+        <li><code>-XX:EliyaProfile=SOC2</code> &mdash; SOC&nbsp;2-aligned settings</li>
+    </ul>
+    <p>Each profile adjusts <code>java.security</code> and JVM defaults for framework-aligned
+        restrictions (algorithm allow-lists, key size minimums, certificate validation strictness,
+        audit logging extensions).</p>
+
+    <p style="margin-top: 1rem">For industries needing the union of multiple frameworks (healthcare
+        payment processors needing PCI&nbsp;DSS + HIPAA, financial SaaS needing SOC&nbsp;2 +
+        ISO&nbsp;27001, defence contractors needing FedRAMP + CMMC), Phase 4 will ship
+        <strong>explicit combined profiles</strong> as distinct enum values:</p>
+    <ul>
+        <li><code>-XX:EliyaProfile=Healthcare-Payment</code> &mdash; PCI&nbsp;DSS + HIPAA combination</li>
+        <li><code>-XX:EliyaProfile=Financial-SaaS</code> &mdash; SOC&nbsp;2 + ISO&nbsp;27001 combination</li>
+        <li><code>-XX:EliyaProfile=Federal-Defense</code> &mdash; FedRAMP + CMMC combination</li>
+    </ul>
+    <p>Combined profiles are <strong>designed explicitly</strong>, not stacked from
+        single-framework values. Profiles are mutually exclusive by design &mdash; only one profile
+        value is active at runtime. Each combined profile activates the documented union of
+        capabilities from its component frameworks plus any framework-specific JVM settings the
+        combination requires. The auditor sees one profile name in <code>asymm eliya info</code>
+        output; the capability list is documented; compliance attribution is unambiguous.</p>
+
+    <p style="margin-top: 1rem">Phase 4 is demand-gated. Each profile ships when at least
+        <strong>5 enterprise prospects</strong> have signed up with a specific framework requirement
+        and provided usable use-case descriptions. PCI&nbsp;DSS, HIPAA, and SOX are the
+        most-requested profiles based on early waitlist signals; FedRAMP, ISO&nbsp;27001,
+        SOC&nbsp;2, and GDPR follow based on the demand mix.</p>
+
+    <p style="margin-top: 1rem; font-size: 0.95rem">
+        <strong>Honest framing.</strong> Activating a compliance profile aligns JVM defaults with
+        framework requirements. It does <em>not</em> certify the application or the organisation as
+        compliant &mdash; compliance is a holistic posture across application code, infrastructure,
+        processes, and controls. The profile reduces JVM-level audit findings; the rest of the
+        compliance posture remains the organisation's responsibility.
+    </p>
+
+    <h4 style="margin-top: 2rem">Why this is opt-in</h4>
+    <p >Eliya never coerces users into stricter security posture.
+        Stricter-than-upstream restrictions can break enterprise integrations with legacy
+        systems (older TLS endpoints, weaker certificate chains, deprecated algorithms in
+        supplier ecosystems). Compliance profiles activate explicitly so teams consciously
+        accept the compatibility trade-off.</p>
+
+    <p style="margin-top: 1rem">The architectural pattern matches
+        <code>-XX:EliyaProfile=Production</code>: opt-in, never coercive, same trade-off framework
+        &mdash; accept some constraint in exchange for a specific operational property.</p>
+
+    <div id="waitlist" style="margin-top: 2rem">
+        <@renderWaitlistForm
+            formspree_url="https://formspree.io/f/xykooakz"
+            product_tag="compliance-profiles"
+            heading="Get notified about compliance-aligned profiles (Phase 4)"
+            body="If your auditor requires a specific framework alignment (PCI DSS Section 10, HIPAA Technical Safeguards, SOX IT general controls, ISO 27001, NIST 800-53, etc.), tell us in the use-case field below. Phase 4 is demand-gated &mdash; we ship the profiles your customers tell us they need, in priority order. Your signup is a meaningful prioritisation signal."
+            submit_label="Notify me about compliance profiles" />
+    </div>
+</section>
+
+<section class="technical-inset">
+    <div style="max-width: 800px; margin: 0 auto">
+        <h3>TCK compliance</h3>
+        <p><strong>Phase 1 claim:</strong> Eliya is based on TCK-certified upstream OpenJDK 25.
+            Eliya's modifications are limited to a JVM flag (<code>EliyaProfile=Production</code>,
+            observability-only) and packaging — none of which alter Java SE behaviour.
+            Upstream <code>java.security</code> is unchanged.</p>
+        <p style="margin-top: 1rem"><strong>Phase 2 deliverable:</strong> a separate TCK run of
+            the Eliya binary itself, under the OpenJDK Community TCK License Agreement (available
+            without fee for distributions derived from OpenJDK, subject to compliance terms; Eliya
+            qualifies under these terms). When the TCK run is complete, the result will be
+            published here &mdash; pass cleanly or document the deltas.</p>
+        <p style="margin-top: 1rem; font-size: 0.9rem">
+            Honest framing. Eliya does not claim certifications it has not earned.
+        </p>
+    </div>
+</section>
+
+<div style="margin-top: 5rem; text-align: center">
+    <a href="/product/eliya.html" class="org-link org-link--internal org-link--back">back to Eliya</a>
+</div>

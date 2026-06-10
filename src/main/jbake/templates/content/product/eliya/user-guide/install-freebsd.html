@@ -1,0 +1,118 @@
+<#include "/macro/waitlist.ftl">
+<#include "/macro/release.ftl">
+
+<header class="page-header">
+    <span class="section-kicker">User guide</span>
+    <h1>Install on FreeBSD</h1>
+    <div class="hero-badge">
+        <span class="dot"></span>
+        Research Preview &mdash; not production supported
+    </div>
+    <p style="max-width: 60ch">We love BSD at Asymm, and we think the platform deserves
+        first-class JVM support. Eliya's FreeBSD build is what we ship today: a Research
+        Preview &mdash; one manual quarterly release, community-supported, no CVE SLA. It's an
+        honest signal of commitment, not a closed door. Production-grade FreeBSD
+        support (quarterly CPU SLA, CVE response timeline, commercial support
+        contracts) is on the table if customer demand justifies it &mdash; see the
+        <a href="#freebsd-production-waitlist" class="org-link org-link--inline org-link--internal">signup at the bottom of this page</a>
+        if your team would adopt Eliya on FreeBSD with production-tier guarantees.</p>
+</header>
+
+<section class="aside-box">
+    <h3>Read this first</h3>
+    <ul class="checklist">
+        <li><span class="check-no" aria-hidden="true">&#10007;</span>
+            No commercial support. No SLA. Issues via GitHub only.</li>
+        <li><span class="check-no" aria-hidden="true">&#10007;</span>
+            Security patches best-effort &mdash; target one quarterly manual rebuild per CPU
+            window.</li>
+        <li><span class="check-no" aria-hidden="true">&#10007;</span>
+            Not published to SDKman: SDKman has no FreeBSD platform classification, so no
+            vendor publishes FreeBSD JDKs through it. Install via direct download.</li>
+        <li><span class="check-yes" aria-hidden="true">&#10003;</span>
+            Built on top of the <a href="https://openjdk.org/projects/bsd-port/" class="org-link org-link--inline org-link--external">OpenJDK BSD Port Project</a>
+            (<a href="https://github.com/openjdk/bsd-port" class="org-link org-link--inline org-link--external">github.com/openjdk/bsd-port</a>)
+            &mdash; community patches that have historically lived outside upstream OpenJDK and are now
+            being merged back into the mainline OpenJDK development tree with
+            <a href="https://freebsdfoundation.org/openjdk-contract/" class="org-link org-link--inline org-link--external">FreeBSD Foundation sponsorship</a>.
+            Eliya's FreeBSD Research Preview tracks this upstream work.</li>
+        <li><span class="check-yes" aria-hidden="true">&#10003;</span>
+            For workloads needing enterprise JDK support on FreeBSD today, the FreeBSD ports
+            tree's <code>openjdk25</code> package is the production-supported option available
+            right now. Eliya FreeBSD is a Research Preview alongside it &mdash; useful for
+            evaluation and for surfacing platform-specific issues we then carry upstream. If
+            you'd adopt Eliya on FreeBSD with production-tier guarantees, sign the
+            <a href="#freebsd-production-waitlist" class="org-link org-link--inline org-link--internal">production-grade FreeBSD support waitlist</a>;
+            your signal directly influences whether and when Eliya graduates from Research
+            Preview.</li>
+    </ul>
+
+
+    <h3>Download the Preview archive</h3>
+    <p>
+        Planned late 2026 &mdash; first Preview archive pending.
+    </p>
+
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('fetch https://github.com/asymmsystems/eliya-jdk/releases/download/v${eliyaVersion}-preview/eliya-jdk-${eliyaVersion}-freebsd-amd64.tar.gz')" aria-label="Copy command">
+        <code>fetch https://github.com/asymmsystems/eliya-jdk/releases/download/v${eliyaVersion}-preview/eliya-jdk-${eliyaVersion}-freebsd-amd64.tar.gz</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('sudo tar -xzf eliya-jdk-${eliyaVersion}-freebsd-amd64.tar.gz -C /usr/local')" aria-label="Copy command">
+        <code>sudo tar -xzf eliya-jdk-${eliyaVersion}-freebsd-amd64.tar.gz -C /usr/local</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('setenv JAVA_HOME /usr/local/java-${eliyaVersion}-eliya; setenv PATH $JAVA_HOME/bin:$PATH')" aria-label="Copy command">
+        <code>setenv JAVA_HOME /usr/local/java-${eliyaVersion}-eliya; setenv PATH $JAVA_HOME/bin:$PATH</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+
+
+    <h3>Verify</h3>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('java -XX:EliyaProfile=Production -version')" aria-label="Copy command">
+        <code>java -XX:EliyaProfile=Production -version</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+
+    <p>The version string will include the
+        <code>-preview</code> suffix to make the Preview status visible in every log line.</p>
+
+
+    <h3>Known caveats</h3>
+    <ul class="checklist">
+        <li><span class="check-no" aria-hidden="true">&#10007;</span>
+            AWT / Swing / JavaFX are unsupported on FreeBSD (as with most JDK BSD ports).</li>
+        <li><span class="check-no" aria-hidden="true">&#10007;</span>
+            Some HotSpot features (ZGC, Shenandoah) may have platform-specific caveats from
+            the BSD patchset. Test before relying.</li>
+        <li><span class="check-yes" aria-hidden="true">&#10003;</span>
+            JFR works. <code>jcmd</code> works. Standard server workloads (Netty, Spring Boot,
+            gRPC) work.</li>
+    </ul>
+</section>
+
+<section id="freebsd-production-waitlist" class="alt-bg">
+    <h3>Production-grade FreeBSD support &mdash; demand signal</h3>
+    <p>The Research Preview is what we ship today. Production-grade FreeBSD support &mdash;
+        quarterly CPU within two weeks of upstream, CVE SLA aligned with the Linux build,
+        commercial support contracts &mdash; is demand-gated. If your team would adopt Eliya on
+        FreeBSD with production-tier guarantees, sign the waitlist below; your signal directly
+        influences the decision.</p>
+
+    <@renderWaitlistForm
+        formspree_url="https://formspree.io/f/mqennyrl"
+        product_tag="freebsd-production"
+        product_label="FreeBSD production support"
+        heading="Signal demand for production-grade FreeBSD support"
+        body="Production-grade FreeBSD support is demand-gated. Your signup is the demand signal that influences whether and when it ships &mdash; we'll email you when it lands."
+        submit_label="Signal demand for production FreeBSD" />
+</section>
+
+<div class="page-back-nav">
+    <a href="/product/eliya/user-guide/" class="org-link org-link--internal org-link--back">user guide</a>
+</div>

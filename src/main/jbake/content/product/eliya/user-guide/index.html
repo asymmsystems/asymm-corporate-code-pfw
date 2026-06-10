@@ -4,22 +4,25 @@ type=page
 status=published
 ~~~~~~
 
-<nav class="eliya-breadcrumb" aria-label="Breadcrumb"><span class="crumb-collapse" role="button" tabindex="0" onclick="this.parentElement.classList.toggle(&apos;expanded&apos;)">~ / &hellip;</span><span class="crumb-hidden"><span class="crumb-sep">/</span><a href="/">asymm</a></span><span class="crumb-hidden"><span class="crumb-sep">/</span>product</span><span class="crumb-sep">/</span><a href="/product/eliya.html">eliya</a><span class="crumb-sep">/</span><span class="crumb-leaf">user-guide</span></nav>
-
 <header class="page-header">
     <span class="section-kicker">Eliya</span>
     <h1>User guide</h1>
-    <p style="max-width: 60ch;">Everything you need to install, operate, and tune Eliya JDK
+    <p style="max-width: 60ch">Everything you need to install, operate, and tune Eliya JDK
         in production. Organised as a reference — jump to the chapter you need.</p>
 </header>
 
-<section style="margin-bottom: 5rem;">
+<section>
     <h2 class="section-title">Getting started</h2>
-    <div class="product-features" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">
+    <div class="product-features" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr))">
         <div class="product-feature-card">
             <h3>What is Eliya?</h3>
-            <p>Positioning, relationship to upstream OpenJDK, telecom optimisations.</p>
+            <p>What Eliya is, how it relates to upstream OpenJDK, and the observability defaults that distinguish it from Corretto, Temurin, and Zulu.</p>
             <a href="/product/eliya/user-guide/what-is-eliya.html" class="org-link org-link--inline org-link--internal">Read</a>
+        </div>
+        <div class="product-feature-card">
+            <h3>Quick start</h3>
+            <p>Zero to a running Eliya with observability defaults in five steps. About five minutes end-to-end.</p>
+            <a href="/product/eliya/user-guide/quick-start.html" class="org-link org-link--inline org-link--internal">Start</a>
         </div>
         <div class="product-feature-card">
             <h3>Install on Linux</h3>
@@ -33,7 +36,7 @@ status=published
         </div>
         <div class="product-feature-card">
             <h3>Install on macOS</h3>
-            <p>SDKman; native PKG deferred to Phase 2.</p>
+            <p>macOS aarch64 is Phase 2 (post-seed, demand-gated). For now, run Eliya in Linux containers locally; SDKman entry for macOS lands with the Phase 2 build.</p>
             <a href="/product/eliya/user-guide/install-macos.html" class="org-link org-link--inline org-link--internal">Install</a>
         </div>
         <div class="product-feature-card">
@@ -47,15 +50,29 @@ status=published
             <a href="/product/eliya/user-guide/verify-download.html" class="org-link org-link--inline org-link--internal">Verify</a>
         </div>
     </div>
-</section>
 
-<section style="margin-bottom: 5rem;">
+
     <h2 class="section-title">Configuration &amp; operations</h2>
-    <div class="product-features" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">
+    <div class="product-features" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr))">
+        <div class="product-feature-card">
+            <h3>Flag architecture</h3>
+            <p>Two-layer flag taxonomy — Layer 1 capabilities (boolean) and Layer 2 profile (enum). When to reach for which.</p>
+            <a href="/product/eliya/user-guide/flag-architecture.html" class="org-link org-link--inline org-link--internal">Architecture</a>
+        </div>
         <div class="product-feature-card">
             <h3>Flags reference</h3>
-            <p><code>-XX:+UseEliyaDefaults</code> breakdown, security defaults, all Eliya-specific flags.</p>
+            <p><code>-XX:EliyaProfile=Production</code> breakdown — observability and operational-readiness defaults activated by the profile.</p>
             <a href="/product/eliya/user-guide/flags-reference.html" class="org-link org-link--inline org-link--internal">Reference</a>
+        </div>
+        <div class="product-feature-card">
+            <h3>Differences from upstream</h3>
+            <p>Precise enumeration of what Eliya changes vs. upstream OpenJDK 25. Engineer-grade specifics.</p>
+            <a href="/product/eliya/user-guide/diff-from-upstream.html" class="org-link org-link--inline org-link--internal">Diff</a>
+        </div>
+        <div class="product-feature-card">
+            <h3><code>asymm</code> CLI</h3>
+            <p><code>asymm version</code>, <code>asymm eliya info</code>, <code>asymm eliya doctor</code>. The unified Asymm Systems CLI for diagnostics and operations.</p>
+            <a href="/product/eliya/user-guide/cli.html" class="org-link org-link--inline org-link--internal">CLI reference</a>
         </div>
         <div class="product-feature-card">
             <h3>Migration</h3>
@@ -64,8 +81,13 @@ status=published
         </div>
         <div class="product-feature-card">
             <h3>Troubleshooting</h3>
-            <p>Common errors, diagnostic commands, <code>asymm --info</code>.</p>
+            <p>Common errors, diagnostic commands, <code>asymm eliya doctor</code>.</p>
             <a href="/product/eliya/user-guide/troubleshooting.html" class="org-link org-link--inline org-link--internal">Troubleshoot</a>
+        </div>
+        <div class="product-feature-card">
+            <h3>Integrations</h3>
+            <p>Build tooling, Kubernetes, service mesh, logging stacks, CI/CD, APM coexistence, cryptographic providers.</p>
+            <a href="/product/eliya/integrations.html" class="org-link org-link--inline org-link--internal">Integrations</a>
         </div>
         <div class="product-feature-card">
             <h3>Uninstall</h3>
@@ -73,22 +95,20 @@ status=published
             <a href="/product/eliya/user-guide/uninstall.html" class="org-link org-link--inline org-link--internal">Uninstall</a>
         </div>
     </div>
-</section>
 
-<section style="margin-bottom: 5rem;">
+
     <h2 class="section-title">Not sure Eliya is right for you?</h2>
-    <div class="product-feature-card" style="max-width: 800px;">
+    <div class="product-feature-card" >
         <h3>Choosing a JDK in 2026 — an honest guide</h3>
         <p>Vendor-by-vendor comparison across Temurin, Corretto, Zulu, Liberica, Oracle, Microsoft, Red
             Hat, SapMachine, IBM Semeru, GraalVM, and Eliya. Written by us, but honest about when Eliya
             is not the right pick.</p>
         <a href="/research/choosing-a-jdk-2026.html" class="org-link org-link--inline org-link--internal">Read the guide</a>
     </div>
-</section>
 
-<section style="margin-bottom: 5rem;">
+
     <h2 class="section-title">Reference</h2>
-    <div class="product-features" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));">
+    <div class="product-features" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr))">
         <div class="product-feature-card">
             <h3>Release notes</h3>
             <p>Every Eliya release, newest first.</p>
@@ -101,7 +121,7 @@ status=published
         </div>
         <div class="product-feature-card">
             <h3>Security</h3>
-            <p>Reporting, advisories, always-on hardening.</p>
+            <p>Disclosure, advisories, quarterly CPU commitment. Eliya inherits upstream JDK 25 security defaults unchanged — verifiable with <code>diff</code>.</p>
             <a href="/product/eliya/security.html" class="org-link org-link--inline org-link--internal">Security</a>
         </div>
         <div class="product-feature-card">
@@ -109,9 +129,24 @@ status=published
             <p>LTS windows and quarterly CPU calendar.</p>
             <a href="/product/eliya/lifecycle.html" class="org-link org-link--inline org-link--internal">Lifecycle</a>
         </div>
+        <div class="product-feature-card">
+            <h3>Roadmap</h3>
+            <p>Phase 1 to Phase 4 trajectory — bundled tooling, FIPS variant, Asymm Forensics, compliance-aligned profiles. Demand-gating mechanics.</p>
+            <a href="/product/eliya/roadmap.html" class="org-link org-link--inline org-link--internal">Roadmap</a>
+        </div>
+        <div class="product-feature-card">
+            <h3>Lessons from production</h3>
+            <p>Four production patterns that motivated Eliya's defaults: container memory miscounting, GC pause variance, JVM-blamed-for-upstream-problems, and crashes-preserve-no-evidence.</p>
+            <a href="/product/eliya/user-guide/lessons-from-production.html" class="org-link org-link--inline org-link--internal">Read</a>
+        </div>
+        <div class="product-feature-card">
+            <h3>FAQ</h3>
+            <p>TCK posture, licensing, support, Dial relationship, platform availability — quick answers to the questions evaluators ask first.</p>
+            <a href="/product/eliya/faq.html" class="org-link org-link--inline org-link--internal">FAQ</a>
+        </div>
     </div>
 </section>
 
-<div style="margin-top: 5rem; text-align: center;">
-    <a href="/product/eliya.html" class="org-link org-link--internal">← back to Eliya</a>
+<div class="page-back-nav">
+    <a href="/product/eliya.html" class="org-link org-link--internal org-link--back">back to Eliya</a>
 </div>

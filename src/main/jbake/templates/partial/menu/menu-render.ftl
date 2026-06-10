@@ -10,7 +10,7 @@
         <#if (item.children)??>
             <div class="status-item has-submenu">
                 <button class="status-trigger" aria-expanded="false" aria-haspopup="true">
-                    ${item.label} <span class="submenu-caret" aria-hidden="true">▴</span>
+                    ${item.label}<span class="submenu-caret" aria-hidden="true"></span>
                 </button>
                 <ul class="submenu" role="menu">
                     <#list item.children as child>

@@ -10,14 +10,20 @@
     --color-olive-light: #AFC29C;
     --color-sand: #F8DBA9;
     --color-sand-light: #FDF5E5;
-    --color-base: #F9F7F6;
+    --color-mist: #F8FAFD;        /* Cool muted blue-gray — alternating section bg */
+    --color-base: #FFFFFF;        /* Page background. Was #F9F7F6 (warm off-white);
+                                     swapped for engineering-tool aesthetic. */
+    --color-warm-paper: #F9F7F6;  /* Off-white accent. Used for elevated cards,
+                                     code-block backgrounds, alternating-section
+                                     fills. Single source of truth — change here. */
     --color-white: #FFFFFF;
     --color-black: #1A1C1E;
     --color-dark-grey: #333333;
 
     /* Semantic Variables */
-    --surface-base: var(--color-base);
-    --surface-elevated: var(--color-white);
+    --surface-base: var(--color-base);              /* Page surface — pure white */
+    --surface-elevated: var(--color-base);          /* Cards, terminals — white */
+    --surface-section-alt: var(--color-mist);       /* Alternating section bg — cool muted */
     --surface-inverted: var(--color-black);
 
     --text-primary: var(--color-black);
@@ -27,7 +33,7 @@
     --accent-asymmetric: var(--color-rose-light);
     --accent-brand-hover: var(--color-rose);
     --accent-brand-hover: var(--color-rose);
-    --border-subtle: #E6E6E6;
+    --border-subtle: #CCCCCC;
     --border-medium: rgba(0, 0, 0, 0.03);
     --border-normal: #666666;
 
@@ -78,6 +84,88 @@
     --space-md:  1.5rem;   /* paragraph default (most common) */
     --space-lg:  2rem;     /* section breaks within a block */
     --space-xl:  3rem;     /* lead-paragraph + major rhythm */
+
+    /* ============================================================
+       Section padding policy
+       ------------------------------------------------------------
+       Every <section> direct child of a body wrapper (.page-body,
+       .microsite-body, .asymm-body, .news-content) gets
+       padding: var(--section-padding-y) 0. The hero is the single
+       exception — it uses min-height: calc(100vh - status-bar)
+       to fill the viewport above the fixed status bar.
+
+       Override ONLY when there's a documented reason (e.g. a
+       sub-component embedded inside a section). Don't reach for
+       bespoke values to "fix spacing" — fix the token.
+       ============================================================ */
+    --section-padding-y: 6rem;
+    --section-padding-y-mobile: 4rem;
+    --status-bar-height: 35px;
+}
+
+/* Sitewide section padding rule. The :not(.hero) guard keeps the hero
+   using min-height instead of padding. */
+.page-body > section:not(.hero),
+.microsite-body > section:not(.hero),
+.asymm-body > section:not(.hero),
+.news-content > section:not(.hero) {
+    padding: var(--section-padding-y) 0;
+}
+
+@media (max-width: 768px) {
+    .page-body > section:not(.hero),
+    .microsite-body > section:not(.hero),
+    .asymm-body > section:not(.hero),
+    .news-content > section:not(.hero) {
+        padding: var(--section-padding-y-mobile) 0;
+    }
+}
+
+/* Alternating section backgrounds — even-indexed body sections get
+   the warm-paper accent. Replaces the in-body horizontal rule for
+   visual rhythm; the colour change does the work the line was doing.
+
+   Cards inside paper sections invert: white background instead of
+   the default warm-paper, so the "lift-off" effect is preserved
+   (white-on-paper or paper-on-white — same contrast either way).
+
+   The :not(.hero) is redundant here (hero is outside body wrappers)
+   but kept for safety.
+
+   `:nth-of-type` rather than `:nth-child` so the count is
+   section-only — div sentinels and other non-section siblings
+   don't shift the parity. */
+.home-body > section:not(.hero):nth-of-type(odd),
+.microsite-body > section:not(.hero):nth-of-type(odd) {
+    background: var(--surface-section-alt);
+}
+
+/* Opt-in alt-bg break — author marks a section with class="alt-bg"
+   when the content is a semantic break (signup form mid-page, CTA
+   between prose blocks). Full-bleed via clip-path so the background
+   escapes the parent .container's max-width and reaches the window
+   edges, while inner content stays where it is. */
+.page-body > section.alt-bg {
+    background: var(--surface-section-alt);
+    clip-path: inset(0 -100vmax);
+    box-shadow: 0 0 0 100vmax var(--surface-section-alt);
+}
+
+/* Inverse-fill rule for elevated surfaces inside alternating sections.
+   Cards and terminals normally use `--surface-elevated` (warm-paper)
+   for lift-off against a white page. On a sand-light alternating
+   section the warm-paper card would sit at near-identical lightness
+   and lose contrast. Flip to white so the lift-off is preserved
+   either way:
+       odd section (white)      → cards/terminals warm-paper
+       even section (sand-light) → cards/terminals white          */
+.home-body > section:not(.hero):nth-of-type(odd) .product-feature-card,
+.microsite-body > section:not(.hero):nth-of-type(odd) .product-feature-card,
+.home-body > section:not(.hero):nth-of-type(odd) .inline-terminal,
+.microsite-body > section:not(.hero):nth-of-type(odd) .inline-terminal,
+.page-body > section.alt-bg .inline-terminal,
+.page-body > section.alt-bg .clinical-table {
+    background: var(--surface-base);
 }
 
 /* ============================================================
@@ -200,7 +288,7 @@ body {
     height: 100%;
     display: inline-flex;
     align-items: center;
-    padding: 0 1rem 0 0.2rem;
+    padding: 0 1rem
 }
 
 .ide-status-bar a:hover {
@@ -220,6 +308,18 @@ body {
     background-color: var(--accent-brand-hover);
     color: #F9F7F6 !important;
     font-weight: 500;
+}
+
+/* Meta status items — small, dim, sit at the far right of the status bar.
+   Used for sitewide-meta links (Privacy, etc.) that aren't part of the
+   page-context menu. */
+.ide-status-bar .status-item--meta {
+    font-size: 0.75rem;
+    opacity: 0.6;
+    padding: 0 1rem;
+}
+.ide-status-bar .status-item--meta:hover {
+    opacity: 1;
 }
 
 .status-highlight:hover {
@@ -267,13 +367,23 @@ body {
 .ide-status-bar .has-submenu[data-open="true"] .status-trigger {
     background-color: rgba(255, 255, 255, 0.05);
 }
+/* Caret is rendered via CSS pseudo-element ::before — the markup span is empty.
+   Closed state shows "↑" (\2191), open shows "↓" (\2193). Two distinct glyphs,
+   no transform, no transition: nothing for the browser to interpolate, so the
+   character swap is atomic on every state change. */
 .ide-status-bar .submenu-caret {
-    font-size: 0.7em;
+    font-family: var(--font-code);
+    font-size: 0.85em;
     opacity: 0.6;
-    transition: transform 0.15s ease;
+    display: inline-block;
+    margin-top: 0;
+    padding: 0.4rem 0 0 0.2rem;
 }
-.ide-status-bar .has-submenu[data-open="true"] .submenu-caret {
-    transform: rotate(180deg);
+.ide-status-bar .submenu-caret::before {
+    content: "\2191";
+}
+.ide-status-bar .has-submenu[data-open="true"] .submenu-caret::before {
+    content: "\2193";
 }
 .ide-status-bar .submenu {
     position: fixed;
@@ -359,10 +469,6 @@ ul {
     opacity: 0.7;
     margin-bottom: var(--space-lg);
     line-height: 1.7;
-}
-
-.asymm-body {
-    max-width: 800px;
 }
 
 .asymm-body p:first-child {
@@ -555,12 +661,151 @@ select.form-control {
 
 
 
-/* Page Body (About, Research, etc.) */
+/* .page-body sits inside .container (page.ftl), so the container
+   provides the centred 1440px frame. Bare children (header, p,
+   ol, table, etc.) align naturally with the brand/breadcrumb
+   above — no container behavior needs to be pushed onto them. */
 .page-body {
-    max-width: 900px;
-    /* Reading-optimized width */
-    margin: 0;
-    /* Aligned to left of container */
+    padding-bottom: 8rem;
+    min-height: 70vh;
+}
+
+/* Corporate home closes with the full-width OSS banner whose own
+   --section-padding-y (6rem bottom) plus border-bottom give the page
+   a clean visual ending. The 8rem .page-body padding-bottom above is
+   intended for content pages whose last element is a .page-back-nav
+   link; the home page has no back-link, so the 8rem renders as an
+   empty white strip between the OSS banner and the fixed status bar.
+   Override on the home page only. */
+.page-body.home-body {
+    padding-bottom: 0;
+}
+
+/* Prose reading width — paragraphs, lists, tables share a 70ch cap. */
+.page-body p,
+.page-body ol,
+.page-body ul,
+.page-body table {
+    max-width: 70ch;
+}
+
+/* Lists — restore default-style indent (the global * { padding: 0 }
+   reset strips it) so markers sit inside the list box. */
+.page-body ol,
+.page-body ul {
+    padding-left: 1.5em;
+    margin-bottom: var(--space-md);
+}
+
+/* Restore default markers on content lists. The global `ul { list-style: none }`
+   reset higher up strips bullets/numbers from every <ul>/<ol> site-wide
+   (intended for navigation/UI lists). Content lists inside .page-body need
+   the markers back; .checklist (with explicit ✓/✗ spans) and .product-feature-card
+   internal lists (used as nav menus) opt out below. */
+.page-body ol {
+    list-style: decimal outside;
+}
+.page-body ul {
+    list-style: disc outside;
+}
+
+/* Opt-outs: checklist has its own inline markers; product-feature-card lists
+   are nav menus where bullets would clutter. */
+.page-body ul.checklist,
+.page-body ol.checklist,
+.page-body .product-feature-card ul,
+.page-body .product-feature-card ol {
+    list-style: none;
+}
+
+.page-body ol li {
+    padding-left: 0.6em;
+    text-indent: 0;
+}
+
+/* Checklist — replaces default disc/decimal markers with inline
+   ✓/✗ markers in the <li> text. Works on both <ul> and <ol>.
+   Add `class="checklist"`; mark each item with
+   `<span class="check-yes">&#10003;</span>` or
+   `<span class="check-no">&#10007;</span>` at the start.
+
+   Flexbox layout keeps wrapped lines aligned under the first line of
+   text (not under the marker): the LI is a flex row, the marker is a
+   fixed-width flex item, the text content fills the rest. */
+.page-body ul.checklist,
+.page-body ol.checklist {
+    list-style: none;
+    padding-left: 0;
+}
+
+/* float-pulled-into-padding pattern: the LI establishes a block
+   formatting context (display: flow-root) so the floated marker is
+   contained, and inline content (text, <code>, <strong>, etc.) flows
+   normally inside. Wrapped lines all align at content-box-left. */
+.page-body ul.checklist li,
+.page-body ol.checklist li {
+    display: flow-root;
+    padding-left: 1.8em;
+    text-indent: 0;
+}
+
+.page-body .checklist .check-yes,
+.page-body .checklist .check-no {
+    float: left;
+    width: 1.4em;
+    margin-left: -1.8em;
+    text-align: center;
+    font-weight: 600;
+}
+
+.page-body .checklist .check-yes {
+    color: var(--color-olive, #6b8c4f);
+}
+
+.page-body .checklist .check-no {
+    color: var(--color-rose);
+}
+
+.page-body li {
+    margin-bottom: var(--space-sm);
+    line-height: var(--t-lh-relaxed);
+}
+
+.page-body table {
+    margin-bottom: var(--space-md);
+}
+
+/* Inline <code> in prose — monospace via --font-code (Fira Code),
+   smaller than body so it reads as a distinct token without
+   dominating the line. Scoped to prose wrappers so .inline-terminal
+   (which gets 0.85rem via .t-caption) is unaffected. */
+.page-body code,
+.asymm-body code,
+.news-content code,
+.aside-box code,
+.technical-inset code {
+    font-family: var(--font-code);
+    font-size: 0.9rem;
+}
+
+/* First section after page-header: drop the top padding so
+   header → first content sits at one breath, not a chasm. */
+.page-body > .page-header + section {
+    padding-top: 0;
+}
+
+/* TOC variant — reserve right-side space inside the article so
+   prose doesn't underlap the fixed sidebar. */
+@media (min-width: 1281px) {
+    .page-body--toc {
+        padding-right: calc(220px + 3rem);
+    }
+}
+
+/* Article that follows the breadcrumb header — give it breathing
+   room before the page header / first content. */
+.page-body--breadcrumb {
+    margin-top: var(--space-xl);
 }
 
 /* --- Clinical Content Typography (Shared across Page, Grid, and Registry) --- */
@@ -583,7 +828,22 @@ select.form-control {
 .asymm-body h3,
 .news-content h3 {
     @extend .t-display-s;
-    margin: var(--space-lg) 0 var(--space-sm) 0;
+    margin: var(--space-xl) 0 var(--space-sm) 0;
+}
+
+/* First h3 that sits as the immediate first child of its container
+   gets no top margin — the container's padding already provides the
+   separation, and stacking margin-top on top of it doubles the gap.
+   Covers <section> (section padding-y), .callout-box (form/note
+   wrappers like the waitlist macro), and .aside-box (Read this first
+   / Multi-arch info panels). Subsequent h3s inside the same container
+   keep --space-xl so they separate from preceding prose. */
+.page-body section > h3:first-child,
+.asymm-body section > h3:first-child,
+.news-content section > h3:first-child,
+.page-body .callout-box > h3:first-child,
+.page-body .aside-box > h3:first-child {
+    margin-top: 0;
 }
 
 .page-body p,
@@ -600,9 +860,10 @@ select.form-control {
     margin: 4rem 0;
 }
 
-/* Hero */
+/* Hero — fills the viewport above the fixed status bar.
+   Uses min-height instead of padding so content can vertically centre. */
 .hero {
-    min-height: 100vh;
+    min-height: calc(100vh - var(--status-bar-height));
     display: flex;
     align-items: center;
     position: relative;
@@ -652,7 +913,7 @@ select.form-control {
 
 /* Minimal Stack Sections */
 .section-block {
-    padding: 10rem 0;
+    padding: var(--section-padding-y) 0;
     position: relative;
     z-index: 10;
     background: var(--surface-base);
@@ -820,9 +1081,29 @@ select.form-control {
     margin-left: 0.3em;
 }
 
+/* Back-link variant — left-pointing arrow rendered before the text.
+   Use alongside .org-link--internal (e.g. "Back to Registry"). */
+.org-link--back::before {
+    content: "\2190";
+    margin-right: 0.3em;
+}
+.org-link--back.org-link--internal::after,
+.org-link--back.org-link--external::after {
+    content: "";
+    margin-left: 0;
+}
+
+/* Wrapper for an end-of-page back-nav link. Replaces the inline
+   style="text-align: center" pattern used on every user-guide page
+   and gives the link visual breathing room from preceding content. */
+.page-back-nav {
+    margin-top: var(--space-xl);
+    text-align: center;
+}
+
 /* Product Cards */
 .products-section {
-    padding: 8rem 0;
+    padding: var(--section-padding-y) 0;
     position: relative;
     z-index: 10;
     background: var(--surface-base);
@@ -990,7 +1271,7 @@ footer {
     }
 
     .section-block {
-        padding: 6rem 0;
+        padding: var(--section-padding-y-mobile) 0;
     }
 
     .minimal-stack {
@@ -1032,7 +1313,7 @@ footer {
     }
 
     .products-section {
-        padding: 5rem 0;
+        padding: var(--section-padding-y-mobile) 0;
     }
 
     .hero-cta {
@@ -1108,7 +1389,7 @@ footer::before {
     margin-bottom: var(--space-sm);
 }
 
-nav {
+nav:not(.crumb-nav) {
     display: flex;
     justify-content: space-between;
     align-items: center;
@@ -1208,9 +1489,21 @@ select option {
 
 .checkbox-group {
     display: flex;
-    flex-direction: column;
-    gap: 0.3rem;
+    flex-direction: row;
+    align-items: flex-start;
+    gap: 0.75rem;
     margin-top: 0.5rem;
+}
+
+/* Checkbox sibling-of-label pattern (waitlist macro) — fixed size,
+   never shrinks, baseline-aligns with the first line of the wrapped
+   label text. */
+.checkbox-group > input[type="checkbox"] {
+    width: 1.1rem;
+    height: 1.1rem;
+    margin-top: 0.2rem;
+    flex-shrink: 0;
+    accent-color: var(--color-rose);
 }
 
 .checkbox-label {
@@ -1430,7 +1723,7 @@ form .form-note {
 
 /* Products Bento */
 .products-bento {
-    padding: 8rem 0 4rem 0;
+    padding: var(--section-padding-y) 0;
 }
 
 .market-context {
@@ -1490,7 +1783,9 @@ form .form-note {
 /* Product inline terminal */
 .inline-terminal {
     @extend .t-caption;
-    background: var(--color-base);
+    /* Use the warm-paper accent (not the page surface) so the terminal
+       reads as a distinct surface against the white body. */
+    background: var(--surface-elevated);
     padding: var(--space-sm) 1.25rem;
     margin: var(--space-md) 0;
     overflow-x: auto;
@@ -1503,6 +1798,167 @@ form .form-note {
     align-items: center;
     cursor: pointer;
     transition: background 0.2s ease, border-color 0.2s ease;
+
+    /* Reset native <button> styling so .inline-terminal as <button>
+       renders identically to the legacy <div> form, while keeping
+       keyboard focus, activation, and screen-reader semantics. */
+    width: 100%;
+    max-width: 70ch;
+    text-align: left;
+    appearance: none;
+    -webkit-appearance: none;
+    font: inherit;
+    line-height: inherit;
+}
+
+.inline-terminal:focus-visible {
+    outline: 2px solid var(--color-rose);
+    outline-offset: 2px;
+}
+
+.inline-terminal--static {
+    cursor: default;
+}
+
+/* Callout-box — bordered prose/form container. Used for:
+   - Sitewide combined-waitlist callout on the Eliya home
+   - CRaC waitlist on the FAQ
+   - The waitlist-form macro wrapper itself
+   Width: 70ch — matches .inline-terminal for sitewide consistency. */
+.callout-box {
+    max-width: 70ch;
+    padding: 1.5rem;
+    border: 1px solid var(--border-subtle);
+    border-radius: 4px;
+}
+
+.waitlist-form.callout-box,
+.callout-box.waitlist-form {
+    /* Waitlist forms get slightly more padding for breathing room
+       around the form fields. */
+    padding: var(--space-xl);
+    border-radius: 6px;
+}
+
+/* Code-comment label — small monospace text used as a section/label
+   immediately above an .inline-terminal block (the "# Download …"
+   shell-style comment lines on the home page Quick Start). */
+.code-comment {
+    @extend .t-caption;
+    font-family: var(--font-code);
+    color: var(--text-secondary);
+    opacity: 0.7;
+    margin: 0 0 var(--space-xs) 0;
+}
+.code-comment + .code-comment,
+.inline-terminal + .code-comment,
+.inline-terminal--static + .code-comment {
+    margin-top: var(--space-lg);
+}
+
+/* Inline meta text — small, dim, used in tables and roadmap rows where
+   a phrase like "— available now" is parenthetical to the row content. */
+.meta-muted {
+    color: var(--text-secondary);
+    opacity: 0.7;
+}
+
+/* Diff grid — side-by-side comparison of "what Eliya adds" vs "what stays
+   upstream". Two columns on desktop pair concepts visually; collapses to
+   stacked on narrow viewports. Semantic markers (+ / =) prepended via
+   ::before so the visual diff reads at a glance.
+
+   Used on /product/eliya home; reusable elsewhere where a binary
+   add-vs-preserve comparison is the right rhetorical shape. */
+.diff-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+}
+
+.diff-grid__heading {
+    @extend .t-display-s;
+    margin: 0 0 var(--space-md) 0;
+}
+
+.diff-grid__col--add .diff-grid__heading {
+    color: var(--color-rose);
+}
+.diff-grid__col--keep .diff-grid__heading {
+    color: var(--text-secondary);
+}
+
+.diff-grid__list {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    line-height: 1.7;
+}
+
+.diff-grid__list li {
+    position: relative;
+    padding-left: 1.6rem;
+    margin-bottom: var(--space-md);
+}
+
+.diff-grid__list li::before {
+    position: absolute;
+    left: 0;
+    top: 0;
+    font-family: var(--font-code);
+    font-weight: 600;
+}
+
+.diff-grid__col--add .diff-grid__list li::before {
+    content: "+";
+    color: var(--color-rose);
+}
+
+.diff-grid__col--keep .diff-grid__list li::before {
+    content: "=";
+    color: var(--text-secondary);
+    opacity: 0.6;
+}
+
+@media (max-width: 800px) {
+    .diff-grid {
+        grid-template-columns: 1fr;
+        gap: 2rem;
+    }
+}
+
+/* Screen-reader-only utility for form labels and other a11y text. */
+.visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0, 0, 0, 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+.org-link--button {
+    display: inline-block;
+    background: var(--color-rose);
+    color: var(--surface-inverted, #fff);
+    border: 1px solid var(--color-rose);
+    border-radius: 4px;
+    text-decoration: none;
+    transition: background 0.2s ease, border-color 0.2s ease;
+}
+
+.org-link--button:hover,
+.org-link--button:focus-visible {
+    background: var(--color-rose-dark, var(--color-rose));
+    text-decoration: none;
+}
+
+.org-link--button:focus-visible {
+    outline: 2px solid var(--color-rose);
+    outline-offset: 2px;
 }
 
 .inline-terminal:hover {
@@ -1525,6 +1981,14 @@ form .form-note {
 .inline-terminal:hover .copy-btn {
     background: var(--color-sand-light);
     color: var(--surface-inverted);
+}
+
+/* Success state — applied by the copyToClipboard JS for ~1.8s after
+   a successful copy. Olive accent + opaque background so the "✓ Copied"
+   feedback is unmissable against the inline-terminal background. */
+.copy-btn--success {
+    background: var(--color-olive, #8FA96D) !important;
+    color: #FFFFFF !important;
 }
 
 .bento-card:hover {
@@ -1560,115 +2024,10 @@ form .form-note {
     max-width: none;
 }
 
-/* ============================================================
-   Eliya brand-mark — cup + animated smoke.
-   Markup lives in templates/eliya-branding.ftl OR can be inlined
-   directly in content HTML using the same class names.
-   Parameters: theme (color/mono/watermark), trigger (auto/hover),
-   rounds (infinite|N) via inline style="--eliya-rounds:N".
-   ============================================================ */
-.eliya-svg-logo {
-    width: 100%;
-    max-width: 400px;
-    display: block;
-}
-.eliya-svg-logo .eliya-cup-stroke {
-    stroke: var(--border-normal);
-    stroke-width: 20;
-    stroke-miterlimit: 10;
-    fill: none;
-}
-.eliya-svg-logo .eliya-cup-base {
-    stroke-width: 15;
-}
-.eliya-svg-logo .eliya-smoke {
-    stroke-miterlimit: 10;
-    fill: none;
-}
-.eliya-svg-logo .eliya-smoke-1 { stroke-width: 18; }
-.eliya-svg-logo .eliya-smoke-2 { stroke-width: 14; }
-.eliya-svg-logo .eliya-smoke-3 { stroke-width: 16; }
-
-/* Theme variants */
-.eliya-svg-logo--color .eliya-smoke {
-    stroke: var(--color-rose);
-}
-.eliya-svg-logo--mono .eliya-smoke {
-    stroke: var(--text-primary);
-    opacity: 0.55;
-}
-.eliya-svg-logo--watermark .eliya-cup-stroke,
-.eliya-svg-logo--watermark .eliya-smoke {
-    stroke: #e6e6e6;
-}
-
-/* Trigger: auto — autoplay continuously */
-.eliya-svg-logo--auto .eliya-smoke-1 {
-    animation: eliya-smoke-1-anim 1.5s ease-in-out var(--eliya-rounds, infinite);
-}
-.eliya-svg-logo--auto .eliya-smoke-2 {
-    animation: eliya-smoke-2-anim 1.5s ease-in-out var(--eliya-rounds, infinite);
-    animation-delay: 0.15s;
-}
-.eliya-svg-logo--auto .eliya-smoke-3 {
-    animation: eliya-smoke-3-anim 1.5s ease-in-out var(--eliya-rounds, infinite);
-    animation-delay: 0.3s;
-}
-
-/* Trigger: hover — animate when .eliya-trigger-parent ancestor is hovered */
-.eliya-trigger-parent:hover .eliya-svg-logo--hover .eliya-smoke-1 {
-    animation: eliya-smoke-1-anim 1.5s ease-in-out var(--eliya-rounds, 1);
-}
-.eliya-trigger-parent:hover .eliya-svg-logo--hover .eliya-smoke-2 {
-    animation: eliya-smoke-2-anim 1.5s ease-in-out var(--eliya-rounds, 1);
-    animation-delay: 0.15s;
-}
-.eliya-trigger-parent:hover .eliya-svg-logo--hover .eliya-smoke-3 {
-    animation: eliya-smoke-3-anim 1.5s ease-in-out var(--eliya-rounds, 1);
-    animation-delay: 0.3s;
-}
-
-/* Straight-line smoke that grows tall at 50% and returns to rest at 100% */
-@keyframes eliya-smoke-1-anim {
-    0%, 100% { d: path('M 177 150 L 177 70'); }
-    50%      { d: path('M 177 150 L 177 10'); }
-}
-@keyframes eliya-smoke-2-anim {
-    0%, 100% { d: path('M 137 150 L 137 110'); }
-    50%      { d: path('M 137 150 L 137 60'); }
-}
-@keyframes eliya-smoke-3-anim {
-    0%, 100% { d: path('M 217 150 L 217 10'); }
-    50%      { d: path('M 217 150 L 217 110'); }
-}
-
-@media (prefers-reduced-motion: reduce) {
-    .eliya-svg-logo .eliya-smoke {
-        animation: none !important;
-    }
-}
-
-.bento-watermark.is-dialing {
-    animation: dial-rotate 1.4s cubic-bezier(0.45, 0.05, 0.55, 0.95);
-}
-
-@keyframes dial-rotate {
-    0% {
-        transform: rotate(0deg);
-    }
-
-    35% {
-        transform: rotate(70deg);
-    }
-
-    70% {
-        transform: rotate(70deg);
-    }
-
-    100% {
-        transform: rotate(0deg);
-    }
-}
+/* Eliya brand visual styles (svg paths, animations, themes, prefers-reduced-motion)
+   live with the markup in templates/brand/eliya-brand.ftl — self-contained.
+   Dial brand visual styles (rotation, dial-rotate keyframes) live in
+   templates/brand/dial-brand.ftl. Only bento-card layout lives here. */
 
 .bento-content {
     position: relative;
@@ -1679,7 +2038,8 @@ form .form-note {
 
 .bento-content h3 {
     @extend .t-display-s;
-    margin: var(--space-sm) 0 var(--space-xs) 0;
+    margin: 1rem 0 0.5rem 0;
+    font-size: 1.6rem;
 }
 
 /* Unified card paragraph rule — extends UI preset; .market-context > p:first-child
@@ -1714,6 +2074,9 @@ form .form-note {
     font-size: 0.75rem;
     background: var(--color-rose-light);
     color: var(--surface-elevated);
+    letter-spacing: 0.02em;
+    margin-bottom: 1.5rem;
+    font-weight: 500;
 }
 
 .card-jdk .product-badge {
@@ -1725,7 +2088,7 @@ form .form-note {
 
 /* Pipeline Section */
 .pipeline-section {
-    padding: 6rem 0 8rem 0;
+    padding: var(--section-padding-y) 0;
 }
 
 .pipeline-grid {
@@ -1795,7 +2158,7 @@ form .form-note {
 
 /* OSS Banner */
 .oss-banner {
-    padding: 4rem 0;
+    padding: var(--section-padding-y) 0;
     background: var(--surface-base);
     border-top: 1px solid var(--border-subtle);
     border-bottom: 1px solid var(--border-subtle);
@@ -1827,7 +2190,7 @@ form .form-note {
 
 /* Stats Strip */
 .stats-strip {
-    padding: 5rem 0;
+    padding: var(--section-padding-y) 0;
 }
 
 .stats-grid {
@@ -2003,12 +2366,49 @@ h2.news-entry-title {
     border-radius: 50%;
 }
 
+/* Horizontal-rule policy
+   ============================================================
+   Within the body of a long-form page (.page-body, .microsite-body,
+   .asymm-body, .news-content), section-to-section transitions are
+   carried by vertical padding alone — no <hr>, no border, no rule.
+   Adding rules between every section creates "stripe fatigue" and
+   visually fragments the reading flow.
+
+   The single sanctioned use of an explicit <hr> is the *full-bleed
+   bottom rule* before a final CTA strip or footer. That rule:
+     - spans the full viewport width (escapes the container)
+     - signals "the page ends; what follows is meta"
+     - uses a heavier weight than the body's section padding implies
+
+   .chapter-rule (legacy, soon-to-be-removed) was a thin divider
+   between Engineering / Operations / Adoption persona chapters on
+   the Eliya product page. The persona-chapter structure was
+   replaced (the page now flows continuously); the class is kept
+   only for backward-compat and renders identically to the
+   full-bleed rule below. New pages: do NOT add chapter-rule.
+
+   .full-bleed-rule is the canonical class for the end-of-page
+   demarcation. */
+.chapter-rule,
+.full-bleed-rule {
+    border: 0;
+    border-top: 1px solid var(--border-subtle);
+    width: 100vw;
+    position: relative;
+    left: 50%;
+    right: 50%;
+    margin-left: -50vw;
+    margin-right: -50vw;
+    margin-top: 5rem;
+    margin-bottom: 0;
+}
+
 /* Feature Grid */
 .product-features {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 2.5rem;
-    margin: 6rem 0;
+    margin: 0;
 }
 
 .product-feature-card {
@@ -2017,15 +2417,35 @@ h2.news-entry-title {
     border: 1px solid var(--border-subtle);
     border-radius: 8px;
     transition: border-color 0.4s ease;
+    position: relative;
+    overflow: hidden;
 }
 
 .product-feature-card:hover {
     border-color: var(--color-rose);
 }
 
+.product-feature-card--dashed {
+    border-style: dashed;
+}
+
 .product-feature-card h3 {
     @extend .t-display-s;
     margin-bottom: var(--space-sm);
+}
+
+/* Watermark icon — top-right of the card, low-opacity, rose-light.
+   Mirrors the .step-number pattern on .pipeline-step. The icon
+   itself is a FontAwesome <i> rendered via FA's ::before glyph;
+   this rule provides positioning, size, opacity, and colour. */
+.product-feature-card__icon {
+    position: absolute;
+    top: 5px;
+    right: 5px;
+    font-size: 9rem;
+    color: var(--border-medium);
+    // opacity: 0.18;
+    pointer-events: none;
 }
 
 /* .product-feature-card p — see unified card paragraph rule above */
@@ -2079,13 +2499,19 @@ h2.news-entry-title {
     display: block;
 }
 
-/* Technical Inset */
+/* Technical Inset — dark, marketing-emphasis aside (used sparingly).
+   Inner content (h3, p, ul) sits at natural section padding; no
+   inner wrapper div needed. */
 .technical-inset {
-    margin: 6rem 0;
-    padding: 4rem;
+    margin: var(--space-xl) 0;
+    padding: 3rem;
     background: var(--surface-inverted);
     color: var(--surface-base);
     border-radius: 8px;
+}
+
+.technical-inset > * {
+    max-width: 70ch;
 }
 
 .technical-inset h3 {
@@ -2094,34 +2520,99 @@ h2.news-entry-title {
     margin-bottom: var(--space-md);
 }
 
-.technical-inset p {
+.technical-inset p,
+.technical-inset li {
     @extend .t-body;
+    color: var(--surface-base);
     opacity: 0.8;
 }
 
-/* Clinical Table */
+.technical-inset ul,
+.technical-inset ol {
+    margin-left: 0;
+    padding-left: 1.5em;
+}
+
+.technical-inset a {
+    color: var(--color-rose-light);
+}
+
+.technical-inset a:hover,
+.technical-inset a:focus-visible {
+    color: var(--color-rose);
+}
+
+/* Aside Box — light, informational caveat/note. Use this for
+   "Read this first", "Multi-arch support", and similar info panels
+   where dark-emphasis would feel heavy. */
+.aside-box {
+    max-width: 70ch;
+    margin-bottom: var(--space-xl);
+    padding: var(--space-xl) var(--space-xl) !important;
+    background: var(--color-sand-light);
+    border-radius: 8px;
+    border-left: 4px solid var(--color-sand);
+}
+
+.aside-box h3:first-of-type {
+  margin-top: 0;
+}
+
+.aside-box > :last-child {
+  margin-bottom: 0;
+}
+
+.aside-box h3 {
+    @extend .t-display-s;
+    color: var(--text-primary);
+    margin-bottom: var(--space-sm);
+}
+
+.aside-box p,
+.aside-box li {
+    color: var(--text-secondary);
+}
+
+.aside-box ul,
+.aside-box ol {
+    margin-left: 0;
+    padding-left: 1.5em;
+}
+
+/* Clinical Table — outer border + subtle column dividers, white body, grey header */
 .clinical-table {
     @extend .t-caption;
     width: 100%;
+    max-width: 70ch;
     border-collapse: collapse;
-    margin: 4rem 0;
+    margin: 2rem 0;
+    border: 1px solid var(--border-subtle);
+    background: #FFFFFF;
 }
 
 .clinical-table th {
     @extend .t-kicker;
     text-align: left;
-    padding: 1.2rem;
-    border-bottom: 1px solid var(--border-normal);
+    padding: 0.8rem 1rem;
+    border-bottom: 1px solid var(--border-subtle);
+    border-right: 1px solid var(--border-subtle);
     color: var(--text-secondary);
+    background: #F9F7F6;
 }
 
 .clinical-table td {
-    padding: 1.5rem 1.2rem;
+    padding: 0.8rem 1rem;
     border-bottom: 1px solid var(--border-subtle);
+    border-right: 1px solid var(--border-subtle);
+}
+
+.clinical-table th:last-child,
+.clinical-table td:last-child {
+    border-right: 0;
 }
 
 .clinical-table tr:last-child td {
-    border-bottom: none;
+    border-bottom: 0;
 }
 
 @media (max-width: 1024px) {
@@ -2158,9 +2649,12 @@ h2.news-entry-title {
    research articles that opt in via toc=true frontmatter.
    ============================================================ */
 
-/* Page header: replaces ad-hoc <header style="margin-bottom: 4rem;"> */
+/* Page header: tight spacing — pages where the header is just a
+   kicker + h1 (no description) shouldn't open a chasm before the
+   first paragraph. Section padding-top is reset via the
+   .page-header + section rule above. */
 .page-header {
-    margin-bottom: 4rem;
+    margin-bottom: var(--space-md);
 }
 
 .page-header .section-kicker {
@@ -2170,7 +2664,7 @@ h2.news-entry-title {
 
 .page-header h1 {
     @extend .t-display-l;
-    margin: 0 0 var(--space-sm) 0;
+    margin: 0 0 var(--space-md) 0;
 }
 
 .page-header p {
@@ -2180,81 +2674,56 @@ h2.news-entry-title {
     max-width: 65ch;
 }
 
-/* Terminal-style breadcrumb — matches .ide-status-bar typography */
-.eliya-breadcrumb {
+/* Breadcrumb — Montserrat, all levels visible, tight spacing. */
+.crumb-nav {
     @extend .t-caption;
-    font-family: var(--font-code);
-    opacity: 0.75;
-    margin-bottom: var(--space-lg);
-    padding-bottom: var(--space-sm);
+    font-family: var(--font-body);
+    margin-bottom: var(--space-md);
+    padding-bottom: var(--space-xs);
     border-bottom: 1px solid var(--border-subtle);
-    display: flex;
-    flex-wrap: wrap;
-    align-items: center;
-    gap: 0.3rem;
+    line-height: 1.6;
 }
 
-.eliya-breadcrumb a,
-.eliya-breadcrumb .crumb-sep,
-.eliya-breadcrumb .crumb-leaf {
+.crumb-nav a,
+.crumb-nav span {
     color: var(--text-secondary);
     text-decoration: none;
     white-space: nowrap;
 }
 
-.eliya-breadcrumb a:hover {
+.crumb-nav a:hover {
     color: var(--color-rose);
 }
 
-.eliya-breadcrumb .crumb-leaf {
+.crumb-nav .crumb-sep {
+    opacity: 0.4;
+    margin: 0 0.4em;
+}
+
+.crumb-nav .crumb-leaf {
     color: var(--color-rose);
     opacity: 0.9;
 }
 
-.eliya-breadcrumb .crumb-sep {
-    opacity: 0.4;
-}
-
-.eliya-breadcrumb .crumb-collapse {
-    cursor: pointer;
-    padding: 0 0.3rem;
-    border-radius: 3px;
-    transition: background 0.15s ease;
-}
-
-.eliya-breadcrumb .crumb-collapse:hover {
-    background: var(--border-subtle);
-}
-
-.eliya-breadcrumb .crumb-hidden {
-    display: none;
-}
-
-.eliya-breadcrumb.expanded .crumb-hidden {
-    display: inline;
-}
-
-.eliya-breadcrumb.expanded .crumb-collapse {
-    display: none;
-}
-
 /* Right-side sticky ToC (IDE minimap analogue) */
-.page-with-toc {
-    display: grid;
-    grid-template-columns: 1fr 220px;
-    gap: 4rem;
-    align-items: start;
-}
-
 .page-toc {
     @extend .t-caption;
-    position: sticky;
-    top: 2rem;
-    font-family: var(--font-code);
+    position: fixed;
+    top: 14rem;
+    right: 4vw;
+    width: 220px;
+    font-family: var(--font-body);
     padding-left: var(--space-sm);
     border-left: 1px solid var(--border-subtle);
-    max-height: calc(100vh - 4rem);
+    max-height: calc(100vh - 18rem);
     overflow-y: auto;
+    z-index: 10;
+}
+
+@media (max-width: 1280px) {
+    .page-toc {
+        display: none;
+    }
 }
 
 .page-toc .toc-label {
@@ -2360,7 +2829,7 @@ h2.news-entry-title {
 }
 
 @media (max-width: 768px) {
-    .eliya-breadcrumb {
+    .crumb-nav {
         font-size: 0.78rem;
     }
 

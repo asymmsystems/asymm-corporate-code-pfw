@@ -18,7 +18,7 @@ In telecom, we don't just need speed; we need predictability and extreme resilie
 
 You can install the latest release via SDKman:
 <div class="inline-terminal" style="margin: 2rem 0; background: var(--color-base); padding: 1rem; border: 1px dashed var(--border-normal); border-radius: 4px; font-family: var(--font-code); font-size: 0.9rem;">
-    <code>sdk install java 25.0.2-eliya</code>
+    <code>sdk install java 25.0.3-eliya</code>
 </div>
 
 Read the full deep-dive on the philosophy behind Eliya: <a href="https://www.fahimfarook.me/why-asymm-jdk" target="_blank" rel="noopener" class="org-link org-link--inline org-link--external">Why We Built Our Own JDK</a>

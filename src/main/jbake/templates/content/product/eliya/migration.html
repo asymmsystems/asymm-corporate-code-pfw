@@ -1,0 +1,315 @@
+<#include "/macro/release.ftl">
+
+<header class="page-header">
+    <span class="section-kicker">Eliya</span>
+    <h1>Migration guide</h1>
+    <p style="max-width: 60ch">Moving to Eliya from another OpenJDK distribution is a
+        runtime swap. Eliya is built from upstream OpenJDK source with no API changes, so existing
+        applications run without modification.</p>
+</header>
+
+<section style="margin-bottom: 5rem">
+    <h2 class="section-title">Behavioural parity</h2>
+    <table class="clinical-table">
+        <thead>
+            <tr>
+                <th>Aspect</th>
+                <th>Standard OpenJDK behaviour</th>
+                <th>Eliya behaviour</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Java APIs</td>
+                <td>OpenJDK 25 semantics</td>
+                <td>Identical (built from same source)</td>
+            </tr>
+            <tr>
+                <td>Default GC</td>
+                <td>G1GC, 200 ms pause target</td>
+                <td>Identical &mdash; JDK 25 ergonomics unchanged. <code>-XX:EliyaProfile=Production</code> does not modify GC selection.</td>
+            </tr>
+            <tr>
+                <td>TLS defaults</td>
+                <td>Upstream <code>java.security</code> (already secure in JDK 25)</td>
+                <td>Identical &mdash; no overlay applied. JDK 25 already disables SSLv3 / TLS 1.0 / TLS 1.1 and weak ciphers.</td>
+            </tr>
+            <tr>
+                <td>Custom flags</td>
+                <td>&mdash;</td>
+                <td><code>-XX:EliyaProfile=Production</code> (off by default)</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p style="margin-top: 2rem">If your application relies on legacy TLS
+        protocols (TLS 1.0/1.1) or weak ciphers, it will fail to negotiate &mdash; but that is upstream
+        OpenJDK 25 behaviour, not an Eliya overlay. Those protocols are disabled by default in any
+        modern JDK distribution. If legacy interoperability is truly required, override at the
+        JVM level:
+        <code>-Djava.security.properties==&lt;path-with-relaxed-policy&gt;</code>
+        (double equals overrides rather than appends).</p>
+</section>
+
+<section style="margin-bottom: 5rem">
+    <h2 class="section-title">Side-by-side with SDKman</h2>
+    <p style="margin-bottom: 1.5rem">SDKman lets you install Eliya alongside
+        your current JDK and switch per shell. Safest path &mdash; your existing runtime stays default until you
+        explicitly change it.</p>
+
+    <p style="margin-bottom: 1rem; font-size: 0.95rem"><strong>First-time SDKman setup
+        (skip if already installed):</strong></p>
+    <button type="button" class="inline-terminal" style="max-width: 600px; margin-bottom: 1rem"
+        onclick="copyToClipboard('curl -s &quot;https://get.sdkman.io&quot; | bash')" aria-label="Copy command">
+        <code>curl -s "https://get.sdkman.io" | bash</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+    <button type="button" class="inline-terminal" style="max-width: 600px; margin-bottom: 1rem"
+        onclick="copyToClipboard('source &quot;$HOME/.sdkman/bin/sdkman-init.sh&quot;')" aria-label="Copy command">
+        <code>source "$HOME/.sdkman/bin/sdkman-init.sh"</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+
+    <p style="margin-bottom: 1rem; font-size: 0.95rem"><strong>Install and switch to Eliya:</strong></p>
+    <button type="button" class="inline-terminal" style="max-width: 600px; margin-bottom: 1rem"
+        onclick="copyToClipboard('sdk install java ${eliyaVersion}-eliya')" aria-label="Copy command">
+        <code>sdk install java ${eliyaVersion}-eliya</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+    <button type="button" class="inline-terminal" style="max-width: 600px; margin-bottom: 1rem"
+        onclick="copyToClipboard('sdk use java ${eliyaVersion}-eliya')" aria-label="Copy command">
+        <code>sdk use java ${eliyaVersion}-eliya</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+    <button type="button" class="inline-terminal" style="max-width: 600px"
+        onclick="copyToClipboard('sdk default java ${eliyaVersion}-eliya')" aria-label="Copy command">
+        <code>sdk default java ${eliyaVersion}-eliya</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+
+    <p style="margin-top: 1.5rem; font-size: 0.95rem">
+        <code>sdk use</code> is per-shell. <code>sdk default</code> is permanent.
+    </p>
+</section>
+
+<section style="margin-bottom: 5rem">
+    <h2 class="section-title">System-wide on Linux (update-alternatives)</h2>
+    <p style="margin-bottom: 1.5rem">For machine-wide default replacement
+        after installing the tar.gz archive to <code>/opt/eliya</code>:</p>
+
+    <button type="button" class="inline-terminal" style="max-width: 700px; margin-bottom: 1rem"
+        onclick="copyToClipboard('sudo update-alternatives --install /usr/bin/java java /opt/eliya/bin/java 2500')" aria-label="Copy command">
+        <code>sudo update-alternatives --install /usr/bin/java java /opt/eliya/bin/java 2500</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+    <button type="button" class="inline-terminal" style="max-width: 700px"
+        onclick="copyToClipboard('sudo update-alternatives --config java')" aria-label="Copy command">
+        <code>sudo update-alternatives --config java</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+
+    <p style="margin-top: 1.5rem; font-size: 0.95rem">
+        The priority value <code>2500</code> ensures Eliya is preferred over distro-packaged
+        OpenJDK installations (typically 1500&ndash;2000) while still allowing manual override via
+        <code>update-alternatives --config java</code>. Adjust to taste for your environment.
+    </p>
+    <p style="margin-top: 1rem; font-size: 0.95rem">
+        When <code>.deb</code> and <code>.rpm</code> packages ship in Q4 2026, they register these
+        alternatives automatically.
+    </p>
+</section>
+
+<section style="margin-bottom: 5rem">
+    <h2 class="section-title">Enable Eliya observability defaults (optional)</h2>
+    <p style="margin-bottom: 1.5rem">After switching runtimes your
+        application will run unchanged. To opt into Eliya's production observability profile &mdash;
+        Java Flight Recorder continuous recording, heap dump on OOM, Native Memory Tracking,
+        GC logging, crash dump configuration &mdash; add the single flag:</p>
+
+    <button type="button" class="inline-terminal" style="max-width: 600px"
+        onclick="copyToClipboard('-XX:EliyaProfile=Production')" aria-label="Copy command">
+        <code>-XX:EliyaProfile=Production</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+
+    <p style="margin-top: 1.5rem; font-size: 0.95rem">
+        Details on what this flag activates:
+        <a href="/product/eliya/user-guide/flags-reference.html" class="org-link org-link--inline org-link--internal">flags reference</a>.
+    </p>
+
+    <p style="margin-top: 1.5rem">For teams currently running APM tools (AppDynamics, Dynatrace,
+        New Relic, Elastic APM, Datadog), migrating to Eliya is additive &mdash; you don't lose
+        APM dashboards, you gain forensic data capture that APM cannot provide. For teams in
+        compliance-restricted environments where SaaS APM was prohibited, Eliya provides
+        observability capability previously inaccessible. The architectural distinction is
+        documented in
+        <a href="/research/jvm-forensics-vs-apm.html" class="org-link org-link--inline org-link--internal">JVM forensics vs APM</a>.</p>
+</section>
+
+<section style="margin-bottom: 5rem">
+    <h2 class="section-title">Vendor-specific notes</h2>
+
+    <h3>From Corretto</h3>
+    <p>Behavioural parity is high &mdash; Corretto is also built from upstream OpenJDK 25.
+        The most notable Corretto-specific feature is the Corretto Crypto Provider (ACCP) &mdash;
+        AWS-optimised cryptographic implementations. Eliya does not bundle ACCP, but applications
+        that benefit from ACCP can add it as an explicit Maven/Gradle dependency on any JDK,
+        including Eliya. For FIPS-validated cryptography, Eliya's FIPS variant ships in Phase 2
+        with a FIPS-validated provider preinstalled &mdash; sign up on the
+        <a href="/product/eliya/security.html#waitlist" class="org-link org-link--inline org-link--internal">security page</a>.</p>
+
+    <h3>From Temurin / Adoptium</h3>
+    <p>Direct swap. Both are vanilla OpenJDK builds.
+        Eliya adds opt-in observability defaults via <code>-XX:EliyaProfile=Production</code>; Temurin's
+        philosophy is to ship vanilla OpenJDK without overlays. Both are valid choices &mdash; Eliya is
+        for teams who want production observability configured by default; Temurin is for teams
+        who prefer to configure observability themselves.</p>
+
+    <h3>From Azul Zulu</h3>
+    <p>Direct swap for Zulu Community. Azul
+        Platform Prime uses a different JVM (Falcon JIT, C4 GC) &mdash; swapping to Eliya reverts to standard
+        HotSpot behaviour. Benchmark before committing.</p>
+
+    <h3>From Oracle JDK</h3>
+    <p>The primary motivation is usually
+        licensing. Oracle JDK under the "No-Fee Terms and Conditions" licence has restrictions Eliya does
+        not. Oracle's Flight Recorder is the same code as the OpenJDK version shipped in Eliya.</p>
+
+    <h3>From Liberica / BellSoft</h3>
+    <p>Direct swap for Liberica Standard JDK.
+        Liberica Full JDK bundles JavaFX &mdash; Eliya does not. If your application uses JavaFX, either stay
+        on Liberica Full or add OpenJFX as an explicit dependency.</p>
+
+    <h3>From SapMachine</h3>
+    <p>Direct swap. SapMachine is SAP's OpenJDK build, used heavily inside SAP HANA-adjacent
+        workloads. Same upstream OpenJDK base; SapMachine adds SAP-specific patches that are
+        irrelevant outside SAP's ecosystem. Eliya is a clean alternative if you're not coupled to
+        the SAP-specific bits.</p>
+
+    <h3>From Microsoft Build of OpenJDK</h3>
+    <p>Direct swap. Microsoft Build of OpenJDK is the default JDK on many Azure services;
+        switching to Eliya is purely a runtime choice and doesn't affect Azure service compatibility.
+        Eliya runs identically on Azure App Service, AKS, and VMs.</p>
+
+    <h3>From Red Hat OpenJDK</h3>
+    <p>Direct swap. Red Hat OpenJDK is bundled with RHEL and CentOS Stream. If your motivation
+        for moving is observability defaults or the Phase 2&ndash;4 trajectory, Eliya is additive;
+        if your motivation is keeping the Red Hat support contract, stay on Red Hat OpenJDK.</p>
+
+    <h3>From IBM Semeru (OpenJ9)</h3>
+    <p><strong>Not a direct swap.</strong> Semeru uses the OpenJ9 JVM &mdash; a different runtime
+        from HotSpot, with different GC implementations, JIT behaviour, and memory characteristics.
+        Eliya is HotSpot-based. Switching requires benchmark validation and possibly heap-size
+        retuning. Most heap-tuning advice for OpenJ9 does not transfer to HotSpot.</p>
+
+    <h3>From GraalVM</h3>
+    <p><strong>Not a direct swap.</strong> GraalVM uses the Graal JIT compiler (not C1/C2) and
+        optionally Native Image (ahead-of-time compilation). Application performance characteristics
+        differ. Eliya is a HotSpot/C1+C2 runtime; switching means giving up Graal's polyglot and
+        Native Image capabilities. If you rely on Native Image specifically, Eliya is not a
+        replacement; if you rely on Graal JIT for peak throughput, benchmark before committing.</p>
+</section>
+
+<section style="margin-bottom: 5rem">
+    <h2 class="section-title">Diagnostic data portability</h2>
+    <p>Diagnostic artifacts captured on other OpenJDK distributions work on Eliya:</p>
+    <ul>
+        <li><strong>JFR recordings</strong> are binary-compatible across OpenJDK distributions at
+            the same major version. Recordings captured on Corretto&nbsp;25 or Temurin&nbsp;25 can be
+            analysed by Eclipse MAT, JMC, or (Phase 2) <code>asymm eliya analyze-heap</code> on
+            Eliya&nbsp;25.</li>
+        <li><strong>HPROF heap dumps</strong> are standardised across JVMs. Eclipse MAT reports on
+            the same dump regardless of source.</li>
+        <li><strong>GC logs</strong> use upstream OpenJDK unified logging format. Tools like
+            GCViewer and gceasy.io parse them identically across distributions.</li>
+    </ul>
+    <p>Migrating runtimes does not lose access to historical diagnostic data or require
+        re-analysis.</p>
+</section>
+
+<section style="margin-bottom: 5rem">
+    <h2 class="section-title">Build tooling</h2>
+    <p>Maven, Gradle, Ant, sbt, and other build tools work identically on Eliya &mdash; the JDK is
+        invoked the same way, the modular runtime image is in the same location, and Maven Toolchain
+        definitions work without modification:</p>
+    <div class="inline-terminal inline-terminal--static" style="max-width: 700px">
+        <code>&lt;toolchain&gt;<br>
+&nbsp;&nbsp;&lt;type&gt;jdk&lt;/type&gt;<br>
+&nbsp;&nbsp;&lt;provides&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;version&gt;25&lt;/version&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;vendor&gt;Eliya&lt;/vendor&gt;<br>
+&nbsp;&nbsp;&lt;/provides&gt;<br>
+&nbsp;&nbsp;&lt;configuration&gt;<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&lt;jdkHome&gt;/opt/eliya&lt;/jdkHome&gt;<br>
+&nbsp;&nbsp;&lt;/configuration&gt;<br>
+&lt;/toolchain&gt;</code>
+    </div>
+</section>
+
+<section style="margin-bottom: 5rem">
+    <h2 class="section-title">Rollback</h2>
+    <p>Switching back to your previous JDK is the same procedure in reverse.</p>
+
+    <p style="margin-top: 1.5rem"><strong>Via SDKman:</strong></p>
+    <button type="button" class="inline-terminal" style="max-width: 600px; margin-bottom: 1rem"
+        onclick="copyToClipboard('sdk use java &lt;previous-version&gt;')" aria-label="Copy command">
+        <code>sdk use java &lt;previous-version&gt;</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+    <button type="button" class="inline-terminal" style="max-width: 600px"
+        onclick="copyToClipboard('sdk default java &lt;previous-version&gt;')" aria-label="Copy command">
+        <code>sdk default java &lt;previous-version&gt;</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+
+    <p style="margin-top: 1.5rem"><strong>Via update-alternatives:</strong></p>
+    <button type="button" class="inline-terminal" style="max-width: 700px"
+        onclick="copyToClipboard('sudo update-alternatives --config java')" aria-label="Copy command">
+        <code>sudo update-alternatives --config java</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+    <p style="margin-top: 0.75rem; font-size: 0.95rem">Select your previous JDK from the
+        numbered list.</p>
+
+    <p style="margin-top: 1.5rem"><strong>Application-side rollback.</strong> Remove
+        <code>-XX:EliyaProfile=Production</code> from your JVM arguments. Without the flag, even
+        with Eliya as the runtime, behaviour is identical to upstream OpenJDK&nbsp;25 &mdash; so a
+        rollback by simply removing the flag (rather than reverting the runtime) is also valid.</p>
+
+    <p style="margin-top: 1rem">Eliya's defaults are opt-in. Reverting requires no migration of
+        diagnostic data, no code changes, no configuration changes beyond JVM runtime selection.</p>
+</section>
+
+<section style="margin-bottom: 5rem">
+    <h2 class="section-title">What you're migrating into</h2>
+    <p>This page describes today's migration &mdash; Phase 1 of Eliya. The Eliya trajectory
+        matters for migration planning:</p>
+    <ul>
+        <li><strong>Phase 1 (current):</strong> Production observability defaults via
+            <code>EliyaProfile=Production</code> (this page).</li>
+        <li><strong>Phase 2 (post-seed):</strong> Bundled local diagnostic tooling (Eclipse MAT
+            headless, async-profiler), FIPS-validated variant, <code>asymm eliya</code> CLI
+            expansion. No migration changes &mdash; same Eliya distribution, expanded capability.</li>
+        <li><strong>Phase 3 (post-Series A):</strong> Asymm Forensics &mdash; cross-correlation
+            platform analysing JFR + heap dumps + thread dumps + GC logs + crash logs together.
+            Local execution, no SaaS dependency.</li>
+        <li><strong>Phase 4 (demand-gated):</strong> Compliance-aligned profiles
+            (<code>EliyaProfile=PCIDSS</code>, <code>=HIPAA</code>, <code>=SOX</code>,
+            <code>=FedRAMP</code>, plus combined profiles like <code>=Healthcare-Payment</code> for
+            industries needing multiple frameworks). No migration changes &mdash; same runtime,
+            additional profile values.</li>
+    </ul>
+    <p>The migration path you adopt today (Eliya runtime + <code>EliyaProfile=Production</code>)
+        remains the foundation across all phases. Phase 2/3/4 additions are additive &mdash; no
+        further migration required.</p>
+    <p>For the consolidated phase-by-phase trajectory and demand-gating mechanics, see the
+        <a href="/product/eliya/roadmap.html" class="org-link org-link--inline org-link--internal">roadmap page</a>.
+        For positioning relative to APM tools and other JDK distributions, see
+        <a href="/research/jvm-forensics-vs-apm.html" class="org-link org-link--inline org-link--internal">JVM forensics vs APM</a>
+        and
+        <a href="/research/choosing-a-jdk-2026.html" class="org-link org-link--inline org-link--internal">Choosing a JDK in 2026</a>.</p>
+</section>
+
+<div style="margin-top: 5rem; text-align: center">
+    <a href="/product/eliya.html" class="org-link org-link--internal org-link--back">back to Eliya</a>
+</div>

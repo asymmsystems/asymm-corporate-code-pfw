@@ -1,127 +1,505 @@
 title=Eliya flags reference
-description=Complete reference for -XX:+UseEliyaDefaults and Eliya's always-on security defaults.
+description=Complete reference for Eliya's Phase 1 flags — EliyaProfile (production-readiness profile) and EliyaConflictCheck (conflict-detection control). java.security is inherited from upstream JDK 25 unchanged.
 type=page
 toc=true
 status=published
 ~~~~~~
 
-<nav class="eliya-breadcrumb" aria-label="Breadcrumb"><span class="crumb-collapse" role="button" tabindex="0" onclick="this.parentElement.classList.toggle(&apos;expanded&apos;)">~ / &hellip;</span><span class="crumb-hidden"><span class="crumb-sep">/</span><a href="/">asymm</a></span><span class="crumb-hidden"><span class="crumb-sep">/</span>product</span><span class="crumb-sep">/</span><a href="/product/eliya.html">eliya</a><span class="crumb-sep">/</span><a href="/product/eliya/user-guide/">user-guide</a><span class="crumb-sep">/</span><span class="crumb-leaf">flags-reference</span></nav>
-
 <header class="page-header">
     <span class="section-kicker">User guide</span>
     <h1>Flags reference</h1>
-    <p style="max-width: 60ch;">Eliya adds one flag to the JVM and modifies one
-        configuration file. Everything else is upstream OpenJDK behaviour.</p>
+    <p style="max-width: 60ch">Eliya keeps its JVM-flag surface small and explicit. Phase 1
+        ships two Eliya-namespaced flags: <code>EliyaProfile</code> (the production-readiness
+        profile) and <code>EliyaConflictCheck</code> (the conflict-detection control). Everything
+        else is upstream OpenJDK 25 behaviour &mdash; <code>java.security</code> included. The
+        namespace is reserved for future capability flags and profile values; see
+        <a href="/product/eliya/user-guide/flag-architecture.html" class="org-link org-link--inline org-link--internal">flag architecture</a>
+        for the two-layer taxonomy and Phase 2/4 roadmap.</p>
 </header>
 
-<section style="margin-bottom: 5rem;">
-    <h2 class="section-title"><code>-XX:+UseEliyaDefaults</code></h2>
-    <p style="max-width: 70ch; margin-bottom: 1rem;"><strong>Default:</strong> off.
+<section>
+    <h3><code>-XX:EliyaProfile=Production</code></h3>
+    <p><strong>Default value:</strong> <code>None</code>.
         <strong>Scope:</strong> product flag. <strong>Location:</strong>
         <code>src/hotspot/share/runtime/globals.hpp</code>.</p>
 
-    <p style="max-width: 70ch;">When enabled, applies a curated runtime profile tuned for
-        telecom and request-processing workloads. Every individual flag is set via
-        <code>FLAG_SET_ERGO</code> — meaning an explicit value on the command line always wins.</p>
+    <p>When <code>EliyaProfile=None</code> (the default), Eliya behaves identically to upstream
+        OpenJDK 25 with no observability defaults applied. When <code>EliyaProfile=Production</code>,
+        Eliya activates the <strong>observability and operational-readiness profile</strong> — Java Flight Recorder with a default profile,
+        heap-dump-on-OOM, Native Memory Tracking summary, GC logging always-on, container
+        awareness reinforced, crash dump generation. Every individual setting is applied via
+        <code>FLAG_SET_ERGO</code> or equivalent, so explicit command-line overrides always win.</p>
+
+    <p>What this flag deliberately does
+        <strong>not</strong> set: GC choice, GC tuning parameters (<code>MaxGCPauseMillis</code>,
+        region size, IHOP), string deduplication, tiered compilation, compressed oops. JDK 25's
+        automatic ergonomics handle GC selection better than a distribution can guess; setting
+        opinionated GC defaults helps some workloads and hurts others.</p>
 
     <h3>What it sets</h3>
-    <table class="clinical-table" style="margin-top: 1rem;">
+    <table class="clinical-table" >
         <thead>
             <tr>
-                <th>Flag</th>
-                <th>Value</th>
+                <th>Capability</th>
+                <th>Setting</th>
                 <th>Purpose</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td><code>UseG1GC</code></td>
-                <td>true</td>
-                <td>G1 collector — predictable pauses for request-driven workloads</td>
+                <td>JFR continuous recording</td>
+                <td><code>-XX:StartFlightRecording=settings=default,disk=true,maxage=24h,maxsize=250m,dumponexit=true,filename=&lt;path&gt;</code></td>
+                <td>24-hour rolling buffer at sub-1% overhead — last day of execution profile already on disk when failure happens, dumped on JVM exit</td>
             </tr>
             <tr>
-                <td><code>MaxGCPauseMillis</code></td>
-                <td>50</td>
-                <td>50 ms pause target — aggressive for tail-latency SLAs</td>
+                <td>Heap dump on OOM</td>
+                <td><code>-XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=&lt;path&gt;</code></td>
+                <td>Capture the heap at the moment of failure, with predictable file location for triage</td>
             </tr>
             <tr>
-                <td><code>G1HeapRegionSize</code></td>
-                <td>4M</td>
-                <td>Fixed 4 MB regions — eliminates region-size heuristic variance</td>
+                <td>Exit on OOM</td>
+                <td><code>-XX:+ExitOnOutOfMemoryError</code></td>
+                <td>Fail fast on OOM — let orchestration restart the container; don't run a degraded JVM</td>
             </tr>
             <tr>
-                <td><code>InitiatingHeapOccupancyPercent</code></td>
-                <td>35</td>
-                <td>Start concurrent marking earlier than default 45%</td>
+                <td>Native Memory Tracking</td>
+                <td><code>-XX:NativeMemoryTracking=summary</code></td>
+                <td>Low-overhead native-memory accounting for diagnosing leak suspects in JNI / native libs / metaspace</td>
             </tr>
             <tr>
-                <td><code>UseStringDeduplication</code></td>
-                <td>true</td>
-                <td>Deduplicate duplicate String bodies — large XML/JSON payload wins</td>
+                <td>GC logging</td>
+                <td><code>-Xlog:gc*:file=&lt;path&gt;:time,uptime,level,tags:filecount=10,filesize=100m</code></td>
+                <td>Always-on GC log with rotation. Audit-grade record of pause behaviour</td>
             </tr>
             <tr>
-                <td><code>OptimizeStringConcat</code></td>
-                <td>true</td>
-                <td>Optimise string concatenation</td>
+                <td>Crash log path</td>
+                <td><code>-XX:ErrorFile=&lt;path&gt;/hs_err_pid%p.log</code></td>
+                <td>Predictable path for crash artifacts; integrates with standard triage flow</td>
             </tr>
             <tr>
-                <td><code>UseCompressedOops</code></td>
-                <td>true</td>
-                <td>Compressed object pointers — smaller heap footprint</td>
+                <td>Container awareness</td>
+                <td><code>-XX:+UseContainerSupport</code></td>
+                <td>Honour cgroup memory and CPU limits (already default since JDK 10; reinforced explicitly)</td>
             </tr>
             <tr>
-                <td><code>TieredCompilation</code></td>
-                <td>true</td>
-                <td>Tiered JIT — faster warmup for request paths</td>
+                <td>Diagnostic options unlocked</td>
+                <td><code>-XX:+UnlockDiagnosticVMOptions -XX:+DebugNonSafepoints</code></td>
+                <td>Required for accurate JFR execution sampling and async-profiler usage; safe in production with negligible overhead</td>
             </tr>
         </tbody>
     </table>
 
-    <h3>Override semantics</h3>
-    <p style="max-width: 70ch;">Any flag set explicitly on the command line overrides the
-        Eliya default. Example:</p>
-    <div class="inline-terminal" style="max-width: 700px; margin-top: 1rem;"
-        onclick="copyToClipboard('java -XX:+UseEliyaDefaults -XX:MaxGCPauseMillis=100 -jar app.jar');" title="Click to copy">
-        <code>java -XX:+UseEliyaDefaults -XX:MaxGCPauseMillis=100 -jar app.jar</code>
-        <span class="copy-btn">Copy</span>
+    <h3 id="diagnostic-paths">Diagnostic paths &mdash; three-level layout</h3>
+
+    <p>When <code>EliyaProfile=Production</code> is active, Eliya writes diagnostic artifacts to a
+        three-level filesystem layout that gives both service grouping and per-replica attribution
+        by default:</p>
+
+    <div class="inline-terminal inline-terminal--static">
+        <code>${ELIYA_DIAGNOSTIC_PATH}/${service_name}/${replica_name}/${category}/</code>
     </div>
-    <p style="max-width: 70ch; margin-top: 1rem;">Uses all Eliya defaults <em>except</em>
-        <code>MaxGCPauseMillis</code> (user value 100 ms wins).</p>
+
+    <p><strong>Resolution components:</strong></p>
+    <table class="clinical-table">
+        <thead>
+            <tr>
+                <th>Component</th>
+                <th>Default</th>
+                <th>Resolution chain</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Base path</td>
+                <td><code>/var/log/eliya</code></td>
+                <td><code>ELIYA_DIAGNOSTIC_PATH</code> env var &rarr; platform default</td>
+            </tr>
+            <tr>
+                <td>Service name</td>
+                <td><code>default</code></td>
+                <td><code>ELIYA_SERVICE_NAME</code> &rarr; <code>-Deliya.service.name=</code> &rarr; <code>HOSTNAME</code> &rarr; literal <code>default</code></td>
+            </tr>
+            <tr>
+                <td>Replica name</td>
+                <td>suppressed when equal to service</td>
+                <td><code>ELIYA_REPLICA_NAME</code> &rarr; <code>-Deliya.replica.name=</code> &rarr; <code>HOSTNAME</code> &rarr; suppressed if equals service</td>
+            </tr>
+            <tr>
+                <td>Category</td>
+                <td>Eliya-controlled</td>
+                <td>One of <code>jfr</code>, <code>heap</code>, <code>crash</code>, <code>gc</code></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p><strong>Replica suppression.</strong> When the resolved replica name equals the resolved
+        service name, the replica level is suppressed and paths collapse to two levels. This
+        handles the bare-metal multi-JVM case (where <code>HOSTNAME</code> is the host name,
+        identical for all services on that host) and the all-fallback case (where the service
+        name itself fell through to <code>HOSTNAME</code>). Three-level paths apply when
+        replica is genuinely distinct from service.</p>
+
+    <p><strong>Effective paths by deployment topology:</strong></p>
+    <table class="clinical-table">
+        <thead>
+            <tr>
+                <th>Deployment</th>
+                <th>Configuration</th>
+                <th>Effective JFR path</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Kubernetes, 1 replica</td>
+                <td><code>ELIYA_SERVICE_NAME=billing-service</code> (HOSTNAME = pod name)</td>
+                <td><code>/var/log/eliya/billing-service/billing-service-7d4b9c-xk29p/jfr/</code></td>
+            </tr>
+            <tr>
+                <td>Kubernetes, 3 replicas</td>
+                <td>Same as above</td>
+                <td>Three subdirectories, one per pod, all under <code>/var/log/eliya/billing-service/</code></td>
+            </tr>
+            <tr>
+                <td>Bare-metal multi-JVM</td>
+                <td><code>ELIYA_SERVICE_NAME=billing-service</code> (HOSTNAME=myserver01)</td>
+                <td><code>/var/log/eliya/billing-service/jfr/</code> (replica suppressed)</td>
+            </tr>
+            <tr>
+                <td>Bare-metal single-JVM, defaults</td>
+                <td>Nothing configured (HOSTNAME=myserver01)</td>
+                <td><code>/var/log/eliya/myserver01/jfr/</code> (service falls through to HOSTNAME; replica suppressed)</td>
+            </tr>
+            <tr>
+                <td>Custom base</td>
+                <td><code>ELIYA_DIAGNOSTIC_PATH=/data/diag</code>, <code>ELIYA_SERVICE_NAME=billing</code></td>
+                <td><code>/data/diag/billing/&lt;replica&gt;/jfr/</code></td>
+            </tr>
+            <tr>
+                <td>Explicit replica</td>
+                <td><code>ELIYA_SERVICE_NAME=billing</code>, <code>ELIYA_REPLICA_NAME=replica-1</code></td>
+                <td><code>/var/log/eliya/billing/replica-1/jfr/</code></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p><strong>Why three levels.</strong> The layout is filesystem-encoded compliance metadata.
+        An auditor asking "show me all <code>billing-service</code> artifacts" gets a single
+        directory tree. An engineer asking "which replica produced this dump" sees the answer in
+        the path itself. PID-bearing filenames within each replica directory handle the rare case
+        of multiple JVM processes within one replica (JFR auto-names recordings with PID; heap
+        dumps include PID; GC logs use <code>%p</code> substitution).</p>
+
+    <p>The flat per-replica directory structure works cleanly with <code>logrotate</code>,
+        <code>fluentd</code>, <code>vector</code>, <code>journald</code>, and other ops tools
+        that walk diagnostic paths. Per-replica directories are stable for the replica's
+        lifetime &mdash; they don't churn within a pod.</p>
+
+<h3>Override semantics</h3>
+    <p>Any flag or option set explicitly on the command line overrides the
+        Eliya default. Example — override one observability default while keeping the rest:</p>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('java -XX:EliyaProfile=Production -XX:NativeMemoryTracking=detail -jar app.jar')" aria-label="Copy command">
+        <code>java -XX:EliyaProfile=Production -XX:NativeMemoryTracking=detail -jar app.jar</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+    <p>Uses all Eliya defaults <em>except</em>
+        <code>NativeMemoryTracking</code> (user value <code>detail</code> wins over default <code>summary</code>).</p>
+
+    <p>Example — combine Eliya's observability with
+        Generational ZGC for sub-millisecond pauses:</p>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('java -XX:EliyaProfile=Production -XX:+UseZGC -Xms16g -Xmx16g -jar app.jar')" aria-label="Copy command">
+        <code>java -XX:EliyaProfile=Production -XX:+UseZGC -Xms16g -Xmx16g -jar app.jar</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+    <p>Use this pattern for BFSI settlement engines,
+        telecom signalling gateways, real-time messaging — any workload requiring strict tail
+        latency. <code>EliyaProfile=Production</code> doesn't pick a GC, so <code>-XX:+UseZGC</code>
+        applies cleanly on top.</p>
+
+    <p>Example — combine Eliya's observability with
+        Compact Object Headers (JEP 519, JDK 25):</p>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('java -XX:EliyaProfile=Production -XX:+UseCompactObjectHeaders -jar app.jar')" aria-label="Copy command">
+        <code>java -XX:EliyaProfile=Production -XX:+UseCompactObjectHeaders -jar app.jar</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+    <p>Reduces heap by 15&ndash;22% for object-heavy
+        workloads. Verify dependency compatibility (libraries that introspect object layout) before
+        enabling in production.</p>
+
+    <p>Example &mdash; disable JFR while keeping every other Eliya default:</p>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('java -XX:EliyaProfile=Production -XX:-FlightRecorder -jar app.jar')" aria-label="Copy command">
+        <code>java -XX:EliyaProfile=Production -XX:-FlightRecorder -jar app.jar</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+    <p>JFR is the highest-overhead component of the Production profile. Workloads that have
+        measured unacceptable JFR overhead (extreme allocation rates, some HFT workloads) can
+        disable JFR specifically while keeping heap-dump-on-OOM, NMT, GC logging, and crash log
+        paths. The conflict detection framework issues a Tier 2 warning noting that the explicit
+        <code>-FlightRecorder</code> overrides the profile-implied default &mdash; intentional and
+        supported, but worth flagging.</p>
 
     <h3>Inspecting applied values</h3>
-    <div class="inline-terminal" style="max-width: 700px;"
-        onclick="copyToClipboard('java -XX:+UseEliyaDefaults -XX:+PrintFlagsFinal -version | grep -E &quot;UseG1GC|MaxGCPauseMillis|UseStringDeduplication&quot;');" title="Click to copy">
-        <code>java -XX:+UseEliyaDefaults -XX:+PrintFlagsFinal -version | grep -E "UseG1GC|MaxGCPauseMillis|UseStringDeduplication"</code>
-        <span class="copy-btn">Copy</span>
-    </div>
-    <p style="max-width: 70ch; margin-top: 1rem;">Eliya-applied flags show
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('java -XX:EliyaProfile=Production -XX:+PrintFlagsFinal -version | grep -E &quot;HeapDumpOn|ExitOnOutOfMemoryError|NativeMemoryTracking|UseContainerSupport|UnlockDiagnosticVMOptions|DebugNonSafepoints&quot;')" aria-label="Copy command">
+        <code>java -XX:EliyaProfile=Production -XX:+PrintFlagsFinal -version | grep -E "HeapDumpOn|ExitOnOutOfMemoryError|NativeMemoryTracking|UseContainerSupport|UnlockDiagnosticVMOptions|DebugNonSafepoints"</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+    <p>Eliya-applied flags show
         <code>{ergonomic}</code> as the origin. Explicit user flags show <code>{command line}</code>.</p>
+
+    <p>JFR
+        (<code>StartFlightRecording</code>), error file (<code>ErrorFile</code>), and unified logging
+        (<code>Xlog</code>) settings are JVM <em>arguments</em> rather than flags &mdash; they don't appear
+        in <code>PrintFlagsFinal</code> output. Use <code>jcmd &lt;pid&gt; VM.command_line</code> to
+        see them on a running JVM, or <code>asymm eliya info</code> for a structured summary.</p>
+
+
+    <h3><code>-XX:+EliyaConflictCheck</code></h3>
+    <p><strong>Default:</strong> enabled. <strong>Scope:</strong> product flag.
+        <strong>Location:</strong> <code>src/hotspot/share/runtime/globals.hpp</code>.</p>
+
+    <p>Controls startup-time detection of flag conflicts. When enabled (the default), Eliya
+        inspects the command line at JVM startup and responds to suspicious or invalid flag
+        combinations with one of three tiers:</p>
+    <ul>
+        <li><strong>Silent</strong> &mdash; user explicit settings override profile-implied
+            defaults (established Hotspot semantics; no warning issued).</li>
+        <li><strong>Warning</strong> &mdash; redundant or suspicious-but-legal combinations produce
+            a warning to stderr; JVM continues normally.</li>
+        <li><strong>Fatal</strong> &mdash; incompatible combinations cause JVM startup to fail with
+            a descriptive error message.</li>
+    </ul>
+
+    <p>For the three-tier framework, conflict examples, and rationale, see
+        <a href="/product/eliya/user-guide/flag-architecture.html" class="org-link org-link--inline org-link--internal">flag architecture &mdash; conflict detection</a>.</p>
+
+    <p><strong>When to disable:</strong></p>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('java -XX:-EliyaConflictCheck -XX:EliyaProfile=Production -jar app.jar')" aria-label="Copy command">
+        <code>java -XX:-EliyaConflictCheck -XX:EliyaProfile=Production -jar app.jar</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+    <p>Use <code>-XX:-EliyaConflictCheck</code> only when experimenting with flag combinations or
+        running CI matrix tests where intentional invalid combinations are part of the test plan.
+        Production deployments should leave conflict checking enabled &mdash; fail-fast on
+        misconfiguration is the right operational posture.</p>
+
+
+    <h3>Available profile values</h3>
+    <table class="clinical-table">
+        <thead>
+            <tr>
+                <th>Profile value</th>
+                <th>Phase</th>
+                <th>Effect</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code>None</code></td>
+                <td>Phase 1</td>
+                <td>Default &mdash; no Eliya-specific defaults applied; equivalent to upstream OpenJDK 25</td>
+            </tr>
+            <tr>
+                <td><code>Production</code></td>
+                <td>Phase 1</td>
+                <td>Production-readiness profile (documented above)</td>
+            </tr>
+            <tr>
+                <td><code>PCIDSS</code>, <code>HIPAA</code>, <code>SOX</code>, <code>FedRAMP</code>, <code>GDPR</code>, <code>ISO27001</code>, <code>SOC2</code></td>
+                <td>Phase 4 (reserved)</td>
+                <td>Single-framework compliance profiles; demand-gated</td>
+            </tr>
+            <tr>
+                <td>Combined profiles (e.g., <code>Healthcare-Payment</code>, <code>Financial-SaaS</code>, <code>Federal-Defense</code>)</td>
+                <td>Phase 4 (reserved)</td>
+                <td>Explicit unions of compliance frameworks for industries needing multiple &mdash; designed when customer demand justifies; never stacked from individual profiles</td>
+            </tr>
+        </tbody>
+    </table>
+    <p>For the full Phase 1 surface and Phase 2/4 roadmap, see
+        <a href="/product/eliya/user-guide/flag-architecture.html" class="org-link org-link--inline org-link--internal">flag architecture</a>.</p>
 </section>
 
-<section style="margin-bottom: 5rem;">
-    <h2 class="section-title">Security defaults (always on)</h2>
-    <p style="max-width: 70ch;">Eliya modifies
-        <code>$JAVA_HOME/conf/security/java.security</code> in the overlay so hardening is active from
-        every JVM invocation — no flag required. This is separate from
-        <code>-XX:+UseEliyaDefaults</code> (performance) because security hardening is a safety
-        requirement, not a performance preference.</p>
+<section id="performance-impact" >
+    <h3>Performance impact</h3>
+    <p>The observability defaults activated by
+        <code>-XX:EliyaProfile=Production</code> are designed for always-on production use. Empirical
+        overhead is small but not zero — this section documents what to expect and where the
+        trade-offs are.</p>
 
-    <p style="max-width: 70ch; margin-top: 1.5rem;">Full breakdown on the
+    <h3>Steady-state overhead by component</h3>
+    <table class="clinical-table" >
+        <thead>
+            <tr>
+                <th>Component</th>
+                <th>CPU overhead</th>
+                <th>Memory overhead</th>
+                <th>Disk overhead</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>JFR <code>default</code> profile recording</td>
+                <td>&lt;1% typical, &lt;2% worst case (default profile only &mdash; <code>settings=profile</code> adds more)</td>
+                <td>~8-16 MB internal buffers</td>
+                <td>~250 MB rolling (configurable)</td>
+            </tr>
+            <tr>
+                <td>Native Memory Tracking <code>summary</code></td>
+                <td>&lt;0.5%</td>
+                <td>~5-10 MB</td>
+                <td>None</td>
+            </tr>
+            <tr>
+                <td>GC logging with rotation</td>
+                <td>Negligible</td>
+                <td>None</td>
+                <td>~1 GB total (10 × 100 MB)</td>
+            </tr>
+            <tr>
+                <td>Heap dump on OOM</td>
+                <td>Zero during normal operation</td>
+                <td>Zero</td>
+                <td>Triggered only on OOM</td>
+            </tr>
+            <tr>
+                <td>Crash log path</td>
+                <td>Zero</td>
+                <td>Zero</td>
+                <td>Triggered only on JVM crash</td>
+            </tr>
+            <tr>
+                <td>Container support reinforced</td>
+                <td>Zero</td>
+                <td>Zero</td>
+                <td>None</td>
+            </tr>
+            <tr>
+                <td>Diagnostic VM options unlocked</td>
+                <td>Zero</td>
+                <td>Zero</td>
+                <td>None</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p><em>The &lt;1% JFR overhead applies to the default JFR profile that Eliya configures by
+        default (<code>settings=default</code>). The <code>profile.jfc</code> template (deeper
+        sampling, allocation profiling) has higher overhead and is not the Eliya default.</em></p>
+
+    <h3>Combined overhead</h3>
+    <p>In typical production workloads, total steady-state overhead is <strong>1-2% CPU</strong>
+        &mdash; roughly <strong>&lt;1% from JFR continuous recording</strong> (the dominant
+        component) plus <strong>&lt;0.5% from NMT summary mode</strong> plus negligible
+        contributions from GC logging and the unlocked diagnostic options. The figure varies with
+        workload characteristics (allocation rate, GC pressure, lock contention) but stays within
+        this envelope for the workloads Eliya targets.</p>
+
+    <p>JFR's overhead is the most-studied component and the one that historically drove operator
+        concern. Multiple independent sources confirm sub-1% JFR overhead with the default profile:</p>
+    <ul>
+        <li><strong>Oracle benchmarks:</strong> JFR with the <code>default</code> profile is
+            documented at sub-1% overhead and is designed for always-on production use
+            (<a href="https://docs.oracle.com/en/java/java-components/jdk-mission-control/" class="org-link org-link--inline org-link--external">Oracle JDK Mission Control documentation</a>).</li>
+        <li><strong>JFR design intent:</strong> Marcus Hirt &mdash; original JFR architect at Oracle &mdash;
+            has consistently positioned JFR as production-grade always-on instrumentation,
+            including for performance-sensitive workloads.</li>
+        <li><strong>Production deployments at scale:</strong> Datadog Continuous Profiler,
+            New Relic Java Profiler, and Azure Application Insights all rely on JFR. These
+            SaaS vendors would not have built businesses on JFR if the overhead were
+            operationally meaningful.</li>
+        <li><strong>Microsoft Azure Spring Apps</strong> (formerly Azure Spring Cloud) exposes
+            JFR-based continuous diagnostics as a first-class platform capability.</li>
+        <li><strong>Open-source maturity:</strong> JFR has been GPLv2 and publicly available
+            since JDK 11 (JEP 328, 2018) &mdash; seven years of public production hardening.</li>
+    </ul>
+
+    <h3>Where overhead may be higher</h3>
+    <p>Two workload classes are worth measuring before committing:</p>
+    <ol>
+        <li><strong>Extreme allocation rates</strong> (sustained &gt;10M object allocations per
+            second). JFR's allocation events have a per-allocation cost. The <code>default</code>
+            profile samples allocations rather than recording all, which mitigates but doesn't
+            eliminate this. Workloads near this threshold (HFT order books, certain log
+            aggregation pipelines, in-memory analytics) should benchmark with and without
+            <code>-XX:EliyaProfile=Production</code> before committing.</li>
+        <li><strong>Tight container resource budgets.</strong> JFR's internal buffers consume
+            ~8-16 MB. On containers with &lt;512 MB heap, this becomes proportionally larger.
+            JFR's disk buffer (default 250 MB) needs free disk space; on containers with
+            &lt;500 MB available disk, buffer rotation may cause disk pressure.</li>
+    </ol>
+
+    <h3>What this flag does NOT cost</h3>
+    <ul>
+        <li>GC selection (G1 default per JDK 25 ergonomics — same as upstream)</li>
+        <li>GC tuning parameters (no changes to pause targets, region size, IHOP)</li>
+        <li>JIT compilation behaviour (same tier transitions as upstream)</li>
+        <li>Class loading or module system (unchanged)</li>
+        <li>Application throughput characteristics beyond the ~1-2% steady-state overhead</li>
+    </ul>
+
+    <h3>Opting out</h3>
+    <p>If the trade-off doesn't fit your workload, simply don't set
+        <code>-XX:EliyaProfile=Production</code>. Eliya without the flag is functionally identical
+        to upstream OpenJDK 25 — same source tree, same JIT, same GC, same TLS defaults, same
+        <code>java.security</code>. The flag is opt-in, not coercive.</p>
+
+    <section class="technical-inset" >
+            <h3>The trade-off, in plain language</h3>
+            <p>In exchange for ~1-2% steady-state CPU overhead, you have 24 hours of execution
+                profile data already on disk when an incident occurs.</p>
+            <p>The economics: 1.5% CPU overhead on a 2 vCPU container at typical cloud pricing
+                (~$50/month) costs roughly <strong>$0.75/month per replica</strong>. A single major
+                incident diagnosed without forensic data typically consumes <strong>8&ndash;40
+                engineering hours</strong> at $200/hr &mdash; $1,600 to $8,000 per incident, plus
+                business impact during the time-to-root-cause. One avoided incident pays for years
+                of always-on observability across a sizeable fleet.</p>
+            <p>For compliance-conscious teams in regulated industries,
+                this trade-off is almost always worth it &mdash; the alternative is realising you
+                don't have observability data <em>after</em> the incident has already happened.
+                For latency-sensitive workloads where every microsecond matters (HFT, low-latency
+                messaging gateways, real-time signalling), measure before committing.</p>
+            <p>For where Eliya's forensic posture fits alongside SaaS APM platforms, see
+                <a href="/research/jvm-forensics-vs-apm.html" class="org-link org-link--inline org-link--internal">JVM forensics vs APM</a>.
+                For the vendor-by-vendor JDK comparison (and why Eliya doesn't tune GC), see
+                <a href="/research/choosing-a-jdk-2026.html" class="org-link org-link--inline org-link--internal">Choosing a JDK in 2026</a>.</p>
+        </section>
+
+
+    <h3>Security defaults — inherited from upstream</h3>
+    <p>Eliya inherits upstream OpenJDK 25's security configuration
+        unchanged. JDK 25 already disables SSLv3, TLS 1.0, TLS 1.1, weak ciphers (RC4, DES, MD5),
+        and enforces NIST-aligned minimum key sizes. Eliya does not modify
+        <code>$JAVA_HOME/conf/security/java.security</code> — duplicating upstream defaults to claim
+        differentiation would be performative.</p>
+
+    <p>Verify with a <code>diff</code>:</p>
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('diff $JAVA_HOME/conf/security/java.security &lt;upstream-jdk-25&gt;/conf/security/java.security')" aria-label="Copy command">
+        <code>diff $JAVA_HOME/conf/security/java.security &lt;upstream-jdk-25&gt;/conf/security/java.security</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+
+    <p>Full security posture on the
         <a href="/product/eliya/security.html" class="org-link org-link--inline org-link--internal">security page</a>.
-        Source of truth:
-        <a href="https://github.com/asymmsystems/eliya-jdk/blob/main/conf/eliya/security.properties" class="org-link org-link--inline org-link--external">conf/eliya/security.properties</a>.</p>
+        Precise diff from upstream:
+        <a href="/product/eliya/user-guide/diff-from-upstream.html" class="org-link org-link--inline org-link--internal">Differences from upstream OpenJDK 25</a>.</p>
 
     <h3>Opt-out (not recommended)</h3>
-    <div class="inline-terminal" style="max-width: 700px;"
-        onclick="copyToClipboard('java -Djava.security.properties==/path/to/vanilla-java.security ...');" title="Click to copy">
+    <button type="button" class="inline-terminal"
+        onclick="copyToClipboard('java -Djava.security.properties==/path/to/vanilla-java.security ...')" aria-label="Copy command">
         <code>java -Djava.security.properties==/path/to/vanilla-java.security ...</code>
-        <span class="copy-btn">Copy</span>
-    </div>
-    <p style="max-width: 70ch; margin-top: 1rem;">The double equals <code>==</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+    <p>The double equals <code>==</code>
         overrides; a single <code>=</code> appends. Only use this if a legacy integration genuinely
         requires TLS 1.0 or weak ciphers.</p>
 </section>
 
-<div style="margin-top: 5rem; text-align: center;">
-    <a href="/product/eliya/user-guide/" class="org-link org-link--internal">← user guide</a>
+<div class="page-back-nav">
+    <a href="/product/eliya/user-guide/" class="org-link org-link--internal org-link--back">user guide</a>
 </div>

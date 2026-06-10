@@ -6,7 +6,10 @@
 # restructuring is needed.
 #
 # Source files keep .html in hrefs so jbake:inline dev server works as-is.
-# This script runs only during production builds (mvnw clean process-resources).
+# This script runs only when the "production" Maven profile is active:
+#   ./mvnw -Pproduction clean process-resources
+# Default builds (./mvnw clean process-resources, no profile) keep .html so
+# target/site/ is browsable with a plain local file server.
 #
 # Usage: ./scripts/clean-urls.sh [output-dir]
 #   Default output-dir: target/site

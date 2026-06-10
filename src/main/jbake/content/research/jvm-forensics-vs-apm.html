@@ -1,0 +1,379 @@
+title=JVM forensics vs APM — why both, when each, and where each stops
+description=APM tools aggregate metrics to a backend. JVM forensics captures artefacts on disk that survive incidents. Both have legitimate roles. This article documents the architectural distinction and the production scenarios where each is the right answer.
+type=page
+toc=true
+status=published
+~~~~~~
+
+<header class="page-header">
+    <span class="section-kicker">Asymm Research</span>
+    <h1>JVM forensics vs APM &mdash; why both, when each, and where each stops</h1>
+    <p style="max-width: 60ch">APM tools (AppDynamics, Dynatrace, New Relic, Elastic APM /
+        OpenTelemetry, Datadog) aggregate metrics and send them to a backend. JVM forensics
+        captures artefacts on disk that survive incidents and answer questions APM cannot.
+        Both have legitimate roles. This article documents the architectural distinction and
+        the production scenarios where each is the right answer.</p>
+</header>
+
+<section>
+    <h3>The compatibility story (short version)</h3>
+    <p>Every major APM tool uses the Java Agent API (<code>-javaagent:</code>) plus bytecode
+        instrumentation. That mechanism is standard OpenJDK; Eliya doesn't modify it. APM
+        agents coexist with Eliya the same way they coexist with Corretto, Temurin, or Zulu:</p>
+
+    <div class="inline-terminal inline-terminal--static">
+        <code>java -javaagent:/opt/your-apm-agent.jar \<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-XX:EliyaProfile=Production \<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-jar app.jar</code>
+    </div>
+
+    <p>The agent does its instrumentation; Eliya activates its observability defaults. Both
+        run side by side. No conflict at the JVM level. The interesting question is not
+        compatibility &mdash; it's which tool answers which question, and where each stops.</p>
+
+
+    <h3>What APM tools do well</h3>
+    <p>APM tools are real-time observability platforms. They excel at:</p>
+    <ul class="checklist">
+        <li><span class="check-yes" aria-hidden="true">&#10003;</span>
+            <strong>Distributed tracing</strong> &mdash; following a request across service
+            boundaries, with timing per hop.</li>
+        <li><span class="check-yes" aria-hidden="true">&#10003;</span>
+            <strong>Business transaction analysis</strong> &mdash; aggregating performance
+            data by user-facing operation rather than by JVM internal.</li>
+        <li><span class="check-yes" aria-hidden="true">&#10003;</span>
+            <strong>Real-time dashboards and alerting</strong> &mdash; threshold-based pages
+            and Slack notifications when latency or error rate moves.</li>
+        <li><span class="check-yes" aria-hidden="true">&#10003;</span>
+            <strong>Service-map visualisation</strong> &mdash; topology, dependency graphs,
+            request flow across a microservices estate.</li>
+        <li><span class="check-yes" aria-hidden="true">&#10003;</span>
+            <strong>Cross-service correlation</strong> &mdash; one trace ID stitches frontend,
+            backend, database, and message-broker spans together.</li>
+    </ul>
+
+    <p>Typical overhead bands across the major vendors (memory + steady-state CPU):</p>
+    <table class="clinical-table">
+        <thead>
+            <tr>
+                <th>APM</th>
+                <th>Memory overhead</th>
+                <th>CPU overhead</th>
+                <th>Notes</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>AppDynamics</td>
+                <td>~50&ndash;200 MB</td>
+                <td>2&ndash;8%</td>
+                <td>SaaS or on-prem Controller; instruments business transactions, SQL, HTTP</td>
+            </tr>
+            <tr>
+                <td>Dynatrace OneAgent</td>
+                <td>~100&ndash;300 MB</td>
+                <td>3&ndash;10%</td>
+                <td>Most aggressive instrumentation; separate native agent for system metrics</td>
+            </tr>
+            <tr>
+                <td>New Relic</td>
+                <td>~80&ndash;200 MB</td>
+                <td>2&ndash;5%</td>
+                <td>SaaS only; no self-host option for the agent</td>
+            </tr>
+            <tr>
+                <td>Elastic APM</td>
+                <td>~50&ndash;150 MB</td>
+                <td>1&ndash;5%</td>
+                <td>Open-source; self-host the Elastic stack on-prem</td>
+            </tr>
+            <tr>
+                <td>Datadog APM</td>
+                <td>~80&ndash;200 MB</td>
+                <td>2&ndash;6%</td>
+                <td>SaaS; Datadog Continuous Profiler uses JFR under the hood</td>
+            </tr>
+            <tr>
+                <td>OpenTelemetry (Java auto-instrumentation)</td>
+                <td>~50&ndash;120 MB</td>
+                <td>1&ndash;4%</td>
+                <td>Open standard; vendor-neutral; same structural limitations as commercial APM</td>
+            </tr>
+        </tbody>
+    </table>
+
+
+    <h3>What APM tools structurally cannot do</h3>
+    <p>The structural limitation of APM is the architecture itself: agents sample, aggregate,
+        and ship summaries to a backend. The raw artefacts production incidents require are
+        not in that data model. Six specific things APM cannot do:</p>
+
+    <ul class="checklist">
+        <li><span class="check-no" aria-hidden="true">&#10007;</span>
+            <strong>Capture textual artefacts for offline analysis.</strong> HPROF heap dumps
+            for Eclipse MAT, <code>jstack</code>-format thread dumps for fastThread / TDA,
+            raw GC logs for GCEasy &mdash; APM tools don't natively structure these formats on
+            local disk for your own offline tools. Some heavy enterprise APMs (Dynatrace,
+            AppDynamics) provide a UI button to trigger a heap dump, but they often struggle
+            with container filesystems, require proprietary proxies (e.g. Dynatrace
+            ActiveGate) to download the file, and trap the analysis inside their SaaS
+            platform rather than producing a standard <code>.hprof</code> on a predictable
+            path. Elastic APM's issue tracker has explicit user requests for native heap-dump
+            capture; the answer is "use <code>jmap</code>, <code>jcmd</code>,
+            <code>jstat</code> directly."</li>
+        <li><span class="check-no" aria-hidden="true">&#10007;</span>
+            <strong>Replay JVM history at event-level granularity.</strong> APM samples (every
+            10s, every 60s); aggregates (p50, p95, p99); ships summaries. JFR captures every
+            event &mdash; allocation, GC, lock contention, method execution &mdash; for the
+            configured rolling window (24h default in Eliya) at sub-1% overhead. When a rare
+            incident occurs, JFR has the actual events; APM has only the metrics that survived
+            sampling.</li>
+        <li><span class="check-no" aria-hidden="true">&#10007;</span>
+            <strong>Diagnose native memory leaks.</strong> APM watches the Java heap. Leaks in
+            JNI code, <code>DirectByteBuffer</code> allocations, Metaspace growth, code cache
+            pressure, thread stack accumulation, and third-party native libraries (Deflater,
+            image processors, crypto) live <em>outside</em> the heap. Native Memory Tracking
+            (NMT) is the only standard JVM tool for this; Eliya enables it by default.</li>
+        <li><span class="check-no" aria-hidden="true">&#10007;</span>
+            <strong>Survive JVM crashes.</strong> When the JVM segfaults, the APM agent dies
+            with it. Anything in the agent's memory at the moment of crash is gone. The JVM
+            crash log (<code>hs_err_pid&lt;PID&gt;.log</code>) is written by JVM crash machinery
+            <em>before</em> the process terminates &mdash; register state, all thread stacks,
+            loaded libraries, signal info, JVM internal state. APM has nothing equivalent.</li>
+        <li><span class="check-no" aria-hidden="true">&#10007;</span>
+            <strong>Reach JIT / compilation-event detail.</strong> APM shows latency moved.
+            JFR shows the C1&rarr;C2 promotion that caused it, the deoptimisation event, the
+            code cache pressure that pushed a hot method out, the monomorphic inline cache
+            that lost its assumption. APM aggregates around symptoms; JFR records causes.</li>
+        <li><span class="check-no" aria-hidden="true">&#10007;</span>
+            <strong>Work in air-gapped or data-egress-restricted environments.</strong> SaaS
+            APM requires continuous outbound connectivity to a vendor backend. BFSI settlement
+            systems with regulatory restrictions on production data leaving the perimeter,
+            healthcare integrations under HIPAA, government and defence deployments under
+            classification controls, air-gapped industrial control systems, sovereign-cloud
+            deployments under data-localisation laws &mdash; all of these break the SaaS APM
+            requirement. Eliya runs entirely inside the perimeter.</li>
+    </ul>
+
+
+    <h3>Ten production incident-response use cases</h3>
+    <p>These are scenarios where Eliya's captured artefacts solve problems APM tools
+        structurally cannot. Each is a real incident pattern, not a contrived example.</p>
+
+    <h4>1. Memory leak investigation requiring heap analysis</h4>
+    <p>Production app OOMs every 18 hours. APM shows heap pressure but cannot identify what's
+        holding references. With Eliya, <code>HeapDumpOnOutOfMemoryError</code> is configured
+        by default; when OOM occurs the heap dump lands at
+        <code>/var/log/eliya/${service}/${replica}/heap/java_pid&lt;PID&gt;.hprof</code>.
+        Eclipse MAT's Leak Suspects report identifies the dominator tree and retainer paths.
+        APM gave a graph saying memory grew; Eliya gives the dump telling you which objects,
+        which classloader, which paths.</p>
+
+    <h4>2. Thread starvation / deadlock investigation</h4>
+    <p>Service stops responding; CPU at 100%; APM shows latency exploding but can't say why.
+        Thread dumps via <code>jcmd &lt;pid&gt; Thread.print</code> show every thread's state
+        and stack. Multiple dumps 5&ndash;10 seconds apart show which threads moved and which
+        are stuck. Real example: Apache PDFBox deadlock where two threads acquired locks in
+        opposite orders, hanging an application that APM only saw as "high latency." Thread
+        dumps showed exactly which two threads, which locks, which call stacks.</p>
+
+    <h4>3. Native memory leak requiring NMT analysis</h4>
+    <p>Container memory grows steadily despite stable heap. Eventually OOMKilled by
+        Kubernetes. Heap analysis shows nothing because the leak isn't in the heap. NMT
+        summary mode (enabled by <code>EliyaProfile=Production</code>):
+        <code>jcmd &lt;pid&gt; VM.native_memory baseline</code> then later
+        <code>jcmd &lt;pid&gt; VM.native_memory summary.diff</code> shows which regions grew.
+        Real example: Twitter exception logger compressing messages with native zlib library
+        caused service-killing memory growth &mdash; 94% of leaked blocks traced to
+        <code>Java_java_util_zip_Deflater_init</code>. No APM would have caught this.</p>
+
+    <h4>4. JIT performance regression investigation</h4>
+    <p>v1.4.2 was fast; v1.4.3 is 30% slower with the same code. APM shows the slowdown but
+        cannot tell you which methods compile differently. JFR's compilation events
+        (recorded by default in Eliya) show which methods entered C1 vs C2, which were
+        deoptimised, which hit code cache pressure. APM showed latency increased; JFR
+        explains why &mdash; a specific virtual call lost its monomorphic inline cache, or
+        tiered compilation policy shifted.</p>
+
+    <h4>5. GC pause investigation</h4>
+    <p>P99.9 latency spike at 04:17 UTC. APM shows the spike. Cannot show what GC was doing.
+        GC log rotation (default in Eliya) captures every collection event with pause
+        duration, reason, live set before and after, algorithm phase. JFR's GC events add
+        allocation pressure, promotion failures, humongous allocations. APM cannot reach
+        this level of detail; GCViewer, GCEasy.io, or JClarity Censum can analyse the raw
+        log Eliya produced.</p>
+
+    <h4>6. Crash investigation</h4>
+    <p>JVM segfaults; container restarts; APM agent died with the process and no signal
+        reached the backend. Eliya writes <code>hs_err_pid&lt;PID&gt;.log</code> to
+        <code>/var/log/eliya/${service}/${replica}/crash/</code> &mdash; register state,
+        crashing thread's stack trace, all loaded libraries, environment variables, signal
+        info, JVM internal state at the moment of crash. Without this file the crash is
+        unrecoverable knowledge.</p>
+
+    <h4>7. Compliance audit trail</h4>
+    <p>Auditor asks: "Show me evidence that <code>billing-service</code> in production didn't
+        crash or experience memory pressure during March 2026." With Eliya, the per-replica
+        directory tree under <code>/var/log/eliya/billing-service/</code> contains
+        <code>jfr/</code>, <code>gc/</code>, <code>crash/</code>, <code>heap/</code> for each
+        replica. Filesystem timestamps and contents are the audit record. APM provides
+        dashboards an auditor cannot directly verify; Eliya provides files on disk an auditor
+        can independently inspect.</p>
+
+    <h4>8. Customer post-mortem support</h4>
+    <p>Customer reports their integration with your service failed at 14:23 UTC. Was your
+        service degraded? JFR recordings from 14:00&ndash;14:30 UTC are on disk for that
+        exact pod. You can ship the JFR file to the customer for joint analysis, or analyse
+        it yourself. APM dashboards covering that period are aggregated and you cannot share
+        the raw events with the customer.</p>
+
+    <h4>9. Multi-region incident correlation</h4>
+    <p>P99 latency degraded in eu-west-1 between 09:00 and 11:00. Did the same happen in
+        us-east-1? What was different? JFR recordings from both regions are on disk in
+        identical format because the data is JFR-native. Compare GC behaviour, compilation
+        events, allocation patterns directly. APM aggregates metrics differently across
+        regions depending on deployment; JFR has consistent semantics regardless of where
+        captured.</p>
+
+    <h4>10. Cross-artefact correlation (Phase 3 Asymm Forensics preview)</h4>
+    <p>JFR alone tells you what events occurred. Heap dumps alone tell you what was retained.
+        Thread dumps alone tell you what threads were doing. GC logs alone tell you what the
+        collector did. Crash logs alone tell you the moment of failure. <strong>Asymm
+        Forensics correlates them.</strong> Was the OOM preceded by a specific allocation
+        pattern (JFR + heap dump)? Did the GC pause correlate with a specific lock contention
+        pattern (GC log + thread dump)? Was the crash preceded by JIT pressure (crash log +
+        JFR compilation events)? This is what no APM does &mdash; APM correlates metrics;
+        forensics correlates artefacts. The artefacts must exist on disk for forensics to
+        work. Eliya makes them exist on disk by default.</p>
+
+
+    <h3>Coexistence patterns</h3>
+    <p>Three concrete configurations covering the realistic deployment shapes.</p>
+
+    <h4>Eliya + SaaS APM (Datadog example)</h4>
+    <p>Both agents attach; both work. Datadog captures distributed traces, business metrics,
+        and APM views. Eliya's JFR captures detailed JVM-level profiling locally. The
+        interesting note: <strong>Datadog Continuous Profiler uses JFR under the hood</strong>,
+        so Eliya's JFR-by-default activation directly feeds Datadog's profiling pipeline.
+        Because Eliya guarantees JFR is safely configured and running by default with
+        sub-1% overhead, it eliminates the setup friction Datadog customers otherwise hit
+        when enabling Continuous Profiler &mdash; <strong>Eliya is the reliable engine;
+        Datadog is the visualisation pane</strong>. Heap dumps on OOM (Eliya) additionally
+        preserve evidence Datadog couldn't have captured retroactively.</p>
+    <div class="inline-terminal inline-terminal--static">
+        <code>java -javaagent:/opt/dd-java-agent.jar \<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-XX:EliyaProfile=Production \<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-jar app.jar</code>
+    </div>
+
+    <h4>Eliya + self-hosted APM (Elastic APM with on-prem stack)</h4>
+    <p>Hospital IT runs their own Elasticsearch + Kibana + Elastic APM Server in their
+        datacenter; data never leaves. Adding Eliya is purely additive &mdash; Elastic APM
+        gives the distributed view (cross-service traces, dashboards); Eliya gives the deep
+        per-JVM forensic data (JFR recordings, heap dumps, GC analysis) that Elastic APM
+        doesn't capture. Different analysis surfaces, same compliance posture.</p>
+    <div class="inline-terminal inline-terminal--static">
+        <code>java -javaagent:/opt/elastic-apm-agent.jar \<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-XX:EliyaProfile=Production \<br>
+&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-jar integration-service.jar</code>
+    </div>
+
+    <h4>Eliya alone (compliance-restricted environment)</h4>
+    <p>A BFSI settlement system under regulatory data-egress restrictions: production data
+        cannot leave the perimeter; SaaS APM is therefore prohibited. The team historically
+        had JConsole for occasional inspection, ad-hoc heap dumps under suspicion of memory
+        pressure, no continuous profiling at all. With Eliya, they now have continuous JFR
+        (24h rolling, sub-1% overhead), automatic heap dumps on OOM with structured paths,
+        GC logs with rotation, NMT summary, crash log generation &mdash; the capability they
+        previously couldn't get without violating data-egress policy.</p>
+
+
+    <h3>The four-phase compounding</h3>
+    <p>Eliya is not "OpenJDK with observability defaults." It is a <strong>forensic-grade
+        JVM platform across four phases</strong>, each phase extending the position. The
+        compounding is the strategic argument.</p>
+
+    <p><strong>Phase 1 (current) &mdash; <em>production observability defaults.</em></strong>
+        JFR continuous recording, heap dump on OOM, GC logging with rotation, native memory
+        tracking, exit-on-OOM, predictable crash log paths. Defaults that survive incidents
+        and crashes. Activated by <code>-XX:EliyaProfile=Production</code>; off by default,
+        opt-in.</p>
+
+    <p><strong>Phase 2 (planned) &mdash; <em>bundled local-only diagnostic tooling.</em></strong>
+        Eclipse MAT headless and async-profiler ship <em>inside the Eliya image</em>
+        alongside the artefacts they analyse &mdash; analysis tools live in the perimeter
+        with the data. FIPS-validated build variant for procurement-restricted environments.
+        Capability flag carve-outs for fine-grained control.</p>
+
+    <p><strong>Phase 3 (post-Series-A) &mdash; <em>Asymm Forensics cross-correlation
+        engine.</em></strong> JFR + heap dumps + thread dumps + GC logs + crash artefacts
+        analysed together to generate compliance-aligned root-cause reports. No APM does this
+        because no APM has the raw artefacts. The architectural argument that Phase 1 makes
+        possible.</p>
+
+    <p><strong>Phase 4 (demand-gated) &mdash; <em>compliance-aligned profile flags.</em></strong>
+        <code>EliyaProfile=PCIDSS</code>, <code>=HIPAA</code>, <code>=SOX</code>,
+        <code>=FedRAMP</code>, etc., activating framework-specific JVM settings while
+        preserving the local-only forensic discipline. The flag namespace is reserved today;
+        implementations ship as customer demand triggers each framework.</p>
+
+    <p>APM tools occupy a different category that Eliya doesn't try to compete with. The
+        four-phase trajectory builds a forensic-platform position no APM is structured to
+        reach.</p>
+
+
+    <h3>Decision framework</h3>
+    <table class="clinical-table">
+        <thead>
+            <tr>
+                <th>Use APM only</th>
+                <th>Use Eliya only</th>
+                <th>Use both</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>You need cross-service distributed tracing as the primary diagnostic surface,
+                    and your environment permits SaaS data egress.</td>
+                <td>You operate under data-egress restrictions that prohibit SaaS APM (BFSI,
+                    healthcare, public sector, air-gapped industrial).</td>
+                <td>You want APM for team-wide dashboards and alerting, plus Eliya for the
+                    forensic data APM cannot capture &mdash; the dominant pattern at scale.</td>
+            </tr>
+            <tr>
+                <td>You're at a development scale where forensic-grade artefacts are
+                    over-engineering for the questions you actually ask.</td>
+                <td>You need filesystem-encoded compliance audit trail and APM dashboards
+                    aren't an auditable artefact for your framework.</td>
+                <td>You're a Datadog Continuous Profiler customer &mdash; Eliya's JFR defaults
+                    directly feed Datadog's profiler.</td>
+            </tr>
+            <tr>
+                <td>Your stack is so cross-language (Go, Rust, Python beside Java) that the
+                    APM vendor's polyglot view is the primary win.</td>
+                <td>You need to analyse JVM internals (JIT compilation, native memory, crash
+                    forensics) and APM cannot reach that level.</td>
+                <td>You need both real-time operational visibility (APM) and post-incident
+                    forensic analysis (Eliya) &mdash; most production teams.</td>
+            </tr>
+        </tbody>
+    </table>
+
+
+    <h3>Eliya is not an APM replacement</h3>
+    <p>APM tools provide real-time operational visibility that Eliya doesn't try to compete
+        with. Eliya is a JDK distribution that provides production-ready forensic-grade
+        defaults; APM tools are observability platforms. Use both where it makes sense; use
+        Eliya where SaaS APM is prohibited; use APM where dashboards and distributed traces
+        are the primary need.</p>
+
+    <p>For a summary of Eliya's flag taxonomy and what each phase ships,
+        see
+        <a href="/product/eliya/user-guide/what-is-eliya.html" class="org-link org-link--inline org-link--internal">What is Eliya?</a>
+        For the vendor-by-vendor JDK comparison, see
+        <a href="/research/choosing-a-jdk-2026.html" class="org-link org-link--inline org-link--internal">Choosing a JDK in 2026</a>.</p>
+</section>
+
+<div style="text-align: center">
+    <a href="/" class="org-link org-link--internal org-link--back">home</a>
+</div>

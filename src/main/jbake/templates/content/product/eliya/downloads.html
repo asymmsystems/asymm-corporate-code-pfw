@@ -1,0 +1,230 @@
+<#include "/macro/waitlist.ftl">
+<#include "/macro/release.ftl">
+
+<header class="page-header">
+    <span class="section-kicker">Eliya</span>
+    <h1>Downloads</h1>
+    <p style="max-width: 60ch">Eliya ships JDK 25 LTS. The recommended install path is SDKman;
+        direct archives and package formats are linked below. Every release includes <code>SHA256SUMS.txt</code>
+        and a detached GPG signature — see
+        <a href="/product/eliya/user-guide/verify-download.html" class="org-link org-link--inline org-link--internal">verify your download</a>.</p>
+</header>
+
+<section style="margin-bottom: 5rem">
+    <h2 class="section-title">Recommended: SDKman</h2>
+    <p style="margin-bottom: 1.5rem">One command. Works on any Linux and macOS shell that has
+        SDKman installed. Handles upgrades automatically.</p>
+
+    <button type="button" class="inline-terminal" style="max-width: 600px"
+        onclick="copyToClipboard('sdk install java ${eliyaVersion}-eliya')" aria-label="Copy command">
+        <code>sdk install java ${eliyaVersion}-eliya</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+
+    <p style="margin-top: 2rem; font-size: 0.95rem">
+        Don't have SDKman?
+        <a href="https://sdkman.io/install" class="org-link org-link--inline org-link--external">Install SDKman</a>
+    </p>
+</section>
+
+<section style="margin-bottom: 5rem">
+    <h2 class="section-title">Direct downloads</h2>
+    <p style="margin-bottom: 2rem">GitHub Releases host every archive, checksum, and signature.
+        Tags follow <code>eliya-jdk-25.0.N</code> (brand-first, no <code>v</code> prefix).</p>
+
+    <table class="clinical-table">
+        <thead>
+            <tr>
+                <th>Platform</th>
+                <th>Architecture</th>
+                <th>Format</th>
+                <th>Download</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Linux</td>
+                <td>x64</td>
+                <td>tar.gz</td>
+                <td><a href="https://github.com/asymmsystems/eliya-jdk/releases/download/eliya-jdk-${eliyaVersion}/eliya-jdk-${eliyaVersion}-linux-x64.tar.gz" class="org-link org-link--inline org-link--external">download</a></td>
+            </tr>
+            <tr>
+                <td>Linux</td>
+                <td>x64</td>
+                <td>.deb</td>
+                <td><a href="https://github.com/asymmsystems/eliya-jdk/releases/download/eliya-jdk-${eliyaVersion}/eliya-jdk_${eliyaVersion}_amd64.deb" class="org-link org-link--inline org-link--external">download</a></td>
+            </tr>
+            <tr>
+                <td>Linux</td>
+                <td>x64</td>
+                <td>.rpm</td>
+                <td><a href="https://github.com/asymmsystems/eliya-jdk/releases/download/eliya-jdk-${eliyaVersion}/eliya-jdk-${eliyaVersion}.x86_64.rpm" class="org-link org-link--inline org-link--external">download</a></td>
+            </tr>
+            <tr>
+                <td>Linux</td>
+                <td>aarch64</td>
+                <td>tar.gz</td>
+                <td><a href="https://github.com/asymmsystems/eliya-jdk/releases/download/eliya-jdk-${eliyaVersion}/eliya-jdk-${eliyaVersion}-linux-aarch64.tar.gz" class="org-link org-link--inline org-link--external">download</a></td>
+            </tr>
+            <tr>
+                <td>Linux</td>
+                <td>aarch64</td>
+                <td>.deb</td>
+                <td><a href="https://github.com/asymmsystems/eliya-jdk/releases/download/eliya-jdk-${eliyaVersion}/eliya-jdk_${eliyaVersion}_arm64.deb" class="org-link org-link--inline org-link--external">download</a></td>
+            </tr>
+            <tr>
+                <td>Linux</td>
+                <td>aarch64</td>
+                <td>.rpm</td>
+                <td><a href="https://github.com/asymmsystems/eliya-jdk/releases/download/eliya-jdk-${eliyaVersion}/eliya-jdk-${eliyaVersion}.aarch64.rpm" class="org-link org-link--inline org-link--external">download</a></td>
+            </tr>
+            <tr>
+                <td>Docker (multi-arch)</td>
+                <td>amd64 + arm64</td>
+                <td>OCI image</td>
+                <td><a href="https://github.com/asymmsystems/eliya-jdk/pkgs/container/eliya" class="org-link org-link--inline org-link--external"><code>ghcr.io/asymmsystems/eliya</code></a></td>
+            </tr>
+            <tr>
+                <td>macOS</td>
+                <td>aarch64</td>
+                <td>tar.gz</td>
+                <td>Phase 2 &mdash; demand-gated · <a href="#waitlist" class="org-link org-link--inline org-link--internal">notify me</a></td>
+            </tr>
+            <tr>
+                <td>FreeBSD</td>
+                <td>x64</td>
+                <td>tar.gz (Research Preview)</td>
+                <td>Planned late 2026 &mdash; first Preview archive pending</td>
+            </tr>
+            <tr>
+                <td>Windows</td>
+                <td>x64</td>
+                <td>tar.gz / installer</td>
+                <td>Phase 3 &mdash; demand-gated · <a href="#waitlist" class="org-link org-link--inline org-link--internal">notify me</a></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p style="margin-top: 2rem; font-size: 0.95rem">
+        All releases:
+        <a href="https://github.com/asymmsystems/eliya-jdk/releases" class="org-link org-link--inline org-link--external">github.com/asymmsystems/eliya-jdk/releases</a>
+    </p>
+</section>
+
+<section style="margin-bottom: 5rem">
+    <h2 class="section-title">What's in the Eliya JRE</h2>
+    <p style="max-width: 60ch; margin-bottom: 1.5rem">The Eliya JRE is assembled with <code>jlink</code> from
+        the standard Java SE module set plus nine commonly-needed production-diagnostic modules, and built
+        with <code>--strip-debug</code> for smaller binaries (~48&nbsp;MB vs ~140&nbsp;MB for standard JREs).
+        The added <code>jdk.*</code> modules are part of every OpenJDK distribution but are not in the
+        standard Java SE module set that other vendors' JREs ship — bundling them by default matches the
+        canonical server/CLI deployment pattern.</p>
+
+    <table class="clinical-table" style="max-width: 800px">
+        <thead>
+            <tr>
+                <th>Module</th>
+                <th>Why included</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td><code>java.se</code></td><td>The standard Java SE aggregator (pulls all standard SE modules)</td></tr>
+            <tr><td><code>java.net.http</code></td><td>HTTP/2 client (explicit; also pulled via <code>java.se</code>)</td></tr>
+            <tr><td><code>jdk.unsupported</code></td><td><code>sun.misc.Unsafe</code> — required by the ecosystem (Netty, Caffeine, Hazelcast, …)</td></tr>
+            <tr><td><code>jdk.crypto.cryptoki</code></td><td>PKCS#11 — HSM-backed crypto</td></tr>
+            <tr><td><code>jdk.jfr</code></td><td>Flight Recorder — continuous low-overhead profiling</td></tr>
+            <tr><td><code>jdk.management.agent</code></td><td>JMX/RMI agent — production diagnostics, Prometheus exporters</td></tr>
+            <tr><td><code>jdk.attach</code></td><td>The attach API for <code>jcmd</code> / <code>jconsole</code> against external JVMs</td></tr>
+            <tr><td><code>jdk.naming.dns</code></td><td>DNS SPI for JNDI</td></tr>
+            <tr><td><code>jdk.localedata</code></td><td>Non-en_US locales</td></tr>
+            <tr><td><code>jdk.zipfs</code></td><td>The <code>jar:</code> NIO Path provider</td></tr>
+        </tbody>
+    </table>
+
+    <p style="margin-top: 1.5rem; font-size: 0.95rem">
+        Full background on <code>jlink</code>, the Java SE vs JDK module distinction, and the
+        rationale for each module's inclusion is in the
+        <a href="/product/eliya/user-guide/jre-curation.html" class="org-link org-link--inline org-link--internal">JRE curation guide</a>.</p>
+</section>
+
+<section style="margin-bottom: 5rem">
+    <h2 class="section-title">Container images</h2>
+    <p style="margin-bottom: 1.5rem">Multi-arch OCI images on GitHub Container Registry —
+        amd64 + arm64. Slim variants available.</p>
+
+    <button type="button" class="inline-terminal" style="max-width: 600px; margin-bottom: 1rem"
+        onclick="copyToClipboard('docker pull ghcr.io/asymmsystems/eliya:25-lts')" aria-label="Copy command">
+        <code>docker pull ghcr.io/asymmsystems/eliya:25-lts</code>
+        <span class="copy-btn" aria-hidden="true">Copy</span>
+    </button>
+
+    <p style="font-size: 0.9rem; margin-top: 1rem">Available tags: <code>25-lts</code>,
+        <code>${eliyaVersion}</code>, <code>25-lts-slim</code>, <code>${eliyaVersion}-slim</code>.
+        The moving <code>25-lts</code> tag tracks the latest CPU; pinned-version tags
+        (<code>${eliyaVersion}</code>) stay frozen. Tag refresh schedule follows the
+        <a href="/product/eliya/lifecycle.html" class="org-link org-link--inline org-link--internal">quarterly CPU calendar</a>.</p>
+</section>
+
+<section class="technical-inset">
+    <div style="max-width: 800px; margin: 0 auto">
+        <h3>Verifying your download</h3>
+        <p>Every release archive ships alongside <code>SHA256SUMS.txt</code> and
+            <code>SHA256SUMS.txt.asc</code> (detached GPG signature).</p>
+        <button type="button" class="inline-terminal" style="margin-top: 1.5rem"
+            onclick="copyToClipboard('sha256sum -c SHA256SUMS.txt &amp;&amp; gpg --verify SHA256SUMS.txt.asc')" aria-label="Copy command">
+            <code>sha256sum -c SHA256SUMS.txt && gpg --verify SHA256SUMS.txt.asc</code>
+            <span class="copy-btn" aria-hidden="true">Copy</span>
+        </button>
+        <p style="margin-top: 1.5rem; font-size: 0.9rem">
+            GPG fingerprint and first-time verification walkthrough:
+            <a href="/product/eliya/user-guide/verify-download.html" class="org-link org-link--inline org-link--internal">verify-download guide</a>.
+        </p>
+    </div>
+</section>
+
+<section id="waitlist" style="margin-bottom: 5rem">
+    <h2 class="section-title">Get notified about Phase 2 deliverables</h2>
+    <p>The macOS aarch64 binary and the FIPS variant build are Phase 2 deliverables.
+        Hosted apt and yum repositories (<code>deb.asymm.systems</code>, <code>rpm.asymm.systems</code>)
+        are also Phase 2 — until they ship, install <code>.deb</code> and <code>.rpm</code> packages
+        directly from the GitHub Release above.</p>
+
+    <p style="margin-top: 1rem">Subscribe to product-specific lists below. We'll
+        send quarterly progress updates and a launch notification when each ships. We'll only email
+        you about the products you sign up for; one-click unsubscribe in every email; we never share
+        your data — see <a href="/privacy.html" class="org-link org-link--inline org-link--internal">privacy</a>.</p>
+
+    <div style="margin-top: 2.5rem; display: flex; flex-direction: column; gap: 2rem">
+
+<@renderWaitlistForm
+        formspree_url="https://formspree.io/f/mkoygygd"
+        product_tag="apt-repo"
+        heading="Hosted apt repository (Debian, Ubuntu)"
+        body="Native <code>.deb</code> packages are available directly from the GitHub Release above (Linux x64 + aarch64). The hosted apt repository at <code>deb.asymm.systems</code> for managed automatic updates is a Phase 2 deliverable."
+        submit_label="Notify me about the hosted apt repository" />
+
+<@renderWaitlistForm
+        formspree_url="https://formspree.io/f/mwvypyvk"
+        product_tag="yum-repo"
+        heading="Hosted yum repository (RHEL, Rocky, Fedora, openSUSE)"
+        body="Native <code>.rpm</code> packages are available directly from the GitHub Release above (Linux x64 + aarch64). The hosted yum repository at <code>rpm.asymm.systems</code> for managed automatic updates is a Phase 2 deliverable."
+        submit_label="Notify me about the hosted yum repository" />
+
+<@renderWaitlistForm
+        formspree_url="https://formspree.io/f/mnjwnwjp"
+        product_tag="macos"
+        heading="macOS aarch64 binary"
+        body="Native aarch64 builds for Apple Silicon are a Phase 2 demand-gated deliverable. Today, macOS users can run Eliya in Linux-based Docker containers. Your signup is a meaningful demand signal that influences Phase 2 prioritisation."
+        submit_label="Notify me about macOS support" />
+
+<@renderWaitlistForm
+        formspree_url="https://formspree.io/f/mgodvdvb"
+        product_tag="fips"
+        heading="FIPS 140-3 variant"
+        body="A FIPS 140-3 compliant Eliya variant (<code>eliya-25-fips.tar.gz</code>) with Bouncy Castle FIPS provider pre-installed is a Phase 2 deliverable."
+        submit_label="Notify me about FIPS variant" />
+
+    </div>
+
+    <p style="margin-top: 2.5rem; font-size: 0.95rem">
+        Looking for <strong>Asymm Forensics</strong> (Phase 3, JVM diagnostic forensics platform)?

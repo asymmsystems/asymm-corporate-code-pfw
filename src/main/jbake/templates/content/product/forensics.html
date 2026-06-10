@@ -1,0 +1,146 @@
+<#include "/macro/waitlist.ftl">
+
+<header class="page-header">
+    <span class="section-kicker">Asymm</span>
+    <h1>Asymm Forensics</h1>
+    <p style="max-width: 60ch">JVM diagnostic forensics for compliance-conscious environments.</p>
+</header>
+
+<section style="margin-bottom: 5rem">
+    <p >Asymm Forensics is a JVM diagnostic forensics
+        platform built on JFR + JMC + Eclipse MAT foundations. It ingests JFR recordings, heap dumps,
+        thread dumps, GC logs, and crash logs into a unified incident timeline — producing
+        cross-correlation analysis and audit-ready compliance reports without sending data to a SaaS
+        service.</p>
+    <p style="margin-top: 1.5rem"><strong>Status:</strong> In active development.
+        Phase 3 deliverable (post-Series-A timeline).</p>
+</section>
+
+<section style="margin-bottom: 5rem">
+    <h2 class="section-title">What Asymm Forensics does</h2>
+    <p >Existing JVM diagnostic tooling does single-artifact analysis well:
+        JFR + JMC for event recordings, Eclipse MAT for heap dumps, fastthread.io for thread dumps.
+        What's unbuilt is <strong>cross-correlation across all artifact types</strong> in the
+        workflow regulated industries actually need.</p>
+
+    <h3 style="margin-top: 2rem">Asymm Forensics ingests</h3>
+    <ul style="line-height: 1.9">
+        <li>JFR recordings (continuous profiling data)</li>
+        <li>Heap dumps (HPROF format)</li>
+        <li>Thread dumps (jstack output)</li>
+        <li>GC logs (unified logging format)</li>
+        <li>Crash logs (<code>hs_err_pid*.log</code>)</li>
+        <li>OS metrics (sar, vmstat, iostat output)</li>
+    </ul>
+
+    <h3 style="margin-top: 2rem">And produces</h3>
+    <ul style="line-height: 1.9">
+        <li>Unified incident timeline correlating all artifact types</li>
+        <li>ML-based pattern detection across thread dumps and heap dumps</li>
+        <li>Compliance-ready audit reports (PCI DSS Section 10, HIPAA Technical Safeguards, SOX IT general controls)</li>
+        <li>Dial-aware semantic analysis for Dial workflow incidents</li>
+    </ul>
+</section>
+
+<section style="margin-bottom: 5rem">
+    <h2 class="section-title">Why local execution matters</h2>
+    <p >Asymm Forensics runs entirely on your hardware. JFR recordings,
+        heap dumps, thread dumps — none of it leaves your perimeter. This is intentional, not
+        incidental.</p>
+    <p style="margin-top: 1rem">Compliance-conscious teams in regulated industries
+        cannot use SaaS-based diagnostic tools because:</p>
+    <ul style="line-height: 1.9; margin-top: 0.5rem">
+        <li>PCI DSS / HIPAA / SOX requirements often prohibit sending production data to third parties</li>
+        <li>Data residency requirements (especially in EU, Middle East, Asia) require local processing</li>
+        <li>Air-gapped or restricted-network environments cannot reach SaaS endpoints</li>
+        <li>Customer data exposure risk is unacceptable even for diagnostic purposes</li>
+    </ul>
+    <p style="margin-top: 1rem">Asymm Forensics is designed for this audience.
+        The optional SaaS hosted version (Phase 3E) exists for teams who can use it, but local
+        execution is the default deployment model.</p>
+</section>
+
+<section style="margin-bottom: 5rem">
+    <h2 class="section-title">What Asymm Forensics is NOT</h2>
+    <ul style="line-height: 1.9">
+        <li>It is not an APM tool (use Datadog, New Relic, Dynatrace for application performance monitoring)</li>
+        <li>It is not a real-time observability platform (use Prometheus + Grafana, or your existing stack)</li>
+        <li>It is not a log aggregator (use Elastic, Loki, or your existing stack)</li>
+        <li>It is not a competitor to fastthread.io / gceasy.io / heaphero.io / yCrash on individual artifact analysis — those tools work fine; Asymm Forensics adds cross-correlation across all of them</li>
+    </ul>
+    <p style="margin-top: 1rem">Asymm Forensics is <strong>post-incident
+        forensics</strong>. When something failed and you need to understand why, across multiple
+        diagnostic artifacts, with audit-ready reporting — that's what Asymm Forensics is for.</p>
+</section>
+
+<section style="margin-bottom: 5rem">
+    <h2 class="section-title">Built by OpenJDK contributors</h2>
+    <p >Asymm Systems contributes to upstream OpenJDK — specifically to the
+        JFR project (custom event types, scrub enhancements) and the OpenJDK CRaC Project. Asymm
+        Forensics is not built parallel to OpenJDK tooling; it is built on top of it.</p>
+    <p style="margin-top: 1rem">JMC Core libraries (UPL 1.0) are the analysis
+        backbone. Eclipse MAT (EPL 2.0, bundled in Eliya Phase 2) is the heap analysis backbone.
+        Asymm Forensics adds the cross-correlation engine, ML-based pattern detection, compliance
+        reporting, and Dial-aware analysis layers on top of these foundations.</p>
+</section>
+
+<section style="margin-bottom: 5rem">
+    <h2 class="section-title">Roadmap</h2>
+    <table class="clinical-table">
+        <thead>
+            <tr>
+                <th>Sub-phase</th>
+                <th>Deliverable</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Phase 3A</td><td>JFR custom events upstream contribution</td><td>In progress</td></tr>
+            <tr><td>Phase 3B</td><td>Cross-correlation engine (backend)</td><td>Planned</td></tr>
+            <tr><td>Phase 3C</td><td>UI (architecture decision pending)</td><td>Planned</td></tr>
+            <tr><td>Phase 3D</td><td>Compliance reporting + Dial-aware analysis</td><td>Planned</td></tr>
+            <tr><td>Phase 3E</td><td>SaaS hosted option (separate audience)</td><td>Future</td></tr>
+        </tbody>
+    </table>
+
+    <p style="margin-top: 1.5rem; font-size: 0.95rem">
+        Full Phase 3 strategy, sub-phases, architectural options, and OpenJDK contribution thesis:
+        <a href="https://github.com/asymmsystems/eliya-jdk/blob/main/docs/08-asymm-forensics-strategy.md" class="org-link org-link--inline org-link--external">Asymm Forensics strategy</a>
+        (public).
+    </p>
+</section>
+
+<section style="margin-bottom: 5rem">
+    <h2 class="section-title">Get notified when Asymm Forensics is available</h2>
+    <p >Asymm Forensics — the JVM diagnostic forensics platform built on
+        JFR + JMC + Eclipse MAT — is in active development. Join the early access list to be notified
+        at launch. We'll send quarterly progress updates covering JFR custom event contributions to
+        OpenJDK, cross-correlation engine development, compliance reporting work, and Dial-aware
+        analysis features.</p>
+
+    <@renderWaitlistForm
+        formspree_url="https://formspree.io/f/mzdozozy"
+        product_tag="forensics-local"
+        heading="Early access — local execution"
+        body="Asymm Forensics — built on JFR + JMC + Eclipse MAT — is in active development. Join the early access list to be notified at launch. We'll send quarterly progress updates covering JFR custom event contributions to OpenJDK, cross-correlation engine development, compliance reporting work, and Dial-aware analysis features."
+        submit_label="Get notified at launch" />
+
+    <div style="margin-top: 2rem; padding: 1rem 1.5rem; background: var(--color-sand-light, #f7f5f0); border-radius: 4px; font-size: 0.95rem">
+        Want the <strong>SaaS hosted</strong> version specifically? That's a separate list with a
+        different audience (Phase 3E).
+        <a href="#waitlist-saas" class="org-link org-link--inline org-link--internal">Sign up for SaaS notifications</a>
+    </div>
+
+    <div id="waitlist-saas" style="margin-top: 3rem">
+<@renderWaitlistForm
+        formspree_url="https://formspree.io/f/meenonon"
+        product_tag="forensics-saas"
+        heading="Notify me about Forensics SaaS (Phase 3E)"
+        body="The hosted version of Asymm Forensics is a Phase 3E item — local execution remains the default deployment model. If you can use SaaS-based diagnostic tooling and want to be notified when the hosted option is available, sign up below."
+        submit_label="Get notified about SaaS" />
+    </div>
+</section>
+
+<div style="margin-top: 5rem; text-align: center">
+    <a href="/" class="org-link org-link--internal org-link--back">back to Asymm</a>
+</div>
