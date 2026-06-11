@@ -24,11 +24,20 @@ status=published
         <code>src/hotspot/share/runtime/globals.hpp</code>.</p>
 
     <p>When <code>EliyaProfile=None</code> (the default), Eliya behaves identically to upstream
-        OpenJDK 25 with no observability defaults applied. When <code>EliyaProfile=Production</code>,
-        Eliya activates the <strong>observability and operational-readiness profile</strong> — Java Flight Recorder with a default profile,
-        heap-dump-on-OOM, Native Memory Tracking summary, GC logging always-on, container
-        awareness reinforced, crash dump generation. Every individual setting is applied via
-        <code>FLAG_SET_ERGO</code> or equivalent, so explicit command-line overrides always win.</p>
+        OpenJDK 25 with no defaults applied. When <code>EliyaProfile=Production</code>,
+        Eliya activates <strong>six operational-readiness ergonomics</strong> (Phase 1, shipped
+        25.0.3): heap-dump-on-OOM with structured path, exit-on-OOM, Native Memory Tracking
+        summary, predictable crash log path, container support reinforced, and diagnostic VM
+        options unlocked. Every individual setting is applied via <code>FLAG_SET_ERGO</code>, so
+        explicit command-line overrides always win.</p>
+
+    <p><strong>Continuous JFR + unified GC logging are planned for Phase 2</strong>
+        alongside bundled local diagnostic tooling (Eclipse MAT headless, async-profiler),
+        the FIPS variant, macOS aarch64, and TCK + AQAvit quality-signal alignment. Phase 3
+        adds Asymm Forensics (cross-artefact correlation) and Windows x64. Phase 4
+        (demand-gated) adds compliance-aligned profile values (PCIDSS, HIPAA, SOX, FedRAMP,
+        GDPR, ISO27001, SOC2 &mdash; see Available profile values below for the full Phase-4
+        namespace).</p>
 
     <p>What this flag deliberately does
         <strong>not</strong> set: GC choice, GC tuning parameters (<code>MaxGCPauseMillis</code>,
@@ -36,7 +45,7 @@ status=published
         automatic ergonomics handle GC selection better than a distribution can guess; setting
         opinionated GC defaults helps some workloads and hurts others.</p>
 
-    <h3>What it sets</h3>
+    <h3>What it sets — Phase 1 (shipped 25.0.3)</h3>
     <table class="clinical-table" >
         <thead>
             <tr>
@@ -47,11 +56,6 @@ status=published
         </thead>
         <tbody>
             <tr>
-                <td>JFR continuous (Phase 2) recording</td>
-                <td><code>-XX:StartFlightRecording=settings=default,disk=true,maxage=24h,maxsize=250m,dumponexit=true,filename=&lt;path&gt;</code></td>
-                <td>24-hour rolling buffer at sub-1% overhead — last day of execution profile already on disk when failure happens, dumped on JVM exit</td>
-            </tr>
-            <tr>
                 <td>Heap dump on OOM</td>
                 <td><code>-XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=&lt;path&gt;</code></td>
                 <td>Capture the heap at the moment of failure, with predictable file location for triage</td>
@@ -59,17 +63,12 @@ status=published
             <tr>
                 <td>Exit on OOM</td>
                 <td><code>-XX:+ExitOnOutOfMemoryError</code></td>
-                <td>Fail fast on OOM — let orchestration restart the container; don't run a degraded JVM</td>
+                <td>Fail fast on OOM &mdash; let orchestration restart the container; don't run a degraded JVM</td>
             </tr>
             <tr>
                 <td>Native Memory Tracking</td>
                 <td><code>-XX:NativeMemoryTracking=summary</code></td>
                 <td>Low-overhead native-memory accounting for diagnosing leak suspects in JNI / native libs / metaspace</td>
-            </tr>
-            <tr>
-                <td>GC logging</td>
-                <td><code>-Xlog:gc*:file=&lt;path&gt;:time,uptime,level,tags:filecount=10,filesize=100m</code></td>
-                <td>Always-on GC log with rotation. Audit-grade record of pause behaviour</td>
             </tr>
             <tr>
                 <td>Crash log path</td>
@@ -84,7 +83,31 @@ status=published
             <tr>
                 <td>Diagnostic options unlocked</td>
                 <td><code>-XX:+UnlockDiagnosticVMOptions -XX:+DebugNonSafepoints</code></td>
-                <td>Required for accurate JFR execution sampling and async-profiler usage; safe in production with negligible overhead</td>
+                <td>Required for accurate JFR execution sampling and async-profiler usage; makes JFR + async-profiler trivially usable today via one-flag activation (<code>-XX:StartFlightRecording=&hellip;</code>). Safe in production with negligible overhead</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3>What it sets — Phase 2 (planned)</h3>
+    <p>Two additional ergonomics arrive in Phase 2 alongside the bundled diagnostic tools. They cannot use <code>FLAG_SET_ERGO</code> (the activation mechanism is not a product flag); they need <code>JfrOptionSet</code> / <code>LogConfiguration</code> hooks. </p>
+    <table class="clinical-table" >
+        <thead>
+            <tr>
+                <th>Capability</th>
+                <th>Planned setting</th>
+                <th>Purpose</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>JFR continuous recording (Phase 2)</td>
+                <td><code>-XX:StartFlightRecording=settings=default,disk=true,maxage=24h,maxsize=250m,dumponexit=true,filename=&lt;path&gt;</code></td>
+                <td>24-hour rolling buffer at sub-1% overhead &mdash; last day of execution profile already on disk when failure happens, dumped on JVM exit. Today: opt-in via the same flag (the unlocked diagnostic options make it trivially usable)</td>
+            </tr>
+            <tr>
+                <td>Unified GC logging (Phase 2)</td>
+                <td><code>-Xlog:gc*:file=&lt;path&gt;:time,uptime,level,tags:filecount=10,filesize=100m</code></td>
+                <td>Continuous GC log with rotation. Audit-grade record of pause behaviour. Today: opt-in via the same flag</td>
             </tr>
         </tbody>
     </table>
@@ -196,7 +219,7 @@ status=published
 
 <h3>Override semantics</h3>
     <p>Any flag or option set explicitly on the command line overrides the
-        Eliya default. Example — override one observability default while keeping the rest:</p>
+        Eliya default. Example — override one default while keeping the rest:</p>
     <button type="button" class="inline-terminal"
         onclick="copyToClipboard('java -XX:EliyaProfile=Production -XX:NativeMemoryTracking=detail -jar app.jar')" aria-label="Copy command">
         <code>java -XX:EliyaProfile=Production -XX:NativeMemoryTracking=detail -jar app.jar</code>
@@ -228,18 +251,20 @@ status=published
         workloads. Verify dependency compatibility (libraries that introspect object layout) before
         enabling in production.</p>
 
-    <p>Example &mdash; disable JFR while keeping every other Eliya default:</p>
+    <p>Example &mdash; disable JFR pre-emptively for Phase-2-ready environments:</p>
     <button type="button" class="inline-terminal"
         onclick="copyToClipboard('java -XX:EliyaProfile=Production -XX:-FlightRecorder -jar app.jar')" aria-label="Copy command">
         <code>java -XX:EliyaProfile=Production -XX:-FlightRecorder -jar app.jar</code>
         <span class="copy-btn" aria-hidden="true">Copy</span>
     </button>
-    <p>JFR is the highest-overhead component of the Production profile. Workloads that have
-        measured unacceptable JFR overhead (extreme allocation rates, some HFT workloads) can
-        disable JFR specifically while keeping heap-dump-on-OOM, NMT, GC logging, and crash log
-        paths. The conflict detection framework issues a Tier 2 warning noting that the explicit
-        <code>-FlightRecorder</code> overrides the profile-implied default &mdash; intentional and
-        supported, but worth flagging.</p>
+    <p>In Phase 1 today (25.0.3), JFR is not started by <code>EliyaProfile=Production</code> &mdash;
+        the profile only unlocks diagnostic options so operators can start JFR via
+        <code>-XX:StartFlightRecording=&hellip;</code> in a separate flag. The <code>-XX:-FlightRecorder</code>
+        switch is documented here so workloads that have measured unacceptable JFR overhead
+        (extreme allocation rates, some HFT workloads) can preemptively disable Phase-2's
+        continuous JFR default in advance of it landing. Once Phase 2 ships, the conflict
+        detection framework will issue a Tier 2 warning noting that the explicit
+        <code>-FlightRecorder</code> overrides the profile-implied default.</p>
 
     <h3>Inspecting applied values</h3>
     <button type="button" class="inline-terminal"
@@ -450,19 +475,29 @@ status=published
 
     <section class="technical-inset" >
             <h3>The trade-off, in plain language</h3>
-            <p>In exchange for ~1-2% steady-state CPU overhead, you have 24 hours of execution
-                profile data already on disk when an incident occurs.</p>
-            <p>The economics: 1.5% CPU overhead on a 2 vCPU container at typical cloud pricing
-                (~$50/month) costs roughly <strong>$0.75/month per replica</strong>. A single major
-                incident diagnosed without forensic data typically consumes <strong>8&ndash;40
-                engineering hours</strong> at $200/hr &mdash; $1,600 to $8,000 per incident, plus
-                business impact during the time-to-root-cause. One avoided incident pays for years
-                of always-on observability across a sizeable fleet.</p>
-            <p>For compliance-conscious teams in regulated industries,
-                this trade-off is almost always worth it &mdash; the alternative is realising you
-                don't have observability data <em>after</em> the incident has already happened.
-                For latency-sensitive workloads where every microsecond matters (HFT, low-latency
-                messaging gateways, real-time signalling), measure before committing.</p>
+            <p><strong>Phase 1 today (25.0.3):</strong> The six operational-readiness ergonomics
+                cost near-zero steady-state CPU (NMT summary &lt;0.5%; everything else triggers
+                only on the actual event). In exchange you have heap-dump-on-OOM landing in a
+                predictable structured path, NMT summary visible via <code>jcmd</code>, the
+                crash log where you expect it, and diagnostic options unlocked so JFR +
+                async-profiler are one-flag-away when you need them.</p>
+            <p><strong>Phase 2:</strong> The trade-off changes once continuous
+                JFR + unified GC logging become defaults &mdash; an additional ~1&ndash;2%
+                steady-state CPU overhead, in exchange for 24 hours of execution profile data
+                already on disk when an incident occurs.</p>
+            <p>The Phase 2 economics: 1.5% CPU overhead on a 2 vCPU container at typical cloud
+                pricing (~$50/month) costs roughly <strong>$0.75/month per replica</strong>. A
+                single major incident diagnosed without forensic data typically consumes
+                <strong>8&ndash;40 engineering hours</strong> at $200/hr &mdash; $1,600 to
+                $8,000 per incident, plus business impact during the time-to-root-cause. One
+                avoided incident pays for years of Phase-2 continuous observability across a
+                sizeable fleet.</p>
+            <p>For compliance-conscious teams in regulated industries, the Phase 2 trade-off is
+                almost always worth it &mdash; the alternative is realising you don't have
+                observability data <em>after</em> the incident has already happened. For
+                latency-sensitive workloads where every microsecond matters (HFT, low-latency
+                messaging gateways, real-time signalling), measure before committing once
+                Phase 2 ships.</p>
             <p>For where Eliya's forensic posture fits alongside SaaS APM platforms, see
                 <a href="/research/jvm-forensics-vs-apm.html" class="org-link org-link--inline org-link--internal">JVM forensics vs APM</a>.
                 For the vendor-by-vendor JDK comparison (and why Eliya doesn't tune GC), see

@@ -211,14 +211,18 @@ status=published
     <a href="/product/eliya.html" class="org-link org-link--inline org-link--internal">Eliya overview page</a>
     and the
     <a href="/product/eliya/user-guide/diff-from-upstream.html" class="org-link org-link--inline org-link--internal">precise diff from upstream</a>.
-    In short: <strong>observability defaults</strong> behind <code>-XX:EliyaProfile=Production</code>
-    (JFR with default profile, heap-dump-on-OOM, exit-on-OOM, Native Memory Tracking, GC logging
-    always-on, crash log paths, container awareness, diagnostic options unlocked for accurate
-    sampling), an <code>asymm</code> diagnostic CLI, and SDKMAN! distribution (registration in progress;
-    PR <a href="https://github.com/sdkman/sdkman-db-migrations/pull/783" class="org-link org-link--inline org-link--external">#783</a>). Eliya
-    does NOT modify <code>java.security</code> — upstream JDK 25 defaults are already correct;
+    In short: <strong>Phase 1 today (25.0.3) ships six operational-readiness ergonomics</strong>
+    behind <code>-XX:EliyaProfile=Production</code>: heap-dump-on-OOM with structured path,
+    exit-on-OOM, Native Memory Tracking summary, predictable crash log path, container support
+    reinforced, and diagnostic VM options unlocked (which makes JFR + async-profiler trivially
+    usable today via one-flag activation). Phase 2 (planned) adds continuous JFR + unified GC
+    logging by default plus bundled Eclipse MAT + async-profiler. Also: an <code>asymm</code>
+    diagnostic CLI and distribution via the Foojay DISCO API (registration in progress; SDKMAN!
+    surfaces Eliya once their backend cutover completes). Eliya does NOT modify
+    <code>java.security</code> &mdash; upstream JDK 25 defaults are already correct;
     duplicating them would be performative. The flag deliberately does not set GC choice or
-    tuning — JDK 25's automatic ergonomics handle that. Everything else is upstream OpenJDK.</p>
+    tuning &mdash; JDK 25's automatic ergonomics handle that. Everything else is upstream
+    OpenJDK.</p>
 
 <h3>Should I use Eliya, or one of Corretto / Temurin / Zulu / Liberica?</h3>
 <p >Honest answer: most people should use Temurin, Corretto, Zulu,

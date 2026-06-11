@@ -40,19 +40,25 @@
         sane. Both should pass before you continue.</p>
 
 
-    <h3>3. Run your application with observability defaults</h3>
+    <h3>3. Run your application with operational-readiness defaults</h3>
     <p>Add a single flag to your existing JVM command:</p>
     <button type="button" class="inline-terminal"
         onclick="copyToClipboard('java -XX:EliyaProfile=Production -jar app.jar')" aria-label="Copy command">
         <code>java -XX:EliyaProfile=Production -jar app.jar</code>
         <span class="copy-btn" aria-hidden="true">Copy</span>
     </button>
-    <p>This activates JFR continuous (Phase 2) recording (24-hour rolling buffer), heap dump on OOM, Native
-        Memory Tracking summary, GC logging, crash log path configuration, and container support
-        reinforced &mdash; all at ~1&ndash;2% steady-state CPU overhead. No GC tuning, no TLS overlay
-        &mdash; just observability defaults. See
+    <p><strong>Phase 1 today (25.0.3) activates six ergonomics:</strong>
+        heap-dump-on-OOM with structured path, exit-on-OOM, Native Memory Tracking summary,
+        predictable crash log path, container support reinforced, and diagnostic VM options
+        unlocked (which makes JFR + async-profiler trivially usable today via one-flag
+        activation). Near-zero steady-state CPU overhead &mdash; the Phase 1 ergonomics
+        either trigger only on the actual event (heap-dump-on-OOM, crash log, exit-on-OOM)
+        or carry &lt;0.5% overhead (NMT summary). No GC tuning, no TLS overlay.</p>
+    <p><strong>Phase 2 (planned)</strong> adds continuous JFR (24-hour rolling buffer at
+        sub-1% overhead) + unified GC logging as defaults under the same flag, plus bundled
+        Eclipse MAT + async-profiler. See
         <a href="/product/eliya/user-guide/flags-reference.html" class="org-link org-link--inline org-link--internal">flags reference</a>
-        for the full breakdown.</p>
+        for the full breakdown of Phase 1 + Phase 2 capabilities.</p>
 
 
     <h3>4. Inspect what Eliya is recording</h3>

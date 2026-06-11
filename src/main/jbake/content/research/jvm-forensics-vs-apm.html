@@ -27,7 +27,7 @@ status=published
 &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;-jar app.jar</code>
     </div>
 
-    <p>The agent does its instrumentation; Eliya activates its observability defaults. Both
+    <p>The agent does its instrumentation; Eliya activates its operational-readiness defaults. Both
         run side by side. No conflict at the JVM level. The interesting question is not
         compatibility &mdash; it's which tool answers which question, and where each stops.</p>
 
@@ -287,7 +287,7 @@ status=published
         support reinforced, and diagnostic VM options unlocked &mdash; the capability they
         previously couldn't get without violating data-egress policy. Phase 2 will add
         continuous JFR (24h rolling, sub-1% overhead) + unified GC logging by default,
-        per ADR-1 sec.11 2026-06-11.</p>
+       .</p>
 
 
     <h3>The four-phase compounding</h3>
@@ -295,11 +295,14 @@ status=published
         JVM platform across four phases</strong>, each phase extending the position. The
         compounding is the strategic argument.</p>
 
-    <p><strong>Phase 1 (current) &mdash; <em>production observability defaults.</em></strong>
-        JFR continuous (Phase 2) recording, heap dump on OOM, GC logging with rotation, native memory
-        tracking, exit-on-OOM, predictable crash log paths. Defaults that survive incidents
-        and crashes. Activated by <code>-XX:EliyaProfile=Production</code>; off by default,
-        opt-in.</p>
+    <p><strong>Phase 1 (current, shipped 25.0.3) &mdash; <em>six operational-readiness ergonomics.</em></strong>
+        Heap dump on OOM with structured path, exit-on-OOM, Native Memory Tracking summary,
+        predictable crash log path, container support reinforced, diagnostic VM options unlocked
+        (which makes JFR + async-profiler trivially usable today via one-flag activation).
+        Defaults that survive incidents and crashes. Activated by
+        <code>-XX:EliyaProfile=Production</code>; off by default, opt-in. Phase 2 (planned) adds
+        continuous JFR recording (24-hour rolling buffer) and unified GC logging as defaults under
+        the same flag.</p>
 
     <p><strong>Phase 2 (planned) &mdash; <em>bundled local-only diagnostic tooling.</em></strong>
         Eclipse MAT headless and async-profiler ship <em>inside the Eliya image</em>
@@ -307,7 +310,7 @@ status=published
         with the data. FIPS-validated build variant for procurement-restricted environments.
         Capability flag carve-outs for fine-grained control.</p>
 
-    <p><strong>Phase 3 (post-Series-A) &mdash; <em>Asymm Forensics cross-correlation
+    <p><strong>Phase 3 &mdash; <em>Asymm Forensics cross-correlation
         engine.</em></strong> JFR + heap dumps + thread dumps + GC logs + crash artefacts
         analysed together to generate compliance-aligned root-cause reports. No APM does this
         because no APM has the raw artefacts. The architectural argument that Phase 1 makes

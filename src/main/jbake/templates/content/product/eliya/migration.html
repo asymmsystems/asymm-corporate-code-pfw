@@ -131,7 +131,7 @@
 </section>
 
 <section style="margin-bottom: 5rem">
-    <h2 class="section-title">Enable Eliya observability defaults (optional)</h2>
+    <h2 class="section-title">Enable Eliya operational-readiness defaults (optional)</h2>
     <p style="margin-bottom: 1.5rem">After switching runtimes your
         application will run unchanged. To opt into Eliya's production observability profile &mdash;
         Java Flight Recorder continuous recording, heap dump on OOM, Native Memory Tracking,
@@ -171,9 +171,9 @@
 
     <h3>From Temurin / Adoptium</h3>
     <p>Direct swap. Both are vanilla OpenJDK builds.
-        Eliya adds opt-in observability defaults via <code>-XX:EliyaProfile=Production</code>; Temurin's
+        Eliya adds opt-in operational-readiness defaults via <code>-XX:EliyaProfile=Production</code>; Temurin's
         philosophy is to ship vanilla OpenJDK without overlays. Both are valid choices &mdash; Eliya is
-        for teams who want production observability configured by default; Temurin is for teams
+        for teams who want Phase 1 operational-readiness configured by default (Phase 2 adds continuous observability); Temurin is for teams
         who prefer to configure observability themselves.</p>
 
     <h3>From Azul Zulu</h3>
@@ -296,9 +296,9 @@
     <p>This page describes today's migration &mdash; Phase 1 of Eliya. The Eliya trajectory
         matters for migration planning:</p>
     <ul>
-        <li><strong>Phase 1 (current):</strong> Production observability defaults via
+        <li><strong>Phase 1 (current):</strong> Production operational-readiness defaults via
             <code>EliyaProfile=Production</code> (this page).</li>
-        <li><strong>Phase 2 (post-seed):</strong> Bundled local diagnostic tooling (Eclipse MAT
+        <li><strong>Phase 2:</strong> Bundled local diagnostic tooling (Eclipse MAT
             headless, async-profiler), FIPS-validated variant, <code>asymm eliya</code> CLI
             expansion. No migration changes &mdash; same Eliya distribution, expanded capability.</li>
         <li><strong>Phase 3 (post-Series A):</strong> Asymm Forensics &mdash; cross-correlation

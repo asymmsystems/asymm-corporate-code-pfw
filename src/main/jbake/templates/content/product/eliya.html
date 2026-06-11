@@ -9,7 +9,7 @@
      defaults today (Phase 1 shipped 25.0.3: 6 ergonomics - heap dump on OOM
      with structured path, exit-on-OOM, NMT summary, crash log path, container
      support reinforced, diagnostic options unlocked); continuous observability
-     (continuous JFR + unified GC logging) Phase 2 ahead per ADR-1 sec.11
+     (continuous JFR + unified GC logging) Phase 2 ahead
      2026-06-11 dissolution. NOT GC tuning, NOT compilation flags. Eliya
      inherits upstream JDK 25's security configuration unchanged. -->
 <#include "/macro/cards.ftl">
@@ -146,7 +146,7 @@
             <p class="code-comment"># Developer machines &mdash; SDKman registration in progress (target Q2 2026)</p>
             <@renderInlineTerminal command="sdk install java ${eliyaVersion}-eliya" max_width="100%" copyable=false />
 
-            <p class="code-comment"># Activate observability defaults</p>
+            <p class="code-comment"># Activate operational-readiness defaults (Phase 1)</p>
             <@renderInlineTerminal command="java -XX:EliyaProfile=Production -jar your-app.jar" max_width="100%" />
         </div>
 
@@ -183,7 +183,7 @@
             [
                 "Phase 2",
                 "Bundled diagnostic tools (Eclipse MAT headless, async-profiler), FIPS variant build (Bouncy Castle FIPS, CMVP cert #4943), <code>.deb</code> / <code>.rpm</code> packages, hosted apt/yum repositories, macOS aarch64 binary (demand-gated), expanded <code>asymm eliya</code> CLI surface",
-                "Target H2 2026 (post-seed)",
+                "Target H2 2026",
                 "Demand-gated",
                 "<a href=\"/product/eliya/downloads.html#waitlist\" class=\"org-link org-link--inline org-link--internal\">Notify me about Phase 2 deliverables</a>"
             ],
