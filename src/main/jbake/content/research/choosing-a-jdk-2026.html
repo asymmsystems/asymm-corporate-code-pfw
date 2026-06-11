@@ -346,14 +346,14 @@ status=published
     <p><strong>The actual value proposition.</strong> Eliya is a forensic-grade JVM platform across
         four phases:</p>
     <ul>
-        <li><strong>Phase 1 (current, Q3 2026 target):</strong> Production observability defaults via
+        <li><strong>Phase 1 (current, Q3 2026 target):</strong> Production operational-readiness defaults via
             <code>-XX:EliyaProfile=Production</code> &mdash; JFR continuous (Phase 2) recording (24-hour rolling
             buffer, sub-1% overhead), heap dump on OOM with structured paths, Native Memory Tracking
             summary mode, GC logging with rotation, crash log path configuration, container awareness
             reinforced, diagnostic VM options unlocked. Everything written to a three-level filesystem
             layout (<code>/var/log/eliya/${service}/${replica}/</code>) for per-replica audit
             attribution.</li>
-        <li><strong>Phase 2 (post-seed):</strong> Bundled local-only diagnostic tooling.
+        <li><strong>Phase 2:</strong> Bundled local-only diagnostic tooling.
             <strong>No other major OpenJDK distribution bundles Eclipse MAT or async-profiler in the
             JDK itself</strong> &mdash; engineers today install them separately. Eliya bundles both
             alongside the runtime, sidestepping the "diagnostic tool installation" friction in
@@ -500,7 +500,7 @@ status=published
             <tr>
                 <td>Compliance-conscious production in regulated industries (BFSI settlement, healthcare integration, government workloads, air-gapped deployments)</td>
                 <td>Eliya JDK (evaluate)</td>
-                <td><code>-XX:EliyaProfile=Production</code> activates forensic-grade observability defaults that survive incidents and crashes. Benchmark against Temurin if observability data isn't a primary requirement.</td>
+                <td><code>-XX:EliyaProfile=Production</code> activates forensic-grade operational-readiness defaults (Phase 1) + continuous observability (Phase 2) that survive incidents and crashes. Benchmark against Temurin if observability data isn't a primary requirement.</td>
             </tr>
             <tr>
                 <td>FreeBSD</td>

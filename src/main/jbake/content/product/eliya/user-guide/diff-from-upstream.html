@@ -27,29 +27,35 @@ status=published
         <code>EliyaProfile=None</code> plus selected boolean capabilities. See
         <a href="/product/eliya/user-guide/flag-architecture.html" class="org-link org-link--inline org-link--internal">flag architecture</a>
         for the full taxonomy.</p>
-    <p>When the user opts into Eliya's defaults, the following are
-        activated. None are upstream defaults.</p>
+    <p><strong>Phase 1 today (25.0.3) &mdash; six ergonomics activated by
+        <code>-XX:EliyaProfile=Production</code>.</strong> None are upstream defaults.</p>
     <ol>
-        <li><strong>JFR continuous (Phase 2) recording</strong> &mdash;
-            <code>-XX:StartFlightRecording=settings=default,disk=true,maxage=24h,maxsize=250m,dumponexit=true,filename=${ELIYA_DIAGNOSTIC_PATH}/${service_name}/${replica_name}/jfr/recording.jfr</code></li>
         <li><strong>Heap dump on OOM</strong> &mdash;
             <code>-XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=${ELIYA_DIAGNOSTIC_PATH}/${service_name}/${replica_name}/heap/</code></li>
         <li><strong>Exit on OOM</strong> &mdash; <code>-XX:+ExitOnOutOfMemoryError</code></li>
         <li><strong>Native Memory Tracking</strong> &mdash; <code>-XX:NativeMemoryTracking=summary</code></li>
         <li><strong>Crash log path</strong> &mdash;
             <code>-XX:ErrorFile=${ELIYA_DIAGNOSTIC_PATH}/${service_name}/${replica_name}/crash/hs_err_pid%p.log</code></li>
-        <li><strong>GC logging</strong> &mdash;
-            <code>-Xlog:gc*=info:file=${ELIYA_DIAGNOSTIC_PATH}/${service_name}/${replica_name}/gc/gc-%t-%p.log:time,level,tags:filecount=10,filesize=100M</code></li>
         <li><strong>Container support reinforced</strong> &mdash; <code>-XX:+UseContainerSupport</code>
             (already upstream default; reinforced for clarity)</li>
         <li><strong>Diagnostic VM options unlocked</strong> &mdash;
-            <code>-XX:+UnlockDiagnosticVMOptions -XX:+DebugNonSafepoints</code> (required for accurate
-            JFR and async-profiler sampling)</li>
+            <code>-XX:+UnlockDiagnosticVMOptions -XX:+DebugNonSafepoints</code> &mdash; required for
+            accurate JFR and async-profiler sampling, and makes them trivially usable today via
+            one-flag activation (<code>-XX:StartFlightRecording=&hellip;</code>)</li>
         <li><strong>Conflict detection</strong> &mdash; <code>EliyaConflictCheck</code> is enabled by
             default. Startup-time inspection of the command line responds to conflicts between the
             profile-implied defaults and explicit user flags in three tiers: silent override (user
             explicit wins), warning (redundant flag), fatal (incompatible combination). See
             <a href="/product/eliya/user-guide/flag-architecture.html" class="org-link org-link--inline org-link--internal">flag architecture &mdash; conflict detection</a>.</li>
+    </ol>
+
+    <p><strong>Phase 2 (planned) &mdash; two additional ergonomics activated by the same flag</strong>
+        once the bundled diagnostic tools work lands:</p>
+    <ol>
+        <li><strong>JFR continuous recording (Phase 2)</strong> &mdash;
+            <code>-XX:StartFlightRecording=settings=default,disk=true,maxage=24h,maxsize=250m,dumponexit=true,filename=${ELIYA_DIAGNOSTIC_PATH}/${service_name}/${replica_name}/jfr/recording.jfr</code></li>
+        <li><strong>Unified GC logging (Phase 2)</strong> &mdash;
+            <code>-Xlog:gc*=info:file=${ELIYA_DIAGNOSTIC_PATH}/${service_name}/${replica_name}/gc/gc-%t-%p.log:time,level,tags:filecount=10,filesize=100M</code></li>
     </ol>
     <p>The <code>${replica_name}</code> level is suppressed when it resolves to the same value
         as <code>${service_name}</code> (bare-metal multi-JVM hosts, or all-fallback cases). See
