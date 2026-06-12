@@ -1,5 +1,5 @@
-title=Eliya — FAQ
-description=Frequently asked questions about Eliya JDK — TCK, licensing, support, the Dial relationship, platforms.
+title=Eliya FAQ
+description=Frequently asked questions about Eliya JDK: TCK, licensing, support, the Dial relationship, platforms.
 type=page
 toc=true
 status=published
@@ -29,7 +29,7 @@ status=published
     </thead>
     <tbody>
         <tr>
-            <td>JFR <code>default</code> profile continuous recording</td>
+            <td>JFR <code>default</code> profile continuous recording (Phase 2)</td>
             <td>&lt;1% CPU, ~16 MB memory, 250 MB rolling disk</td>
         </tr>
         <tr>
@@ -37,7 +37,7 @@ status=published
             <td>&lt;0.5% CPU, ~10 MB memory</td>
         </tr>
         <tr>
-            <td>GC logging with rotation</td>
+            <td>GC logging with rotation (Phase 2)</td>
             <td>Negligible CPU, ~1 GB rolling disk</td>
         </tr>
         <tr>
@@ -60,13 +60,13 @@ status=published
 <ul style="line-height: 1.9; margin-top: 1rem">
     <li><strong>Oracle's own benchmarks</strong> documented in JDK Mission Control documentation.</li>
     <li><strong>Datadog Continuous Profiler</strong>, <strong>New Relic Java Profiler</strong>,
-        and <strong>Microsoft Azure Application Insights</strong> are all built on JFR — these
+        and <strong>Microsoft Azure Application Insights</strong> are all built on JFR; these
         vendors would not have invested if the overhead were operationally meaningful.</li>
     <li><strong>Microsoft Azure Spring Apps</strong> (formerly Azure Spring Cloud) exposes
         JFR-based continuous diagnostics as a first-class platform capability.</li>
     <li><strong>Marcus Hirt</strong>, original JFR architect at Oracle, has consistently
         positioned JFR as production-grade always-on instrumentation.</li>
-    <li><strong>JDK 11+ ecosystem</strong> has used JFR in production since 2018 (JEP 328) —
+    <li><strong>JDK 11+ ecosystem</strong> has used JFR in production since 2018 (JEP 328),
         seven years of hardening.</li>
 </ul>
 
@@ -84,8 +84,8 @@ status=published
     container resource budget or opt out by not setting the flag.</p>
 
 <h3>What if my workload is latency-sensitive (HFT, low-latency messaging)?</h3>
-<p >For workloads where every microsecond matters — high-frequency
-    trading, real-time messaging gateways, signalling protocols with strict tail-latency SLAs —
+<p >For workloads where every microsecond matters (high-frequency
+    trading, real-time messaging gateways, signalling protocols with strict tail-latency SLAs),
     measure before committing.</p>
 <p style="margin-top: 1rem">Even latency-sensitive workloads typically see
     acceptable overhead because JFR's events are emitted from JVM internals using lock-free
@@ -100,7 +100,7 @@ status=published
     regardless of recording duration (the buffers are circular). Native Memory Tracking
     <code>summary</code> adds ~5-10 MB. Combined: 10-25 MB JVM memory overhead.</p>
 <p style="margin-top: 1rem"><strong>Disk:</strong> Eliya's defaults are
-    bounded — JFR rolling buffer at 250 MB max, GC logs at 1 GB max (10 × 100 MB rotated),
+    bounded: JFR rolling buffer at 250 MB max, GC logs at 1 GB max (10 × 100 MB rotated),
     heap dumps only on OOM, crash logs only on JVM crash. Steady-state disk usage: ~1.25 GB
     per JVM under <code>/var/log/eliya/${ELIYA_SERVICE_NAME}/</code>. On systems with limited
     disk, configure <code>ELIYA_DIAGNOSTIC_PATH</code> to point to a larger volume, or opt out.</p>
@@ -108,11 +108,11 @@ status=published
 <h3>Does this affect GC behaviour or JIT compilation?</h3>
 <p ><strong>No.</strong> <code>-XX:EliyaProfile=Production</code> does not
     change GC selection, pause targets, region size, IHOP, string deduplication, or any GC
-    tuning parameters. JDK 25's automatic ergonomics handle GC selection — Eliya does not
+    tuning parameters. JDK 25's automatic ergonomics handle GC selection; Eliya does not
     override this.</p>
 <p style="margin-top: 1rem">JIT compiler tier transitions are unchanged
     from upstream OpenJDK 25. The <code>DebugNonSafepoints</code> flag is enabled (required
-    for accurate JFR sampling), but it does not change JIT compilation decisions or output —
+    for accurate JFR sampling), but it does not change JIT compilation decisions or output;
     it only enables more accurate stack-trace attribution during JFR event collection.</p>
 
 <h3>How does this compare to alternatives?</h3>
@@ -180,7 +180,7 @@ status=published
 <h3>What's the trade-off in plain language?</h3>
 <p >In exchange for ~1-2% steady-state CPU overhead, you have
     24 hours of execution profile data already on disk when an incident occurs. The
-    alternative — discovering after an incident that observability data wasn't recorded — is
+    alternative (discovering after an incident that observability data wasn't recorded) is
     operationally worse than the marginal CPU cost.</p>
 <p style="margin-top: 1rem">For compliance-conscious teams in regulated
     industries, this trade-off is almost always worth it. For latency-sensitive workloads
@@ -194,14 +194,14 @@ status=published
 <h3>Is Eliya TCK-certified?</h3>
 <p >Eliya is based on TCK-certified upstream OpenJDK 25 and inherits its
     compatibility properties. Eliya's modifications are limited to a JVM flag
-    (<code>EliyaProfile=Production</code> — observability-only) and packaging — none of which alter Java SE
+    (<code>EliyaProfile=Production</code>, observability-only) and packaging, none of which alter Java SE
     behaviour. Upstream <code>java.security</code> is unchanged. A separate TCK run of the Eliya
     binary itself is a Phase 2 deliverable; when complete it will be published on the
     <a href="/product/eliya/security.html" class="org-link org-link--inline org-link--internal">security page</a>.</p>
 
 <h3>Can I use Eliya in production?</h3>
 <p >Yes. Eliya is distributed under GPLv2 with the Classpath Exception
-    — the same licence as upstream OpenJDK. Production use is explicitly permitted. The audience
+    the same licence as upstream OpenJDK. Production use is explicitly permitted. The audience
     is compliance-conscious and quality-conscious teams in regulated industries (BFSI, healthcare,
     public sector, telecom) and any high-throughput Java environment that values engineering
     quality over convenience.</p>
@@ -211,22 +211,26 @@ status=published
     <a href="/product/eliya.html" class="org-link org-link--inline org-link--internal">Eliya overview page</a>
     and the
     <a href="/product/eliya/user-guide/diff-from-upstream.html" class="org-link org-link--inline org-link--internal">precise diff from upstream</a>.
-    In short: <strong>observability defaults</strong> behind <code>-XX:EliyaProfile=Production</code>
-    (JFR with default profile, heap-dump-on-OOM, exit-on-OOM, Native Memory Tracking, GC logging
-    always-on, crash log paths, container awareness, diagnostic options unlocked for accurate
-    sampling), an <code>asymm</code> diagnostic CLI, and SDKMAN! distribution (registration in progress;
-    PR <a href="https://github.com/sdkman/sdkman-db-migrations/pull/783" class="org-link org-link--inline org-link--external">#783</a>). Eliya
-    does NOT modify <code>java.security</code> — upstream JDK 25 defaults are already correct;
-    duplicating them would be performative. The flag deliberately does not set GC choice or
-    tuning — JDK 25's automatic ergonomics handle that. Everything else is upstream OpenJDK.</p>
+    In short: <strong>Phase 1 today (25.0.3) ships six operational-readiness ergonomics</strong>
+    behind <code>-XX:EliyaProfile=Production</code>: heap-dump-on-OOM with structured path,
+    exit-on-OOM, Native Memory Tracking summary, predictable crash log path, container support
+    reinforced, and diagnostic VM options unlocked (which makes JFR + async-profiler trivially
+    usable today via one-flag activation). Phase 2 (planned) adds continuous JFR + unified GC
+    logging by default plus bundled Eclipse MAT + async-profiler. Also: an <code>asymm</code>
+    diagnostic CLI and distribution via the Foojay DISCO API (registration in progress; SDKMAN!
+    surfaces Eliya once their backend cutover completes). Eliya does NOT modify
+    <code>java.security</code>; upstream JDK 25 defaults are already correct, and
+    duplicating them would add nothing. The flag deliberately does not set GC choice or
+    tuning; JDK 25's automatic ergonomics handle that. Everything else is upstream
+    OpenJDK.</p>
 
 <h3>Should I use Eliya, or one of Corretto / Temurin / Zulu / Liberica?</h3>
-<p >Honest answer: most people should use Temurin, Corretto, Zulu,
-    or Liberica. Eliya wins in a narrow niche — compliance-conscious teams who cannot send
+<p >Most people should use Temurin, Corretto, Zulu,
+    or Liberica. Eliya wins in a narrow niche: compliance-conscious teams who cannot send
     diagnostic data to external SaaS analyzers, teams that want production observability defaults
     without manual tuning, Dial users, FreeBSD users. We wrote a comprehensive vendor-by-vendor
     guide that explicitly tells you when <em>not</em> to pick Eliya:
-    <a href="/research/choosing-a-jdk-2026.html" class="org-link org-link--inline org-link--internal">Choosing a JDK in 2026 — an honest guide</a>.</p>
+    <a href="/research/choosing-a-jdk-2026.html" class="org-link org-link--inline org-link--internal">Choosing a JDK in 2026: an honest guide</a>.</p>
 
 <h3>Does Eliya work with APM tools (AppDynamics, Dynatrace, New Relic, Elastic APM, Datadog)?</h3>
 <p>Yes. APM tools that use the Java Agent API coexist with Eliya without conflict:</p>
@@ -239,8 +243,8 @@ status=published
     real-time dashboards, and team-wide observability. Eliya provides forensic-grade
     artefacts on disk (JFR recordings, heap dumps, GC logs, crash logs) that APM tools
     structurally cannot capture. Most production teams run both. Note that Datadog
-    Continuous Profiler uses JFR under the hood, so Eliya's JFR-by-default activation
-    directly feeds Datadog's pipeline.</p>
+    Continuous Profiler uses JFR under the hood, so Eliya's JFR activation
+    feeds Datadog's pipeline directly.</p>
 <p>For environments where SaaS APM is prohibited (BFSI, healthcare, public sector under
     data-egress restrictions), Eliya provides forensic capability previously inaccessible
     without violating compliance. Self-hosted APM stacks (Elastic APM with on-prem
@@ -248,17 +252,17 @@ status=published
     positioning and run alongside without compliance concerns.</p>
 <p>For the architectural distinction, the six specific APM limitations, the ten
     incident-response use cases, and the four-phase trajectory, see
-    <a href="/research/jvm-forensics-vs-apm.html" class="org-link org-link--inline org-link--internal">JVM forensics vs APM &mdash; why both, when each, and where each stops</a>.</p>
+    <a href="/research/jvm-forensics-vs-apm.html" class="org-link org-link--inline org-link--internal">JVM forensics vs APM: why both, when each, and where each stops</a>.</p>
 
 <h3>How long is each Eliya version supported?</h3>
 <p >Eliya LTS versions align with upstream OpenJDK LTS support
-    windows. Eliya 25 LTS is supported through September 2030. See the
+    windows. Eliya 25 LTS is supported through September 2029. See the
     <a href="/product/eliya/lifecycle.html" class="org-link org-link--inline org-link--internal">lifecycle page</a>
     for the full calendar.</p>
 
 <h3>Do I need Eliya to run Dial?</h3>
-<p ><strong>No.</strong> Dial targets JDK 25 and above from any vendor
-    — Corretto, Temurin, Zulu, Oracle, Liberica, or Eliya. Eliya is the recommended runtime because of
+<p ><strong>No.</strong> Dial targets JDK 25 and above from any vendor:
+    Corretto, Temurin, Zulu, Oracle, Liberica, or Eliya. Eliya is the recommended runtime because of
     the observability defaults baked in, but never required. Asymm Systems does not create vendor
     lock-in for Dial users.</p>
 
@@ -282,8 +286,8 @@ status=published
 
 <h3>Why no Windows build?</h3>
 <p >Eliya is server-first. The compliance-conscious workloads Eliya
-    targets — BFSI gateways, healthcare integrations, public-sector platforms, telecom BSS/OSS —
-    deploy on Linux. Windows support is demand-gated — if enterprise users request it, the build
+    targets (BFSI gateways, healthcare integrations, public-sector platforms, telecom BSS/OSS)
+    deploy on Linux. Windows support is demand-gated. If enterprise users request it, the build
     matrix can be extended, but it's not a default.</p>
 
 <h3>Does Eliya support CRaC (Coordinated Restore at Checkpoint)?</h3>
@@ -302,7 +306,7 @@ status=published
     <p style="margin: 0 0 1.5rem 0; line-height: 1.7">A CRaC variant of Eliya for sub-second JVM
         startup is a Phase 3+ consideration. Asymm is engaging with the upstream OpenJDK CRaC
         Project; a separate Eliya CRaC variant build is deferred until demand and engineering
-        capacity warrant. Join the list to register interest — your signup is a meaningful demand
+        capacity warrant. Join the list to register interest; your signup is a meaningful demand
         signal.</p>
 
     <form action="https://formspree.io/f/xjglklgw" method="POST">
@@ -349,10 +353,10 @@ status=published
     </form>
 </div>
 
-<h3 style="margin-top: 3rem">Why a FreeBSD build? Nobody else does this.</h3>
-<p >Exactly. Eliya ships a FreeBSD Research Preview — honestly
-    labelled, community-supported, no CVE SLA — because Asymm Systems operates at the JVM infrastructure
-    level. It's a single quarterly manual build, not a GA product. See the
+<h3 style="margin-top: 3rem">Why ship a FreeBSD build at all?</h3>
+<p >No other major vendor ships FreeBSD binaries, and Asymm Systems
+    operates at the JVM infrastructure level. A FreeBSD Research Preview is planned for late 2026:
+    clearly labelled, community-supported, no CVE SLA. It will be a single quarterly manual build, not a GA product. See the
     <a href="/product/eliya.html" class="org-link org-link--inline org-link--internal">platform matrix</a>
     for scope and caveats.</p>
 

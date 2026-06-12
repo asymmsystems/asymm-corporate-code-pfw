@@ -1,4 +1,4 @@
-title=Lessons from production — why Eliya's defaults look the way they do
+title=Lessons from production: why Eliya's defaults look the way they do
 description=Four production patterns that recur across 15+ years of telecom and enterprise JVM operations, and how Eliya's defaults respond to each.
 type=page
 toc=true
@@ -15,7 +15,7 @@ status=published
 </header>
 
 <section>
-    <h3>Pattern 1 — When 4 GB ≠ 4 GB</h3>
+    <h3>Pattern 1: When 4 GB ≠ 4 GB</h3>
     <p>A recurring production pattern in containerised JVM
         deployments: teams set <code>-Xmx4G</code> to match a 4 GB container memory limit,
         then encounter allocation failures or OOM kills well below the configured heap maximum.</p>
@@ -41,13 +41,13 @@ status=published
     <ul>
         <li><code>UseContainerSupport</code> is enabled by default (already upstream in JDK 25,
             but reinforced by Eliya for clarity).</li>
-        <li>Native Memory Tracking enabled by default makes the off-heap memory visible &mdash; you
+        <li>Native Memory Tracking enabled by default makes the off-heap memory visible; you
             can diagnose "where is the rest of my container memory going?" by examining the NMT
             summary.</li>
         <li>For container deployments, teams often get more predictable results with
             <code>-XX:MaxRAMPercentage</code> (e.g., 70%) than with explicit <code>-Xmx</code>,
             since percentage-based sizing automatically accounts for container memory-limit changes.
-            Eliya does not set this for you &mdash; it's a tuning decision that depends on JVM
+            Eliya does not set this for you; it's a tuning decision that depends on JVM
             workload patterns and non-JVM container memory consumption.</li>
     </ul>
 
@@ -77,7 +77,7 @@ Total: reserved=4194304KB, committed=2891024KB<br>
         don't have this visibility.</p>
 
 
-    <h3>Pattern 2 — Pause variance kills SLAs, not pause medians</h3>
+    <h3>Pattern 2: Pause variance kills SLAs, not pause medians</h3>
     <p>A recurring observation from production GC analysis: teams
         tune for and report <strong>median</strong> GC pause times, then get surprised when p99
         latency SLAs fail.</p>
@@ -89,41 +89,48 @@ Total: reserved=4194304KB, committed=2891024KB<br>
 
     <p>This pattern appears across Eliya's target industries:</p>
     <ul>
-        <li><strong>BFSI</strong> &mdash; real-time payment processing, settlement systems,
+        <li><strong>BFSI</strong>: real-time payment processing, settlement systems,
             algorithmic trading. p99.99 latency tied to transaction timing windows.</li>
-        <li><strong>Telecom</strong> &mdash; identity platforms, BSS components, signalling
+        <li><strong>Telecom</strong>: identity platforms, BSS components, signalling
             gateways. Latency tied to subscriber experience and protocol timing.</li>
-        <li><strong>Healthcare</strong> &mdash; real-time clinical decision support, image
+        <li><strong>Healthcare</strong>: real-time clinical decision support, image
             processing pipelines. Latency tied to clinical workflow timing.</li>
-        <li><strong>Government</strong> &mdash; high-availability citizen services, authentication
+        <li><strong>Government</strong>: high-availability citizen services, authentication
             infrastructure. Latency tied to SLA contracts with regulatory penalties.</li>
     </ul>
     <p>Each industry has different acceptable latency bands, but all share the structural property
-        that <em>variance</em> &mdash; not the median &mdash; determines whether the SLA is met.</p>
+        that <em>variance</em>, not the median, determines whether the SLA is met.</p>
 
     <h3>Eliya's response</h3>
     <ul>
-        <li>GC logging enabled by default — you see variance, not just averages</li>
-        <li>JFR continuous (Phase 2) recording captures every individual pause as a structured event</li>
+        <li><strong>Phase 1 today (25.0.3):</strong> the unlocked diagnostic options make GC
+            events visible via <code>jcmd &lt;pid&gt; JFR.start settings=default</code> against
+            the running JVM in one step (no restart, no second flag); the deep options
+            JFR needs to sample accurately are already in place. NMT summary surfaces native
+            memory pressure that correlates with GC variance.</li>
+        <li><strong>Phase 2 (planned):</strong> continuous JFR + unified <code>-Xlog:gc*</code>
+            with rotation become defaults under <code>EliyaProfile=Production</code>. Every
+            individual pause captured as a structured event; variance visible without operator
+            action.</li>
         <li>The <code>-XX:+UseZGC</code> opt-in pattern is documented in the
             <a href="/product/eliya/user-guide/flags-reference.html" class="org-link org-link--inline org-link--internal">flags reference</a>
             for sub-millisecond pause guarantees across a wide range of heap sizes (Generational ZGC
             in JDK&nbsp;21+ works well from a few GB up to multi-TB). For latency-critical
             workloads where every microsecond matters, benchmark ZGC against G1 with your actual
-            workload &mdash; the relative throughput trade-off depends on allocation rate and CPU
+            workload; the relative throughput trade-off depends on allocation rate and CPU
             availability.</li>
     </ul>
 
     <p><strong>The lesson:</strong> continuous
-        observability beats periodic reporting. You can't tune what you can't measure — and
+        observability beats periodic reporting. You can't tune what you can't measure, and
         aggregate metrics hide the variance that matters.</p>
 
 
-    <h3>Pattern 3 — When the JVM gets blamed for upstream problems</h3>
+    <h3>Pattern 3: When the JVM gets blamed for upstream problems</h3>
     <p>A recurring incident pattern: production outage looks like JVM
         failure (threads hung, requests timing out, application unresponsive). Initial investigation
-        focuses on the JVM. Root cause turns out to be upstream — load balancer queue saturation,
-        downstream database connection limits, network middleware misconfiguration — but the JVM
+        focuses on the JVM. Root cause turns out to be upstream (load balancer queue saturation,
+        downstream database connection limits, network middleware misconfiguration), but the JVM
         appeared to be the problem because:</p>
 
     <ul>
@@ -139,38 +146,38 @@ Total: reserved=4194304KB, committed=2891024KB<br>
     <h3>Eliya's response</h3>
     <ul>
         <li><strong>Phase 1 today (25.0.3):</strong> Eliya activates heap-dump-on-OOM with a
-            structured path, NMT summary, and unlocked diagnostic VM options &mdash; the post-incident
+            structured path, NMT summary, and unlocked diagnostic VM options; the post-incident
             forensic artefacts and the deep flags JFR + async-profiler need are already in place.
             When the incident happens an operator runs <code>jcmd &lt;pid&gt; JFR.start
             settings=default duration=10m filename=&lt;path&gt;</code> against the already-running
             JVM; the unlocked diagnostic options make the deep flags usable in one step rather than
             requiring a restart.</li>
-        <li><strong>Phase 2 (planned per ADR-1 sec.11 2026-06-11):</strong> Continuous JFR with a
+        <li><strong>Phase 2 (planned):</strong> Continuous JFR with a
             24-hour rolling buffer becomes the default under <code>EliyaProfile=Production</code>,
-            eliminating the "start JFR and reproduce" step entirely &mdash; the recording covers the
+            eliminating the "start JFR and reproduce" step entirely; the recording covers the
             incident window without manual intervention.</li>
         <li>JFR's event taxonomy (already in the JRE module set today) distinguishes the source of
             any thread block:
             <ul>
-                <li><code>jdk.SocketRead</code> / <code>jdk.SocketWrite</code> &mdash; blocked on
+                <li><code>jdk.SocketRead</code> / <code>jdk.SocketWrite</code>: blocked on
                     network I/O (likely upstream / downstream issue).</li>
-                <li><code>jdk.FileRead</code> / <code>jdk.FileWrite</code> &mdash; blocked on disk
+                <li><code>jdk.FileRead</code> / <code>jdk.FileWrite</code>: blocked on disk
                     I/O.</li>
-                <li><code>jdk.JavaMonitorEnter</code> / <code>jdk.JavaMonitorWait</code> &mdash;
+                <li><code>jdk.JavaMonitorEnter</code> / <code>jdk.JavaMonitorWait</code>:
                     blocked on synchronisation (likely application code).</li>
-                <li><code>jdk.GarbageCollection</code> &mdash; blocked by GC pauses.</li>
-                <li><code>jdk.SafepointBegin</code> &mdash; blocked by JVM safepoints.</li>
-                <li><code>jdk.ThreadPark</code> &mdash; explicit application blocking (e.g.,
+                <li><code>jdk.GarbageCollection</code>: blocked by GC pauses.</li>
+                <li><code>jdk.SafepointBegin</code>: blocked by JVM safepoints.</li>
+                <li><code>jdk.ThreadPark</code>: explicit application blocking (e.g.,
                     <code>CompletableFuture</code> chains).</li>
             </ul>
             Reading these events from a JFR recording immediately answers "is the JVM healthy or is
-            something external?" &mdash; the question Pattern 3 outages otherwise burn hours
+            something external?": the question Pattern 3 outages otherwise burn hours
             diagnosing.</li>
     </ul>
 
     <p><strong>Pattern 3 and APM coexistence.</strong> Standard APM tools tell you that latency
-        increased &mdash; they show the symptom. JFR tells you what the JVM was doing during that
-        latency &mdash; it shows the cause. The two are complementary: APM identifies "something
+        increased; they show the symptom. JFR tells you what the JVM was doing during that
+        latency; it shows the cause. The two are complementary: APM identifies "something
         happened at 14:23"; JFR identifies "threads were blocked on socket reads to upstream
         service X." For the architectural distinction, see
         <a href="/research/jvm-forensics-vs-apm.html" class="org-link org-link--inline org-link--internal">JVM forensics vs APM</a>.</p>
@@ -181,7 +188,7 @@ Total: reserved=4194304KB, committed=2891024KB<br>
         incident.</p>
 
 
-    <h3>Pattern 4 — Crashes preserve no evidence without configured paths</h3>
+    <h3>Pattern 4: Crashes preserve no evidence without configured paths</h3>
     <p>A recurring incident pattern: a JVM segfaults or hits OutOfMemoryError. The JVM crashes. The
         container restarts. An on-call engineer investigates. What's available?</p>
 
@@ -191,7 +198,7 @@ Total: reserved=4194304KB, committed=2891024KB<br>
         <li>The crash log <code>hs_err_pid&lt;PID&gt;.log</code> is written to the JVM's working
             directory, which in containers is often ephemeral and lost on restart.</li>
         <li>JFR is off by default, so no continuous record of what was happening exists.</li>
-        <li>The container's stdout / stderr is the only evidence &mdash; and that captures
+        <li>The container's stdout / stderr is the only evidence, and that captures
             application output, not JVM state.</li>
     </ul>
 
@@ -201,8 +208,8 @@ Total: reserved=4194304KB, committed=2891024KB<br>
             under <code>${ELIYA_DIAGNOSTIC_PATH}/${service}/${replica}/heap/</code>.</li>
         <li>The crash log path points to
             <code>${ELIYA_DIAGNOSTIC_PATH}/${service}/${replica}/crash/</code>.</li>
-        <li>JFR continuous (Phase 2) recording with <code>dumponexit=true</code> flushes to disk on any
-            termination &mdash; including a fatal crash where the JVM has the chance to write before
+        <li>Continuous JFR recording with <code>dumponexit=true</code> (Phase 2) will flush to disk on any
+            termination, including a fatal crash where the JVM has the chance to write before
             exiting.</li>
         <li>When operators mount <code>${ELIYA_DIAGNOSTIC_PATH}</code> as a persistent volume, all
             three artifacts survive container restarts.</li>
@@ -214,14 +221,16 @@ Total: reserved=4194304KB, committed=2891024KB<br>
 
 
     <h3>What these patterns have in common</h3>
-    <p>All three share a structural property: <strong>they are visible
+    <p>All four share a structural property: <strong>they are visible
         in the data the JVM already produces, but only if observability is enabled before the
         incident occurs.</strong></p>
 
-    <p>Eliya's defaults exist to ensure this
-        observability is in place by default, not as something teams have to remember to
-        configure. A 24-hour JFR rolling buffer with sub-1% overhead is not a feature you
-        need to debate; it's the new baseline for production-ready JVMs.</p>
+    <p>Phase 1 today (25.0.3) puts the post-incident forensic artefacts in place by default:
+        heap-dump-on-OOM with structured paths, NMT summary, crash log path, container support
+        reinforced, and diagnostic VM options unlocked so JFR + async-profiler are
+        one-flag-away when you need them. Phase 2 (planned) makes the streaming data (continuous
+        JFR with a 24-hour rolling buffer, unified GC logging) defaults too,
+        so the recording covers the incident window without manual intervention.</p>
 
     <p>The pattern that emerges from 15+ years of
         JVM operations is not <em>"we need better debugging tools."</em> It's <em>"we need data
@@ -229,7 +238,7 @@ Total: reserved=4194304KB, committed=2891024KB<br>
         observation.</p>
 
     <p><strong>Kubernetes context.</strong> Each of these patterns is especially common in
-        Kubernetes deployments &mdash; Pattern 1 hits hard because container memory limits are
+        Kubernetes deployments: Pattern 1 hits hard because container memory limits are
         strict, Pattern 2 because pod resource constraints create variance, Pattern 3 because
         service-mesh layers add upstream complexity, and Pattern 4 because container restarts
         destroy ephemeral working directories. The patterns are general, but Kubernetes amplifies
@@ -237,21 +246,21 @@ Total: reserved=4194304KB, committed=2891024KB<br>
 
 
     <h3>How these patterns motivate future phases</h3>
-    <p>The four patterns above motivate Eliya's Phase 1 observability defaults. They also motivate
-        the Phase 2 / 3 / 4 trajectory:</p>
+    <p>The four patterns above motivate Eliya's Phase 1 operational-readiness defaults
+        (shipped 25.0.3). They also motivate the Phase 2 / 3 / 4 trajectory:</p>
     <ul>
         <li><strong>Phase 2</strong> bundles Eclipse MAT (headless) for offline heap analysis
             (deeper Pattern 1 investigation) and async-profiler for hardware-counter profiling
             (deeper Pattern 2 investigation). Both run locally in the security perimeter.</li>
         <li><strong>Phase 3</strong> Asymm Forensics will correlate JFR + heap + thread + GC +
-            crash artifacts together &mdash; automating the "is this JVM or upstream?" diagnosis
+            crash artifacts together, automating the "is this JVM or upstream?" diagnosis
             that Pattern 3 requires.</li>
         <li><strong>Phase 4</strong> compliance profiles add framework-aligned audit trails to all
             four patterns, so the same diagnostic data that resolves an incident also satisfies
             PCI&nbsp;DSS Section 10 / HIPAA Technical Safeguards / SOX IT general controls
             requirements.</li>
     </ul>
-    <p>The Phase 1 defaults are the foundation. Phase 2 / 3 / 4 capabilities are additive &mdash;
+    <p>The Phase 1 defaults are the foundation. Phase 2 / 3 / 4 capabilities are additive;
         they extend the same observability discipline this page describes.</p>
 </section>
 
@@ -265,7 +274,7 @@ Total: reserved=4194304KB, committed=2891024KB<br>
             ranges, deployment topologies) are representative ranges encountered across multiple
             incidents, not measurements from a single event. Specific clients, applications,
             personnel, and dates are not identified. Any resemblance to a specific incident at a
-            specific organisation is coincidental — these are recurring patterns, not unique cases.</p>
+            specific organisation is coincidental; these are recurring patterns, not unique cases.</p>
     </section>
 
 <div class="page-back-nav">

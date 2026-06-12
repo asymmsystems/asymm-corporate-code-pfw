@@ -2,7 +2,7 @@
 
 <header class="page-header">
     <span class="section-kicker">User guide</span>
-    <h1>JRE curation — what's in the Eliya JRE and why</h1>
+    <h1>JRE curation: what's in the Eliya JRE and why</h1>
     <p style="max-width: 60ch">The Eliya JRE downloads as a ~48&nbsp;MB tarball and extracts to
         ~95&nbsp;MB. It includes the standard <code>java.se</code> module set <em>plus</em> nine
         additional <code>jdk.*</code> modules (Flight Recorder, JMX, jcmd attach, PKCS#11, DNS SPI,
@@ -12,17 +12,17 @@
 </header>
 
 <section>
-    <h2 class="section-title">JDK vs JRE — the structural picture</h2>
+    <h2 class="section-title">JDK vs JRE: the structural picture</h2>
 
     <h3>The JDK</h3>
     <p>The Java Development Kit is the full distribution: HotSpot (the JVM, in <code>libjvm.so</code>),
         the standard Java class library (<code>java.*</code> modules), the JDK tooling modules
-        (<code>jdk.*</code> — Flight Recorder, JMX/RMI agent, jcmd attach, PKCS#11, the javac compiler,
+        (<code>jdk.*</code>: Flight Recorder, JMX/RMI agent, jcmd attach, PKCS#11, the javac compiler,
         javadoc, jlink itself, etc.), and the CLI tools in <code>bin/</code> (<code>java</code>,
         <code>javac</code>, <code>jcmd</code>, <code>jlink</code>, etc.). A typical JDK is ~280&nbsp;MB.</p>
 
     <h3>What "Java SE" actually means as a module</h3>
-    <p>Java SE is the standardised Java surface — the API portfolio in the Java Language Specification
+    <p>Java SE is the standardised Java surface: the API portfolio in the Java Language Specification
         plus the Java Platform Specification. As a module, Java SE is named <code>java.se</code> in
         OpenJDK: an aggregator that <code>requires</code> every other <code>java.*</code> module
         (<code>java.base</code>, <code>java.compiler</code>, <code>java.datatransfer</code>,
@@ -33,7 +33,7 @@
         must expose.</p>
 
     <h3>The gap: <code>jdk.*</code> modules are NOT in Java SE</h3>
-    <p>The JDK also ships modules that are <em>outside</em> the Java SE specification — JDK tooling
+    <p>The JDK also ships modules that are <em>outside</em> the Java SE specification: JDK tooling
         modules with the <code>jdk.*</code> prefix:</p>
 
     <table class="clinical-table" style="max-width: 800px">
@@ -41,18 +41,18 @@
             <tr><th>Module</th><th>What it provides</th></tr>
         </thead>
         <tbody>
-            <tr><td><code>jdk.unsupported</code></td><td><code>sun.misc.Unsafe</code>, <code>sun.misc.Signal</code> — "load-bearing" for the JVM ecosystem (Netty, Caffeine, Hazelcast, Lucene rely on it)</td></tr>
-            <tr><td><code>jdk.jfr</code></td><td>Flight Recorder — continuous low-overhead profiling, the standard JVM observability primitive</td></tr>
-            <tr><td><code>jdk.management.agent</code></td><td>JMX/RMI agent — for Prometheus exporters and monitoring tools</td></tr>
+            <tr><td><code>jdk.unsupported</code></td><td><code>sun.misc.Unsafe</code>, <code>sun.misc.Signal</code>: "load-bearing" for the JVM ecosystem (Netty, Caffeine, Hazelcast, Lucene rely on it)</td></tr>
+            <tr><td><code>jdk.jfr</code></td><td>Flight Recorder: continuous low-overhead profiling, the standard JVM observability primitive</td></tr>
+            <tr><td><code>jdk.management.agent</code></td><td>JMX/RMI agent: for Prometheus exporters and monitoring tools</td></tr>
             <tr><td><code>jdk.attach</code></td><td>The Attach API for <code>jcmd</code>, <code>jconsole</code>, or any tool to attach to a running JVM</td></tr>
-            <tr><td><code>jdk.crypto.cryptoki</code></td><td>SunPKCS11 — HSM / hardware-token crypto access</td></tr>
+            <tr><td><code>jdk.crypto.cryptoki</code></td><td>SunPKCS11: HSM / hardware-token crypto access</td></tr>
             <tr><td><code>jdk.naming.dns</code></td><td>DNS SPI for JNDI</td></tr>
             <tr><td><code>jdk.localedata</code></td><td>Non-en_US locale resources (i18n)</td></tr>
             <tr><td><code>jdk.zipfs</code></td><td>The <code>jar:</code> NIO Path provider</td></tr>
         </tbody>
     </table>
 
-    <p>A <em>Java SE-compliant</em> JRE — i.e. <code>jlink --add-modules java.se</code> — does not
+    <p>A <em>Java SE-compliant</em> JRE (i.e. <code>jlink --add-modules java.se</code>) does not
         include any of these. They are JDK tooling modules outside the Java SE specification.</p>
 
     <p>This is the source of the apparent paradox the next section resolves: vendors that ship a "JRE"
@@ -73,7 +73,7 @@
     <p><code>jlink</code> traces the transitive <code>requires</code> of the root modules, copies the
         resulting module closure plus the JVM runtime image, and produces a directory tree that looks
         like a JRE (<code>bin/java</code>, <code>lib/</code>, <code>conf/</code>). The resulting tree
-        runs independently — it doesn't need a JDK on the host.</p>
+        runs independently; it doesn't need a JDK on the host.</p>
 
     <h3 style="margin-top: 2rem">The <code>--strip-debug</code> flag</h3>
     <p>The <code>--strip-debug</code> option removes DWARF debug information from the shared libraries.
@@ -89,7 +89,7 @@
 </section>
 
 <section>
-    <h2 class="section-title">Eliya's curation — the 10 modules</h2>
+    <h2 class="section-title">Eliya's curation: the 10 modules</h2>
     <p>The Eliya JRE includes:</p>
 
     <table class="clinical-table" style="max-width: 800px">
@@ -97,16 +97,16 @@
             <tr><th>Module</th><th>Why included</th></tr>
         </thead>
         <tbody>
-            <tr><td><code>java.se</code></td><td>The Java SE aggregator — pulls in every standard Java SE module</td></tr>
+            <tr><td><code>java.se</code></td><td>The Java SE aggregator: pulls in every standard Java SE module</td></tr>
             <tr><td><code>java.net.http</code></td><td>HTTP/2 client (explicit; also pulled via <code>java.se</code>, listed for visibility)</td></tr>
             <tr><td><code>jdk.unsupported</code></td><td>Effectively required by the JVM ecosystem (Netty, Caffeine, Hazelcast, …)</td></tr>
             <tr><td><code>jdk.crypto.cryptoki</code></td><td>Forward-looking: HSM-backed crypto needed for Phase 4 hardware-token work</td></tr>
-            <tr><td><code>jdk.jfr</code></td><td>Flight Recorder — the OpenJDK community has standardised on JFR for production profiling. Operators expect <code>jcmd &lt;pid&gt; JFR.start</code> to work without switching to the JDK.</td></tr>
-            <tr><td><code>jdk.management.agent</code></td><td>JMX/RMI agent — Prometheus exporters, monitoring agents, and operational tools attach via JMX</td></tr>
-            <tr><td><code>jdk.attach</code></td><td>The Attach API — local <code>jcmd</code> works without it; remote / external tool attach requires it</td></tr>
+            <tr><td><code>jdk.jfr</code></td><td>Flight Recorder: the OpenJDK community has standardised on JFR for production profiling. Operators expect <code>jcmd &lt;pid&gt; JFR.start</code> to work without switching to the JDK.</td></tr>
+            <tr><td><code>jdk.management.agent</code></td><td>JMX/RMI agent: Prometheus exporters, monitoring agents, and operational tools attach via JMX</td></tr>
+            <tr><td><code>jdk.attach</code></td><td>The Attach API: local <code>jcmd</code> works without it; remote / external tool attach requires it</td></tr>
             <tr><td><code>jdk.naming.dns</code></td><td>DNS SPI for JNDI</td></tr>
-            <tr><td><code>jdk.localedata</code></td><td>Non-en_US locales — i18n surface for production servers handling international data</td></tr>
-            <tr><td><code>jdk.zipfs</code></td><td>The <code>jar:</code> NIO Path provider — tools that walk into ZIP/JAR archives via NIO</td></tr>
+            <tr><td><code>jdk.localedata</code></td><td>Non-en_US locales: i18n surface for production servers handling international data</td></tr>
+            <tr><td><code>jdk.zipfs</code></td><td>The <code>jar:</code> NIO Path provider: tools that walk into ZIP/JAR archives via NIO</td></tr>
         </tbody>
     </table>
 
@@ -124,7 +124,7 @@
     <ol>
         <li><strong><code>--strip-debug</code></strong> drops DWARF debug symbols from <code>libjvm.so</code>
             and the other shared libraries. Other vendors typically ship with debug symbols intact (so
-            users can attach gdb and walk JVM frames). Eliya strips them — production runtimes don't
+            users can attach gdb and walk JVM frames). Eliya strips them; production runtimes don't
             need this; JVM hackers use the JDK. This is the dominant size win: ~50&nbsp;MB extracted-
             footprint reduction.</li>
         <li><strong><code>--no-man-pages</code></strong> and <strong><code>--no-header-files</code></strong>
@@ -160,9 +160,9 @@
 </section>
 
 <section>
-    <h2 class="section-title">The non-Eliya alternative — <code>jlink</code> your own</h2>
+    <h2 class="section-title">The non-Eliya alternative: <code>jlink</code> your own</h2>
     <p>The architectural beauty of <code>jlink</code> is that any user can produce their own custom runtime
-        image from any vendor's JDK. Customers don't <em>need</em> the Eliya JRE — they could run:</p>
+        image from any vendor's JDK. Customers don't <em>need</em> the Eliya JRE; they could run:</p>
 
     <button type="button" class="inline-terminal"
         onclick="copyToClipboard('$JAVA_HOME/bin/jlink --module-path $JAVA_HOME/jmods --add-modules java.se,jdk.jfr,jdk.management.agent,jdk.attach,jdk.crypto.cryptoki --strip-debug --no-man-pages --no-header-files --output ./custom-jre')" aria-label="Copy command">
@@ -173,7 +173,7 @@
     <p style="margin-top: 1.5rem">…using the Eliya JDK, the Temurin JDK, the Corretto JDK, or any other vendor's JDK.
         The result is a runtime they own. Eliya's JRE saves customers that step and provides a curated,
         signed, reproducible default. The argument for Eliya's JRE is convenience + the
-        reproducibility/signing/audit-trail story attached to it — not <em>"you can't do this yourself"</em>.</p>
+        reproducibility/signing/audit-trail story attached to it, not <em>"you can't do this yourself"</em>.</p>
 </section>
 
 <section>

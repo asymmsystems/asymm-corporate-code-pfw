@@ -47,7 +47,7 @@
 <section style="margin-bottom: 5rem">
     <h2 class="section-title">Security inheritance from upstream</h2>
     <p >Eliya inherits upstream OpenJDK 25's security configuration unchanged.
-        This is deliberate — JDK 25's <code>java.security</code> defaults already implement modern
+        This is deliberate: JDK 25's <code>java.security</code> defaults already implement modern
         best practices:</p>
 
     <table class="clinical-table" style="margin-top: 1.5rem">
@@ -82,8 +82,8 @@
         </tbody>
     </table>
 
-    <p style="margin-top: 1.5rem">Eliya does not duplicate these defaults to
-        claim differentiation it has not earned. If you <code>diff</code> Eliya's
+    <p style="margin-top: 1.5rem">Eliya does not re-declare these defaults as
+        if they were its own. If you <code>diff</code> Eliya's
         <code>conf/security/java.security</code> against upstream OpenJDK 25, the result is empty for
         security configuration:</p>
 
@@ -94,9 +94,10 @@
     </button>
 
     <p style="margin-top: 1.5rem"><strong>Eliya's contribution to operational
-        security is observability</strong>, not duplicated <code>java.security</code> overlays. JFR
-        continuous recording, heap dump on OOM, GC logging, and crash log artifacts produce
-        audit-ready diagnostic trails for incident review. Those are activated by
+        security is observability</strong>, not duplicated <code>java.security</code> overlays. Heap
+        dump on OOM and crash log artifacts today, plus continuous JFR recording and GC logging in
+        Phase 2, produce
+        audit-ready diagnostic trails for incident review, activated by
         <code>-XX:EliyaProfile=Production</code>.</p>
 
     <p style="margin-top: 1.5rem"><strong>Audit trail and diagnostic data attribution.</strong>
@@ -163,7 +164,7 @@
 </section>
 
 <section style="margin-bottom: 5rem">
-    <h2 class="section-title">FIPS 140-3 variant — Phase 2</h2>
+    <h2 class="section-title">FIPS 140-3 variant: Phase 2</h2>
     <p >A FIPS 140-3 compliant Eliya variant
         (<code>eliya-25-fips.tar.gz</code>) is a Phase 2 deliverable. The standard
         <code>eliya-25.tar.gz</code> distribution ships with SunJCE (not FIPS-validated). The FIPS
@@ -210,17 +211,17 @@
             </tr>
             <tr>
                 <td>Phase 2</td>
-                <td>Bundled local diagnostic tools (Eclipse MAT, async-profiler) &mdash; keeps forensic capability inside the security perimeter</td>
-                <td>Post-seed (target H2 2026)</td>
+                <td>Bundled local diagnostic tools (Eclipse MAT, async-profiler): keeps forensic capability inside the security perimeter</td>
+                <td>target H2 2026</td>
             </tr>
             <tr>
                 <td>Phase 2</td>
                 <td>FIPS 140-3 variant (separate artifact, Bouncy Castle FIPS)</td>
-                <td>Post-seed (target H2 2026)</td>
+                <td>target H2 2026</td>
             </tr>
             <tr>
                 <td>Phase 3</td>
-                <td><a href="/product/forensics.html" class="org-link org-link--inline org-link--internal">Asymm Forensics</a> &mdash; cross-correlation analysis, compliance audit reports</td>
+                <td><a href="/product/forensics.html" class="org-link org-link--inline org-link--internal">Asymm Forensics</a>: cross-correlation analysis, compliance audit reports</td>
                 <td>Post-Series A funding (target 2027)</td>
             </tr>
             <tr>
@@ -231,18 +232,18 @@
         </tbody>
     </table>
 
-    <h3 style="margin-top: 2.5rem">Phase 4 &mdash; compliance-aligned profiles</h3>
+    <h3 style="margin-top: 2.5rem">Phase 4: compliance-aligned profiles</h3>
     <p>Compliance-aligned profiles activate stricter-than-upstream defaults via opt-in profile
         values. Phase 4 will expand the <code>EliyaProfile</code> enum with framework-aligned
         values:</p>
     <ul>
-        <li><code>-XX:EliyaProfile=PCIDSS</code> &mdash; PCI DSS Section 10-aligned settings</li>
-        <li><code>-XX:EliyaProfile=HIPAA</code> &mdash; HIPAA Technical Safeguards-aligned</li>
-        <li><code>-XX:EliyaProfile=SOX</code> &mdash; SOX IT general controls-aligned</li>
-        <li><code>-XX:EliyaProfile=FedRAMP</code> &mdash; FedRAMP-aligned settings</li>
-        <li><code>-XX:EliyaProfile=GDPR</code> &mdash; GDPR data-handling-aligned</li>
-        <li><code>-XX:EliyaProfile=ISO27001</code> &mdash; ISO&nbsp;27001-aligned settings</li>
-        <li><code>-XX:EliyaProfile=SOC2</code> &mdash; SOC&nbsp;2-aligned settings</li>
+        <li><code>-XX:EliyaProfile=PCIDSS</code>: PCI DSS Section 10-aligned settings</li>
+        <li><code>-XX:EliyaProfile=HIPAA</code>: HIPAA Technical Safeguards-aligned</li>
+        <li><code>-XX:EliyaProfile=SOX</code>: SOX IT general controls-aligned</li>
+        <li><code>-XX:EliyaProfile=FedRAMP</code>: FedRAMP-aligned settings</li>
+        <li><code>-XX:EliyaProfile=GDPR</code>: GDPR data-handling-aligned</li>
+        <li><code>-XX:EliyaProfile=ISO27001</code>: ISO&nbsp;27001-aligned settings</li>
+        <li><code>-XX:EliyaProfile=SOC2</code>: SOC&nbsp;2-aligned settings</li>
     </ul>
     <p>Each profile adjusts <code>java.security</code> and JVM defaults for framework-aligned
         restrictions (algorithm allow-lists, key size minimums, certificate validation strictness,
@@ -253,12 +254,12 @@
         ISO&nbsp;27001, defence contractors needing FedRAMP + CMMC), Phase 4 will ship
         <strong>explicit combined profiles</strong> as distinct enum values:</p>
     <ul>
-        <li><code>-XX:EliyaProfile=Healthcare-Payment</code> &mdash; PCI&nbsp;DSS + HIPAA combination</li>
-        <li><code>-XX:EliyaProfile=Financial-SaaS</code> &mdash; SOC&nbsp;2 + ISO&nbsp;27001 combination</li>
-        <li><code>-XX:EliyaProfile=Federal-Defense</code> &mdash; FedRAMP + CMMC combination</li>
+        <li><code>-XX:EliyaProfile=Healthcare-Payment</code>: PCI&nbsp;DSS + HIPAA combination</li>
+        <li><code>-XX:EliyaProfile=Financial-SaaS</code>: SOC&nbsp;2 + ISO&nbsp;27001 combination</li>
+        <li><code>-XX:EliyaProfile=Federal-Defense</code>: FedRAMP + CMMC combination</li>
     </ul>
     <p>Combined profiles are <strong>designed explicitly</strong>, not stacked from
-        single-framework values. Profiles are mutually exclusive by design &mdash; only one profile
+        single-framework values. Profiles are mutually exclusive by design; only one profile
         value is active at runtime. Each combined profile activates the documented union of
         capabilities from its component frameworks plus any framework-specific JVM settings the
         combination requires. The auditor sees one profile name in <code>asymm eliya info</code>
@@ -271,9 +272,9 @@
         SOC&nbsp;2, and GDPR follow based on the demand mix.</p>
 
     <p style="margin-top: 1rem; font-size: 0.95rem">
-        <strong>Honest framing.</strong> Activating a compliance profile aligns JVM defaults with
+        Activating a compliance profile aligns JVM defaults with
         framework requirements. It does <em>not</em> certify the application or the organisation as
-        compliant &mdash; compliance is a holistic posture across application code, infrastructure,
+        compliant; compliance is a holistic posture across application code, infrastructure,
         processes, and controls. The profile reduces JVM-level audit findings; the rest of the
         compliance posture remains the organisation's responsibility.
     </p>
@@ -286,15 +287,15 @@
         accept the compatibility trade-off.</p>
 
     <p style="margin-top: 1rem">The architectural pattern matches
-        <code>-XX:EliyaProfile=Production</code>: opt-in, never coercive, same trade-off framework
-        &mdash; accept some constraint in exchange for a specific operational property.</p>
+        <code>-XX:EliyaProfile=Production</code>: opt-in, never coercive, same trade-off framework:
+        accept some constraint in exchange for a specific operational property.</p>
 
     <div id="waitlist" style="margin-top: 2rem">
         <@renderWaitlistForm
             formspree_url="https://formspree.io/f/xykooakz"
             product_tag="compliance-profiles"
             heading="Get notified about compliance-aligned profiles (Phase 4)"
-            body="If your auditor requires a specific framework alignment (PCI DSS Section 10, HIPAA Technical Safeguards, SOX IT general controls, ISO 27001, NIST 800-53, etc.), tell us in the use-case field below. Phase 4 is demand-gated &mdash; we ship the profiles your customers tell us they need, in priority order. Your signup is a meaningful prioritisation signal."
+            body="If your auditor requires a specific framework alignment (PCI DSS Section 10, HIPAA Technical Safeguards, SOX IT general controls, ISO 27001, NIST 800-53, etc.), tell us in the use-case field below. Phase 4 is demand-gated: we ship the profiles your customers tell us they need, in priority order. Your signup is a meaningful prioritisation signal."
             submit_label="Notify me about compliance profiles" />
     </div>
 </section>
@@ -304,15 +305,15 @@
         <h3>TCK compliance</h3>
         <p><strong>Phase 1 claim:</strong> Eliya is based on TCK-certified upstream OpenJDK 25.
             Eliya's modifications are limited to a JVM flag (<code>EliyaProfile=Production</code>,
-            observability-only) and packaging — none of which alter Java SE behaviour.
+            observability-only) and packaging, none of which alter Java SE behaviour.
             Upstream <code>java.security</code> is unchanged.</p>
         <p style="margin-top: 1rem"><strong>Phase 2 deliverable:</strong> a separate TCK run of
             the Eliya binary itself, under the OpenJDK Community TCK License Agreement (available
             without fee for distributions derived from OpenJDK, subject to compliance terms; Eliya
             qualifies under these terms). When the TCK run is complete, the result will be
-            published here &mdash; pass cleanly or document the deltas.</p>
+            published here: pass cleanly or document the deltas.</p>
         <p style="margin-top: 1rem; font-size: 0.9rem">
-            Honest framing. Eliya does not claim certifications it has not earned.
+            Eliya does not claim certifications it hasn't earned.
         </p>
     </div>
 </section>

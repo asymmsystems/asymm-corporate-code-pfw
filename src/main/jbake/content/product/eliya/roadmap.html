@@ -1,5 +1,5 @@
 title=Eliya roadmap
-description=Eliya's four-phase trajectory — observability defaults today (Phase 1), bundled diagnostic tooling and FIPS variant (Phase 2), Asymm Forensics cross-correlation (Phase 3), compliance-aligned profiles (Phase 4).
+description=Eliya's four-phase trajectory: operational-readiness defaults today; continuous observability Phase 2 ahead (Phase 1), bundled diagnostic tooling and FIPS variant (Phase 2), Asymm Forensics cross-correlation (Phase 3), compliance-aligned profiles (Phase 4).
 type=page
 toc=true
 status=published
@@ -9,7 +9,7 @@ status=published
     <span class="section-kicker">Eliya</span>
     <h1>Roadmap</h1>
     <p style="max-width: 60ch">Eliya ships in four phases. Phase 1 is the foundation; Phase 2/3/4
-        are additive &mdash; no migration required. This page consolidates the trajectory and
+        are additive, with no migration required. This page consolidates the trajectory and
         demand-gating mechanics so you can plan multi-year adoption against the same runtime you
         adopt today.</p>
 </header>
@@ -29,19 +29,19 @@ status=published
             <tr>
                 <td>Phase 1</td>
                 <td>Current</td>
-                <td>Observability defaults (<code>EliyaProfile=Production</code>); three-level diagnostic path layout; <code>asymm</code> CLI Phase 1 surface; Linux x64 + aarch64; Docker multi-arch; FreeBSD Research Preview</td>
+                <td>Observability defaults (<code>EliyaProfile=Production</code>); three-level diagnostic path layout; <code>asymm</code> CLI Phase 1 surface; Linux x64 + aarch64; Docker multi-arch; FreeBSD Research Preview (planned, late 2026)</td>
                 <td>Shipping</td>
             </tr>
             <tr>
                 <td>Phase 2</td>
-                <td>Post-seed funding (target H2 2026)</td>
+                <td>target H2 2026</td>
                 <td>Bundled Eclipse MAT (headless) + async-profiler; FIPS-validated variant (<code>eliya-jdk-fips</code>); macOS aarch64; DEB/RPM packages; <code>asymm</code> CLI Phase 2 subcommands</td>
                 <td>Demand-gated &middot; <a href="/product/eliya/downloads.html#waitlist" class="org-link org-link--inline org-link--internal">waitlist</a></td>
             </tr>
             <tr>
                 <td>Phase 3</td>
                 <td>Post-Series A funding (target 2027)</td>
-                <td><a href="/product/forensics.html" class="org-link org-link--inline org-link--internal">Asymm Forensics</a> &mdash; cross-correlation platform analysing JFR + heap dumps + thread dumps + GC logs + crash logs together (local execution, no SaaS); Windows x64 platform expansion (demand-gated, independent of Forensics); FreeBSD GA graduation (demand-gated)</td>
+                <td><a href="/product/forensics.html" class="org-link org-link--inline org-link--internal">Asymm Forensics</a>: cross-correlation platform analysing JFR + heap dumps + thread dumps + GC logs + crash logs together (local execution, no SaaS); Windows x64 platform expansion (demand-gated, independent of Forensics); FreeBSD GA graduation (demand-gated)</td>
                 <td>Planned</td>
             </tr>
             <tr>
@@ -53,15 +53,15 @@ status=published
         </tbody>
     </table>
 
-    <h3 style="margin-top: 3rem">Phase 1 — observability defaults (current)</h3>
+    <h3 style="margin-top: 3rem">Phase 1: observability defaults (current)</h3>
     <p>Phase 1 is the foundation every later phase builds on. The single flag
         <code>-XX:EliyaProfile=Production</code> activates a curated set of observability defaults
         that survive incidents, crashes, and audits:</p>
     <ul>
-        <li>JFR continuous (Phase 2) recording &mdash; 24-hour rolling buffer, sub-1% overhead</li>
+        <li>JFR one flag away: diagnostic options unlocked so a recording starts in one step (continuous 24-hour recording by default arrives in Phase 2)</li>
         <li>Heap dump on OOM with structured filesystem path</li>
         <li>Native Memory Tracking summary mode</li>
-        <li>GC logging with rotation</li>
+        <li>GC logging with rotation (Phase 2)</li>
         <li>Crash log path configuration</li>
         <li>Container awareness reinforced</li>
         <li>Diagnostic VM options unlocked</li>
@@ -76,25 +76,25 @@ status=published
         and
         <a href="/product/eliya/user-guide/cli.html" class="org-link org-link--inline org-link--internal">asymm CLI</a>.</p>
 
-    <h3 style="margin-top: 3rem">Phase 2 — bundled tooling + FIPS variant</h3>
+    <h3 style="margin-top: 3rem">Phase 2: bundled tooling + FIPS variant</h3>
     <p>Phase 2 expands the JDK distribution with diagnostic tools and procurement-relevant variants.
-        Target H2 2026, post-seed funding.</p>
+        Target H2 2026, once Phase 2 ships.</p>
 
     <h4 style="margin-top: 1.5rem">Bundled diagnostic tooling</h4>
     <p><strong>No other major OpenJDK distribution bundles Eclipse MAT or async-profiler in the JDK
-        itself</strong> &mdash; engineers today install them separately. Eliya bundles both
+        itself</strong>. Engineers today install them separately. Eliya bundles both
         alongside the runtime, sidestepping the "diagnostic tool installation" friction in
         air-gapped or policy-restricted environments:</p>
     <ul>
-        <li><strong>Eclipse MAT (headless)</strong> &mdash; EPL-2.0. Offline heap analysis with the
+        <li><strong>Eclipse MAT (headless)</strong>: EPL-2.0. Offline heap analysis with the
             new <code>asymm eliya analyze-heap</code> wrappers
             (<code>--duplicates</code>, <code>--histogram</code>,
             <code>--oql 'SELECT...'</code>).</li>
-        <li><strong>async-profiler</strong> &mdash; Apache-2.0. Hardware-counter and wall-clock
+        <li><strong>async-profiler</strong>: Apache-2.0. Hardware-counter and wall-clock
             profiling via <code>asymm eliya profile</code>
             (<code>--hw-counters</code>, <code>--wall</code>, <code>--ttsp</code>,
             <code>--alloc</code>).</li>
-        <li><code>asymm eliya jfr {start, stop, dump, scrub}</code> &mdash; ad-hoc JFR convenience
+        <li><code>asymm eliya jfr {start, stop, dump, scrub}</code>: ad-hoc JFR convenience
             wrappers around <code>jcmd</code>.</li>
         <li>Optional installers (<code>asymm eliya install-mat-gui</code>,
             <code>install-jitwatch</code>, <code>install-jol</code>) for less-bundled tooling that
@@ -111,24 +111,24 @@ status=published
 
     <h4 style="margin-top: 1.5rem">Platform expansion</h4>
     <ul>
-        <li><strong>macOS aarch64</strong> &mdash; native binary for Apple Silicon, demand-gated on
+        <li><strong>macOS aarch64</strong>: native binary for Apple Silicon, demand-gated on
             developer-machine sign-ups.</li>
-        <li><strong>DEB / RPM packages</strong> &mdash; Q4 2026 target. Includes
+        <li><strong>DEB / RPM packages</strong>: Q4 2026 target. Includes
             <code>eliya-diagnostics</code> system group and automatic <code>update-alternatives</code>
             registration.</li>
-        <li><strong>Distroless variant</strong> (<code>:25-lts-distroless</code>) &mdash; minimal
+        <li><strong>Distroless variant</strong> (<code>:25-lts-distroless</code>): minimal
             container image with no shell and no package manager, for compliance-conscious
             environments where attack surface is a primary concern. Demand-gated.</li>
-        <li><strong>UBI variant</strong> (<code>:25-lts-ubi</code>) &mdash; built on Red Hat
+        <li><strong>UBI variant</strong> (<code>:25-lts-ubi</code>): built on Red Hat
             Universal Base Image for OpenShift and RHEL environments. Demand-gated.</li>
     </ul>
 
     <p style="margin-top: 1rem"><a href="/product/eliya/downloads.html#waitlist" class="org-link org-link--inline org-link--internal">Sign up</a>
         to signal demand for any Phase 2 deliverable.</p>
 
-    <h3 style="margin-top: 3rem">Phase 3 — Asymm Forensics</h3>
+    <h3 style="margin-top: 3rem">Phase 3: Asymm Forensics</h3>
     <p>Post-Series A funding, target 2027. Asymm Forensics is a cross-correlation diagnostic
-        platform &mdash; it analyses JFR + heap dumps + thread dumps + GC logs + crash logs
+        platform: it analyses JFR + heap dumps + thread dumps + GC logs + crash logs
         <em>together</em>, rather than as separate analyses.</p>
     <ul>
         <li><strong>Local execution.</strong> No SaaS dependency. Diagnostic data never leaves your
@@ -137,9 +137,9 @@ status=published
         <li><strong>Cross-artifact correlation.</strong> Answers questions APM cannot: "which heap
             allocation pattern preceded this GC pause spike?", "which threads were blocked when this
             JFR sample fired?", "what was the last NMT diff before this crash?"</li>
-        <li><strong><code>asymm forensics</code> CLI</strong> &mdash; <code>analyze</code>,
+        <li><strong><code>asymm forensics</code> CLI</strong>: <code>analyze</code>,
             <code>ingest</code>, <code>report</code> subcommands.</li>
-        <li><strong>Compliance reports</strong> &mdash; framework-aligned audit reports (PCI DSS,
+        <li><strong>Compliance reports</strong>: framework-aligned audit reports (PCI DSS,
             HIPAA, SOX initially; FedRAMP, GDPR, ISO 27001, SOC 2, and combined-profile reports
             follow Phase 4 demand).</li>
     </ul>
@@ -147,10 +147,10 @@ status=published
     <p><strong>Phase 3 platform expansion.</strong> Independent of Asymm Forensics itself, Phase 3
         also brings two platform deliverables:</p>
     <ul>
-        <li><strong>Windows x64</strong> binaries &mdash; demand-gated platform expansion, separate
+        <li><strong>Windows x64</strong> binaries: demand-gated platform expansion, separate
             from Asymm Forensics. Ships in Phase 3 because it depends on the same resourcing
             milestone, not because the two are coupled.</li>
-        <li><strong>FreeBSD GA graduation</strong> &mdash; the Research Preview promotes to a
+        <li><strong>FreeBSD GA graduation</strong>: the Research Preview promotes to a
             supported GA build, also demand-gated.</li>
     </ul>
 
@@ -159,31 +159,31 @@ status=published
         Phase 3 details:
         <a href="/product/forensics.html" class="org-link org-link--inline org-link--internal">Asymm Forensics</a>.</p>
 
-    <h3 style="margin-top: 3rem">Phase 4 — compliance-aligned profiles</h3>
-    <p>Demand-gated. Each profile ships when sustained enterprise demand emerges &mdash; typically
+    <h3 style="margin-top: 3rem">Phase 4: compliance-aligned profiles</h3>
+    <p>Demand-gated. Each profile ships when sustained enterprise demand emerges, typically
         <strong>5+ prospects</strong> with concrete framework requirements and usable use-case
         descriptions. The threshold isn't a guarantee; it's a meaningful prioritisation signal that
         helps Asymm Systems sequence Phase 4 delivery against the highest-demand frameworks first.
         Phase 4 expands the <code>EliyaProfile</code> enum with framework-aligned values:</p>
     <ul>
-        <li><code>EliyaProfile=PCIDSS</code> &mdash; PCI DSS Section 10-aligned</li>
-        <li><code>EliyaProfile=HIPAA</code> &mdash; HIPAA Technical Safeguards-aligned</li>
-        <li><code>EliyaProfile=SOX</code> &mdash; SOX IT general controls-aligned</li>
-        <li><code>EliyaProfile=FedRAMP</code> &mdash; FedRAMP-aligned</li>
-        <li><code>EliyaProfile=GDPR</code> &mdash; GDPR data-handling-aligned</li>
-        <li><code>EliyaProfile=ISO27001</code> &mdash; ISO 27001-aligned</li>
-        <li><code>EliyaProfile=SOC2</code> &mdash; SOC 2-aligned</li>
+        <li><code>EliyaProfile=PCIDSS</code>: PCI DSS Section 10-aligned</li>
+        <li><code>EliyaProfile=HIPAA</code>: HIPAA Technical Safeguards-aligned</li>
+        <li><code>EliyaProfile=SOX</code>: SOX IT general controls-aligned</li>
+        <li><code>EliyaProfile=FedRAMP</code>: FedRAMP-aligned</li>
+        <li><code>EliyaProfile=GDPR</code>: GDPR data-handling-aligned</li>
+        <li><code>EliyaProfile=ISO27001</code>: ISO 27001-aligned</li>
+        <li><code>EliyaProfile=SOC2</code>: SOC 2-aligned</li>
     </ul>
 
     <p style="margin-top: 1rem"><strong>Combined profiles.</strong> For industries needing the
         union of multiple frameworks, Phase 4 ships explicit combined values rather than allowing
         operators to stack profile flags:</p>
     <ul>
-        <li><code>EliyaProfile=Healthcare-Payment</code> &mdash; PCI DSS + HIPAA</li>
-        <li><code>EliyaProfile=Financial-SaaS</code> &mdash; SOC 2 + ISO 27001</li>
-        <li><code>EliyaProfile=Federal-Defense</code> &mdash; FedRAMP + CMMC</li>
+        <li><code>EliyaProfile=Healthcare-Payment</code>: PCI DSS + HIPAA</li>
+        <li><code>EliyaProfile=Financial-SaaS</code>: SOC 2 + ISO 27001</li>
+        <li><code>EliyaProfile=Federal-Defense</code>: FedRAMP + CMMC</li>
     </ul>
-    <p>Profiles are mutually exclusive by design &mdash; only one value is active at runtime.
+    <p>Profiles are mutually exclusive by design; only one value is active at runtime.
         Combined profiles are designed by Asymm Systems with documented capability unions, never
         stacked from single-framework values. The auditor sees one profile name in
         <code>asymm eliya info</code> output; compliance attribution is unambiguous.</p>
@@ -194,9 +194,9 @@ status=published
         next available CPU. Operators pinning to a specific Eliya version pin to a specific
         framework-version interpretation; rolling updates track framework revisions.</p>
 
-    <p style="margin-top: 1rem"><strong>Honest framing.</strong> Activating a compliance profile
+    <p style="margin-top: 1rem">Activating a compliance profile
         aligns JVM defaults with framework requirements. It does <em>not</em> certify the
-        application or organisation as compliant &mdash; compliance is a holistic posture across
+        application or organisation as compliant; compliance is a holistic posture across
         application code, infrastructure, processes, and controls.</p>
 
     <p style="margin-top: 1rem"><a href="/product/eliya/security.html#waitlist" class="org-link org-link--inline org-link--internal">Sign up</a>
@@ -216,7 +216,7 @@ status=published
     <h4 style="margin-top: 1.5rem">"What's my adoption path if my requirements are Phase 2+?"</h4>
     <p>Adopt Phase 1 today. The migration path you adopt today (Eliya runtime +
         <code>EliyaProfile=Production</code>) remains the foundation across all phases. Phase 2/3/4
-        capabilities are additive &mdash; no migration is required when they ship. The runtime is
+        capabilities are additive; no migration is required when they ship. The runtime is
         the same; the additions arrive as new bundled tools, new variants, new CLI subcommands, and
         new profile values within the existing <code>EliyaProfile</code> namespace.</p>
 
@@ -225,24 +225,24 @@ status=published
         signup is the demand signal that determines shipping order.</p>
 
     <h3 style="margin-top: 3rem">Demand-gating mechanics</h3>
-    <p>Several Phase 2 / 3 / 4 deliverables are demand-gated &mdash; they ship when customer demand
+    <p>Several Phase 2 / 3 / 4 deliverables are demand-gated: they ship when customer demand
         signals are concrete enough to justify the engineering investment. The mechanics:</p>
     <ul>
-        <li><strong>Phase 2 platform variants</strong> (macOS aarch64, distroless, UBI) &mdash;
+        <li><strong>Phase 2 platform variants</strong> (macOS aarch64, distroless, UBI):
             ship when sustained signups indicate operational demand. Single waitlist on the
             downloads page.</li>
-        <li><strong>Phase 2 FIPS variant</strong> &mdash; ships when 5+ procurement-restricted
+        <li><strong>Phase 2 FIPS variant</strong>: ships when 5+ procurement-restricted
             prospects sign up with FIPS as a requirement.</li>
-        <li><strong>Phase 4 compliance profiles</strong> &mdash; each profile ships when 5+
+        <li><strong>Phase 4 compliance profiles</strong>: each profile ships when 5+
             enterprise prospects have signed up with that specific framework requirement and
             provided usable use-case descriptions. PCI DSS, HIPAA, SOX are the highest-demand
             profiles based on early waitlist signals; FedRAMP, ISO 27001, SOC 2, GDPR follow based
             on the demand mix.</li>
-        <li><strong>Phase 4 combined profiles</strong> &mdash; ship when the underlying
+        <li><strong>Phase 4 combined profiles</strong>: ship when the underlying
             single-framework profiles have both shipped and combined-use customer demand emerges.</li>
     </ul>
     <p>Demand signals matter; speculative engineering ahead of signals doesn't. Sign up on the
-        relevant waitlist with a concrete use-case description &mdash; that's the input the
+        relevant waitlist with a concrete use-case description; that's the input the
         roadmap responds to.</p>
 
     <p><strong>Phases are loosely sequenced, not strictly sequential.</strong> Phase 4 compliance
@@ -252,10 +252,10 @@ status=published
         ordering.</p>
 
     <p><strong>Beyond Phase 4.</strong> Phase 4 completes the current strategic horizon. Beyond
-        Phase 4, Asymm Systems may extend the platform with additional capabilities &mdash;
-        compliance-aligned <a href="/product/dial.html" class="org-link org-link--inline org-link--internal">Dial</a>
+        Phase 4, Asymm Systems may extend the platform with additional capabilities (compliance-aligned
+        <a href="/product/dial.html" class="org-link org-link--inline org-link--internal">Dial</a>
         integrations, multi-JVM cross-correlation for distributed systems, sector-specific profile
-        bundles &mdash; as the customer base and demand patterns evolve. Phase 5+ is unbounded
+        bundles) as the customer base and demand patterns evolve. Phase 5+ is unbounded
         today; it's driven by what customers tell us they need.</p>
 </section>
 

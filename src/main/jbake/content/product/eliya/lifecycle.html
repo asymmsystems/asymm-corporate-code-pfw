@@ -1,4 +1,4 @@
-title=Eliya — Lifecycle & Support
+title=Eliya Lifecycle & Support
 description=Quarterly CPU cadence, LTS support windows, end-of-support policy, version pinning patterns, and release calendar for Eliya JDK.
 type=page
 toc=true
@@ -33,7 +33,7 @@ status=published
         the table content above is the canonical lifecycle data sourced from this page today.</p>
 
     <p style="margin-top: 2rem; font-size: 0.95rem">
-        Eliya publishes the latest LTS. JDK&nbsp;21 is not a published target &mdash; anyone needing
+        Eliya publishes the latest LTS. JDK&nbsp;21 is not a published target; anyone needing
         JDK&nbsp;21 in production today is already on an established vendor distribution (Corretto,
         Temurin, Zulu). Eliya will become multi-version naturally when JDK&nbsp;29 LTS lands in
         September 2027.
@@ -79,7 +79,7 @@ status=published
 
     <p style="margin-top: 1.5rem; font-size: 0.95rem">
         Patch numbers follow OpenJDK's <a href="https://openjdk.org/jeps/322" class="org-link org-link--inline org-link--external">JEP&nbsp;322</a>
-        time-based versioning &mdash; the <code>$UPDATE</code> field increments by one per CPU
+        time-based versioning: the <code>$UPDATE</code> field increments by one per CPU
         (25.0.3&nbsp;&rarr;&nbsp;25.0.4&nbsp;&rarr;&nbsp;25.0.5&nbsp;&hellip;).
     </p>
 
@@ -93,7 +93,7 @@ status=published
     <p>When upstream OpenJDK publishes an out-of-cycle patch for a critical CVE (typically
         CVSS&nbsp;&ge;&nbsp;9.0 or actively-exploited per Oracle Security Alerts), Eliya targets
         <strong>one week</strong> to ship the corresponding rebuild.</p>
-    <p style="margin-top: 1rem">Eliya tracks upstream's out-of-cycle releases &mdash; Eliya does not
+    <p style="margin-top: 1rem">Eliya tracks upstream's out-of-cycle releases; Eliya does not
         unilaterally determine what constitutes a critical CVE. If upstream treats an issue as
         quarterly-cycle, Eliya does too. This alignment ensures Eliya users get the same CVE
         response timing as upstream OpenJDK consumers.</p>
@@ -105,11 +105,11 @@ status=published
     <ul style="margin-top: 1rem">
         <li>All upstream OpenJDK security fixes and stability patches for the quarter.</li>
         <li>Any <code>java.security</code> updates upstream applies. Eliya inherits these
-            unchanged &mdash; there is no Eliya-specific security overlay.</li>
+            unchanged; there is no Eliya-specific security overlay.</li>
         <li>No behavioural changes to <code>-XX:EliyaProfile=Production</code> unless explicitly
             noted in
             <a href="https://github.com/asymmsystems/eliya-jdk/blob/main/CHANGELOG.md" class="org-link org-link--inline org-link--external">CHANGELOG</a>.</li>
-        <li>No API changes &mdash; strictly CPU semantics.</li>
+        <li>No API changes, strictly CPU semantics.</li>
     </ul>
 </section>
 
@@ -117,16 +117,16 @@ status=published
     <h2 class="section-title">Version pinning recommendations</h2>
     <p>Three patterns cover how operators typically pin Eliya:</p>
 
-    <h3 style="margin-top: 1.5rem">Pattern 1 &mdash; Moving tag (<code>25-lts</code>, <code>25-lts-slim</code>)</h3>
+    <h3 style="margin-top: 1.5rem">Pattern 1: Moving tag (<code>25-lts</code>, <code>25-lts-slim</code>)</h3>
     <p>Pull policy determines update timing. With <code>imagePullPolicy: Always</code> in
         Kubernetes (or equivalent), each pod restart picks up the latest CPU. Best for teams that
         trust quarterly CPUs and want automatic adoption.</p>
 
-    <h3 style="margin-top: 1.5rem">Pattern 2 &mdash; Pinned version (<code>25.0.3</code>, <code>25.0.4</code>, &hellip;)</h3>
+    <h3 style="margin-top: 1.5rem">Pattern 2: Pinned version (<code>25.0.3</code>, <code>25.0.4</code>, &hellip;)</h3>
     <p>You explicitly update the version string each CPU. Best for compliance-conscious
         environments that require change-management approval for each version bump.</p>
 
-    <h3 style="margin-top: 1.5rem">Pattern 3 &mdash; Frozen version with selective patches</h3>
+    <h3 style="margin-top: 1.5rem">Pattern 3: Frozen version with selective patches</h3>
     <p>Stay on a specific version (e.g., <code>25.0.3</code>) indefinitely, applying only
         CVE-triggered out-of-cycle rebuilds. Common in environments with heavy regression-testing
         requirements.</p>
@@ -142,22 +142,22 @@ status=published
     <p><strong>Phase 1 (current).</strong> Eliya tracks upstream OpenJDK&nbsp;25 LTS with the
         quarterly CPU cadence documented above.</p>
 
-    <p style="margin-top: 1rem"><strong>Phase 2 (post-seed, target H2 2026).</strong> Adds:</p>
+    <p style="margin-top: 1rem"><strong>Phase 2 (next major release, target H2 2026).</strong> Adds:</p>
     <ul>
-        <li><strong>FIPS variant (<code>eliya-25-fips</code>)</strong> &mdash; separate artifact
+        <li><strong>FIPS variant (<code>eliya-25-fips</code>)</strong>: separate artifact
             with a FIPS-validated provider. FIPS variants typically have longer CPU lag than
             non-FIPS (CMVP recertification of cryptographic modules adds weeks); target one CPU
             cycle behind standard Eliya.</li>
-        <li><strong>Bundled diagnostic tools</strong> &mdash; Eclipse MAT (headless) and
+        <li><strong>Bundled diagnostic tools</strong>: Eclipse MAT (headless) and
             async-profiler. These have their own upstream releases independent of OpenJDK; Eliya
             tracks their stable branches and bundles a refresh in each quarterly CPU.</li>
-        <li><strong>macOS aarch64 variant</strong> &mdash; quarterly CPU aligned with Linux
+        <li><strong>macOS aarch64 variant</strong>: quarterly CPU aligned with Linux
             variants.</li>
     </ul>
 
     <p style="margin-top: 1rem"><strong>Phase 3 (post-Series A, target 2027).</strong> Asymm
-        Forensics ships with its own SemVer cadence independent of the Eliya JDK &mdash;
-        cross-correlation analysis improvements ship more frequently than the JDK's quarterly CPU;
+        Forensics ships with its own SemVer cadence independent of the Eliya JDK: cross-correlation
+        analysis improvements ship more frequently than the JDK's quarterly CPU;
         pattern-detection library updates align with quarterly CPUs.</p>
 
     <p style="margin-top: 1rem"><strong>Phase 4 (demand-gated).</strong> Compliance profile values

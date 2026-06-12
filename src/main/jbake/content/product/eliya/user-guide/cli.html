@@ -11,14 +11,14 @@ status=published
     <p style="max-width: 60ch">A small, focused command-line tool installed alongside Eliya at
         <code><#noparse>${JAVA_HOME}</#noparse>/bin/asymm</code> (and symlinked from <code>/usr/bin/asymm</code> when
         installed via <code>.deb</code> / <code>.rpm</code>). The unified entry point for Asymm
-        Systems products &mdash; Eliya today, Dial and Forensics in future phases.</p>
+        Systems products: Eliya today, Dial and Forensics in future phases.</p>
 </header>
 
 <section>
     <aside style="background: #fff7ed; border-left: 4px solid #f59e0b; padding: 1rem 1.5rem; margin-bottom: 1.5rem; max-width: 700px">
         <p style="margin: 0; font-size: 0.95rem"><strong>Phase 1 (today) ships three commands:</strong>
             <code>asymm --info</code> (default), <code>asymm --version</code>, <code>asymm --help</code>.
-            The Phase 2 and Phase 3 subcommand families listed below are <strong>reserved namespace</strong> &mdash;
+            The Phase 2 and Phase 3 subcommand families listed below are <strong>reserved namespace</strong>:
             documented as the design roadmap, not currently implemented in the shipped <code>bin/asymm</code>
             binary. The Phase 1 binary is intentionally minimal so customers can verify their install
             and read vendor metadata; deeper diagnostics today route through standard JDK tooling
@@ -112,7 +112,7 @@ OpenJDK 64-Bit Server VM (build 25.0.3+9-Eliya-25.0.3, mixed mode, sharing)
 
 
     <h3>Phase 2 roadmap (reserved namespace; not yet implemented)</h3>
-    <p>The Phase 2 release (target post-seed, est. H2 2026) adds bundled local diagnostic tools
+    <p>The Phase 2 release (target next major release, est. H2 2026) adds bundled local diagnostic tools
         (Eclipse MAT headless, async-profiler) and wraps them under the <code>asymm eliya</code>
         subcommand tree. The commands below are <strong>design documentation</strong> for that
         roadmap; the Phase 1 binary does <strong>not</strong> dispatch to any <code>asymm
@@ -143,7 +143,7 @@ OpenJDK 64-Bit Server VM (build 25.0.3+9-Eliya-25.0.3, mixed mode, sharing)
             <tr>
                 <td><code>asymm eliya doctor</code></td>
                 <td>Native preflight checker</td>
-                <td>Configuration sanity check &mdash; diagnostic paths writable, log directories
+                <td>Configuration sanity check: diagnostic paths writable, log directories
                     exist, JFR can write to expected paths, GC log path is writable, container
                     support enabled</td>
             </tr>
@@ -193,7 +193,7 @@ OpenJDK 64-Bit Server VM (build 25.0.3+9-Eliya-25.0.3, mixed mode, sharing)
 
 
     <h3>Phase 3 roadmap (reserved namespace; Asymm Forensics)</h3>
-    <p>The Phase 3 release (target post-Series-A) introduces <strong>Asymm Forensics</strong>, a
+    <p>The Phase 3 release (target 2027) introduces <strong>Asymm Forensics</strong>, a
         cross-correlation diagnostic platform that ingests JFR, heap, thread, GC, and crash
         artefacts to produce unified incident reports. The <code>asymm forensics</code> subcommand
         tree below is design documentation for that release; not implemented in Phase 1 or Phase 2

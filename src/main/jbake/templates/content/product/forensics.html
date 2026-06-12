@@ -9,11 +9,11 @@
 <section style="margin-bottom: 5rem">
     <p >Asymm Forensics is a JVM diagnostic forensics
         platform built on JFR + JMC + Eclipse MAT foundations. It ingests JFR recordings, heap dumps,
-        thread dumps, GC logs, and crash logs into a unified incident timeline — producing
+        thread dumps, GC logs, and crash logs into a unified incident timeline, producing
         cross-correlation analysis and audit-ready compliance reports without sending data to a SaaS
         service.</p>
     <p style="margin-top: 1.5rem"><strong>Status:</strong> In active development.
-        Phase 3 deliverable (post-Series-A timeline).</p>
+        Phase 3 deliverable (target 2027).</p>
 </section>
 
 <section style="margin-bottom: 5rem">
@@ -45,8 +45,7 @@
 <section style="margin-bottom: 5rem">
     <h2 class="section-title">Why local execution matters</h2>
     <p >Asymm Forensics runs entirely on your hardware. JFR recordings,
-        heap dumps, thread dumps — none of it leaves your perimeter. This is intentional, not
-        incidental.</p>
+        heap dumps, thread dumps. None of it leaves your perimeter. That's by design.</p>
     <p style="margin-top: 1rem">Compliance-conscious teams in regulated industries
         cannot use SaaS-based diagnostic tools because:</p>
     <ul style="line-height: 1.9; margin-top: 0.5rem">
@@ -66,16 +65,16 @@
         <li>It is not an APM tool (use Datadog, New Relic, Dynatrace for application performance monitoring)</li>
         <li>It is not a real-time observability platform (use Prometheus + Grafana, or your existing stack)</li>
         <li>It is not a log aggregator (use Elastic, Loki, or your existing stack)</li>
-        <li>It is not a competitor to fastthread.io / gceasy.io / heaphero.io / yCrash on individual artifact analysis — those tools work fine; Asymm Forensics adds cross-correlation across all of them</li>
+        <li>It is not a competitor to fastthread.io / gceasy.io / heaphero.io / yCrash on individual artifact analysis. Those tools work fine; Asymm Forensics adds cross-correlation across all of them</li>
     </ul>
     <p style="margin-top: 1rem">Asymm Forensics is <strong>post-incident
         forensics</strong>. When something failed and you need to understand why, across multiple
-        diagnostic artifacts, with audit-ready reporting — that's what Asymm Forensics is for.</p>
+        diagnostic artifacts, with audit-ready reporting: that's what Asymm Forensics is for.</p>
 </section>
 
 <section style="margin-bottom: 5rem">
     <h2 class="section-title">Built by OpenJDK contributors</h2>
-    <p >Asymm Systems contributes to upstream OpenJDK — specifically to the
+    <p >Asymm Systems contributes to upstream OpenJDK, specifically to the
         JFR project (custom event types, scrub enhancements) and the OpenJDK CRaC Project. Asymm
         Forensics is not built parallel to OpenJDK tooling; it is built on top of it.</p>
     <p style="margin-top: 1rem">JMC Core libraries (UPL 1.0) are the analysis
@@ -112,8 +111,8 @@
 
 <section style="margin-bottom: 5rem">
     <h2 class="section-title">Get notified when Asymm Forensics is available</h2>
-    <p >Asymm Forensics — the JVM diagnostic forensics platform built on
-        JFR + JMC + Eclipse MAT — is in active development. Join the early access list to be notified
+    <p >Asymm Forensics, the JVM diagnostic forensics platform built on
+        JFR + JMC + Eclipse MAT, is in active development. Join the early access list to be notified
         at launch. We'll send quarterly progress updates covering JFR custom event contributions to
         OpenJDK, cross-correlation engine development, compliance reporting work, and Dial-aware
         analysis features.</p>
@@ -121,8 +120,8 @@
     <@renderWaitlistForm
         formspree_url="https://formspree.io/f/mzdozozy"
         product_tag="forensics-local"
-        heading="Early access — local execution"
-        body="Asymm Forensics — built on JFR + JMC + Eclipse MAT — is in active development. Join the early access list to be notified at launch. We'll send quarterly progress updates covering JFR custom event contributions to OpenJDK, cross-correlation engine development, compliance reporting work, and Dial-aware analysis features."
+        heading="Early access: local execution"
+        body="Asymm Forensics, built on JFR + JMC + Eclipse MAT, is in active development. Join the early access list to be notified at launch. We'll send quarterly progress updates covering JFR custom event contributions to OpenJDK, cross-correlation engine development, compliance reporting work, and Dial-aware analysis features."
         submit_label="Get notified at launch" />
 
     <div style="margin-top: 2rem; padding: 1rem 1.5rem; background: var(--color-sand-light, #f7f5f0); border-radius: 4px; font-size: 0.95rem">
@@ -136,7 +135,7 @@
         formspree_url="https://formspree.io/f/meenonon"
         product_tag="forensics-saas"
         heading="Notify me about Forensics SaaS (Phase 3E)"
-        body="The hosted version of Asymm Forensics is a Phase 3E item — local execution remains the default deployment model. If you can use SaaS-based diagnostic tooling and want to be notified when the hosted option is available, sign up below."
+        body="The hosted version of Asymm Forensics is a Phase 3E item; local execution remains the default deployment model. If you can use SaaS-based diagnostic tooling and want to be notified when the hosted option is available, sign up below."
         submit_label="Get notified about SaaS" />
     </div>
 </section>

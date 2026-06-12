@@ -9,7 +9,7 @@
         <div class="section-intro">
             <span class="section-kicker">Developer Ecosystem</span>
             <h2>Shift Compliance Left. Build Right the First Time.</h2>
-            <p>Our solutions move compliance and execution validation upstream - ensuring what you build is verified, resilient, and production-ready before they ever reach deployment.</p>
+            <p>Our solutions move compliance and execution validation upstream, so what you build is verified, resilient, and production-ready before it reaches deployment.</p>
         </div>
         <div class="bento-grid">
 
@@ -17,7 +17,7 @@
                 cardClass="bento-dial"
                 badge="ODA-Native"
                 title="Build-Time Compliance Verification"
-                text="The developer ecosystem that understands TMFC components, eTOM processes, and Open APIs natively. Non-compliant architectures and specification violations fail at build-time, preventing expensive integration remediation."
+                text="The developer ecosystem that understands TMFC components, eTOM processes, and Open APIs natively. Non-compliant architecture and spec violations fail the build, not the integration round."
                 status="Prototype complete. Launching 2026."
                 cta_label="Explore Dial"
                 cta_href="/product/dial.html">
@@ -29,7 +29,7 @@
                 cardClass="bento-eliya eliya-trigger-parent"
                 badge="Platform Foundation"
                 title="The JDK Built for Telecom"
-                text="OpenJDK for compliance-conscious production. Observability defaults out of the box (JFR, heap dump on OOM, NMT, GC logging) — diagnostic data stays inside your perimeter. Available on SDKman."
+                text="OpenJDK for compliance-conscious production. Operational-readiness defaults out of the box (heap dump on OOM, NMT, crash log path, JFR one flag away). Diagnostic data stays inside your perimeter. Coming to SDKMAN."
                 install_cmd="sdk install java ${eliyaVersion}-eliya"
                 cta_label="Download"
                 cta_href="/product/eliya.html">
@@ -94,8 +94,8 @@
             <div class="pipeline-connector"></div>
             <@renderPipelineStep
                 number="03"
-                title="Fast Execution"
-                text="Deploy standard, compliant TMF components powered by Asymm JVM defaults tailored for the world's heaviest workloads." />
+                title="Production-Ready Execution"
+                text="Deploy standard, compliant TMF components on Eliya, with operational-readiness and observability defaults built in for demanding production workloads." />
         </div>
     </div>
 </section>
