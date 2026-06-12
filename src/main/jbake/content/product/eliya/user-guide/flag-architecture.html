@@ -1,5 +1,5 @@
 title=Eliya flag architecture
-description=Two-layer flag taxonomy with dual syntax — Layer 1 capabilities (boolean) and Layer 2 profile (enum).
+description=Two-layer flag taxonomy with dual syntax: Layer 1 capabilities (boolean) and Layer 2 profile (enum).
 type=page
 toc=true
 status=published
@@ -9,7 +9,7 @@ status=published
     <span class="section-kicker">User guide</span>
     <h1>Flag architecture</h1>
     <p style="max-width: 60ch">Eliya's flags are organised into two layers
-        with distinct purposes. This page explains the taxonomy &mdash;
+        with distinct purposes. This page explains the taxonomy:
         what each layer does, why the syntaxes differ, and when to reach
         for which.</p>
 </header>
@@ -18,16 +18,16 @@ status=published
     <h3>Two layers, two syntaxes</h3>
     <p>Eliya's flag namespace is split into two layers
         that match different concerns. The two layers use different
-        Hotspot flag syntaxes that match their semantic structure &mdash;
+        Hotspot flag syntaxes that match their semantic structure, the
         same pattern Hotspot itself uses (<code>-XX:NativeMemoryTracking=summary</code>
         for enums, <code>-XX:+HeapDumpOnOutOfMemoryError</code> for toggles).
         Capabilities give fine-grained control; the profile gives a curated
         combination. Each layer is documented below.</p>
 
-    <h3>Layer 1 — Capabilities</h3>
+    <h3>Layer 1: Capabilities</h3>
     <p>Each capability flag activates a single,
-        narrowly-scoped technical concern. Capabilities are composable
-        &mdash; you set multiple capability flags to assemble custom
+        narrowly-scoped technical concern. Capabilities are composable:
+        you set multiple capability flags to assemble custom
         configurations. Capability flags use boolean syntax:</p>
     <button type="button" class="inline-terminal"
         onclick="copyToClipboard('-XX:+UseEliyaObservability -XX:+UseEliyaSecurityStrict -XX:+UseEliyaAudit')" aria-label="Copy command">
@@ -35,7 +35,7 @@ status=published
         <span class="copy-btn" aria-hidden="true">Copy</span>
     </button>
     <p><strong>Note.</strong> The capability flag names above are
-        <strong>reserved namespace</strong> &mdash; <code>UseEliyaObservability</code>,
+        <strong>reserved namespace</strong>: <code>UseEliyaObservability</code>,
         <code>UseEliyaDiagnostics</code>, <code>UseEliyaOperational</code>,
         and <code>UseEliyaTooling</code> become operational in Phase 2;
         <code>UseEliyaSecurityStrict</code> and <code>UseEliyaAudit</code>
@@ -45,10 +45,10 @@ status=published
     <p>Capabilities are what
         the JVM actually does. They are the source of truth.</p>
 
-    <h3>Layer 2 — Profile</h3>
+    <h3>Layer 2: Profile</h3>
     <p>A single profile selector specifies which
         curated combination is active. Profiles are mutually exclusive
-        by design &mdash; only one profile can be active at a time.
+        by design; only one profile can be active at a time.
         <code>EliyaProfile</code> is an enum-valued flag holding a single
         value at runtime; the JVM cannot be in a state of "two profiles
         active simultaneously." When customer demand requires the union of
@@ -68,7 +68,7 @@ status=published
         underlying capabilities plus framework-specific settings.</p>
 
 
-    <h3>Phase 1 — what's available today</h3>
+    <h3>Phase 1: what's available today</h3>
     <p>Phase 1 ships a single profile and reserves
         the capability namespace for Phase 2. The profile is the canonical
         way to activate Eliya's defaults; capability flags are documented
@@ -86,12 +86,12 @@ status=published
         <tbody>
             <tr>
                 <td><code>-XX:EliyaProfile=Production</code></td>
-                <td>Layer 2 — profile</td>
-                <td>Activates production-readiness defaults: JFR continuous (Phase 2) recording, heap dump on OOM, native memory tracking, GC logging, crash log path, container awareness, diagnostic VM options.</td>
+                <td>Layer 2: profile</td>
+                <td>Activates production-readiness defaults: Phase 1: heap dump on OOM, native memory tracking, crash log path, container awareness, diagnostic VM options. Phase 2: continuous JFR recording and GC logging.</td>
             </tr>
             <tr>
                 <td><code>-XX:EliyaProfile=None</code></td>
-                <td>Layer 2 — profile</td>
+                <td>Layer 2: profile</td>
                 <td>Explicit no-profile (default). Compose capabilities directly when they ship in Phase 2.</td>
             </tr>
             <tr>
@@ -208,7 +208,7 @@ status=published
 
     <h4>Combined profiles</h4>
     <p>Some regulated industries require the union of multiple compliance
-        frameworks &mdash; healthcare payment processors need PCI&nbsp;DSS +
+        frameworks: healthcare payment processors need PCI&nbsp;DSS +
         HIPAA, financial SaaS providers need SOC&nbsp;2 + ISO&nbsp;27001,
         defence contractors need FedRAMP + CMMC. For these cases, Eliya
         ships <strong>explicit combined profile values</strong> rather than
@@ -254,7 +254,7 @@ status=published
         and tell us which framework (or combination) your auditor requires.</p>
 
 
-    <h3>Conflict detection &mdash; three response tiers</h3>
+    <h3>Conflict detection: three response tiers</h3>
     <p>Eliya checks flag combinations at JVM startup
         and responds in one of three tiers depending on the conflict's
         severity. Default behaviour is <strong>checking enabled</strong>; opt
@@ -272,10 +272,10 @@ status=published
         ships the profile flag (<code>EliyaProfile=Production</code>) and
         the conflict-check control flag only.</p>
 
-    <h4>Tier 1 — Silent resolution</h4>
+    <h4>Tier 1: Silent resolution</h4>
     <p>User explicit command-line settings override
         profile-implied defaults. This is established Hotspot override
-        semantics &mdash; no warning issued.</p>
+        semantics; no warning issued.</p>
     <button type="button" class="inline-terminal"
         onclick="copyToClipboard('java -XX:EliyaProfile=Production -XX:-UseEliyaObservability -jar app.jar')" aria-label="Copy command">
         <code>java -XX:EliyaProfile=Production -XX:-UseEliyaObservability -jar app.jar</code>
@@ -285,7 +285,7 @@ status=published
         activates observability; user explicit <code>-UseEliyaObservability</code>
         wins. Intentional override; no warning.</p>
 
-    <h4>Tier 2 — Warning</h4>
+    <h4>Tier 2: Warning</h4>
     <p>Suspicious-but-legal combinations produce a
         warning to stderr. The JVM continues normally.</p>
     <div class="inline-terminal inline-terminal--static">
@@ -295,7 +295,7 @@ status=published
 &nbsp;&nbsp;explicit flag is redundant.</code>
     </div>
 
-    <h4>Tier 3 — Fatal exit</h4>
+    <h4>Tier 3: Fatal exit</h4>
     <p>Genuinely incompatible combinations cause
         JVM startup to fail with a descriptive error. Compliance environments
         require fail-fast on misconfiguration; the alternative (silent
@@ -325,9 +325,9 @@ status=published
     <h4>Why dual syntax</h4>
     <p>The syntax matches the semantics:</p>
     <ul>
-        <li>"Is observability enabled?" &mdash; boolean question &rarr;
+        <li>"Is observability enabled?": boolean question &rarr;
             <code>+/-</code> syntax</li>
-        <li>"Which profile is active?" &mdash; enumeration question &rarr;
+        <li>"Which profile is active?": enumeration question &rarr;
             <code>=</code> syntax</li>
     </ul>
     <p>This produces three real
@@ -345,7 +345,7 @@ status=published
             scanning JVM args knows from the syntax alone whether they're
             looking at a capability or a profile.</li>
         <li><strong>Native Hotspot compilation.</strong> Both flag forms
-            map to standard Hotspot macros in <code>globals.hpp</code> &mdash;
+            map to standard Hotspot macros in <code>globals.hpp</code>;
             no custom parser, no macro hacking. Same C++ compilation path
             as <code>UseG1GC</code> and <code>NativeMemoryTracking</code>.</li>
     </ol>
@@ -358,18 +358,18 @@ status=published
         <code>${ELIYA_DIAGNOSTIC_PATH}/${service_name}/${replica_name}/${category}/</code>
     </div>
 
-    <p><strong>Base path</strong> &mdash; configurable: <code>ELIYA_DIAGNOSTIC_PATH</code>
+    <p><strong>Base path</strong>, configurable: <code>ELIYA_DIAGNOSTIC_PATH</code>
         env var &rarr; platform default (Linux: <code>/var/log/eliya</code>).</p>
 
-    <p><strong>Service name</strong> &mdash; logical service identity:
+    <p><strong>Service name</strong>, logical service identity:
         <code>ELIYA_SERVICE_NAME</code> &rarr; <code>-Deliya.service.name=</code> &rarr;
         <code>HOSTNAME</code> &rarr; literal <code>default</code>.</p>
 
-    <p><strong>Replica name</strong> &mdash; per-instance identity:
+    <p><strong>Replica name</strong>, per-instance identity:
         <code>ELIYA_REPLICA_NAME</code> &rarr; <code>-Deliya.replica.name=</code> &rarr;
         <code>HOSTNAME</code> &rarr; suppressed when equal to <code>${service_name}</code>.</p>
 
-    <p><strong>Category</strong> &mdash; Eliya-controlled, one of: <code>jfr</code>,
+    <p><strong>Category</strong>, Eliya-controlled, one of: <code>jfr</code>,
         <code>heap</code>, <code>crash</code>, <code>gc</code>.</p>
 
     <h4>The suppression rule</h4>
@@ -402,7 +402,7 @@ status=published
 
     <p>For deployment-by-deployment effective path examples (Kubernetes single- and multi-replica,
         bare-metal multi-JVM, docker-compose scale, explicit replica naming), see
-        <a href="/product/eliya/user-guide/flags-reference.html#diagnostic-paths" class="org-link org-link--inline org-link--internal">flags reference &mdash; diagnostic paths</a>.</p>
+        <a href="/product/eliya/user-guide/flags-reference.html#diagnostic-paths" class="org-link org-link--inline org-link--internal">flags reference: diagnostic paths</a>.</p>
 </section>
 
 <div class="page-back-nav">

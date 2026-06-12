@@ -33,15 +33,15 @@
             the container spec, or pin to a specific <code>${eliyaVersion}</code> tag and bump
             explicitly on each CPU.</li>
         <li><span class="check-yes" aria-hidden="true">&#10003;</span>
-            <code>${eliyaVersion}</code> for environments that pin to a specific version &mdash;
+            <code>${eliyaVersion}</code> for environments that pin to a specific version;
             the tag is immutable, so <code>docker pull</code> returns the same image every time.</li>
         <li><span class="check-yes" aria-hidden="true">&#10003;</span>
-            <code>-slim</code> variants for headless server workloads &mdash; smaller base
+            <code>-slim</code> variants for headless server workloads: smaller base
             (Debian slim) with no fontconfig/freetype/X11. Default recommendation for application
             containers.</li>
         <li><span class="check-yes" aria-hidden="true">&#10003;</span>
             Full (non-slim) variants when your application uses AWT or Java2D for server-side
-            rendering (PDF generation, chart images, font-metric calculations) &mdash; the full
+            rendering (PDF generation, chart images, font-metric calculations): the full
             Debian base provides the native <code>fontconfig</code>, <code>freetype</code>, and
             X11 libraries those paths call into. Also the right choice for diagnostic sidecar
             containers (see
@@ -88,7 +88,7 @@
                 <td><code>debian:12-slim</code></td>
                 <td>Eliya JRE</td>
                 <td>~110 MB</td>
-                <td><strong>Recommended default for application containers</strong> &mdash; production
+                <td><strong>Recommended default for application containers</strong>: production
                     headless servers</td>
                 <td>Coming Q4 2026 (Wave 7)</td>
             </tr>
@@ -136,25 +136,25 @@
         &ge; glibc 2.12</strong> (Oracle Linux 6.4 sysroot) and
         <strong>aarch64 &ge; glibc 2.17</strong> (Oracle Linux 7.6 sysroot).
         The x86_64 floor is deliberately wider than Temurin's unified 2.17,
-        so an x86_64 Eliya container runs on every glibc &ge; 2.12 host -
+        so an x86_64 Eliya container runs on every glibc &ge; 2.12 host,
         including older RHEL / CentOS / SLES bases when corporate policy
         requires them. Full reach matrix is on the <a href="install-linux.html">Linux install guide</a>.</p>
 
     <p><strong>Predictable operations.</strong> Most Linux production deployments are
         Debian/Ubuntu or RHEL-derived. Operators inspecting an Eliya container find the same
         <code>ps</code>, <code>top</code>, <code>kill</code>, <code>bash</code>, and package
-        management conventions they use on host systems &mdash; no busybox flag differences or
+        management conventions they use on host systems: no busybox flag differences or
         musl-specific surprises. This matters less for routine work (JDK tools like
         <code>jcmd</code>, <code>jstack</code>, and the <code>asymm</code> CLI come from the JDK
         and work regardless of base image) and more for the small fraction of incidents that
-        require below-the-JVM investigation &mdash; <code>strace</code>, <code>lsof</code>,
+        require below-the-JVM investigation: <code>strace</code>, <code>lsof</code>,
         <code>gdb</code>, and the like. For workloads that need AWT/Java2D rendering on the slim
         image, install the runtime libs explicitly:
         <code>apt-get install -y fontconfig libfreetype6</code>.</p>
 
     <p><strong>Predictable lifecycle.</strong> Debian 12 (bookworm) enters Long Term Support on
         2026-06-10 and is supported through 2028-06-30 for <code>amd64</code> and
-        <code>arm64</code> &mdash; both architectures Eliya targets. The Debian LTS team
+        <code>arm64</code>, both architectures Eliya targets. The Debian LTS team
         continues security updates during this window. ELTS (Extended LTS) is a commercial
         offering from Freexian, not an official Debian project, and is not load-bearing for
         Eliya's support story. Eliya tracks Debian's release cycle and will migrate base images
@@ -166,7 +166,7 @@
 
     <h4>Why no Alpine, and what about distroless?</h4>
     <p>Distroless is a separate question from Debian vs Alpine. A distroless image contains only
-        the JDK and its runtime dependencies &mdash; no shell, no package manager, no diagnostic
+        the JDK and its runtime dependencies: no shell, no package manager, no diagnostic
         utilities. The image starts from an effectively empty filesystem (<code>FROM scratch</code>)
         and adds only the binaries and libraries the application strictly needs. Like all
         containers, distroless images share the host's Linux kernel; the "minimal" refers to the
@@ -204,8 +204,8 @@
         over the included libraries, validation against representative Java application classes,
         and documentation of application-fit constraints. If your environment requires this level
         of minimisation (or a Red Hat UBI variant for procurement), sign up at
-        <a href="/product/eliya/downloads.html#waitlist" class="org-link org-link--inline org-link--internal">downloads</a>
-        &mdash; your demand signal helps Wave 7 prioritisation.</p>
+        <a href="/product/eliya/downloads.html#waitlist" class="org-link org-link--inline org-link--internal">downloads</a>;
+        your demand signal helps Wave 7 prioritisation.</p>
 
 
     <h3>Use as a base image</h3>
@@ -231,9 +231,9 @@ ENTRYPOINT ["java", "-jar", "myapp.jar"]</code>
 
 
     <h3>Why direct exec (not <code>sh -c</code>)</h3>
-    <p>The entrypoint uses direct exec &mdash; <code>ENTRYPOINT ["java", "-jar", "myapp.jar"]</code>
-        &mdash; rather than wrapping in a shell &mdash;
-        <code>ENTRYPOINT ["sh", "-c", "java -jar myapp.jar"]</code>. This matters for forensic
+    <p>The entrypoint uses direct exec (<code>ENTRYPOINT ["java", "-jar", "myapp.jar"]</code>)
+        rather than wrapping in a shell
+        (<code>ENTRYPOINT ["sh", "-c", "java -jar myapp.jar"]</code>). This matters for forensic
         data capture during orchestrated shutdowns.</p>
 
     <p>When Kubernetes or Docker stops a container, it sends <code>SIGTERM</code> to PID 1 (the
@@ -243,10 +243,10 @@ ENTRYPOINT ["java", "-jar", "myapp.jar"]</code>
 
     <p>If you wrap the entrypoint in <code>sh -c</code>, the shell becomes PID 1 instead of the
         JVM. The shell receives <code>SIGTERM</code> but doesn't propagate it to the Java
-        process. The JVM gets killed by <code>SIGKILL</code> after the grace period &mdash; too
+        process. The JVM gets killed by <code>SIGKILL</code> after the grace period, too
         late for the shutdown hooks to fire. Result: the JFR events captured immediately before
-        the shutdown &mdash; precisely the data most likely to explain why the orchestrator
-        killed the container &mdash; never reach disk. Heap-dump-on-exit (if configured) also
+        the shutdown, precisely the data most likely to explain why the orchestrator
+        killed the container, never reach disk. Heap-dump-on-exit (if configured) also
         doesn't fire.</p>
 
     <p>Direct exec keeps the JVM as PID 1. <code>SIGTERM</code> reaches the JVM. Shutdown hooks
@@ -262,12 +262,12 @@ ENTRYPOINT ["java", "-jar", "myapp.jar"]</code>
         commands (<code>asymm eliya info</code>, <code>verify</code>, <code>doctor</code>,
         <code>versions</code>, <code>schedule</code>, plus the <code>version</code> commands)
         are documented in the
-        <a href="/product/eliya/user-guide/cli.html" class="org-link org-link--inline org-link--internal">asymm CLI reference</a>
-        &mdash; the same surface, same behaviour, inside or outside a container.</p>
+        <a href="/product/eliya/user-guide/cli.html" class="org-link org-link--inline org-link--internal">asymm CLI reference</a>:
+        the same surface, same behaviour, inside or outside a container.</p>
 
     <p>Phase 2 will add diagnostic tooling subcommands (<code>asymm eliya analyze-heap</code>,
         <code>asymm eliya profile</code>, <code>asymm eliya jfr</code> family) that wrap Eclipse
-        MAT headless and async-profiler &mdash; both Phase 2 bundled tools. Phase 3 will add
+        MAT headless and async-profiler, both Phase 2 bundled tools. Phase 3 will add
         Asymm Forensics subcommands. Three operational patterns for running these tools against
         a containerised JVM are documented below under
         <a href="#diagnostic-patterns" class="org-link org-link--inline org-link--internal">Production diagnostic patterns</a>.</p>
@@ -302,7 +302,7 @@ ENTRYPOINT ["java", "-jar", "myapp.jar"]</code>
         checkouts (typically Windows-originated commits).</p>
 
     <p>If you use <code>jlink</code> to produce a minimal custom runtime image, the slim Eliya
-        image is the right runtime base &mdash; <code>jlink</code> output works the same way it
+        image is the right runtime base: <code>jlink</code> output works the same way it
         does with upstream OpenJDK.</p>
 
 
@@ -386,7 +386,7 @@ spec:<br>
 /var/log/eliya/billing-service/billing-service-7d4b9c-zr88l/jfr/</code>
     </div>
 
-    <p>Each pod gets its own subdirectory. Per-replica attribution is filesystem-encoded &mdash;
+    <p>Each pod gets its own subdirectory. Per-replica attribution is filesystem-encoded:
         auditors and engineers can list <code>/var/log/eliya/billing-service/</code> to see the
         full replica history; each subdirectory's name identifies the pod that produced its
         contents. With <code>docker compose up --scale my-app=3</code>, each container instance
@@ -406,7 +406,7 @@ spec:<br>
         the hostname carries no per-replica information.</p>
 
     <p>For deployments wanting deterministic replica names across pod restarts (uncommon, but
-        useful for stateful workloads), set <code>ELIYA_REPLICA_NAME</code> explicitly &mdash; in
+        useful for stateful workloads), set <code>ELIYA_REPLICA_NAME</code> explicitly; in
         Kubernetes, <code>valueFrom: fieldRef: fieldPath: metadata.name</code> works.</p>
 
     <p>For full path strategy documentation including all resolution scenarios, see
@@ -423,7 +423,7 @@ spec:<br>
         <a href="/research/jvm-forensics-vs-apm.html" class="org-link org-link--inline org-link--internal">JVM forensics vs APM</a>
         for the architectural distinction.</p>
 
-    <h4>1. Interactive exec &mdash; development and small-scale production</h4>
+    <h4>1. Interactive exec: development and small-scale production</h4>
     <p>The simplest pattern: enter the running container, run diagnostic commands directly.
         Suitable for development, staging, and production environments without strict
         app-container minimisation requirements.</p>
@@ -467,9 +467,9 @@ spec:<br>
         container. The trade-off: the application container ships these tools as part of its
         runtime, increasing the image surface area.</p>
 
-    <h4>2. Ephemeral diagnostic containers &mdash; recommended for production incident response</h4>
+    <h4>2. Ephemeral diagnostic containers: recommended for production incident response</h4>
     <p>For Kubernetes 1.23+ clusters (the typical production cluster as of 2024+), the right
-        pattern for occasional diagnostic access is ephemeral containers &mdash;
+        pattern for occasional diagnostic access is ephemeral containers:
         on-demand diagnostic containers injected into a running pod for the duration of an
         investigation, then removed. This avoids the cost of an always-running diagnostic
         sidecar while preserving the security posture benefit (the app container ships no
@@ -522,7 +522,7 @@ spec:<br>
         <li><span class="check-yes" aria-hidden="true">&#10003;</span>
             RBAC permission for the <code>pods/ephemeralcontainers</code> resource.</li>
         <li><span class="check-yes" aria-hidden="true">&#10003;</span>
-            The Eliya image must be reachable from the cluster &mdash; typically pre-cached on
+            The Eliya image must be reachable from the cluster, typically pre-cached on
             nodes via image-pull policy or pre-pulled by a DaemonSet.</li>
     </ul>
 
@@ -532,7 +532,7 @@ spec:<br>
         Kubernetes 1.23+ and the appropriate RBAC; clusters that don't support ephemeral
         containers fall back to the always-on sidecar pattern below.</p>
 
-    <h4>3. Always-on diagnostic sidecar &mdash; for scheduled tasks or restricted clusters</h4>
+    <h4>3. Always-on diagnostic sidecar: for scheduled tasks or restricted clusters</h4>
     <p>The always-on sidecar pattern runs a diagnostic Eliya container alongside each application
         pod for the lifetime of the pod. Prefer the ephemeral-containers pattern above for
         incident-driven diagnostics; reach for the always-on sidecar when:</p>
@@ -541,7 +541,7 @@ spec:<br>
             Your cluster doesn't support ephemeral containers (Kubernetes &lt;1.23 or policy
             restrictions).</li>
         <li><span class="check-yes" aria-hidden="true">&#10003;</span>
-            You need scheduled diagnostic tasks &mdash; periodic heap dumps, JFR
+            You need scheduled diagnostic tasks: periodic heap dumps, JFR
             rotation, continuous analysis on a cron schedule.</li>
         <li><span class="check-yes" aria-hidden="true">&#10003;</span>
             Your operational model requires pre-provisioned diagnostic surfaces
@@ -557,7 +557,7 @@ spec:<br>
     <p>The sidecar uses the full Eliya image (<code>25-lts</code>, not
         <code>25-lts-slim</code>). The full image's <code>fontconfig</code> and
         <code>freetype</code> libraries are needed when Phase 2 diagnostic tools generate visual
-        reports &mdash; flame graphs from async-profiler, leak-suspects HTML from Eclipse MAT,
+        reports: flame graphs from async-profiler, leak-suspects HTML from Eclipse MAT,
         and JFR rendering from headless analysis. For Phase 1 sidecars running only
         <code>jcmd</code>, <code>jstack</code>, and <code>asymm eliya</code> commands, the slim
         image would also work, but using the full image future-proofs the deployment as the
@@ -634,12 +634,12 @@ spec:<br>
     </button>
 
     <p><strong>About <code>shareProcessNamespace: true</code>.</strong> By default in Kubernetes,
-        each container in a pod has its own PID namespace &mdash; the sidecar's <code>ps aux</code>
+        each container in a pod has its own PID namespace: the sidecar's <code>ps aux</code>
         sees only the sidecar's own processes (the <code>sleep infinity</code>), not the
         application JVM in the other container. With <code>shareProcessNamespace: true</code> set
         at the pod level, all containers in the pod share one PID namespace; the sidecar can now
         see the JVM and target it with <code>jcmd &lt;jvm-pid&gt;</code>. Find the JVM in the
-        shared namespace with <code>pgrep -f java</code> first &mdash; under shared-namespace,
+        shared namespace with <code>pgrep -f java</code> first; under shared-namespace,
         the JVM is not PID 1 (the sidecar's sleep process or whichever container started first is
         PID 1).</p>
 
@@ -680,8 +680,8 @@ spec:<br>
         </tbody>
     </table>
 
-    <p>The trade-off is intentional for diagnostic sidecars &mdash; the whole point of the
-        sidecar is to inspect the app's JVM &mdash; but it's worth understanding that the trust
+    <p>The trade-off is intentional for diagnostic sidecars (the whole point of the
+        sidecar is to inspect the app's JVM), but it's worth understanding that the trust
         boundary has widened. Without <code>shareProcessNamespace</code>, the sidecar is still
         useful for offline analysis of heap dumps, JFR recordings, and GC logs that landed on
         the shared volume; it just can't talk to the live JVM.</p>
@@ -698,7 +698,7 @@ spec:<br>
         Phase 2 will bundle Eclipse MAT (headless) and async-profiler in the Eliya image and
         add <code>asymm eliya analyze-heap</code>, <code>asymm eliya profile</code>, and
         <code>asymm eliya jfr</code> family commands. The sidecar pattern doesn't change between
-        phases &mdash; the same pod spec works; the available diagnostic commands inside the
+        phases: the same pod spec works; the available diagnostic commands inside the
         sidecar expand as Phase 2 ships.</p>
 
     <p><strong>Wave 7 (Q4 2026) with distroless app container.</strong> When the distroless Eliya
@@ -718,13 +718,13 @@ spec:<br>
         the parallel Debian-based sidecar. In Phase 1, both containers use the same Debian-based
         image (with the slim variant for the app, full for the sidecar).</p>
 
-    <h4>4. JMX over secure channel &mdash; legacy enterprise</h4>
+    <h4>4. JMX over secure channel: legacy enterprise</h4>
     <p>Some traditional deployments expose the JVM's Management Extensions (JMX) over a secure
         port, allowing remote inspection from tools like VisualVM, JConsole, or JDK Mission
         Control (JMC) on engineer workstations. Some compliance frameworks specifically require
         JMX-style remote management endpoints for audit and inventory purposes.</p>
 
-    <p>Eliya supports JMX through standard upstream OpenJDK mechanisms &mdash; no Eliya-specific
+    <p>Eliya supports JMX through standard upstream OpenJDK mechanisms, no Eliya-specific
         configuration required. Enable JMX in a containerised deployment by setting the standard
         flags in <code>JAVA_TOOL_OPTIONS</code>:</p>
 
@@ -746,7 +746,7 @@ EXPOSE 9010</code>
     <p>The <code>jmxssl.properties</code> file contains standard Java SSL system properties
         (<code>javax.net.ssl.keyStore</code>, <code>javax.net.ssl.keyStorePassword</code>,
         <code>javax.net.ssl.trustStore</code>, etc.). It's a Java configuration file, not an
-        Eliya file &mdash; refer to Oracle's JMX documentation for the full format.</p>
+        Eliya file; refer to Oracle's JMX documentation for the full format.</p>
 
     <p><strong>Critical compliance guidance:</strong></p>
     <ul class="checklist">
@@ -755,10 +755,10 @@ EXPOSE 9010</code>
             management.</li>
         <li><span class="check-no" aria-hidden="true">&#10007;</span>
             JMX without authentication (<code>jmxremote.authenticate=false</code>) is a critical
-            exposure &mdash; never enable in production.</li>
+            exposure; never enable in production.</li>
         <li><span class="check-no" aria-hidden="true">&#10007;</span>
             JMX without TLS (<code>jmxremote.ssl=false</code>) leaks credentials and management
-            traffic in cleartext &mdash; never enable in production.</li>
+            traffic in cleartext; never enable in production.</li>
         <li><span class="check-yes" aria-hidden="true">&#10003;</span>
             Password and access files must be readable only by the JVM process user
             (<code>chmod 400</code>); JMX startup fails otherwise.</li>

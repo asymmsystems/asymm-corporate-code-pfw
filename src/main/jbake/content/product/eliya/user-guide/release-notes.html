@@ -19,13 +19,13 @@ status=published
 </header>
 
 <section style="margin-bottom: 5rem;">
-    <h2 class="section-title">Eliya 25.0.3 &mdash; June 2026 (first signed GA)</h2>
+    <h2 class="section-title">Eliya 25.0.3: June 2026 (first signed GA)</h2>
     <p style="max-width: 70ch;"><strong>Type:</strong> first signed General Availability release.
         <strong>Upstream base:</strong> OpenJDK 25.0.3 (2026-04-21).</p>
     <ul style="max-width: 70ch; line-height: 1.8; margin-top: 1rem;">
         <li><strong>Platforms:</strong> Linux x86_64 + Linux aarch64, both shipping in this release.</li>
         <li><strong>Artefact formats:</strong> tarball (<code>.tar.gz</code>), Debian package (<code>.deb</code>),
-            RPM (<code>.rpm</code>) &mdash; per arch.</li>
+            RPM (<code>.rpm</code>), per arch.</li>
         <li><strong>Signature:</strong> Ed25519 detached signature on <code>SHA256SUMS.txt</code>; key fingerprint
             <code>076D&nbsp;E547&nbsp;397A&nbsp;5D27&nbsp;EECE&nbsp;E0B3&nbsp;07A9&nbsp;0689&nbsp;B71A&nbsp;158F</code>
             (<a href="/product/eliya/user-guide/verify-download.html" class="org-link org-link--inline org-link--internal">verify-download guide</a>).</li>
@@ -34,7 +34,7 @@ status=published
             <a href="/product/eliya/user-guide/jre-curation.html" class="org-link org-link--inline org-link--internal">JRE curation guide</a>.</li>
         <li><strong>Eliya-specific:</strong> <code>bin/asymm</code> native ELF CLI;
             <code>-XX:+EliyaProfile=Production</code> activator for production-ready ergonomics
-            (continuous JFR (Phase 2), heap dump on OOM, NMT summary, GC logging).</li>
+            (heap dump on OOM, exit-on-OOM, NMT summary, crash log path, container support, diagnostic options unlocked; continuous JFR and unified GC logging by default are Phase 2).</li>
         <li><strong>Reproducibility:</strong> bit-identical builds across two independent runs on both arches
             (verified 2026-06-05); customers can re-derive checksums from publicly-available OpenJDK 25 sources.</li>
         <li><strong>Known limitations:</strong> four upstream-tracked test failures inherited from OpenJDK 25.0.3
@@ -45,7 +45,7 @@ status=published
     <aside style="background: #fff7ed; border-left: 4px solid #f59e0b; padding: 1rem 1.5rem; margin-top: 1.5rem; max-width: 70ch;">
         <p style="margin: 0; font-size: 0.95rem;"><strong>Installation today:</strong> direct
             <a href="/product/eliya/downloads.html" class="org-link org-link--inline org-link--internal">tar.gz / .deb / .rpm</a> downloads or via the GitHub Release.
-            <strong>SDKMAN! is not yet a supported install path</strong> &mdash; vendor onboarding is in
+            <strong>SDKMAN! is not yet a supported install path</strong>: vendor onboarding is in
             progress at
             <a href="https://github.com/sdkman/sdkman-db-migrations/pull/783" class="org-link org-link--inline org-link--external">sdkman/sdkman-db-migrations#783</a>;
             <code>sdk install java 25.0.3-eliya</code> will work once that PR merges and Eliya's
@@ -65,7 +65,7 @@ status=published
 </section>
 
 <section style="margin-bottom: 5rem;">
-    <h2 class="section-title">Eliya 25.0.2 &mdash; April 2026 (pre-GA build)</h2>
+    <h2 class="section-title">Eliya 25.0.2: April 2026 (pre-GA build)</h2>
     <p style="max-width: 70ch;"><strong>Type:</strong> pre-GA development build (not a signed release).
         <strong>Upstream base:</strong> OpenJDK 25.0.2-ga.</p>
     <ul style="max-width: 70ch; line-height: 1.8; margin-top: 1rem;">

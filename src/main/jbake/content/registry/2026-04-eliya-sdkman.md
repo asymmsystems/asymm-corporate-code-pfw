@@ -1,19 +1,17 @@
-title=Eliya now available on SDKman
+title=Eliya is coming to SDKMAN
 date=2026-04-12
 type=post
 status=published
 kicker=Project Milestone
-description=The Eliya JDK is now officially available for easy installation via SDKman.
+description=Eliya's SDKMAN vendor registration is in progress. Once it lands, installing Eliya is a single command.
 ~~~~~~
 
-Developer experience is central to our philosophy. To make it as easy as possible for engineers to adopt **Eliya**, we have officially integrated with the SDKman vendor ecosystem.
-
-No more manual downloads or path configurations. Simply run:
+We want Eliya to be trivial to adopt, and for most developers that means SDKMAN. Our vendor registration is in progress: sdkman-db-migrations [PR #783](https://github.com/sdkman/sdkman-db-migrations/pull/783). Once it merges and our credentials are issued, this works on any shell with SDKMAN installed:
 
 <div class="inline-terminal" style="margin: 2rem 0; background: var(--color-base); padding: 1rem; border: 1px dashed var(--border-normal); border-radius: 4px; font-family: var(--font-code); font-size: 0.9rem;">
     <code>sdk install java 25.0.3-eliya</code>
 </div>
 
-This availability ensures that CI/CD pipelines and local development environments can switch to Eliya with a single command, bringing our server-first optimisations to your team instantly.
+Until then, install Eliya directly from the [downloads page](/product/eliya/downloads.html) (tar.gz, `.deb`, `.rpm`, or the multi-arch Docker image) and use `update-alternatives` for side-by-side coexistence with your current JDK. We'll post here when registration is live.
 
 <a href="/registry.html" class="org-link org-link--inline org-link--internal org-link--back">Back to Registry</a>

@@ -18,7 +18,7 @@
         the source repository carries. For compliance-conscious deployments, that's the
         difference between "we trust Asymm" and "we can independently confirm."</p>
     <p>Eliya is engineered for byte-identical rebuilds, not merely "best-effort similar." The
-        build chain is locked at every layer that would otherwise introduce nondeterminism &mdash;
+        build chain is locked at every layer that would otherwise introduce nondeterminism:
         timestamps, archive metadata, toolchain versions, environment paths, even the bundled
         compression library.</p>
 </section>
@@ -43,8 +43,8 @@
     <h3>One-shot recipe</h3>
     <div class="inline-terminal inline-terminal--static">
         <code># Clone the platform repo (the orchestration layer):<br>
-git clone https://github.com/asymmsystems/eliya-jdk-platform<br>
-cd eliya-jdk-platform<br>
+git clone https://github.com/asymmsystems/eliya-jdk-platform-ops<br>
+cd eliya-jdk-platform-ops<br>
 git checkout eliya-jdk-25.0.3<br>
 <br>
 # Enter the build environment (pulls the digest-pinned buildenv image):<br>
@@ -63,7 +63,7 @@ sha256sum build/openjdk-src/build/*/bundles/eliya-jdk-25.0.3-linux-x64.tar.gz<br
 # Hash B must equal hash A (and equal the published SHA256SUMS.txt entry).</code>
     </div>
 
-    <h3>If hashes differ &mdash; how to diagnose</h3>
+    <h3>If hashes differ: how to diagnose</h3>
     <p>Use <code>diffoscope</code> to identify what changed:</p>
     <div class="inline-terminal inline-terminal--static">
         <code>diffoscope build-a.tar.gz build-b.tar.gz</code>
@@ -77,7 +77,7 @@ find . -type f -exec sha256sum {} + | sort  # per-file listing</code>
         introduced by your environment (toolchain drift, host glibc mismatch, missing devkit pin).
         Confirm the buildenv image digest matches the one published in
         <code>scripts/env-jdk25.sh</code>. If runs differ from each other, you've found a
-        reproducibility regression in Eliya &mdash; report to
+        reproducibility regression in Eliya; report to
         <a href="mailto:security@asymm.systems" class="org-link org-link--inline org-link--external">security@asymm.systems</a>.</p>
 </section>
 
@@ -120,7 +120,7 @@ find . -type f -exec sha256sum {} + | sort  # per-file listing</code>
     </table>
 
     <p style="margin-top: 1.5rem; font-size: 0.95rem">Each layer is a documented engineering
-        decision with rationale in <a href="https://github.com/asymmsystems/eliya-jdk-platform" class="org-link org-link--inline org-link--external">the build orchestration repository</a>'s
+        decision with rationale in <a href="https://github.com/asymmsystems/eliya-jdk-platform-ops" class="org-link org-link--inline org-link--external">the build orchestration repository</a>'s
         <code>scripts/common.sh</code>, <code>scripts/env-jdk25.sh</code>, and the build-system
         configure flags. The full architectural rationale is in the corresponding internal ADR
         (ADR-00023 sec.7) and is summarised here in operator-facing terms.</p>
@@ -156,7 +156,7 @@ grep eliya-jdk-25.0.3-linux-x64.tar.gz SHA256SUMS.txt<br>
 # Compare with your local build's sha256sum output. Hashes must match.</code>
     </div>
     <p>A match is the proof: the published binary corresponds exactly to the published source. A
-        mismatch is investigative &mdash; either your build chain is missing a pin (check buildenv
+        mismatch is investigative: either your build chain is missing a pin (check buildenv
         digest, GCC version, devkit version against the values in
         <code>scripts/env-jdk25.sh</code>), or there's a reproducibility regression to report.</p>
 </section>
@@ -164,14 +164,14 @@ grep eliya-jdk-25.0.3-linux-x64.tar.gz SHA256SUMS.txt<br>
 <section>
     <h2 class="section-title">Related guides</h2>
     <ul>
-        <li><a href="/product/eliya/user-guide/verify-download.html" class="org-link org-link--inline org-link--internal">Verify your download</a>
-            &mdash; SHA256 + GPG signature ceremony (different goal: proves Asymm signed it; this
+        <li><a href="/product/eliya/user-guide/verify-download.html" class="org-link org-link--inline org-link--internal">Verify your download</a>:
+SHA256 + GPG signature ceremony (different goal: proves Asymm signed it; this
             page proves Asymm built it from the published source)</li>
-        <li><a href="/product/eliya/user-guide/diff-from-upstream.html" class="org-link org-link--inline org-link--internal">Diff from upstream OpenJDK</a>
-            &mdash; what Eliya changes vs upstream (so you know what the reproduced binary
+        <li><a href="/product/eliya/user-guide/diff-from-upstream.html" class="org-link org-link--inline org-link--internal">Diff from upstream OpenJDK</a>:
+what Eliya changes vs upstream (so you know what the reproduced binary
             contains)</li>
-        <li><a href="/product/eliya/lifecycle.html" class="org-link org-link--inline org-link--internal">Lifecycle &amp; support</a>
-            &mdash; quarterly cadence + the reproducibility commitment carries to every quarterly
+        <li><a href="/product/eliya/lifecycle.html" class="org-link org-link--inline org-link--internal">Lifecycle &amp; support</a>:
+quarterly cadence + the reproducibility commitment carries to every quarterly
             CPU</li>
     </ul>
 </section>

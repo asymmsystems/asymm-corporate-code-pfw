@@ -6,12 +6,12 @@
     <p style="max-width: 60ch">Removing Eliya is a runtime swap in reverse. Application code and
         data are unaffected. For compliance-conscious deployments, read the
         <a href="#before-you-uninstall" class="org-link org-link--inline org-link--internal">diagnostic-data section</a>
-        before starting &mdash; diagnostic artifacts (JFR recordings, heap dumps, GC logs, crash
+        before starting: diagnostic artifacts (JFR recordings, heap dumps, GC logs, crash
         logs) are NOT removed automatically by uninstall.</p>
 </header>
 
 <section>
-    <h3 id="before-you-uninstall">Before you uninstall &mdash; diagnostic data</h3>
+    <h3 id="before-you-uninstall">Before you uninstall: diagnostic data</h3>
     <p>Eliya's <code>EliyaProfile=Production</code> writes diagnostic artifacts (JFR recordings,
         heap dumps, GC logs, crash logs) to <code>/var/log/eliya/</code> by default. For
         compliance-conscious deployments this data may be regulatory evidence that must be retained
@@ -95,7 +95,7 @@
         removal happen automatically with either command. On <code>purge</code> (not
         <code>remove</code>), the <code>eliya-diagnostics</code> system group is also removed.
         Service accounts that were added to that group as part of Eliya integration are not
-        modified &mdash; they remain members of a now-deleted group, which is harmless but worth
+        modified; they remain members of a now-deleted group, which is harmless but worth
         noting if you audit group memberships post-uninstall.</p>
 
 
@@ -120,7 +120,7 @@
 
 
     <h3>Docker</h3>
-    <p>Stop and remove containers using the image first &mdash; <code>docker rmi</code> fails if
+    <p>Stop and remove containers using the image first; <code>docker rmi</code> fails if
         running containers reference it:</p>
     <button type="button" class="inline-terminal"
         onclick="copyToClipboard('docker ps -a --filter &quot;ancestor=ghcr.io/asymmsystems/eliya-jdk:25-lts&quot; --format &quot;{{.ID}}&quot; | xargs -r docker rm -f')" aria-label="Copy command">
@@ -154,7 +154,7 @@
         platform's image cleanup procedure.</p>
 
 
-    <h3>After uninstall &mdash; application-side cleanup</h3>
+    <h3>After uninstall: application-side cleanup</h3>
     <p>Eliya's uninstall doesn't touch application-side configuration that references Eliya.
         Check for:</p>
     <ul>
@@ -171,11 +171,11 @@
 
     <h3>Uninstall scenarios</h3>
     <p>If you're switching to a different OpenJDK distribution (Corretto, Temurin, Zulu, etc.),
-        uninstall is reversible &mdash; your applications run on the replacement JDK without code
+        uninstall is reversible; your applications run on the replacement JDK without code
         changes since Eliya is built from the same upstream source.</p>
     <p>If you're rolling back the Eliya adoption decision entirely (returning to your previous
-        JDK), this is the same procedure as the migration in reverse &mdash; see
-        <a href="/product/eliya/migration.html" class="org-link org-link--inline org-link--internal">Migration guide &mdash; Rollback</a>.</p>
+        JDK), this is the same procedure as the migration in reverse; see
+        <a href="/product/eliya/migration.html" class="org-link org-link--inline org-link--internal">Migration guide: Rollback</a>.</p>
     <p>Either way, application code and data are unaffected. Eliya is a runtime; uninstall is a
         runtime swap.</p>
 
