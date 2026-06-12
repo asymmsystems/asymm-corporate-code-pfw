@@ -27,12 +27,12 @@
             <tr>
                 <td>Default GC</td>
                 <td>G1GC, 200 ms pause target</td>
-                <td>Identical &mdash; JDK 25 ergonomics unchanged. <code>-XX:EliyaProfile=Production</code> does not modify GC selection.</td>
+                <td>Identical; JDK 25 ergonomics unchanged. <code>-XX:EliyaProfile=Production</code> does not modify GC selection.</td>
             </tr>
             <tr>
                 <td>TLS defaults</td>
                 <td>Upstream <code>java.security</code> (already secure in JDK 25)</td>
-                <td>Identical &mdash; no overlay applied. JDK 25 already disables SSLv3 / TLS 1.0 / TLS 1.1 and weak ciphers.</td>
+                <td>Identical; no overlay applied. JDK 25 already disables SSLv3 / TLS 1.0 / TLS 1.1 and weak ciphers.</td>
             </tr>
             <tr>
                 <td>Custom flags</td>
@@ -43,7 +43,7 @@
     </table>
 
     <p style="margin-top: 2rem">If your application relies on legacy TLS
-        protocols (TLS 1.0/1.1) or weak ciphers, it will fail to negotiate &mdash; but that is upstream
+        protocols (TLS 1.0/1.1) or weak ciphers, it will fail to negotiate, but that is upstream
         OpenJDK 25 behaviour, not an Eliya overlay. Those protocols are disabled by default in any
         modern JDK distribution. If legacy interoperability is truly required, override at the
         JVM level:
@@ -65,7 +65,7 @@
     </aside>
 
     <p style="margin-bottom: 1.5rem">Once SDKMAN! registration is live, SDKMAN! lets you install Eliya alongside
-        your current JDK and switch per shell. Safest path &mdash; your existing runtime stays default until you
+        your current JDK and switch per shell. Safest path: your existing runtime stays default until you
         explicitly change it.</p>
 
     <p style="margin-bottom: 1rem; font-size: 0.95rem"><strong>First-time SDKman setup
@@ -133,9 +133,9 @@
 <section style="margin-bottom: 5rem">
     <h2 class="section-title">Enable Eliya operational-readiness defaults (optional)</h2>
     <p style="margin-bottom: 1.5rem">After switching runtimes your
-        application will run unchanged. To opt into Eliya's production observability profile &mdash;
-        Java Flight Recorder continuous recording, heap dump on OOM, Native Memory Tracking,
-        GC logging, crash dump configuration &mdash; add the single flag:</p>
+        application will run unchanged. To opt into Eliya's production observability profile
+        (Java Flight Recorder continuous recording, heap dump on OOM, Native Memory Tracking,
+        GC logging, crash dump configuration), add the single flag:</p>
 
     <button type="button" class="inline-terminal" style="max-width: 600px"
         onclick="copyToClipboard('-XX:EliyaProfile=Production')" aria-label="Copy command">
@@ -149,7 +149,7 @@
     </p>
 
     <p style="margin-top: 1.5rem">For teams currently running APM tools (AppDynamics, Dynatrace,
-        New Relic, Elastic APM, Datadog), migrating to Eliya is additive &mdash; you don't lose
+        New Relic, Elastic APM, Datadog), migrating to Eliya is additive: you don't lose
         APM dashboards, you gain forensic data capture that APM cannot provide. For teams in
         compliance-restricted environments where SaaS APM was prohibited, Eliya provides
         observability capability previously inaccessible. The architectural distinction is
@@ -161,24 +161,24 @@
     <h2 class="section-title">Vendor-specific notes</h2>
 
     <h3>From Corretto</h3>
-    <p>Behavioural parity is high &mdash; Corretto is also built from upstream OpenJDK 25.
-        The most notable Corretto-specific feature is the Corretto Crypto Provider (ACCP) &mdash;
+    <p>Behavioural parity is high; Corretto is also built from upstream OpenJDK 25.
+        The most notable Corretto-specific feature is the Corretto Crypto Provider (ACCP):
         AWS-optimised cryptographic implementations. Eliya does not bundle ACCP, but applications
         that benefit from ACCP can add it as an explicit Maven/Gradle dependency on any JDK,
         including Eliya. For FIPS-validated cryptography, Eliya's FIPS variant ships in Phase 2
-        with a FIPS-validated provider preinstalled &mdash; sign up on the
+        with a FIPS-validated provider preinstalled; sign up on the
         <a href="/product/eliya/security.html#waitlist" class="org-link org-link--inline org-link--internal">security page</a>.</p>
 
     <h3>From Temurin / Adoptium</h3>
     <p>Direct swap. Both are vanilla OpenJDK builds.
         Eliya adds opt-in operational-readiness defaults via <code>-XX:EliyaProfile=Production</code>; Temurin's
-        philosophy is to ship vanilla OpenJDK without overlays. Both are valid choices &mdash; Eliya is
-        for teams who want Phase 1 operational-readiness configured by default (Phase 2 adds continuous observability); Temurin is for teams
+        philosophy is to ship vanilla OpenJDK without overlays. Both are valid choices; Eliya is
+        for teams who want operational-readiness configured by default today, with continuous observability following in Phase 2; Temurin is for teams
         who prefer to configure observability themselves.</p>
 
     <h3>From Azul Zulu</h3>
     <p>Direct swap for Zulu Community. Azul
-        Platform Prime uses a different JVM (Falcon JIT, C4 GC) &mdash; swapping to Eliya reverts to standard
+        Platform Prime uses a different JVM (Falcon JIT, C4 GC); swapping to Eliya reverts to standard
         HotSpot behaviour. Benchmark before committing.</p>
 
     <h3>From Oracle JDK</h3>
@@ -188,7 +188,7 @@
 
     <h3>From Liberica / BellSoft</h3>
     <p>Direct swap for Liberica Standard JDK.
-        Liberica Full JDK bundles JavaFX &mdash; Eliya does not. If your application uses JavaFX, either stay
+        Liberica Full JDK bundles JavaFX; Eliya does not. If your application uses JavaFX, either stay
         on Liberica Full or add OpenJFX as an explicit dependency.</p>
 
     <h3>From SapMachine</h3>
@@ -208,7 +208,7 @@
         if your motivation is keeping the Red Hat support contract, stay on Red Hat OpenJDK.</p>
 
     <h3>From IBM Semeru (OpenJ9)</h3>
-    <p><strong>Not a direct swap.</strong> Semeru uses the OpenJ9 JVM &mdash; a different runtime
+    <p><strong>Not a direct swap.</strong> Semeru uses the OpenJ9 JVM, a different runtime
         from HotSpot, with different GC implementations, JIT behaviour, and memory characteristics.
         Eliya is HotSpot-based. Switching requires benchmark validation and possibly heap-size
         retuning. Most heap-tuning advice for OpenJ9 does not transfer to HotSpot.</p>
@@ -240,7 +240,7 @@
 
 <section style="margin-bottom: 5rem">
     <h2 class="section-title">Build tooling</h2>
-    <p>Maven, Gradle, Ant, sbt, and other build tools work identically on Eliya &mdash; the JDK is
+    <p>Maven, Gradle, Ant, sbt, and other build tools work identically on Eliya; the JDK is
         invoked the same way, the modular runtime image is in the same location, and Maven Toolchain
         definitions work without modification:</p>
     <div class="inline-terminal inline-terminal--static" style="max-width: 700px">
@@ -284,7 +284,7 @@
 
     <p style="margin-top: 1.5rem"><strong>Application-side rollback.</strong> Remove
         <code>-XX:EliyaProfile=Production</code> from your JVM arguments. Without the flag, even
-        with Eliya as the runtime, behaviour is identical to upstream OpenJDK&nbsp;25 &mdash; so a
+        with Eliya as the runtime, behaviour is identical to upstream OpenJDK&nbsp;25, so a
         rollback by simply removing the flag (rather than reverting the runtime) is also valid.</p>
 
     <p style="margin-top: 1rem">Eliya's defaults are opt-in. Reverting requires no migration of
@@ -293,25 +293,25 @@
 
 <section style="margin-bottom: 5rem">
     <h2 class="section-title">What you're migrating into</h2>
-    <p>This page describes today's migration &mdash; Phase 1 of Eliya. The Eliya trajectory
+    <p>This page describes today's migration: Phase 1 of Eliya. The Eliya trajectory
         matters for migration planning:</p>
     <ul>
         <li><strong>Phase 1 (current):</strong> Production operational-readiness defaults via
             <code>EliyaProfile=Production</code> (this page).</li>
         <li><strong>Phase 2:</strong> Bundled local diagnostic tooling (Eclipse MAT
             headless, async-profiler), FIPS-validated variant, <code>asymm eliya</code> CLI
-            expansion. No migration changes &mdash; same Eliya distribution, expanded capability.</li>
-        <li><strong>Phase 3 (post-Series A):</strong> Asymm Forensics &mdash; cross-correlation
+            expansion. No migration changes: same Eliya distribution, expanded capability.</li>
+        <li><strong>Phase 3 (post-Series A):</strong> Asymm Forensics: cross-correlation
             platform analysing JFR + heap dumps + thread dumps + GC logs + crash logs together.
             Local execution, no SaaS dependency.</li>
         <li><strong>Phase 4 (demand-gated):</strong> Compliance-aligned profiles
             (<code>EliyaProfile=PCIDSS</code>, <code>=HIPAA</code>, <code>=SOX</code>,
             <code>=FedRAMP</code>, plus combined profiles like <code>=Healthcare-Payment</code> for
-            industries needing multiple frameworks). No migration changes &mdash; same runtime,
+            industries needing multiple frameworks). No migration changes: same runtime,
             additional profile values.</li>
     </ul>
     <p>The migration path you adopt today (Eliya runtime + <code>EliyaProfile=Production</code>)
-        remains the foundation across all phases. Phase 2/3/4 additions are additive &mdash; no
+        remains the foundation across all phases. Phase 2/3/4 additions are additive; no
         further migration required.</p>
     <p>For the consolidated phase-by-phase trajectory and demand-gating mechanics, see the
         <a href="/product/eliya/roadmap.html" class="org-link org-link--inline org-link--internal">roadmap page</a>.

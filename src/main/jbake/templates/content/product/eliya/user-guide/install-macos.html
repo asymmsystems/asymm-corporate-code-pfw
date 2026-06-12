@@ -4,7 +4,7 @@
 <header class="page-header">
     <span class="section-kicker">User guide</span>
     <h1>Install on macOS</h1>
-    <p style="max-width: 60ch">Eliya targets Linux servers — macOS support is Phase 2. SDKman
+    <p style="max-width: 60ch">Eliya targets Linux servers; macOS support is Phase 2. SDKman
         provides Eliya for Linux today; macOS users can run Eliya in Linux-based Docker containers
         in the meantime, or wait for the Phase 2 native aarch64 binary.</p>
 </header>
@@ -13,7 +13,7 @@
     <h3>Today: run Eliya in Docker</h3>
     <p>Until the Phase 2 macOS aarch64 binary ships, the recommended path on macOS is to run
         Eliya inside a Linux-based Docker container. On Apple Silicon, prefer the
-        <code>linux/arm64</code> variant &mdash; Eliya's multi-arch image manifest serves it
+        <code>linux/arm64</code> variant; Eliya's multi-arch image manifest serves it
         natively, no emulation involved. Docker Desktop can also run <code>linux/amd64</code>
         images via Rosetta 2 emulation, but not every syscall behaves identically under
         emulation; for production-shape workloads on Apple Silicon, the native arm64 path is
@@ -31,7 +31,7 @@
 
     <h3>SDKman (Phase 2)</h3>
     <p>SDKman is the recommended path on macOS once the macOS aarch64
-        binary ships in Phase 2. Today, SDKman serves Linux — macOS users should use Docker (above)
+        binary ships in Phase 2. Today, SDKman serves Linux; macOS users should use Docker (above)
         in the interim.</p>
 
     <p>
@@ -43,7 +43,7 @@
 </section>
 
 <section id="waitlist" class="alt-bg">
-    <h3>Native aarch64 binary &mdash; Phase 2</h3>
+    <h3>Native aarch64 binary: Phase 2</h3>
     <p>Eliya is server-first. macOS support exists for developers running Dial workflows
         locally against the Eliya runtime, not because macOS is a production target. Native
         aarch64 builds for Apple Silicon are a Phase 2 demand-gated deliverable; native

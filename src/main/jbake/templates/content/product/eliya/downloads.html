@@ -6,7 +6,7 @@
     <h1>Downloads</h1>
     <p style="max-width: 60ch">Eliya ships JDK 25 LTS. Install today via direct archives or package formats
         (linked below). SDKMAN! support is in onboarding. Every release includes <code>SHA256SUMS.txt</code>
-        and a detached GPG signature &mdash; see
+        and a detached GPG signature; see
         <a href="/product/eliya/user-guide/verify-download.html" class="org-link org-link--inline org-link--internal">verify your download</a>.</p>
 </header>
 
@@ -98,19 +98,19 @@
                 <td>macOS</td>
                 <td>aarch64</td>
                 <td>tar.gz</td>
-                <td>Phase 2 &mdash; demand-gated · <a href="#waitlist" class="org-link org-link--inline org-link--internal">notify me</a></td>
+                <td>Phase 2, demand-gated · <a href="#waitlist" class="org-link org-link--inline org-link--internal">notify me</a></td>
             </tr>
             <tr>
                 <td>FreeBSD</td>
                 <td>x64</td>
                 <td>tar.gz (Research Preview)</td>
-                <td>Planned late 2026 &mdash; first Preview archive pending</td>
+                <td>Planned late 2026; first Preview archive pending</td>
             </tr>
             <tr>
                 <td>Windows</td>
                 <td>x64</td>
                 <td>tar.gz / installer</td>
-                <td>Phase 3 &mdash; demand-gated · <a href="#waitlist" class="org-link org-link--inline org-link--internal">notify me</a></td>
+                <td>Phase 3, demand-gated · <a href="#waitlist" class="org-link org-link--inline org-link--internal">notify me</a></td>
             </tr>
         </tbody>
     </table>
@@ -127,7 +127,7 @@
         the standard Java SE module set plus nine commonly-needed production-diagnostic modules, and built
         with <code>--strip-debug</code> for a smaller extracted footprint (~48&nbsp;MB compressed download / ~95&nbsp;MB extracted, vs ~140&nbsp;MB extracted for standard <code>java.se</code>-only JREs).
         The added <code>jdk.*</code> modules are part of every OpenJDK distribution but are not in the
-        standard Java SE module set that other vendors' JREs ship — bundling them by default matches the
+        standard Java SE module set that other vendors' JREs ship; bundling them by default matches the
         canonical server/CLI deployment pattern.</p>
 
     <table class="clinical-table" style="max-width: 800px">
@@ -140,10 +140,10 @@
         <tbody>
             <tr><td><code>java.se</code></td><td>The standard Java SE aggregator (pulls all standard SE modules)</td></tr>
             <tr><td><code>java.net.http</code></td><td>HTTP/2 client (explicit; also pulled via <code>java.se</code>)</td></tr>
-            <tr><td><code>jdk.unsupported</code></td><td><code>sun.misc.Unsafe</code> — required by the ecosystem (Netty, Caffeine, Hazelcast, …)</td></tr>
-            <tr><td><code>jdk.crypto.cryptoki</code></td><td>PKCS#11 — HSM-backed crypto</td></tr>
-            <tr><td><code>jdk.jfr</code></td><td>Flight Recorder — continuous low-overhead profiling</td></tr>
-            <tr><td><code>jdk.management.agent</code></td><td>JMX/RMI agent — production diagnostics, Prometheus exporters</td></tr>
+            <tr><td><code>jdk.unsupported</code></td><td><code>sun.misc.Unsafe</code>: required by the ecosystem (Netty, Caffeine, Hazelcast, …)</td></tr>
+            <tr><td><code>jdk.crypto.cryptoki</code></td><td>PKCS#11: HSM-backed crypto</td></tr>
+            <tr><td><code>jdk.jfr</code></td><td>Flight Recorder: continuous low-overhead profiling</td></tr>
+            <tr><td><code>jdk.management.agent</code></td><td>JMX/RMI agent: production diagnostics, Prometheus exporters</td></tr>
             <tr><td><code>jdk.attach</code></td><td>The attach API for <code>jcmd</code> / <code>jconsole</code> against external JVMs</td></tr>
             <tr><td><code>jdk.naming.dns</code></td><td>DNS SPI for JNDI</td></tr>
             <tr><td><code>jdk.localedata</code></td><td>Non-en_US locales</td></tr>
@@ -159,7 +159,7 @@
 
 <section style="margin-bottom: 5rem">
     <h2 class="section-title">Container images</h2>
-    <p style="margin-bottom: 1.5rem">Multi-arch OCI images on GitHub Container Registry —
+    <p style="margin-bottom: 1.5rem">Multi-arch OCI images on GitHub Container Registry:
         amd64 + arm64. Slim variants available.</p>
 
     <button type="button" class="inline-terminal" style="max-width: 600px; margin-bottom: 1rem"
@@ -196,13 +196,13 @@
     <h2 class="section-title">Get notified about Phase 2 deliverables</h2>
     <p>The macOS aarch64 binary and the FIPS variant build are Phase 2 deliverables.
         Hosted apt and yum repositories (<code>deb.asymm.systems</code>, <code>rpm.asymm.systems</code>)
-        are also Phase 2 — until they ship, install <code>.deb</code> and <code>.rpm</code> packages
+        are also Phase 2; until they ship, install <code>.deb</code> and <code>.rpm</code> packages
         directly from the GitHub Release above.</p>
 
     <p style="margin-top: 1rem">Subscribe to product-specific lists below. We'll
         send quarterly progress updates and a launch notification when each ships. We'll only email
         you about the products you sign up for; one-click unsubscribe in every email; we never share
-        your data — see <a href="/privacy.html" class="org-link org-link--inline org-link--internal">privacy</a>.</p>
+        your data. See <a href="/privacy.html" class="org-link org-link--inline org-link--internal">privacy</a>.</p>
 
     <div style="margin-top: 2.5rem; display: flex; flex-direction: column; gap: 2rem">
 

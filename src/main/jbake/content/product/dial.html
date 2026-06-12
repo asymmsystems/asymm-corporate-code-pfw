@@ -1,13 +1,57 @@
 title=Dial
-description=ODA compliance verification for telecom. The developer ecosystem that verifies TMF Open Digital Architecture
-conformance during development.
+description=Dial verifies TMF Open Digital Architecture conformance at build time. A developer ecosystem for building ODA components that conform by construction.
 type=page
 status=published
 ~~~~~~
 
-<p>Dial is a developer ecosystem that verifies TMF Open Digital Architecture conformance during development - not during
-    integration testing.</p>
+<header class="page-header">
+    <span class="section-kicker">Dial</span>
+    <h1>Dial</h1>
+    <p style="max-width: 60ch">Build ODA components that conform by construction.</p>
+</header>
 
-<p>Prototype complete. Launching 2026.</p>
+<section style="margin-bottom: 4rem">
+    <p>Dial is a developer ecosystem for TMF Open Digital Architecture. It turns TMF
+        specifications (TMFC components, eTOM processes, Open APIs, the SID model) into
+        first-class developer constructs, so conformance is checked while you write code, not
+        discovered in integration testing or certification.</p>
+</section>
 
-<p>For inquiries, contact <a href="mailto:ping@asymm.systems">ping@asymm.systems</a>.</p>
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">The problem</h2>
+    <p>ODA conformance is verified late today. Teams build against a specification document, then
+        spend months in integration and certification finding where the implementation drifted from
+        the standard. Gaps found late are expensive to close and slow to re-verify.</p>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">How Dial works</h2>
+    <p>Dial makes the specification executable. ODA constructs are typed, spec-aware building blocks
+        in your toolchain. Non-conformant architecture and API violations surface at build time. If a
+        component doesn't conform, it doesn't build, and engineers get that feedback in seconds, in
+        their own environment, instead of weeks later in a certification lab.</p>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">Who it's for</h2>
+    <p>Communication service providers, BSS/OSS vendors, and system integrators delivering against
+        TM Forum standards: the 186 organisations and 18 CSPs already committed to ODA.</p>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">Runtime</h2>
+    <p>Dial targets JDK 25 and above from any vendor.
+        <a href="/product/eliya.html" class="org-link org-link--inline org-link--internal">Eliya</a>
+        is the recommended runtime for its operational-readiness defaults, but Dial never requires
+        it. No vendor lock-in.</p>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">Status</h2>
+    <p>Prototype complete. Design-partner preview now; public launch late 2026. Inquire at
+        <a href="mailto:ping@asymm.systems" class="org-link org-link--inline org-link--internal">ping@asymm.systems</a>.</p>
+</section>
+
+<div style="margin-top: 5rem; text-align: center">
+    <a href="/" class="org-link org-link--internal org-link--back">back to Asymm</a>
+</div>

@@ -39,13 +39,13 @@
         old-glibc sysroot, so they run on systems with that glibc version <em>or
         newer</em>; there is no separate <code>libstdc++</code> requirement
         (the C++ runtime is linked statically).</p>
-    <p>Check the installed glibc on your target with <code>ldd --version</code>
-        &mdash; the first line ends with the version number.</p>
+    <p>Check the installed glibc on your target with <code>ldd --version</code>;
+        the first line ends with the version number.</p>
 </section>
 
 <section>
     <h3>1. SDKman</h3>
-    <p>One command. SDKman manages multiple JDK versions side-by-side &mdash; install a newer
+    <p>One command. SDKman manages multiple JDK versions side-by-side; install a newer
         Eliya CPU later with <code>sdk install java &lt;version&gt;-eliya</code>, then switch with
         <code>sdk use java &lt;version&gt;-eliya</code> (current shell) or
         <code>sdk default java &lt;version&gt;-eliya</code> (persistent).</p>
@@ -65,7 +65,7 @@
         you want explicit control over the JDK location rather than a version manager. (Containers
         should use the
         <a href="/product/eliya/user-guide/install-docker.html" class="org-link org-link--inline org-link--internal">Docker image</a>
-        instead &mdash; runtime tarball extraction is an anti-pattern for image-based deploys.)</p>
+        instead; runtime tarball extraction is an anti-pattern for image-based deploys.)</p>
 
     <button type="button" class="inline-terminal"
         onclick="copyToClipboard('curl -LO https://github.com/asymmsystems/eliya-jdk/releases/download/v${eliyaVersion}/java-${eliyaVersion}-eliya-linux-x64.tar.gz')" aria-label="Copy command">
@@ -83,11 +83,11 @@
         <span class="copy-btn" aria-hidden="true">Copy</span>
     </button>
 
-    <p>Verify the download before installing &mdash; see the
+    <p>Verify the download before installing; see the
         <a href="/product/eliya/user-guide/verify-download.html" class="org-link org-link--inline org-link--internal">verification guide</a>.</p>
 
     <p><strong>Make JAVA_HOME persistent.</strong> The <code>export</code> commands above set
-        <code>JAVA_HOME</code> for the current shell only &mdash; the moment you close
+        <code>JAVA_HOME</code> for the current shell only; the moment you close
         the terminal or open a new SSH session, it's gone. Three patterns cover the deployment
         realities:</p>
 
@@ -108,7 +108,7 @@ EOF<br>
 sudo chmod +x /etc/profile.d/eliya.sh</code>
     </div>
 
-    <p><h4>Per service (systemd-managed JVMs &mdash; the production pattern):</h4></p>
+    <p><h4>Per service (systemd-managed JVMs, the production pattern):</h4></p>
     <div class="inline-terminal inline-terminal--static">
         <code># in your unit file's [Service] section<br>
 Environment="JAVA_HOME=/opt/java-${eliyaVersion}-eliya"<br>
@@ -123,7 +123,7 @@ Environment="PATH=/opt/java-${eliyaVersion}-eliya/bin:/usr/bin:/bin"</code>
 
 
     <h3>3. .deb package (Debian, Ubuntu)</h3>
-    <p>Phase 2 &mdash; target Q4 2026. Today use SDKman or tar.gz.
+    <p>Phase 2: target Q4 2026. Today use SDKman or tar.gz.
         <a href="/product/eliya/downloads.html#waitlist" class="org-link org-link--inline org-link--internal">Notify me when packages and the hosted apt repository (<code>deb.asymm.systems</code>) ship</a></p>
 
     <div class="inline-terminal inline-terminal--static">
@@ -138,7 +138,7 @@ Environment="PATH=/opt/java-${eliyaVersion}-eliya/bin:/usr/bin:/bin"</code>
             Register <code>java</code>, <code>javac</code>, <code>jcmd</code>, and other binaries
             with <code>update-alternatives</code></li>
         <li><span class="check-no" aria-hidden="true">&#10007;</span>
-            <strong>Not</strong> set <code>JAVA_HOME</code> system-wide &mdash; set it explicitly
+            <strong>Not</strong> set <code>JAVA_HOME</code> system-wide; set it explicitly
             per the persistence guidance above if your applications (Maven, Gradle, Spring Boot
             tooling, sbt, etc.) require it</li>
     </ul>
@@ -152,12 +152,12 @@ Environment="PATH=/opt/java-${eliyaVersion}-eliya/bin:/usr/bin:/bin"</code>
     <p>This brings up an interactive prompt listing every registered JDK on the system. Enter the
         number corresponding to Eliya and press Enter to make it the default.</p>
 
-    <p>The hosted apt repository (<code>deb.asymm.systems</code>) ships alongside the package &mdash;
+    <p>The hosted apt repository (<code>deb.asymm.systems</code>) ships alongside the package;
         Phase 2, target Q4 2026.</p>
 
 
     <h3>4. .rpm package (RHEL, Rocky, Fedora, openSUSE)</h3>
-    <p>Phase 2 &mdash; target Q4 2026. Today use SDKman or tar.gz.
+    <p>Phase 2: target Q4 2026. Today use SDKman or tar.gz.
         <a href="/product/eliya/downloads.html#waitlist" class="org-link org-link--inline org-link--internal">Notify me when packages and the hosted yum repository (<code>rpm.asymm.systems</code>) ship</a></p>
 
     <div class="inline-terminal inline-terminal--static">
@@ -173,7 +173,7 @@ Environment="PATH=/opt/java-${eliyaVersion}-eliya/bin:/usr/bin:/bin"</code>
             with <code>update-alternatives</code> (or <code>alternatives</code> on RHEL-family
             systems)</li>
         <li><span class="check-no" aria-hidden="true">&#10007;</span>
-            <strong>Not</strong> set <code>JAVA_HOME</code> system-wide &mdash; set it explicitly
+            <strong>Not</strong> set <code>JAVA_HOME</code> system-wide; set it explicitly
             per the persistence guidance above if your applications require it</li>
     </ul>
 
@@ -186,13 +186,13 @@ Environment="PATH=/opt/java-${eliyaVersion}-eliya/bin:/usr/bin:/bin"</code>
     <p>This brings up an interactive prompt listing every registered JDK on the system. Enter the
         number corresponding to Eliya and press Enter to make it the default.</p>
 
-    <p>The hosted yum repository (<code>rpm.asymm.systems</code>) ships alongside the package &mdash;
+    <p>The hosted yum repository (<code>rpm.asymm.systems</code>) ships alongside the package;
         Phase 2, target Q4 2026.</p>
 
 
     <h3>5. Verify the installation</h3>
 
-    <p><h4>Step 1 &mdash; Confirm Eliya is the runtime:</h4></p>
+    <p><h4>Step 1: Confirm Eliya is the runtime:</h4></p>
 
     <button type="button" class="inline-terminal"
         onclick="copyToClipboard('java -version')" aria-label="Copy command">
@@ -209,7 +209,7 @@ OpenJDK 64-Bit Server VM Eliya (build ${eliyaVersion}+1-Eliya, mixed mode, shari
 
     <p>The "Eliya" identifier in the build string confirms the runtime vendor.</p>
 
-    <p><h4>Step 2 &mdash; Confirm the Eliya flag mechanism is present:</h4></p>
+    <p><h4>Step 2: Confirm the Eliya flag mechanism is present:</h4></p>
 
     <button type="button" class="inline-terminal"
         onclick="copyToClipboard(&quot;java -XX:+PrintFlagsFinal -version 2&gt;&amp;1 | grep -E '(EliyaProfile|UseEliya)'&quot;)"
@@ -224,13 +224,13 @@ OpenJDK 64-Bit Server VM Eliya (build ${eliyaVersion}+1-Eliya, mixed mode, shari
 bool      EliyaConflictCheck  = true    {product} {default}</code>
     </div>
 
-    <p><code>EliyaProfile = None</code> is the Phase 1 default &mdash; the flag mechanism is
+    <p><code>EliyaProfile = None</code> is the Phase 1 default; the flag mechanism is
         present and ready to activate when you set <code>-XX:EliyaProfile=Production</code>.</p>
 
-    <p><h4>Step 3 &mdash; Verify the profile state on a running JVM:</h4></p>
+    <p><h4>Step 3: Verify the profile state on a running JVM:</h4></p>
 
     <p>For a Java process already running on this machine, find its PID and inspect its flags.
-        This is the audit-friendly verification &mdash; it shows what the running JVM
+        This is the audit-friendly verification; it shows what the running JVM
         <em>actually</em> has set, not what a fresh invocation would set.</p>
 
     <button type="button" class="inline-terminal"

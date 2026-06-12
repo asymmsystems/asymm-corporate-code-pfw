@@ -5,7 +5,7 @@
     <h1>Verify your download</h1>
     <p style="max-width: 60ch">Every Eliya release ships with <code>SHA256SUMS.txt</code>
         (checksums) and <code>SHA256SUMS.txt.asc</code> (detached GPG signature) on
-        GitHub Releases. Download both, then verify &mdash; don't run a JDK whose
+        GitHub Releases. Download both, then verify; don't run a JDK whose
         integrity you haven't confirmed.</p>
 </header>
 
@@ -25,7 +25,7 @@
     </button>
 
     <p>Both files live next to the archives on the GitHub Release page and apply to
-        <em>every</em> archive in that release &mdash; one checksum file covers Linux,
+        <em>every</em> archive in that release: one checksum file covers Linux,
         Docker, and any other per-platform tarball.</p>
 
 
@@ -37,7 +37,7 @@
     </button>
 
     <p>Both checks must succeed. If either
-        fails, do not use the archive &mdash; re-download and verify again; if it still fails, report it to
+        fails, do not use the archive; re-download and verify again; if it still fails, report it to
         <a href="mailto:security@asymm.systems" class="org-link org-link--inline org-link--external">security@asymm.systems</a>.</p>
 
 
@@ -51,7 +51,7 @@
         <span class="copy-btn" aria-hidden="true">Copy</span>
     </button>
 
-    <p>Or fetch it straight from the domain via <strong>Web Key Directory</strong> (WKD) &mdash;
+    <p>Or fetch it straight from the domain via <strong>Web Key Directory</strong> (WKD):
         GnuPG resolves the key over HTTPS from <code>openpgpkey.asymm.systems</code>, so the key
         is served under Asymm's own TLS-secured domain:</p>
 
@@ -72,19 +72,19 @@
     </button>
 
 
-    <h3>Key fingerprint &mdash; the canonical value</h3>
+    <h3>Key fingerprint: the canonical value</h3>
     <div class="inline-terminal inline-terminal--static">
         <code>076D E547 397A 5D27 EECE&nbsp;&nbsp;E0B3 07A9 0689 B71A 158F</code>
     </div>
 
     <p>Primary key, Ed25519, created 2026-05-19. This is the
         <em>certify</em> key; release signatures are made by its dedicated signing
-        subkey, which <code>gpg --verify</code> resolves automatically &mdash; you
+        subkey, which <code>gpg --verify</code> resolves automatically; you
         verify against this one published fingerprint.</p>
 
     <h3>Multi-channel cross-verification (mandatory ceremony)</h3>
     <p>Per ADR-00002 sec.2.3, the fingerprint is published on FIVE independent channels. The
-        publication is intentional &mdash; fingerprints are public identifiers by design &mdash; and
+        publication is intentional (fingerprints are public identifiers by design) and
         multi-channel agreement is what makes the imported key trustworthy. <strong>Cross-verify
         against at least two of these channels</strong> before trusting the imported key. If one
         channel ever shows a different fingerprint, that's the alarm: do not trust the key; report
@@ -138,7 +138,7 @@
         <li><strong>Verify the release</strong> with <code>gpg --verify SHA256SUMS.txt.asc</code> as
             shown in the one-command verification above. GPG checks the signature against your locally-
             imported key. The signature is created by the dedicated signing subkey but <code>gpg</code>
-            resolves the cert-chain automatically &mdash; you trust the certify key (whose fingerprint
+            resolves the cert-chain automatically; you trust the certify key (whose fingerprint
             you verified) and accept the subkey signatures it certifies.</li>
     </ol>
 
@@ -152,7 +152,7 @@
 <section class="aside-box">
     <h3>Why two-step verification?</h3>
     <p>SHA256 proves the archive wasn't corrupted in transit.
-        GPG signature proves <em>Asymm Systems signed this exact SHA256SUMS file</em> &mdash;
+        GPG signature proves <em>Asymm Systems signed this exact SHA256SUMS file</em>,
         which means an attacker who replaced both the archive and the checksum file on a mirror
         still can't forge the signature without the signing key.</p>
     <p>SHA256 alone is not enough. Always run the GPG step.</p>

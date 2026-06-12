@@ -1,5 +1,5 @@
 title=Eliya troubleshooting
-description=Common Eliya issues and diagnostic commands. Per the May 2026 strategy revision — EliyaProfile=Production activates observability only; security configuration is inherited from upstream JDK 25 unchanged.
+description=Common Eliya issues and diagnostic commands. Per the May 2026 strategy revision, EliyaProfile=Production activates observability only; security configuration is inherited from upstream JDK 25 unchanged.
 type=page
 toc=true
 status=published
@@ -45,7 +45,7 @@ status=published
 
     <h4>TLS handshake fails with "protocol disabled" or "no cipher suites in common"</h4>
     <p>Upstream JDK 25 disables SSLv3, TLS 1.0, TLS 1.1, and weak cipher
-        suites &mdash; Eliya inherits this unchanged. A legacy peer requiring these protocols will fail
+        suites; Eliya inherits this unchanged. A legacy peer requiring these protocols will fail
         to negotiate. Either upgrade the peer (correct fix) or override with:</p>
     <button type="button" class="inline-terminal"
         onclick="copyToClipboard('java -Djava.security.properties==/path/to/legacy-java.security -jar app.jar')" aria-label="Copy command">
@@ -58,7 +58,7 @@ status=published
     <h4>"Unrecognized VM option 'EliyaProfile'"</h4>
     <p>Three possible causes:</p>
     <p><strong>1. Non-Eliya JVM.</strong> You're running a non-Eliya OpenJDK distribution.
-        Confirm with <code>java -version</code> &mdash; the version string must include "Eliya". If
+        Confirm with <code>java -version</code>; the version string must include "Eliya". If
         not, check <code>JAVA_HOME</code>, your <code>PATH</code>, and SDKman's current version
         (<code>sdk current java</code>).</p>
     <p><strong>2. Pre-rename JVM args.</strong> If you're migrating from a pre-public-release
@@ -67,7 +67,7 @@ status=published
         <li>Old: <code>-XX:+UseEliyaDefaults</code> (boolean toggle)</li>
         <li>New: <code>-XX:EliyaProfile=Production</code> (enum-value selector)</li>
     </ul>
-    <p>The rename is complete &mdash; Phase 1 ships only the <code>EliyaProfile</code> form. Scripts
+    <p>The rename is complete; Phase 1 ships only the <code>EliyaProfile</code> form. Scripts
         or documents referencing <code>-XX:+UseEliyaDefaults</code> predate the public release and
         need updating.</p>
     <p><strong>3. Pre-Phase-1 build.</strong> If you're running an alpha/preview Eliya build
@@ -98,8 +98,8 @@ status=published
     <p>Phase 4 will add compliance-aligned profile values (<code>PCIDSS</code>, <code>HIPAA</code>,
         <code>SOX</code>, <code>FedRAMP</code>, <code>GDPR</code>, <code>ISO27001</code>,
         <code>SOC2</code>) plus combined profiles (<code>Healthcare-Payment</code>,
-        <code>Financial-SaaS</code>, etc.) when customer demand justifies. Phase 4 is demand-gated
-        &mdash; sign up on the
+        <code>Financial-SaaS</code>, etc.) when customer demand justifies. Phase 4 is demand-gated;
+        sign up on the
         <a href="/product/eliya/security.html#waitlist" class="org-link org-link--inline org-link--internal">security page</a>
         to signal demand for a specific framework or combination.</p>
     <p>For now, use <code>EliyaProfile=Production</code> to activate Eliya's Phase 1 observability
@@ -108,7 +108,7 @@ status=published
     <h4><code>SHA256SUMS.txt</code> verification fails</h4>
     <p>Re-download both the archive and the
         <code>SHA256SUMS.txt</code> from the same GitHub Release page. If the re-download still fails,
-        do not run the archive &mdash; report to
+        do not run the archive; report to
         <a href="mailto:security@asymm.systems" class="org-link org-link--inline org-link--external">security@asymm.systems</a>.</p>
 
     <h4>GC pauses are higher than expected</h4>
@@ -146,7 +146,7 @@ status=published
     <h4>Flag conflict detection failed JVM startup</h4>
     <p>If JVM startup fails with <code>[Eliya] Fatal: ...</code>, a profile
         flag and an explicit capability negation produced an unrecoverable conflict. Read the
-        error message &mdash; it identifies the conflicting flags and suggests resolution.</p>
+        error message; it identifies the conflicting flags and suggests resolution.</p>
     <p>Common pattern: profile + <code>-XX:-Use&lt;Capability&gt;</code>
         for a capability the profile requires. Three resolutions:</p>
     <ul>
@@ -181,7 +181,7 @@ Resolved heap path:     /var/log/eliya/billing-service/billing-service-7d4b9c-xk
     </div>
     <p>If a component resolved unexpectedly (for example,
         <code>ELIYA_SERVICE_NAME (from HOSTNAME)</code> when you expected it to come from the env
-        var), check whether the env var is actually set in the JVM process's environment &mdash;
+        var), check whether the env var is actually set in the JVM process's environment;
         orchestration platforms sometimes drop env vars that work in shells. If the path doesn't
         exist, the JVM creates it on first write; if permissions prevent writing,
         <code>asymm eliya doctor</code> flags the failure explicitly.</p>
@@ -200,7 +200,7 @@ Resolved heap path:     /var/log/eliya/billing-service/billing-service-7d4b9c-xk
     <p><strong>Path resolution mismatch.</strong> Run <code>asymm eliya info</code> and check the
         <code>Diagnostic Configuration</code> section. If the resolved JFR path differs from your
         expectation, your service or replica resolution chain is producing a different value than
-        you assumed &mdash; check whether <code>ELIYA_SERVICE_NAME</code> /
+        you assumed; check whether <code>ELIYA_SERVICE_NAME</code> /
         <code>ELIYA_REPLICA_NAME</code> are set, or whether <code>HOSTNAME</code> is what you
         thought.</p>
 
@@ -208,7 +208,7 @@ Resolved heap path:     /var/log/eliya/billing-service/billing-service-7d4b9c-xk
     <h4>Multiple replicas writing to the same directory</h4>
     <p>If <code>/var/log/eliya/${service}/</code> contains mixed artifacts from multiple
         replicas without per-replica subdirectories, the replica name resolved to the same value
-        as the service name &mdash; triggering the suppression rule. This is intentional for
+        as the service name, triggering the suppression rule. This is intentional for
         bare-metal multi-JVM hosts (where <code>HOSTNAME</code> is the host, identical for all
         services) but unintended in container deployments.</p>
     <p>Check whether <code>HOSTNAME</code> is being set correctly in your containers (it should be
@@ -231,20 +231,20 @@ Resolved heap path:     /var/log/eliya/billing-service/billing-service-7d4b9c-xk
 
     <h4>Eliya behaves differently than Corretto / Zulu / Temurin</h4>
     <p>If <code>-XX:EliyaProfile=Production</code> is set, observability defaults
-        are active &mdash; JFR recording to disk, heap dumps configured, GC logs written. Disk write
-        activity will be higher than a vanilla JVM. This is by design &mdash; Eliya prioritises diagnostic
+        are active: JFR recording to disk, heap dumps configured, GC logs written. Disk write
+        activity will be higher than a vanilla JVM. This is by design; Eliya prioritises diagnostic
         data availability over filesystem inactivity.</p>
     <p>Other behavioural differences should not occur.
         Eliya inherits upstream OpenJDK 25's Java APIs, JIT, GC, and security configuration
         unchanged. If you observe an unexpected behavioural difference between Eliya and another
         OpenJDK 25 distribution, please file an issue with <code>asymm eliya info</code> output
-        attached &mdash; that is a bug we want to know about.</p>
+        attached, that is a bug we want to know about.</p>
 
 
     <h4>Process memory exceeds JVM heap configuration</h4>
     <p>If <code>ps</code> shows the JVM process using significantly more memory than
         <code>-Xmx</code>, the excess is in native memory regions (Metaspace, code cache, thread
-        stacks, DirectByteBuffers, or JNI allocations) &mdash; not the Java heap.</p>
+        stacks, DirectByteBuffers, or JNI allocations), not the Java heap.</p>
     <p>Eliya's <code>EliyaProfile=Production</code> activates NMT summary mode by default.
         Capture a baseline early:</p>
     <button type="button" class="inline-terminal"
@@ -271,7 +271,7 @@ Resolved heap path:     /var/log/eliya/billing-service/billing-service-7d4b9c-xk
     </ul>
     <p>For deeper analysis, Phase 2 will bundle <code>asymm eliya analyze-heap</code> and the full
         async-profiler suite for native allocation tracing. For Phase 1, the NMT summary plus diff
-        is the canonical entry point for native memory diagnosis &mdash; APM tools don't have this
+        is the canonical entry point for native memory diagnosis; APM tools don't have this
         visibility.</p>
 
 
@@ -314,7 +314,7 @@ Resolved heap path:     /var/log/eliya/billing-service/billing-service-7d4b9c-xk
             after <code>-XX:EliyaProfile=Production</code>).</li>
         <li>Let Eliya manage JFR (disable the APM agent's JFR; consult APM vendor docs).</li>
         <li>Use both but coordinate: APM tools that feed JFR into their own pipeline (Datadog
-            Continuous Profiler) can work with Eliya's JFR configuration &mdash; verify with the
+            Continuous Profiler) can work with Eliya's JFR configuration; verify with the
             vendor.</li>
     </ul>
     <p><strong>Memory overhead combined.</strong> Eliya's observability defaults add ~1&ndash;2%
@@ -329,14 +329,14 @@ Resolved heap path:     /var/log/eliya/billing-service/billing-service-7d4b9c-xk
     <p>Phase 2 will expand the troubleshooting toolkit:</p>
     <ul>
         <li><strong>Bundled Eclipse MAT (headless)</strong> for offline heap analysis without
-            Internet access &mdash; useful in air-gapped environments.</li>
+            Internet access, useful in air-gapped environments.</li>
         <li><strong>Bundled async-profiler</strong> for hardware-counter and wall-clock profiling
             beyond what JFR alone provides.</li>
         <li><strong><code>asymm eliya analyze-heap</code></strong>,
             <strong><code>asymm eliya profile</code></strong>, and
             <strong><code>asymm eliya jfr</code></strong> subcommands wrapping the bundled tools.</li>
     </ul>
-    <p>Phase 3 will add Asymm Forensics for cross-artifact correlation &mdash; analysing JFR + heap
+    <p>Phase 3 will add Asymm Forensics for cross-artifact correlation: analysing JFR + heap
         dumps + thread dumps + GC logs + crash logs together rather than as separate analyses. Local
         execution, no SaaS dependency.</p>
     <p>Phase 4 will add compliance-aligned profiles (PCI DSS, HIPAA, SOX, FedRAMP, etc.) plus
@@ -358,8 +358,8 @@ Resolved heap path:     /var/log/eliya/billing-service/billing-service-7d4b9c-xk
     </ul>
 
     <p>Security issues: email
-        <a href="mailto:security@asymm.systems" class="org-link org-link--inline org-link--external">security@asymm.systems</a>
-        &mdash; see the
+        <a href="mailto:security@asymm.systems" class="org-link org-link--inline org-link--external">security@asymm.systems</a>;
+        see the
         <a href="/product/eliya/security.html" class="org-link org-link--inline org-link--internal">security page</a>.</p>
 </section>
 

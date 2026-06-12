@@ -1,5 +1,5 @@
 title=Differences from upstream OpenJDK 25
-description=The precise enumeration of how Eliya's binary differs from a vanilla OpenJDK 25 build — for engineer-grade evaluation.
+description=The precise enumeration of how Eliya's binary differs from a vanilla OpenJDK 25 build, for engineer-grade evaluation.
 type=page
 toc=true
 status=published
@@ -9,13 +9,13 @@ status=published
     <span class="section-kicker">User guide</span>
     <h1>Differences from upstream OpenJDK 25</h1>
     <p style="max-width: 60ch">For engineers evaluating Eliya, the precise enumeration of how
-        Eliya's binary differs from a vanilla OpenJDK 25 build. No marketing tone — just the diff.</p>
+        Eliya's binary differs from a vanilla OpenJDK 25 build. No marketing tone, just the diff.</p>
 </header>
 
 <section>
     <h3>Behavioural differences when no flags are set</h3>
     <p><strong>None.</strong> Without <code>-XX:EliyaProfile=Production</code>
-        on the command line, Eliya 25 behaves identically to upstream OpenJDK 25. This is deliberate —
+        on the command line, Eliya 25 behaves identically to upstream OpenJDK 25. This is deliberate;
         users who want vanilla behaviour get vanilla behaviour.</p>
 
 
@@ -27,39 +27,39 @@ status=published
         <code>EliyaProfile=None</code> plus selected boolean capabilities. See
         <a href="/product/eliya/user-guide/flag-architecture.html" class="org-link org-link--inline org-link--internal">flag architecture</a>
         for the full taxonomy.</p>
-    <p><strong>Phase 1 today (25.0.3) &mdash; six ergonomics activated by
+    <p><strong>Phase 1 today (25.0.3): six ergonomics activated by
         <code>-XX:EliyaProfile=Production</code>.</strong> None are upstream defaults.</p>
     <ol>
-        <li><strong>Heap dump on OOM</strong> &mdash;
+        <li><strong>Heap dump on OOM</strong>:
             <code>-XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=${ELIYA_DIAGNOSTIC_PATH}/${service_name}/${replica_name}/heap/</code></li>
-        <li><strong>Exit on OOM</strong> &mdash; <code>-XX:+ExitOnOutOfMemoryError</code></li>
-        <li><strong>Native Memory Tracking</strong> &mdash; <code>-XX:NativeMemoryTracking=summary</code></li>
-        <li><strong>Crash log path</strong> &mdash;
+        <li><strong>Exit on OOM</strong>: <code>-XX:+ExitOnOutOfMemoryError</code></li>
+        <li><strong>Native Memory Tracking</strong>: <code>-XX:NativeMemoryTracking=summary</code></li>
+        <li><strong>Crash log path</strong>:
             <code>-XX:ErrorFile=${ELIYA_DIAGNOSTIC_PATH}/${service_name}/${replica_name}/crash/hs_err_pid%p.log</code></li>
-        <li><strong>Container support reinforced</strong> &mdash; <code>-XX:+UseContainerSupport</code>
+        <li><strong>Container support reinforced</strong>: <code>-XX:+UseContainerSupport</code>
             (already upstream default; reinforced for clarity)</li>
-        <li><strong>Diagnostic VM options unlocked</strong> &mdash;
-            <code>-XX:+UnlockDiagnosticVMOptions -XX:+DebugNonSafepoints</code> &mdash; required for
+        <li><strong>Diagnostic VM options unlocked</strong>:
+            <code>-XX:+UnlockDiagnosticVMOptions -XX:+DebugNonSafepoints</code>, required for
             accurate JFR and async-profiler sampling, and makes them trivially usable today via
             one-flag activation (<code>-XX:StartFlightRecording=&hellip;</code>)</li>
-        <li><strong>Conflict detection</strong> &mdash; <code>EliyaConflictCheck</code> is enabled by
+        <li><strong>Conflict detection</strong>: <code>EliyaConflictCheck</code> is enabled by
             default. Startup-time inspection of the command line responds to conflicts between the
             profile-implied defaults and explicit user flags in three tiers: silent override (user
             explicit wins), warning (redundant flag), fatal (incompatible combination). See
-            <a href="/product/eliya/user-guide/flag-architecture.html" class="org-link org-link--inline org-link--internal">flag architecture &mdash; conflict detection</a>.</li>
+            <a href="/product/eliya/user-guide/flag-architecture.html" class="org-link org-link--inline org-link--internal">flag architecture: conflict detection</a>.</li>
     </ol>
 
-    <p><strong>Phase 2 (planned) &mdash; two additional ergonomics activated by the same flag</strong>
+    <p><strong>Phase 2 (planned): two additional ergonomics activated by the same flag</strong>
         once the bundled diagnostic tools work lands:</p>
     <ol>
-        <li><strong>JFR continuous recording (Phase 2)</strong> &mdash;
+        <li><strong>JFR continuous recording (Phase 2)</strong>:
             <code>-XX:StartFlightRecording=settings=default,disk=true,maxage=24h,maxsize=250m,dumponexit=true,filename=${ELIYA_DIAGNOSTIC_PATH}/${service_name}/${replica_name}/jfr/recording.jfr</code></li>
-        <li><strong>Unified GC logging (Phase 2)</strong> &mdash;
+        <li><strong>Unified GC logging (Phase 2)</strong>:
             <code>-Xlog:gc*=info:file=${ELIYA_DIAGNOSTIC_PATH}/${service_name}/${replica_name}/gc/gc-%t-%p.log:time,level,tags:filecount=10,filesize=100M</code></li>
     </ol>
     <p>The <code>${replica_name}</code> level is suppressed when it resolves to the same value
         as <code>${service_name}</code> (bare-metal multi-JVM hosts, or all-fallback cases). See
-        <a href="/product/eliya/user-guide/flags-reference.html#diagnostic-paths" class="org-link org-link--inline org-link--internal">flags reference &mdash; diagnostic paths</a>
+        <a href="/product/eliya/user-guide/flags-reference.html#diagnostic-paths" class="org-link org-link--inline org-link--internal">flags reference: diagnostic paths</a>
         for the full resolution algorithm and effective path examples across deployment topologies.</p>
     <p>All eight observability changes are diagnostic; none change GC selection, GC tuning, JIT
         behaviour, or runtime semantics.</p>
@@ -68,7 +68,7 @@ status=published
     <h3>Patch-level differences in the Eliya binary</h3>
     <p>These are present in the binary regardless of command-line flags.</p>
     <ol>
-        <li><strong>Product flags added</strong> &mdash; two new flag declarations in
+        <li><strong>Product flags added</strong>: two new flag declarations in
             <code>src/hotspot/share/runtime/globals.hpp</code>:
             <ul>
                 <li><code>EliyaProfile</code> (ccstr, product flag, default value <code>None</code>;
@@ -77,24 +77,24 @@ status=published
                     controls startup-time conflict detection)</li>
             </ul>
         </li>
-        <li><strong>Argument resolution helpers</strong> &mdash; three new functions in
+        <li><strong>Argument resolution helpers</strong>: three new functions in
             <code>arguments.cpp</code>:
             <ul>
-                <li><code>resolve_eliya_base_path()</code> &mdash; resolves
+                <li><code>resolve_eliya_base_path()</code>: resolves
                     <code>ELIYA_DIAGNOSTIC_PATH</code> env &rarr; platform default
                     (Linux: <code>/var/log/eliya</code>).</li>
-                <li><code>resolve_eliya_service_name()</code> &mdash; resolves
+                <li><code>resolve_eliya_service_name()</code>: resolves
                     <code>ELIYA_SERVICE_NAME</code> env &rarr; <code>eliya.service.name</code>
                     sysprop &rarr; <code>HOSTNAME</code> &rarr; literal <code>default</code>.</li>
-                <li><code>resolve_eliya_replica_name()</code> &mdash; resolves
+                <li><code>resolve_eliya_replica_name()</code>: resolves
                     <code>ELIYA_REPLICA_NAME</code> env &rarr; <code>eliya.replica.name</code>
                     sysprop &rarr; <code>HOSTNAME</code> &rarr; suppressed when equal to service.</li>
             </ul>
         </li>
-        <li><strong>Path builder helpers</strong> &mdash; <code>build_eliya_path(category)</code> and
+        <li><strong>Path builder helpers</strong>: <code>build_eliya_path(category)</code> and
             <code>build_eliya_error_file_path()</code> in <code>arguments.cpp</code>. Both implement
             the replica suppression rule (collapse to two-level path when replica equals service).</li>
-        <li><strong>Profile activation</strong> &mdash; <code>apply_eliya_production_profile()</code>
+        <li><strong>Profile activation</strong>: <code>apply_eliya_production_profile()</code>
             in <code>arguments.cpp</code> sets the observability options above when
             <code>EliyaProfile=Production</code> is parsed, respecting <code>FLAG_IS_CMDLINE</code>
             semantics so explicit user flags always win.</li>
@@ -125,15 +125,14 @@ status=published
         <li>JIT compiler tier transitions</li>
         <li>Class loader behaviour</li>
         <li>Module system configuration</li>
-        <li>Security provider order — SunJCE remains default; FIPS variant is a separate artifact (Phase 2)</li>
-        <li>TLS protocol defaults — already secure in upstream JDK 25 (SSLv3 / TLS 1.0 / TLS 1.1 disabled)</li>
-        <li>Cipher suite preferences — already secure in upstream JDK 25 (RC4 / DES / 3DES / MD5 blocked)</li>
-        <li>All algorithm-disabling lists in <code>java.security</code> — already configured in upstream JDK 25</li>
+        <li>Security provider order: SunJCE remains default; FIPS variant is a separate artifact (Phase 2)</li>
+        <li>TLS protocol defaults: already secure in upstream JDK 25 (SSLv3 / TLS 1.0 / TLS 1.1 disabled)</li>
+        <li>Cipher suite preferences: already secure in upstream JDK 25 (RC4 / DES / 3DES / MD5 blocked)</li>
+        <li>All algorithm-disabling lists in <code>java.security</code>: already configured in upstream JDK 25</li>
     </ul>
     <p>Eliya does <strong>not</strong> claim a "TLS
         hardening overlay" or "additional security defaults" because upstream JDK 25's defaults are
-        already correct. Marketing performative changes that duplicate upstream work would be
-        dishonest positioning.</p>
+        already correct. Re-declaring upstream work as an Eliya feature would add nothing.</p>
 
     <p>Verify <code>java.security</code> is unchanged:</p>
     <button type="button" class="inline-terminal"
@@ -141,33 +140,33 @@ status=published
         <code>diff $JAVA_HOME/conf/security/java.security &lt;upstream-jdk-25&gt;/conf/security/java.security</code>
         <span class="copy-btn" aria-hidden="true">Copy</span>
     </button>
-    <p>The command produces no output &mdash; the files are byte-identical to upstream OpenJDK 25.</p>
+    <p>The command produces no output; the files are byte-identical to upstream OpenJDK 25.</p>
 
 
     <h3>Roadmap differences (Phase 2 + Phase 4 planned)</h3>
     <p>Items planned for later phases that will add to this diff:</p>
     <ol>
         <li><strong>FIPS-validated variant build</strong> (<code>eliya-25-fips.tar.gz</code>,
-            Phase 2) &mdash; separate artifact with a FIPS-validated provider pre-installed and
+            Phase 2): separate artifact with a FIPS-validated provider pre-installed and
             registered. Standard <code>eliya-25.tar.gz</code> continues with SunJCE. Provider
             choice (Bouncy Castle FIPS or alternative) is locked when the variant ships.</li>
-        <li><strong>Bundled diagnostic tooling</strong> (Phase 2) &mdash; Eclipse MAT (headless,
+        <li><strong>Bundled diagnostic tooling</strong> (Phase 2): Eclipse MAT (headless,
             EPL 2.0) and async-profiler (Apache 2.0) bundled at
             <code>${JAVA_HOME}/lib/</code>.</li>
-        <li><strong><code>asymm eliya</code> CLI Phase 2 subcommands</strong> &mdash; wrappers
+        <li><strong><code>asymm eliya</code> CLI Phase 2 subcommands</strong>: wrappers
             around bundled tools and <code>jcmd</code> operations.</li>
-        <li><strong>TCK self-certification</strong> (Phase 2) &mdash; separate TCK run of the
+        <li><strong>TCK self-certification</strong> (Phase 2): separate TCK run of the
             Eliya binary itself under the OpenJDK Community TCK License Agreement. Phase 1 ships
             built on TCK-certified upstream OpenJDK 25; the self-certification adds an independent
             TCK pass of the Eliya-patched binary.</li>
-        <li><strong>Layer 1 capability flag carve-out</strong> (Phase 2) &mdash; seven new
+        <li><strong>Layer 1 capability flag carve-out</strong> (Phase 2): seven new
             capability flags in <code>globals.hpp</code>:
             <code>UseEliyaObservability</code>, <code>UseEliyaDiagnostics</code>,
             <code>UseEliyaOperational</code>, <code>UseEliyaTooling</code>,
             <code>UseEliyaSecurityBaseline</code>, <code>UseEliyaSecurityStrict</code>,
             <code>UseEliyaAudit</code>. Engineers wanting finer-grained control will set
             <code>EliyaProfile=None</code> and compose capabilities directly.</li>
-        <li><strong>Layer 2 profile expansion</strong> (Phase 4) &mdash; the
+        <li><strong>Layer 2 profile expansion</strong> (Phase 4): the
             <code>EliyaProfile</code> enum expands with single-framework values
             (<code>PCIDSS</code>, <code>HIPAA</code>, <code>SOX</code>, <code>FedRAMP</code>,
             <code>GDPR</code>, <code>ISO27001</code>, <code>SOC2</code>) and explicit combined
@@ -182,7 +181,7 @@ status=published
 <section class="technical-inset">
     
         <h3>Why this page exists</h3>
-        <p>When potential customers — especially in regulated industries — ask
+        <p>When potential customers (especially in regulated industries) ask
             <em>"what exactly does Eliya change vs. upstream?"</em>, this page is the answer.
             Engineer-grade specifics, not marketing-tone "promise cards".</p>
     </section>

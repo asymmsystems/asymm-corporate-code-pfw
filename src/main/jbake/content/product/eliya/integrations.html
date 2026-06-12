@@ -8,7 +8,7 @@ status=published
 <header class="page-header">
     <span class="section-kicker">Eliya</span>
     <h1>Integrations</h1>
-    <p style="max-width: 60ch">Eliya is a runtime &mdash; it integrates with the ecosystem the
+    <p style="max-width: 60ch">Eliya is a runtime; it integrates with the ecosystem the
         same way any HotSpot-based OpenJDK distribution does. This page consolidates the patterns
         that recur in production: build tooling, Kubernetes, service mesh, logging stacks,
         CI/CD, and APM coexistence.</p>
@@ -16,7 +16,7 @@ status=published
 
 <section style="margin-bottom: 5rem">
     <h2 class="section-title">Build tooling</h2>
-    <p>Maven, Gradle, Ant, sbt, and other build tools work identically on Eliya &mdash; the JDK is
+    <p>Maven, Gradle, Ant, sbt, and other build tools work identically on Eliya; the JDK is
         invoked the same way and the modular runtime image is in the same location.</p>
 
     <h3 style="margin-top: 1.5rem">Maven Toolchains</h3>
@@ -35,8 +35,8 @@ status=published
     </div>
 
     <h3 style="margin-top: 1.5rem">Gradle toolchain auto-provisioning</h3>
-    <p>Gradle's JVM toolchain auto-provisioning resolves Eliya via SDKMAN! (once registration completes
-        &mdash; <a href="https://github.com/sdkman/sdkman-db-migrations/pull/783" class="org-link org-link--inline org-link--external">PR #783</a>;
+    <p>Gradle's JVM toolchain auto-provisioning resolves Eliya via SDKMAN! (once registration completes,
+        <a href="https://github.com/sdkman/sdkman-db-migrations/pull/783" class="org-link org-link--inline org-link--external">PR #783</a>;
         until then, point Gradle at the JAVA_HOME path where you installed Eliya manually).
         The standard <code>java.toolchain</code> block works without Eliya-specific syntax.</p>
 
@@ -44,7 +44,7 @@ status=published
     <p>Paketo's default Java buildpack uses Liberica. To swap to Eliya, set the
         <code>BP_JVM_VERSION</code> environment variable to a version selector that includes
         Eliya's vendor string, or use a custom buildpack. A first-class Paketo Eliya buildpack is
-        a Phase 2 consideration &mdash; signal demand on the
+        a Phase 2 consideration; signal demand on the
         <a href="/product/eliya/downloads.html#waitlist" class="org-link org-link--inline org-link--internal">downloads waitlist</a>.</p>
 </section>
 
@@ -98,26 +98,26 @@ status=published
         tooling. The flat per-replica directory structure means tools that walk paths see exactly
         what they expect:</p>
     <ul>
-        <li><strong><code>logrotate</code></strong> &mdash; GC log files
+        <li><strong><code>logrotate</code></strong>: GC log files
             (<code>gc/gc-*-*.log</code>) are pre-sized and rotated by Eliya's own configuration;
             <code>logrotate</code> can additionally archive older rotations off the per-replica
             directory.</li>
-        <li><strong><code>fluentd</code> / <code>fluent-bit</code></strong> &mdash; tail GC log
+        <li><strong><code>fluentd</code> / <code>fluent-bit</code></strong>: tail GC log
             paths and parse via the standard unified-logging format. JFR recordings should be
             shipped as files, not tailed.</li>
-        <li><strong><code>vector</code></strong> &mdash; file-source on
+        <li><strong><code>vector</code></strong>: file-source on
             <code>/var/log/eliya/**/gc/*.log</code> works directly. JFR recordings should be
             handled by an explicit ship-on-rotation pattern.</li>
-        <li><strong><code>journald</code></strong> &mdash; for systemd-managed services, JVM
+        <li><strong><code>journald</code></strong>: for systemd-managed services, JVM
             stdout/stderr flows to journald normally; Eliya's diagnostic artifacts live on the
             filesystem alongside.</li>
-        <li><strong>Audit-pipeline tooling</strong> &mdash; the per-replica directory structure
+        <li><strong>Audit-pipeline tooling</strong>: the per-replica directory structure
             preserves chain of custody from incident to artifact to producing replica without
             requiring correlation with external systems. Each subdirectory's name identifies the
             specific pod, container, or systemd unit that produced its contents.</li>
     </ul>
     <p>Path layout reference:
-        <a href="/product/eliya/user-guide/flags-reference.html#diagnostic-paths" class="org-link org-link--inline org-link--internal">flags reference &mdash; diagnostic paths</a>.</p>
+        <a href="/product/eliya/user-guide/flags-reference.html#diagnostic-paths" class="org-link org-link--inline org-link--internal">flags reference: diagnostic paths</a>.</p>
 </section>
 
 <section style="margin-bottom: 5rem">
@@ -133,7 +133,7 @@ status=published
             <code>kubectl debug</code>. See the
             <a href="/product/eliya/user-guide/install-docker.html" class="org-link org-link--inline org-link--internal">Docker install guide</a>.</li>
     </ul>
-    <p>Sidecar JFR investigation works regardless of mesh choice &mdash; the mesh handles
+    <p>Sidecar JFR investigation works regardless of mesh choice: the mesh handles
         application traffic; Eliya handles JVM diagnostics. The two don't conflict.</p>
 </section>
 
@@ -153,7 +153,7 @@ status=published
     <p>GitOps deployment patterns reference Eliya container images via the standard
         <code>image:</code> field. The
         <code>ghcr.io/asymmsystems/eliya-jdk:25-lts</code> moving tag works for "latest CPU";
-        <code>ghcr.io/asymmsystems/eliya-jdk:25.0.3</code> pins a specific version &mdash; see the
+        <code>ghcr.io/asymmsystems/eliya-jdk:25.0.3</code> pins a specific version; see the
         <a href="/product/eliya/lifecycle.html" class="org-link org-link--inline org-link--internal">lifecycle page</a>
         for pinning patterns.</p>
 </section>
@@ -177,8 +177,8 @@ status=published
             measure combined footprint before committing.</li>
     </ul>
 
-    <p>For the architectural story &mdash; what APM is structurally good at, what JVM forensics
-        adds that APM cannot &mdash; see
+    <p>For the architectural story (what APM is structurally good at, what JVM forensics
+        adds that APM cannot), see
         <a href="/research/jvm-forensics-vs-apm.html" class="org-link org-link--inline org-link--internal">JVM forensics vs APM</a>.</p>
 </section>
 
@@ -188,18 +188,18 @@ status=published
         Common third-party providers integrate via the standard
         <code>java.security</code> mechanism:</p>
     <ul>
-        <li><strong>Amazon Corretto Crypto Provider (ACCP)</strong> &mdash; add as an explicit
+        <li><strong>Amazon Corretto Crypto Provider (ACCP)</strong>: add as an explicit
             Maven/Gradle dependency on any JDK including Eliya; works without runtime
             modification.</li>
-        <li><strong>Bouncy Castle (non-FIPS)</strong> &mdash; standard provider registration via
+        <li><strong>Bouncy Castle (non-FIPS)</strong>: standard provider registration via
             <code>java.security</code> or programmatic
             <code>Security.addProvider()</code>.</li>
-        <li><strong>Bouncy Castle FIPS</strong> &mdash; will ship preinstalled in the Phase 2
+        <li><strong>Bouncy Castle FIPS</strong>: will ship preinstalled in the Phase 2
             <code>eliya-jdk-fips</code> variant; for Phase 1 use, add as a dependency and configure
             <code>java.security</code> for FIPS-mode operation.</li>
     </ul>
     <p>FIPS-validated cryptography in Phase 1 requires manual provider configuration. The Phase 2
-        FIPS variant simplifies this with a preconfigured distribution &mdash;
+        FIPS variant simplifies this with a preconfigured distribution;
         <a href="/product/eliya/security.html#waitlist" class="org-link org-link--inline org-link--internal">sign up</a>
         for notification.</p>
 </section>
@@ -207,15 +207,15 @@ status=published
 <section style="margin-bottom: 5rem">
     <h2 class="section-title">Application framework defaults</h2>
     <ul>
-        <li><strong>Spring Boot</strong> &mdash; works identically on Eliya. For Spring Boot with
+        <li><strong>Spring Boot</strong>: works identically on Eliya. For Spring Boot with
             Paketo Buildpacks, see the Build tooling section above.</li>
-        <li><strong>Quarkus</strong> &mdash; native-image builds use Red Hat Mandrel rather than
+        <li><strong>Quarkus</strong>: native-image builds use Red Hat Mandrel rather than
             any standard JDK; Eliya is not a Mandrel replacement. For Quarkus in JVM mode, Eliya
             works without modification.</li>
-        <li><strong>Apache Kafka, Cassandra, Elasticsearch, Solr</strong> &mdash; all run on Eliya
+        <li><strong>Apache Kafka, Cassandra, Elasticsearch, Solr</strong>: all run on Eliya
             without modification. Elasticsearch's bundled JDK recommendation stands; if you swap
             to Eliya, Elastic may not support the swap.</li>
-        <li><strong>Build tools as runtime targets</strong> (Maven, Gradle, Jenkins) &mdash; Eliya
+        <li><strong>Build tools as runtime targets</strong> (Maven, Gradle, Jenkins): Eliya
             works as the JDK powering these tools themselves, in addition to building artifacts.</li>
     </ul>
 </section>

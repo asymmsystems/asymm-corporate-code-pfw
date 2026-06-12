@@ -51,7 +51,7 @@
         heap-dump-on-OOM with structured path, exit-on-OOM, Native Memory Tracking summary,
         predictable crash log path, container support reinforced, and diagnostic VM options
         unlocked (which makes JFR + async-profiler trivially usable today via one-flag
-        activation). Near-zero steady-state CPU overhead &mdash; the Phase 1 ergonomics
+        activation). Near-zero steady-state CPU overhead; the Phase 1 ergonomics
         either trigger only on the actual event (heap-dump-on-OOM, crash log, exit-on-OOM)
         or carry &lt;0.5% overhead (NMT summary). No GC tuning, no TLS overlay.</p>
     <p><strong>Phase 2 (planned)</strong> adds continuous JFR (24-hour rolling buffer at
@@ -68,7 +68,7 @@
         <span class="copy-btn" aria-hidden="true">Copy</span>
     </button>
     <p>Output shows the resolved diagnostic paths, container detection, GC selection, active flag
-        configuration, and JFR status &mdash; everything Eliya is doing on this JVM. The
+        configuration, and JFR status: everything Eliya is doing on this JVM. The
         <code>Diagnostic Configuration</code> section annotates each path component with its
         resolution source (env var, system property, HOSTNAME, or fallback), so you can verify
         artifacts will land where you expect.</p>
@@ -92,23 +92,23 @@
 
     <h3>Where to go next</h3>
     <ul>
-        <li><a href="/product/eliya/user-guide/install-linux.html" class="org-link org-link--inline org-link--internal">Install on Linux</a>
-            &mdash; tar.gz, DEB/RPM, systemd integration for production servers.</li>
-        <li><a href="/product/eliya/user-guide/install-docker.html" class="org-link org-link--inline org-link--internal">Install with Docker</a>
-            &mdash; multi-arch OCI images, sidecar diagnostics, ephemeral debug containers.</li>
-        <li><a href="/product/eliya/user-guide/flags-reference.html" class="org-link org-link--inline org-link--internal">Flags reference</a>
-            &mdash; what <code>EliyaProfile=Production</code> activates, performance impact,
+        <li><a href="/product/eliya/user-guide/install-linux.html" class="org-link org-link--inline org-link--internal">Install on Linux</a>:
+tar.gz, DEB/RPM, systemd integration for production servers.</li>
+        <li><a href="/product/eliya/user-guide/install-docker.html" class="org-link org-link--inline org-link--internal">Install with Docker</a>:
+multi-arch OCI images, sidecar diagnostics, ephemeral debug containers.</li>
+        <li><a href="/product/eliya/user-guide/flags-reference.html" class="org-link org-link--inline org-link--internal">Flags reference</a>:
+what <code>EliyaProfile=Production</code> activates, performance impact,
             override semantics.</li>
-        <li><a href="/product/eliya/migration.html" class="org-link org-link--inline org-link--internal">Migration guide</a>
-            &mdash; switching from Corretto, Temurin, Zulu, or another OpenJDK distribution.</li>
-        <li><a href="/product/eliya/integrations.html" class="org-link org-link--inline org-link--internal">Integrations</a>
-            &mdash; Maven/Gradle toolchains, Kubernetes, service mesh, logging stacks, APM
+        <li><a href="/product/eliya/migration.html" class="org-link org-link--inline org-link--internal">Migration guide</a>:
+switching from Corretto, Temurin, Zulu, or another OpenJDK distribution.</li>
+        <li><a href="/product/eliya/integrations.html" class="org-link org-link--inline org-link--internal">Integrations</a>:
+Maven/Gradle toolchains, Kubernetes, service mesh, logging stacks, APM
             coexistence.</li>
-        <li><a href="/product/eliya/roadmap.html" class="org-link org-link--inline org-link--internal">Roadmap</a>
-            &mdash; Phase 2/3/4 trajectory: FIPS variant, bundled diagnostic tooling, Asymm
+        <li><a href="/product/eliya/roadmap.html" class="org-link org-link--inline org-link--internal">Roadmap</a>:
+Phase 2/3/4 trajectory: FIPS variant, bundled diagnostic tooling, Asymm
             Forensics, compliance profiles.</li>
-        <li><a href="/product/eliya/user-guide/troubleshooting.html" class="org-link org-link--inline org-link--internal">Troubleshooting</a>
-            &mdash; common issues with concrete diagnostic commands.</li>
+        <li><a href="/product/eliya/user-guide/troubleshooting.html" class="org-link org-link--inline org-link--internal">Troubleshooting</a>:
+common issues with concrete diagnostic commands.</li>
     </ul>
 </section>
 

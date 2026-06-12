@@ -3,7 +3,7 @@ date=2026-04-15
 type=post
 status=published
 kicker=Technical Brief
-description=Asymm Dial is entering private beta. Discover how we're automating TMF Open DIY Architecture conformance at the build-time layer.
+description=Asymm Dial verifies TMF Open Digital Architecture conformance at build time, not during late-stage integration. The problem, our approach, and where we're headed.
 ~~~~~~
 
 The industry is moving toward **Open Digital Architecture (ODA)**, but verification remains a late-stage integration problem. We are building **Asymm Dial** to solve this.
@@ -14,11 +14,9 @@ Currently, organisations spend months verifying that their components conform to
 ### Our Solution
 Dial turns ODA specifications into developer-first constructs. By shifting conformance to the build phase, engineers get instant feedback. If it doesn't conform, it doesn't build.
 
-### Roadmap
-- **Q2 2026**: Private Beta for selected CSP partners.
-- **Q3 2026**: Initial release of the ODA Validator for CI/CD.
-- **Q4 2026**: Public launch of the full Dial Ecosystem.
+### Where we're headed
+Dial is in design-partner preview with selected CSP partners. The ODA Validator for CI/CD and the full public launch are targeted for late 2026.
 
-We are currently accepting inquiries for our private beta program.
+We're accepting design-partner inquiries.
 
 <a href="/about.html#contact" class="org-link org-link--inline org-link--internal">Inquire about Beta Access</a>
