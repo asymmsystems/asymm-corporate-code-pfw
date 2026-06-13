@@ -4,9 +4,9 @@
 <header class="page-header">
     <span class="section-kicker">User guide</span>
     <h1>Install on macOS</h1>
-    <p style="max-width: 60ch">Eliya targets Linux servers; macOS support is Phase 2. SDKman
-        provides Eliya for Linux today; macOS users can run Eliya in Linux-based Docker containers
-        in the meantime, or wait for the Phase 2 native aarch64 binary.</p>
+    <p style="max-width: 60ch">Eliya targets Linux servers; the native macOS aarch64 binary is
+        Phase 2. macOS users can run Eliya in Linux-based Docker containers today, or wait for
+        the Phase 2 native binary.</p>
 </header>
 
 <section>
@@ -29,17 +29,18 @@
         <a href="/product/eliya/user-guide/install-docker.html" class="org-link org-link--inline org-link--internal">Install with Docker</a>.</p>
 
 
-    <h3>SDKman (Phase 2)</h3>
-    <p>SDKman is the recommended path on macOS once the macOS aarch64
-        binary ships in Phase 2. Today, SDKman serves Linux; macOS users should use Docker (above)
-        in the interim.</p>
-
-    <p>
-        When the Phase 2 binary lands, the install command will be:</p>
+    <h3>SDKman (coming soon)</h3>
+    <p>SDKman integration is coming soon for all platforms; the vendor ID
+        <code>${eliyaVersion}-eliya</code> is reserved with SDKman, and the registration PR is
+        rolling out through the Foojay DISCO API to SDKman backend migration. Once the macOS
+        aarch64 binary ships in Phase 2 and the SDKman registration is live, macOS users will be
+        able to install Eliya with:</p>
 
     <button type="button" class="inline-terminal inline-terminal--static">
         <code>sdk install java ${eliyaVersion}-eliya</code>
     </button>
+
+    <p style="margin-top: 1rem">Until then, run the Linux build in Docker (above).</p>
 </section>
 
 <section id="waitlist" class="alt-bg">
