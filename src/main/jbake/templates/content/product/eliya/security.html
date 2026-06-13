@@ -303,18 +303,18 @@
 
 <section class="technical-inset">
     <div style="max-width: 800px; margin: 0 auto">
-        <h3>TCK compliance</h3>
-        <p><strong>Phase 1 claim:</strong> Eliya is based on TCK-certified upstream OpenJDK 25.
-            Eliya's modifications are limited to a JVM flag (<code>EliyaProfile=Production</code>,
-            observability-only) and packaging, none of which alter Java SE behaviour.
-            Upstream <code>java.security</code> is unchanged.</p>
-        <p style="margin-top: 1rem"><strong>Phase 2 deliverable:</strong> a separate TCK run of
-            the Eliya binary itself, under the OpenJDK Community TCK License Agreement (available
-            without fee for distributions derived from OpenJDK, subject to compliance terms; Eliya
-            qualifies under these terms). When the TCK run is complete, the result will be
-            published here: pass cleanly or document the deltas.</p>
+        <h3>TCK pedigree</h3>
+        <p>Upstream OpenJDK 25 source passes the Java SE 25 Technology Compatibility Kit (TCK).
+            TCK conformance is a property of a specific built binary, not of the source code:
+            every OpenJDK build needs to be tested separately by its maker. Eliya is built from
+            the same upstream OpenJDK 25 source, but the Eliya binary is its own build and has
+            not yet been run against the TCK.</p>
+        <p style="margin-top: 1rem">Asymm Systems is applying for the Java SE 25 TCK under the
+            OpenJDK Community TCK License Agreement (OCTLA). The Eliya binary's own TCK run is a
+            Phase 2 deliverable; when complete, the result will be published here: pass cleanly
+            or document the deltas.</p>
         <p style="margin-top: 1rem; font-size: 0.9rem">
-            Eliya does not claim certifications it hasn't earned.
+            Eliya does not claim certifications it has not earned.
         </p>
     </div>
 </section>

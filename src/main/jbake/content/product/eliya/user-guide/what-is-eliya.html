@@ -82,11 +82,11 @@ status=published
                 <td>&#10003;</td>
             </tr>
             <tr>
-                <td>TCK-certified</td>
+                <td>TCK-certified binary</td>
                 <td>&#10003;</td>
                 <td>&#10003;</td>
                 <td>&#10003;</td>
-                <td>based on TCK-certified upstream<sup>1</sup></td>
+                <td>Phase 2 (OCTLA application in progress)<sup>1</sup></td>
             </tr>
             <tr>
                 <td>JFR continuous recording by default</td>
@@ -168,9 +168,12 @@ status=published
         </tbody>
     </table>
 
-    <p><sup>1</sup> Self-certification under the OpenJDK Community TCK License Agreement (OCTLA)
-        is a Phase 2 deliverable. See
-        <a href="/product/eliya/security.html" class="org-link org-link--inline org-link--internal">TCK compliance</a>.</p>
+    <p><sup>1</sup> TCK conformance is a property of a specific built binary, not of source
+        code. The Eliya binary is its own build and has not yet been run against the TCK
+        separately. Asymm Systems is applying for the Java SE 25 TCK under the OpenJDK
+        Community TCK License Agreement (OCTLA); the Eliya binary's TCK run is a Phase 2
+        deliverable. See
+        <a href="/product/eliya/security.html" class="org-link org-link--inline org-link--internal">TCK pedigree</a>.</p>
 
     <p>If your team already configures observability flags themselves and has no plans to
         adopt compliance-aligned profile flags or Asymm Forensics, Eliya offers less marginal

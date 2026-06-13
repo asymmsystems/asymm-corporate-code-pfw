@@ -155,10 +155,11 @@ status=published
             <code>${JAVA_HOME}/lib/</code>.</li>
         <li><strong><code>asymm eliya</code> CLI Phase 2 subcommands</strong>: wrappers
             around bundled tools and <code>jcmd</code> operations.</li>
-        <li><strong>TCK self-certification</strong> (Phase 2): separate TCK run of the
-            Eliya binary itself under the OpenJDK Community TCK License Agreement. Phase 1 ships
-            built on TCK-certified upstream OpenJDK 25; the self-certification adds an independent
-            TCK pass of the Eliya-patched binary.</li>
+        <li><strong>TCK conformance</strong> (Phase 2): runs the Java SE 25 TCK against the
+            Eliya binary itself under the OpenJDK Community TCK License Agreement (OCTLA).
+            Phase 1 binaries are built from upstream OpenJDK 25 source (which passes the TCK).
+            TCK conformance is a property of a specific built binary, not of the source: the
+            Phase 2 run establishes the Eliya binary's own conformance.</li>
         <li><strong>Layer 1 capability flag carve-out</strong> (Phase 2): seven new
             capability flags in <code>globals.hpp</code>:
             <code>UseEliyaObservability</code>, <code>UseEliyaDiagnostics</code>,

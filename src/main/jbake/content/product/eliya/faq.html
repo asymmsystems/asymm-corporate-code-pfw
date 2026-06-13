@@ -192,11 +192,12 @@ status=published
 <h2 class="section-title" style="margin-top: 4rem">General</h2>
 
 <h3>Is Eliya TCK-certified?</h3>
-<p >Eliya is based on TCK-certified upstream OpenJDK 25 and inherits its
-    compatibility properties. Eliya's modifications are limited to a JVM flag
-    (<code>EliyaProfile=Production</code>, observability-only) and packaging, none of which alter Java SE
-    behaviour. Upstream <code>java.security</code> is unchanged. A separate TCK run of the Eliya
-    binary itself is a Phase 2 deliverable; when complete it will be published on the
+<p >Not yet. The upstream OpenJDK 25 source passes the Java SE 25 Technology Compatibility
+    Kit (TCK), but TCK conformance is a property of a specific built binary, not of the source
+    code. The Eliya binary is its own build and has not yet been run against the TCK separately.
+    Asymm Systems is applying for the Java SE 25 TCK under the OpenJDK Community TCK License
+    Agreement (OCTLA); the Eliya binary's own TCK run is a Phase 2 deliverable. When complete
+    the result will be published on the
     <a href="/product/eliya/security.html" class="org-link org-link--inline org-link--internal">security page</a>.</p>
 
 <h3>Can I use Eliya in production?</h3>

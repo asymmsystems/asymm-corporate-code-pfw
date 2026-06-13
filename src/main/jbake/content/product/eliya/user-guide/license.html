@@ -98,13 +98,14 @@ status=published
 
 
 <h3>Compatibility certification</h3>
-<p>Eliya 25.0.x is built from TCK-certified upstream OpenJDK 25 source. The upstream OpenJDK 25
-    codebase has passed the Java SE 25 Technology Compatibility Kit; Eliya's source patches are
-    minimal and confined to diagnostic flag declarations and helpers that don't affect Java SE
-    specification compliance.</p>
-<p>Eliya self-certification (independent TCK run of the Eliya binary itself) is a Phase 2
-    deliverable, following the same pattern most OpenJDK distributions adopt; TCK
-    self-certification typically lags GA by 3&ndash;6 months.</p>
+<p>Eliya 25.0.x is built from upstream OpenJDK 25 source. The upstream OpenJDK 25 source passes
+    the Java SE 25 Technology Compatibility Kit (TCK), but TCK conformance is a property of a
+    specific built binary, not of the source code. The Eliya binary is its own build and has
+    not yet been run against the TCK.</p>
+<p>Asymm Systems is applying for the Java SE 25 TCK under the OpenJDK Community TCK License
+    Agreement (OCTLA); the Eliya binary's own TCK run is a Phase 2 deliverable. TCK
+    self-certification typically lags GA by 3-6 months across the OpenJDK distribution
+    ecosystem.</p>
 
 
 <h3>Bundled components in future phases</h3>
