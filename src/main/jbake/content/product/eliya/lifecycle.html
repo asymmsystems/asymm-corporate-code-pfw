@@ -19,18 +19,13 @@ status=published
     <h2 class="section-title">Supported versions</h2>
 
     <div class="eliya-terminal-panel">
-        <span class="terminal-prompt">$ asymm eliya versions --lts<span style="opacity: 0.6;">  # Phase 2 (reserved namespace; see CLI reference)</span></span>
 <pre>
-  version       upstream          first signed GA      lts-support-through    eol-notification
+  version       upstream          first GA             lts-support-through    eol-notification
   ────────────────────────────────────────────────────────────────────────────────────────────
   eliya-25      openjdk-25u       2026-06-10           2029-09   <span class="term-ok">✓ active</span>     12 months
-  eliya-29      openjdk-29u       2027-09 (planned)    aligned   <span class="term-dim">· planned</span>    —
+  eliya-29      openjdk-29u       2027-09 (planned)    aligned   <span class="term-dim">· planned</span>    -
 </pre>
     </div>
-    <p style="margin-top: 0.5rem; font-size: 0.85rem; opacity: 0.75">The <code>asymm eliya versions</code>
-        subcommand is Phase 2 reserved namespace per the
-        <a href="/product/eliya/user-guide/cli.html" class="org-link org-link--inline org-link--internal">CLI reference</a>;
-        the table content above is the canonical lifecycle data sourced from this page today.</p>
 
     <p style="margin-top: 2rem; font-size: 0.95rem">
         Eliya publishes the latest LTS. JDK&nbsp;21 is not a published target; anyone needing
@@ -59,7 +54,6 @@ status=published
         publication <strong>within ~2-3 calendar days</strong> of each upstream release.</p>
 
     <div class="eliya-terminal-panel">
-        <span class="terminal-prompt">$ asymm eliya schedule --upcoming --full<span style="opacity: 0.6;">  # Phase 2 (reserved namespace; see CLI reference)</span></span>
 <pre>
   quarter     upstream cpu        eliya target          release      status
   ────────────────────────────────────────────────────────────────────────────
@@ -70,10 +64,8 @@ status=published
   Q2 2027     2027-04-20          ≤ 2027-04-23          25.0.7       <span class="term-dim">· scheduled</span>
   Q3 2027     2027-07-20          ≤ 2027-07-23          25.0.8       <span class="term-dim">· scheduled</span>
 
-  <span class="term-dim"># * 25.0.3 was the first signed GA (~50-day delta due to signing-infrastructure</span>
-  <span class="term-dim">#   bring-up); 25.0.4 onward target ~2-3 calendar days per ADR-00027.</span>
-  <span class="term-dim"># cron expression (upstream CPU window)</span>
-  <span class="term-dim">00 00 15-21 1,4,7,10 tue  # 3rd Tuesday of Jan/Apr/Jul/Oct</span>
+  <span class="term-dim"># * 25.0.3 was the first GA. 25.0.4 onward target ~2-3 calendar days.</span>
+  <span class="term-dim"># upstream CPU window: 3rd Tuesday of Jan/Apr/Jul/Oct</span>
 </pre>
     </div>
 
@@ -155,7 +147,7 @@ status=published
             variants.</li>
     </ul>
 
-    <p style="margin-top: 1rem"><strong>Phase 3 (post-Series A, target 2027).</strong> Asymm
+    <p style="margin-top: 1rem"><strong>Phase 3 (target 2027).</strong> Asymm
         Forensics ships with its own SemVer cadence independent of the Eliya JDK: cross-correlation
         analysis improvements ship more frequently than the JDK's quarterly CPU;
         pattern-detection library updates align with quarterly CPUs.</p>

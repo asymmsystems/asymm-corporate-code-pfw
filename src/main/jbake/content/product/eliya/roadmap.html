@@ -40,7 +40,7 @@ status=published
             </tr>
             <tr>
                 <td>Phase 3</td>
-                <td>Post-Series A funding (target 2027)</td>
+                <td>Target 2027</td>
                 <td><a href="/product/forensics.html" class="org-link org-link--inline org-link--internal">Asymm Forensics</a>: cross-correlation platform analysing JFR + heap dumps + thread dumps + GC logs + crash logs together (local execution, no SaaS); Windows x64 platform expansion (demand-gated, independent of Forensics); FreeBSD GA graduation (demand-gated)</td>
                 <td>Planned</td>
             </tr>
@@ -106,7 +106,7 @@ status=published
         (CMVP cert&nbsp;#4943)</strong> preinstalled and registered, with
         <code>java.security</code> configured for FIPS-mode operation. Addresses procurement
         requirements for FedRAMP, FISMA, and other federal-aligned frameworks. FIPS variants
-        typically have longer CPU lag than non-FIPS (CMVP recertification adds weeks); target one
+        carry additional CPU lag versus non-FIPS because of CMVP recertification; target one
         CPU cycle behind standard Eliya.</p>
 
     <h4 style="margin-top: 1.5rem">Platform expansion</h4>
@@ -127,7 +127,7 @@ status=published
         to signal demand for any Phase 2 deliverable.</p>
 
     <h3 style="margin-top: 3rem">Phase 3: Asymm Forensics</h3>
-    <p>Post-Series A funding, target 2027. Asymm Forensics is a cross-correlation diagnostic
+    <p>Target 2027. Asymm Forensics is a cross-correlation diagnostic
         platform: it analyses JFR + heap dumps + thread dumps + GC logs + crash logs
         <em>together</em>, rather than as separate analyses.</p>
     <ul>
@@ -185,8 +185,8 @@ status=published
     </ul>
     <p>Profiles are mutually exclusive by design; only one value is active at runtime.
         Combined profiles are designed by Asymm Systems with documented capability unions, never
-        stacked from single-framework values. The auditor sees one profile name in
-        <code>asymm eliya info</code> output; compliance attribution is unambiguous.</p>
+        stacked from single-framework values. The auditor sees one profile name on the JVM
+        command line; compliance attribution is unambiguous.</p>
 
     <p style="margin-top: 1rem"><strong>Framework versioning.</strong> Each profile aligns with
         the current version of its framework (PCI&nbsp;DSS&nbsp;v4.0, HIPAA Technical Safeguards

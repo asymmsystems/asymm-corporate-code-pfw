@@ -110,11 +110,12 @@
         JVM processes across the replica's lifetime). For regulated workloads, this preserves the
         chain of custody from incident to artifact to producing replica without requiring
         correlation with external systems. For full path strategy and resolution algorithm, see
-        <a href="/product/eliya/user-guide/flags-reference.html#diagnostic-paths" class="org-link org-link--inline org-link--internal">flags reference &sect;Diagnostic paths</a>.</p>
+        <a href="/product/eliya/user-guide/flags-reference.html#diagnostic-paths" class="org-link org-link--inline org-link--internal">flags reference Diagnostic paths section</a>.</p>
 
     <p style="margin-top: 1.5rem">For environments where SaaS APM is prohibited by data-egress
-        policy (BFSI settlement systems, healthcare integrations under HIPAA, government and
-        defence deployments, sovereign-cloud workloads under data-localisation laws), Eliya
+        policy (BFSI settlement systems, healthcare integrations under HIPAA, telecom BSS/OSS
+        platforms, government and defence deployments, sovereign-cloud workloads under
+        data-localisation laws), Eliya
         provides forensic capture capability previously inaccessible without violating
         compliance. The architectural distinction between APM observability platforms and
         local-only JVM forensics is documented in
@@ -222,7 +223,7 @@
             <tr>
                 <td>Phase 3</td>
                 <td><a href="/product/forensics.html" class="org-link org-link--inline org-link--internal">Asymm Forensics</a>: cross-correlation analysis, compliance audit reports</td>
-                <td>Post-Series A funding (target 2027)</td>
+                <td>Target 2027</td>
             </tr>
             <tr>
                 <td>Phase 4</td>
@@ -262,7 +263,7 @@
         single-framework values. Profiles are mutually exclusive by design; only one profile
         value is active at runtime. Each combined profile activates the documented union of
         capabilities from its component frameworks plus any framework-specific JVM settings the
-        combination requires. The auditor sees one profile name in <code>asymm eliya info</code>
+        combination requires. The auditor sees one profile name in <code>asymm --info</code>
         output; the capability list is documented; compliance attribution is unambiguous.</p>
 
     <p style="margin-top: 1rem">Phase 4 is demand-gated. Each profile ships when at least
@@ -302,18 +303,17 @@
 
 <section class="technical-inset">
     <div style="max-width: 800px; margin: 0 auto">
-        <h3>TCK compliance</h3>
-        <p><strong>Phase 1 claim:</strong> Eliya is based on TCK-certified upstream OpenJDK 25.
-            Eliya's modifications are limited to a JVM flag (<code>EliyaProfile=Production</code>,
-            observability-only) and packaging, none of which alter Java SE behaviour.
-            Upstream <code>java.security</code> is unchanged.</p>
-        <p style="margin-top: 1rem"><strong>Phase 2 deliverable:</strong> a separate TCK run of
-            the Eliya binary itself, under the OpenJDK Community TCK License Agreement (available
-            without fee for distributions derived from OpenJDK, subject to compliance terms; Eliya
-            qualifies under these terms). When the TCK run is complete, the result will be
-            published here: pass cleanly or document the deltas.</p>
+        <h3>TCK pedigree</h3>
+        <p>Upstream OpenJDK 25 source passes the Java SE 25 Technology Compatibility Kit (TCK).
+            TCK conformance is a property of a specific built binary, not of the source code:
+            every OpenJDK build needs to be tested separately by its maker. Eliya is built from
+            the same upstream OpenJDK 25 source, but the Eliya binary is its own build and has
+            not yet been run against the TCK.</p>
+        <p style="margin-top: 1rem">The Eliya binary's own TCK run, under the OpenJDK Community
+            TCK License Agreement (OCTLA), is a Phase 2 deliverable. When complete, the result
+            will be published here: pass cleanly or document the deltas.</p>
         <p style="margin-top: 1rem; font-size: 0.9rem">
-            Eliya does not claim certifications it hasn't earned.
+            Eliya does not claim certifications it has not earned.
         </p>
     </div>
 </section>

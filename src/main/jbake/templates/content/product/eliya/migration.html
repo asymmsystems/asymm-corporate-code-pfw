@@ -36,7 +36,7 @@
             </tr>
             <tr>
                 <td>Custom flags</td>
-                <td>&mdash;</td>
+                <td>-</td>
                 <td><code>-XX:EliyaProfile=Production</code> (off by default)</td>
             </tr>
         </tbody>
@@ -133,9 +133,10 @@
 <section style="margin-bottom: 5rem">
     <h2 class="section-title">Enable Eliya operational-readiness defaults (optional)</h2>
     <p style="margin-bottom: 1.5rem">After switching runtimes your
-        application will run unchanged. To opt into Eliya's production observability profile
-        (Java Flight Recorder continuous recording, heap dump on OOM, Native Memory Tracking,
-        GC logging, crash dump configuration), add the single flag:</p>
+        application will run unchanged. To opt into Eliya's Phase 1 operational-readiness
+        ergonomics (heap-dump-on-OOM with structured path, exit-on-OOM, Native Memory Tracking
+        summary, predictable crash log path, container support reinforced, diagnostic VM options
+        unlocked), add the single flag:</p>
 
     <button type="button" class="inline-terminal" style="max-width: 600px"
         onclick="copyToClipboard('-XX:EliyaProfile=Production')" aria-label="Copy command">
@@ -301,7 +302,7 @@
         <li><strong>Phase 2:</strong> Bundled local diagnostic tooling (Eclipse MAT
             headless, async-profiler), FIPS-validated variant, <code>asymm eliya</code> CLI
             expansion. No migration changes: same Eliya distribution, expanded capability.</li>
-        <li><strong>Phase 3 (post-Series A):</strong> Asymm Forensics: cross-correlation
+        <li><strong>Phase 3 (target 2027):</strong> Asymm Forensics: cross-correlation
             platform analysing JFR + heap dumps + thread dumps + GC logs + crash logs together.
             Local execution, no SaaS dependency.</li>
         <li><strong>Phase 4 (demand-gated):</strong> Compliance-aligned profiles
