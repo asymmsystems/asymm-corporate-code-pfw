@@ -24,20 +24,21 @@
 
 
     <h3>2. Verify the install</h3>
-    <p>Confirm Eliya is correctly installed and writable diagnostic paths are reachable:</p>
+    <p>Confirm Eliya is the active JVM and the diagnostic path root is writable:</p>
     <button type="button" class="inline-terminal"
-        onclick="copyToClipboard('asymm eliya verify')" aria-label="Copy command">
-        <code>asymm eliya verify</code>
+        onclick="copyToClipboard('java -version')" aria-label="Copy command">
+        <code>java -version</code>
         <span class="copy-btn" aria-hidden="true">Copy</span>
     </button>
     <button type="button" class="inline-terminal"
-        onclick="copyToClipboard('asymm eliya doctor')" aria-label="Copy command">
-        <code>asymm eliya doctor</code>
+        onclick="copyToClipboard('test -w /var/log/eliya &amp;&amp; echo OK')" aria-label="Copy command">
+        <code>test -w /var/log/eliya &amp;&amp; echo OK</code>
         <span class="copy-btn" aria-hidden="true">Copy</span>
     </button>
-    <p><code>verify</code> checks installation integrity against published checksums and the GPG
-        signature. <code>doctor</code> checks that diagnostic paths are writable and configuration is
-        sane. Both should pass before you continue.</p>
+    <p>The first command should report <code>Eliya</code> in the version banner. The second
+        should print <code>OK</code> when the diagnostic path root exists and is writable. For
+        downloaded-artefact integrity (GPG signature and SHA256 checksums), see
+        <a href="/product/eliya/user-guide/verify-download.html" class="org-link org-link--inline org-link--internal">Verify your download</a>.</p>
 
 
     <h3>3. Run your application with operational-readiness defaults</h3>
@@ -50,10 +51,9 @@
     <p><strong>Phase 1 today (25.0.3) activates six ergonomics:</strong>
         heap-dump-on-OOM with structured path, exit-on-OOM, Native Memory Tracking summary,
         predictable crash log path, container support reinforced, and diagnostic VM options
-        unlocked (which makes JFR + async-profiler trivially usable today via one-flag
-        activation). Near-zero steady-state CPU overhead; the Phase 1 ergonomics
-        either trigger only on the actual event (heap-dump-on-OOM, crash log, exit-on-OOM)
-        or carry &lt;0.5% overhead (NMT summary). No GC tuning, no TLS overlay.</p>
+        unlocked. Near-zero steady-state CPU overhead. The Phase 1 ergonomics either trigger
+        only on the actual event (heap-dump-on-OOM, crash log, exit-on-OOM) or carry low
+        steady-state overhead (NMT summary mode). No GC tuning, no TLS overlay.</p>
     <p><strong>Phase 2 (planned)</strong> adds continuous JFR (24-hour rolling buffer at
         sub-1% overhead) + unified GC logging as defaults under the same flag, plus bundled
         Eclipse MAT + async-profiler. See
@@ -61,17 +61,16 @@
         for the full breakdown of Phase 1 + Phase 2 capabilities.</p>
 
 
-    <h3>4. Inspect what Eliya is recording</h3>
+    <h3>4. Inspect what the profile activated</h3>
     <button type="button" class="inline-terminal"
-        onclick="copyToClipboard('asymm eliya info')" aria-label="Copy command">
-        <code>asymm eliya info</code>
+        onclick="copyToClipboard('java -XX:EliyaProfile=Production -XX:+PrintFlagsFinal -version 2&gt;&amp;1 | grep -E &quot;HeapDumpOnOutOfMemoryError|ExitOnOutOfMemoryError|NativeMemoryTracking|ErrorFile|UseContainerSupport|UnlockDiagnosticVMOptions&quot;')" aria-label="Copy command">
+        <code>java -XX:EliyaProfile=Production -XX:+PrintFlagsFinal -version 2&gt;&amp;1 | grep -E "HeapDumpOnOutOfMemoryError|ExitOnOutOfMemoryError|NativeMemoryTracking|ErrorFile|UseContainerSupport|UnlockDiagnosticVMOptions"</code>
         <span class="copy-btn" aria-hidden="true">Copy</span>
     </button>
-    <p>Output shows the resolved diagnostic paths, container detection, GC selection, active flag
-        configuration, and JFR status: everything Eliya is doing on this JVM. The
-        <code>Diagnostic Configuration</code> section annotates each path component with its
-        resolution source (env var, system property, HOSTNAME, or fallback), so you can verify
-        artifacts will land where you expect.</p>
+    <p>The output shows the six Phase 1 ergonomics with their values and origin. Flags with
+        <code>{ergonomic}</code> in the origin column were set by <code>EliyaProfile=Production</code>;
+        flags with <code>{default}</code> were already at the activated value upstream (this
+        is the case for <code>UseContainerSupport</code> on JDK 25).</p>
 
 
     <h3>5. Find your diagnostic artifacts</h3>

@@ -18,24 +18,25 @@ status=published
         installs). Use it to confirm which runtime you're on and to print build metadata.</p>
 
     <button type="button" class="inline-terminal"
-        onclick="copyToClipboard('asymm version')" aria-label="Copy command">
-        <code>asymm version</code>
+        onclick="copyToClipboard('asymm --version')" aria-label="Copy command">
+        <code>asymm --version</code>
         <span class="copy-btn" aria-hidden="true">Copy</span>
     </button>
     <button type="button" class="inline-terminal"
-        onclick="copyToClipboard('asymm eliya info')" aria-label="Copy command">
-        <code>asymm eliya info</code>
+        onclick="copyToClipboard('java -XX:EliyaProfile=Production -XX:+PrintFlagsFinal -version 2&gt;&amp;1 | grep -E &quot;EliyaProfile|EliyaConflictCheck|HeapDumpOnOutOfMemoryError|ExitOnOutOfMemoryError|NativeMemoryTracking|ErrorFile|UseContainerSupport|UnlockDiagnosticVMOptions&quot;')" aria-label="Copy command">
+        <code>java -XX:EliyaProfile=Production -XX:+PrintFlagsFinal -version 2&gt;&amp;1 | grep -E "EliyaProfile|EliyaConflictCheck|HeapDumpOnOutOfMemoryError|ExitOnOutOfMemoryError|NativeMemoryTracking|ErrorFile|UseContainerSupport|UnlockDiagnosticVMOptions"</code>
         <span class="copy-btn" aria-hidden="true">Copy</span>
     </button>
     <button type="button" class="inline-terminal"
-        onclick="copyToClipboard('asymm eliya doctor')" aria-label="Copy command">
-        <code>asymm eliya doctor</code>
+        onclick="copyToClipboard('test -w /var/log/eliya &amp;&amp; echo writable')" aria-label="Copy command">
+        <code>test -w /var/log/eliya &amp;&amp; echo writable</code>
         <span class="copy-btn" aria-hidden="true">Copy</span>
     </button>
 
-    <p>Output includes JDK version, vendor, build
-        date, platform, diagnostic configuration, container detection, GC ergonomic selection, and
-        JFR status. Attach this output to any issue you file on GitHub.</p>
+    <p>The first confirms the active JVM is Eliya. The second prints the six Phase 1 ergonomics
+        with their values and origins (look for <code>{ergonomic}</code> in the origin column on
+        flags set by the profile). The third confirms the diagnostic-path root is writable.
+        Attach these three outputs to any issue you file.</p>
 
     <p>Full CLI reference:
         <a href="/product/eliya/user-guide/cli.html" class="org-link org-link--inline org-link--internal">asymm CLI</a>.</p>
@@ -80,8 +81,8 @@ status=published
         <span class="copy-btn" aria-hidden="true">Copy</span>
     </button>
     <button type="button" class="inline-terminal"
-        onclick="copyToClipboard('asymm eliya info')" aria-label="Copy command">
-        <code>asymm eliya info</code>
+        onclick="copyToClipboard('asymm --version')" aria-label="Copy command">
+        <code>asymm --version</code>
         <span class="copy-btn" aria-hidden="true">Copy</span>
     </button>
 
@@ -167,26 +168,20 @@ status=published
         name and (usually) replica name:
         <code>${ELIYA_DIAGNOSTIC_PATH}/${service}/${replica}/heap/java_pid&lt;PID&gt;.hprof</code>.</p>
     <button type="button" class="inline-terminal"
-        onclick="copyToClipboard('docker exec -it my-app asymm eliya info')" aria-label="Copy command">
-        <code>docker exec -it my-app asymm eliya info</code>
+        onclick="copyToClipboard('docker exec my-app env | grep -E &quot;ELIYA_|HOSTNAME&quot;')" aria-label="Copy command">
+        <code>docker exec my-app env | grep -E "ELIYA_|HOSTNAME"</code>
         <span class="copy-btn" aria-hidden="true">Copy</span>
     </button>
-    <p>Look at the <code>Diagnostic Configuration</code> section. Each path component is annotated
-        with its resolution source in parentheses:</p>
-    <div class="inline-terminal inline-terminal--static">
-        <code>ELIYA_DIAGNOSTIC_PATH:  /var/log/eliya (default)<br>
-ELIYA_SERVICE_NAME:     billing-service (from env)<br>
-ELIYA_REPLICA_NAME:     billing-service-7d4b9c-xk29p (from HOSTNAME)<br>
-Resolved heap path:     /var/log/eliya/billing-service/billing-service-7d4b9c-xk29p/heap/</code>
-    </div>
-    <p>If a component resolved unexpectedly (for example,
-        <code>ELIYA_SERVICE_NAME (from HOSTNAME)</code> when you expected it to come from the env
-        var), check whether the env var is actually set in the JVM process's environment;
-        orchestration platforms sometimes drop env vars that work in shells. If the path doesn't
-        exist, the JVM creates it on first write; if permissions prevent writing,
-        <code>asymm eliya doctor</code> flags the failure explicitly.</p>
+    <p>Cross-check the resolved values against the precedence chain (env var, then
+        <code>-Deliya.*</code> system property, then <code>HOSTNAME</code> for service and replica
+        names, then platform default for the base path). If a component resolved unexpectedly
+        (for example, <code>ELIYA_SERVICE_NAME</code> coming from <code>HOSTNAME</code> when you
+        expected it to come from the env var), check whether the env var is actually set in the
+        JVM process's environment; orchestration platforms sometimes drop env vars that work in
+        shells. If the path does not exist, the JVM creates it on first write; if permissions
+        prevent writing, the heap-dump or JFR call fails with an explicit IO error.</p>
     <p>Full path strategy:
-        <a href="/product/eliya/user-guide/flags-reference.html#diagnostic-paths" class="org-link org-link--inline org-link--internal">flags reference &sect;Diagnostic paths</a>.</p>
+        <a href="/product/eliya/user-guide/flags-reference.html#diagnostic-paths" class="org-link org-link--inline org-link--internal">flags reference Diagnostic paths section</a>.</p>
 
 
     <h4>JFR recordings not appearing</h4>
@@ -197,8 +192,9 @@ Resolved heap path:     /var/log/eliya/billing-service/billing-service-7d4b9c-xk
         volume is writable by the JVM user. For bare-metal RPM/DEB installs, the JVM service
         account must be a member of the <code>eliya-diagnostics</code> group (set by package
         post-install scripts).</p>
-    <p><strong>Path resolution mismatch.</strong> Run <code>asymm eliya info</code> and check the
-        <code>Diagnostic Configuration</code> section. If the resolved JFR path differs from your
+    <p><strong>Path resolution mismatch.</strong> Inspect the JVM process environment
+        (<code>cat /proc/&lt;pid&gt;/environ | tr '\0' '\n' | grep -E "ELIYA_|HOSTNAME"</code>)
+        and cross-check against the precedence chain. If the resolved JFR path differs from your
         expectation, your service or replica resolution chain is producing a different value than
         you assumed; check whether <code>ELIYA_SERVICE_NAME</code> /
         <code>ELIYA_REPLICA_NAME</code> are set, or whether <code>HOSTNAME</code> is what you
@@ -237,8 +233,8 @@ Resolved heap path:     /var/log/eliya/billing-service/billing-service-7d4b9c-xk
     <p>Other behavioural differences should not occur.
         Eliya inherits upstream OpenJDK 25's Java APIs, JIT, GC, and security configuration
         unchanged. If you observe an unexpected behavioural difference between Eliya and another
-        OpenJDK 25 distribution, please file an issue with <code>asymm eliya info</code> output
-        attached, that is a bug we want to know about.</p>
+        OpenJDK 25 distribution, please file an issue with the diagnostic outputs from the top of
+        this page attached: that is a bug we want to know about.</p>
 
 
     <h4>Process memory exceeds JVM heap configuration</h4>
@@ -269,7 +265,7 @@ Resolved heap path:     /var/log/eliya/billing-service/billing-service-7d4b9c-xk
         <li><strong>DirectByteBuffer or JNI growth</strong> &rarr; application or library leak in
             native code</li>
     </ul>
-    <p>For deeper analysis, Phase 2 will bundle <code>asymm eliya analyze-heap</code> and the full
+    <p>For deeper analysis, Phase 2 will bundle Eclipse MAT (headless) and the full
         async-profiler suite for native allocation tracing. For Phase 1, the NMT summary plus diff
         is the canonical entry point for native memory diagnosis; APM tools don't have this
         visibility.</p>
@@ -332,9 +328,8 @@ Resolved heap path:     /var/log/eliya/billing-service/billing-service-7d4b9c-xk
             Internet access, useful in air-gapped environments.</li>
         <li><strong>Bundled async-profiler</strong> for hardware-counter and wall-clock profiling
             beyond what JFR alone provides.</li>
-        <li><strong><code>asymm eliya analyze-heap</code></strong>,
-            <strong><code>asymm eliya profile</code></strong>, and
-            <strong><code>asymm eliya jfr</code></strong> subcommands wrapping the bundled tools.</li>
+        <li>Wrapping subcommands for the bundled tools, documented in the
+            <a href="/product/eliya/user-guide/cli.html" class="org-link org-link--inline org-link--internal">asymm CLI reference</a>.</li>
     </ul>
     <p>Phase 3 will add Asymm Forensics for cross-artifact correlation: analysing JFR + heap
         dumps + thread dumps + GC logs + crash logs together rather than as separate analyses. Local
@@ -348,10 +343,12 @@ Resolved heap path:     /var/log/eliya/billing-service/billing-service-7d4b9c-xk
     <h3>Filing an issue</h3>
     <p>Non-security issues: open a GitHub issue on
         <a href="https://github.com/asymmsystems/eliya-jdk/issues" class="org-link org-link--inline org-link--external">asymmsystems/eliya-jdk</a>.
-        Include:</p>
+        Include the three diagnostic outputs from the top of this page:</p>
     <ul>
-        <li><code>asymm eliya info</code> output</li>
-        <li><code>java -version</code></li>
+        <li><code>asymm --version</code></li>
+        <li><code>java -XX:EliyaProfile=Production -XX:+PrintFlagsFinal -version</code> output
+            (the six Phase 1 ergonomic flags filtered out)</li>
+        <li><code>test -w /var/log/eliya</code> result (writable check)</li>
         <li>OS, architecture, container image if applicable</li>
         <li>Full command line (flags, JAR path)</li>
         <li>Minimal reproducer if possible</li>

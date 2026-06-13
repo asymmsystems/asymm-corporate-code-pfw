@@ -12,7 +12,7 @@ status=published
 
 <section>
     <p>Eliya JDK is a forensic-grade JVM platform from Asymm Systems, built for compliance-conscious
-        production in regulated industries such as BFSI, healthcare, and government. It is distributed under GPLv2 with the Classpath Exception, the same licence as upstream OpenJDK.</p>
+        production in regulated industries such as BFSI, healthcare, telecom, and government. It is distributed under GPLv2 with the Classpath Exception, the same licence as upstream OpenJDK.</p>
 
     <h3>What Eliya provides</h3>
 
@@ -29,7 +29,7 @@ status=published
         fine-grained control, macOS aarch64 support (demand-gated), native
         <code>.deb</code> / <code>.rpm</code> packages.</p>
 
-    <p><strong>Phase 3 (post-Series A funding, target 2027).</strong> Asymm Forensics: a JVM
+    <p><strong>Phase 3 (target 2027).</strong> Asymm Forensics: a JVM
         diagnostic platform that cross-correlates JFR recordings, heap dumps, thread dumps, GC
         logs, and crash artifacts to generate compliance-aligned audit reports. Local execution,
         no SaaS dependency. Windows x64 ships alongside.</p>
@@ -82,59 +82,59 @@ status=published
                 <td>&#10003;</td>
             </tr>
             <tr>
-                <td>TCK-certified</td>
+                <td>TCK-certified binary</td>
                 <td>&#10003;</td>
                 <td>&#10003;</td>
                 <td>&#10003;</td>
-                <td>based on TCK-certified upstream<sup>1</sup></td>
+                <td>Phase 2 deliverable<sup>1</sup></td>
             </tr>
             <tr>
                 <td>JFR continuous recording by default</td>
-                <td>&mdash;</td>
-                <td>&mdash;</td>
-                <td>&mdash;</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
                 <td>&#10003; (Phase 2)</td>
             </tr>
             <tr>
                 <td>Heap dump on OOM by default</td>
-                <td>&mdash;</td>
-                <td>&mdash;</td>
-                <td>&mdash;</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
                 <td>&#10003; (Phase 1)</td>
             </tr>
             <tr>
                 <td>NMT by default</td>
-                <td>&mdash;</td>
-                <td>&mdash;</td>
-                <td>&mdash;</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
                 <td>&#10003; (Phase 1)</td>
             </tr>
             <tr>
                 <td>GC logging by default</td>
-                <td>&mdash;</td>
-                <td>&mdash;</td>
-                <td>&mdash;</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
                 <td>&#10003; (Phase 2)</td>
             </tr>
             <tr>
                 <td>Bundled local diagnostic tooling (MAT, async-profiler)</td>
-                <td>&mdash;</td>
-                <td>&mdash;</td>
-                <td>&mdash;</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
                 <td>&#10003; (Phase 2)</td>
             </tr>
             <tr>
                 <td>FIPS-validated build variant</td>
-                <td>&mdash;</td>
-                <td>&mdash;</td>
-                <td>&mdash;</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
                 <td>&#10003; (Phase 2)</td>
             </tr>
             <tr>
                 <td>Compliance-aligned profile flags (PCIDSS, HIPAA, SOX, FedRAMP, &hellip;)</td>
-                <td>&mdash;</td>
-                <td>&mdash;</td>
-                <td>&mdash;</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
                 <td>&#10003; (Phase 4, demand-gated)</td>
             </tr>
             <tr>
@@ -146,16 +146,16 @@ status=published
             </tr>
             <tr>
                 <td>Three-level diagnostic path layout (per-replica audit attribution)</td>
-                <td>&mdash;</td>
-                <td>&mdash;</td>
-                <td>&mdash;</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
                 <td>&#10003; (Phase 1)</td>
             </tr>
             <tr>
                 <td>Cross-correlation forensic platform (no SaaS)</td>
-                <td>&mdash;</td>
-                <td>&mdash;</td>
-                <td>&mdash;</td>
+                <td>-</td>
+                <td>-</td>
+                <td>-</td>
                 <td>&#10003; (Phase 3: Asymm Forensics)</td>
             </tr>
             <tr>
@@ -168,9 +168,11 @@ status=published
         </tbody>
     </table>
 
-    <p><sup>1</sup> Self-certification under the OpenJDK Community TCK License Agreement (OCTLA)
-        is a Phase 2 deliverable. See
-        <a href="/product/eliya/security.html" class="org-link org-link--inline org-link--internal">TCK compliance</a>.</p>
+    <p><sup>1</sup> TCK conformance is a property of a specific built binary, not of source
+        code. The Eliya binary is its own build and has not yet been run against the TCK
+        separately. The Eliya binary's TCK run, under the OpenJDK Community TCK License
+        Agreement (OCTLA), is a Phase 2 deliverable. See
+        <a href="/product/eliya/security.html" class="org-link org-link--inline org-link--internal">TCK pedigree</a>.</p>
 
     <p>If your team already configures observability flags themselves and has no plans to
         adopt compliance-aligned profile flags or Asymm Forensics, Eliya offers less marginal

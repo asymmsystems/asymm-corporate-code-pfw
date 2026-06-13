@@ -4,7 +4,7 @@ type=page
 status=published
 ~~~~~~
 
-<nav class="eliya-breadcrumb" aria-label="Breadcrumb"><span class="crumb-collapse" role="button" tabindex="0" onclick="this.parentElement.classList.toggle(&apos;expanded&apos;)">~ / &hellip;</span><span class="crumb-hidden"><span class="crumb-sep">/</span><a href="/">asymm</a></span><span class="crumb-hidden"><span class="crumb-sep">/</span>product</span><span class="crumb-sep">/</span><a href="/product/eliya.html">eliya</a><span class="crumb-sep">/</span><a href="/product/eliya/user-guide/">user-guide</a><span class="crumb-sep">/</span><span class="crumb-leaf">release-notes</span></nav>
+<nav class="eliya-breadcrumb" aria-label="Breadcrumb"><a href="/">asymm</a><span class="crumb-sep">/</span><a href="/product/eliya.html">eliya</a><span class="crumb-sep">/</span><a href="/product/eliya/user-guide/">user-guide</a><span class="crumb-sep">/</span><span class="crumb-leaf">release-notes</span></nav>
 
 <header class="page-header">
     <span class="section-kicker">User guide</span>
@@ -19,8 +19,8 @@ status=published
 </header>
 
 <section style="margin-bottom: 5rem;">
-    <h2 class="section-title">Eliya 25.0.3: June 2026 (first signed GA)</h2>
-    <p style="max-width: 70ch;"><strong>Type:</strong> first signed General Availability release.
+    <h2 class="section-title">Eliya 25.0.3: June 2026 (first GA)</h2>
+    <p style="max-width: 70ch;"><strong>Type:</strong> first General Availability release.
         <strong>Upstream base:</strong> OpenJDK 25.0.3 (2026-04-21).</p>
     <ul style="max-width: 70ch; line-height: 1.8; margin-top: 1rem;">
         <li><strong>Platforms:</strong> Linux x86_64 + Linux aarch64, both shipping in this release.</li>
@@ -35,8 +35,11 @@ status=published
         <li><strong>Eliya-specific:</strong> <code>bin/asymm</code> native ELF CLI;
             <code>-XX:+EliyaProfile=Production</code> activator for production-ready ergonomics
             (heap dump on OOM, exit-on-OOM, NMT summary, crash log path, container support, diagnostic options unlocked; continuous JFR and unified GC logging by default are Phase 2).</li>
-        <li><strong>Reproducibility:</strong> bit-identical builds across two independent runs on both arches
-            (verified 2026-06-05); customers can re-derive checksums from publicly-available OpenJDK 25 sources.</li>
+        <li><strong>Reproducibility:</strong> bit-identical builds verified across multiple
+            independent runs on both arches as part of release qualification. See the
+            <a href="/product/eliya/user-guide/verify-reproducibility.html" class="org-link org-link--inline org-link--internal">reproducibility page</a>
+            for what a customer can verify today and how compliance shops requiring independent
+            rebuild verification can engage Asymm directly.</li>
         <li><strong>Known limitations:</strong> four upstream-tracked test failures inherited from OpenJDK 25.0.3
             (none are defects in the shipped JDK; full JBS cites in the
             <a href="https://github.com/asymmsystems/eliya-jdk/releases/tag/eliya-jdk-25.0.3" class="org-link org-link--inline org-link--external">GitHub Release body</a>).</li>
@@ -70,12 +73,12 @@ status=published
         <strong>Upstream base:</strong> OpenJDK 25.0.2-ga.</p>
     <ul style="max-width: 70ch; line-height: 1.8; margin-top: 1rem;">
         <li>Built from <code>openjdk/jdk25u</code> tag <code>jdk-25.0.2-ga</code>.</li>
-        <li>Internal milestone toward the 25.0.3 first signed GA.</li>
+        <li>Internal milestone toward the 25.0.3 first GA.</li>
         <li>Platform: Linux x86_64 only.</li>
         <li><strong>SDKMAN!:</strong> never published; first SDKMAN! registration is queued with 25.0.3
             (see PR #783 link in the 25.0.3 entry above).</li>
     </ul>
-    <p style="max-width: 70ch; margin-top: 1.5rem;">For production use, install Eliya 25.0.3 (first signed GA) per the
+    <p style="max-width: 70ch; margin-top: 1.5rem;">For production use, install Eliya 25.0.3 (first GA) per the
         25.0.3 entry above. 25.0.2 was not signed and is not recommended for production.</p>
 </section>
 
@@ -83,7 +86,7 @@ status=published
     <h2 class="section-title">Previously (as Asymm JDK)</h2>
     <p style="max-width: 70ch;">Earlier development builds were published under the "Asymm JDK" name
         during the April 2026 rename transition. Eliya 25.0.2 was the first public artefact under the
-        new product name; Eliya 25.0.3 is the first signed GA. No "Asymm JDK"-era version reached
+        new product name; Eliya 25.0.3 is the first GA. No "Asymm JDK"-era version reached
         any public distribution channel.</p>
 </section>
 

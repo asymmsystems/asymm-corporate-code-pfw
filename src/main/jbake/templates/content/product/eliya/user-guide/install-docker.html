@@ -48,7 +48,7 @@
             <a href="#diagnostic-patterns" class="org-link org-link--inline org-link--internal">Production diagnostic patterns</a>).</li>
     </ul>
 
-    <p>Per ADR-00014, Eliya ships images on two orthogonal axes: <strong>base image</strong>
+    <p>Eliya ships images on two orthogonal axes: <strong>base image</strong>
         (Debian full vs slim vs distroless) and <strong>Java content</strong> (full JDK vs Eliya JRE).
         Four published tag families per Eliya release. <code>-jre*</code> variants ship Wave 7
         (after the first signed Linux GA lands on the storefront repo).</p>
@@ -109,7 +109,7 @@
         with the Java SE aggregator (full standard library) + production-server essentials
         (<code>jdk.unsupported</code>, <code>jdk.crypto.cryptoki</code>, <code>jdk.jfr</code>,
         <code>jdk.management.agent</code>, <code>jdk.attach</code>, <code>jdk.naming.dns</code>,
-        <code>jdk.localedata</code>, <code>jdk.zipfs</code>) per ADR-00014 sec.2.2. Compatible
+        <code>jdk.localedata</code>, <code>jdk.zipfs</code>). Compatible
         with any standard-Java-SE application; the Production-profile observability (JFR + JMX)
         works on the JRE image, not just the JDK.</p>
 
@@ -258,18 +258,16 @@ ENTRYPOINT ["java", "-jar", "myapp.jar"]</code>
 
 
     <h3>The <code>asymm</code> CLI inside the container</h3>
-    <p>Every Eliya image bundles the <code>asymm</code> CLI on <code>$PATH</code>. The Phase 1
-        commands (<code>asymm eliya info</code>, <code>verify</code>, <code>doctor</code>,
-        <code>versions</code>, <code>schedule</code>, plus the <code>version</code> commands)
-        are documented in the
+    <p>Every Eliya image bundles the <code>asymm</code> CLI on <code>$PATH</code>. Phase 1 ships
+        three commands (<code>asymm</code>, <code>asymm --version</code>, <code>asymm --help</code>)
+        documented in the
         <a href="/product/eliya/user-guide/cli.html" class="org-link org-link--inline org-link--internal">asymm CLI reference</a>:
         the same surface, same behaviour, inside or outside a container.</p>
 
-    <p>Phase 2 will add diagnostic tooling subcommands (<code>asymm eliya analyze-heap</code>,
-        <code>asymm eliya profile</code>, <code>asymm eliya jfr</code> family) that wrap Eclipse
-        MAT headless and async-profiler, both Phase 2 bundled tools. Phase 3 will add
-        Asymm Forensics subcommands. Three operational patterns for running these tools against
-        a containerised JVM are documented below under
+    <p>Phase 2 will add diagnostic-tooling subcommands that wrap Eclipse MAT headless and
+        async-profiler (both Phase 2 bundled tools), and Phase 3 will add Asymm Forensics
+        subcommands. Three operational patterns for running diagnostics against a containerised
+        JVM are documented below under
         <a href="#diagnostic-patterns" class="org-link org-link--inline org-link--internal">Production diagnostic patterns</a>.</p>
 
 
@@ -410,7 +408,7 @@ spec:<br>
         Kubernetes, <code>valueFrom: fieldRef: fieldPath: metadata.name</code> works.</p>
 
     <p>For full path strategy documentation including all resolution scenarios, see
-        <a href="/product/eliya/user-guide/flags-reference.html#diagnostic-paths" class="org-link org-link--inline org-link--internal">flags reference &sect;Diagnostic paths</a>.</p>
+        <a href="/product/eliya/user-guide/flags-reference.html#diagnostic-paths" class="org-link org-link--inline org-link--internal">flags reference Diagnostic paths section</a>.</p>
 
 
     <h3 id="diagnostic-patterns">Production diagnostic patterns</h3>
@@ -430,13 +428,13 @@ spec:<br>
 
     <p><strong>Docker:</strong></p>
     <button type="button" class="inline-terminal"
-        onclick="copyToClipboard('docker exec -it my-app asymm eliya info')" aria-label="Copy command">
-        <code>docker exec -it my-app asymm eliya info</code>
+        onclick="copyToClipboard('docker exec my-app java -version')" aria-label="Copy command">
+        <code>docker exec my-app java -version</code>
         <span class="copy-btn" aria-hidden="true">Copy</span>
     </button>
     <button type="button" class="inline-terminal"
-        onclick="copyToClipboard('docker exec -it my-app asymm eliya doctor')" aria-label="Copy command">
-        <code>docker exec -it my-app asymm eliya doctor</code>
+        onclick="copyToClipboard('docker exec my-app jcmd 1 VM.flags | grep Eliya')" aria-label="Copy command">
+        <code>docker exec my-app jcmd 1 VM.flags | grep Eliya</code>
         <span class="copy-btn" aria-hidden="true">Copy</span>
     </button>
     <button type="button" class="inline-terminal"
@@ -447,8 +445,8 @@ spec:<br>
 
     <p><strong>Kubernetes:</strong></p>
     <button type="button" class="inline-terminal"
-        onclick="copyToClipboard('kubectl exec -it &lt;pod-name&gt; -- asymm eliya info')" aria-label="Copy command">
-        <code>kubectl exec -it &lt;pod-name&gt; -- asymm eliya info</code>
+        onclick="copyToClipboard('kubectl exec &lt;pod-name&gt; -- java -version')" aria-label="Copy command">
+        <code>kubectl exec &lt;pod-name&gt; -- java -version</code>
         <span class="copy-btn" aria-hidden="true">Copy</span>
     </button>
     <button type="button" class="inline-terminal"
@@ -491,8 +489,8 @@ spec:<br>
         <span class="copy-btn" aria-hidden="true">Copy</span>
     </button>
     <button type="button" class="inline-terminal"
-        onclick="copyToClipboard('asymm eliya info')" aria-label="Copy command">
-        <code>asymm eliya info</code>
+        onclick="copyToClipboard('jcmd &lt;jvm-pid&gt; VM.flags | grep Eliya')" aria-label="Copy command">
+        <code>jcmd &lt;jvm-pid&gt; VM.flags | grep Eliya</code>
         <span class="copy-btn" aria-hidden="true">Copy</span>
     </button>
     <button type="button" class="inline-terminal"
@@ -559,9 +557,8 @@ spec:<br>
         <code>freetype</code> libraries are needed when Phase 2 diagnostic tools generate visual
         reports: flame graphs from async-profiler, leak-suspects HTML from Eclipse MAT,
         and JFR rendering from headless analysis. For Phase 1 sidecars running only
-        <code>jcmd</code>, <code>jstack</code>, and <code>asymm eliya</code> commands, the slim
-        image would also work, but using the full image future-proofs the deployment as the
-        bundled tooling expands in Phase 2.</p>
+        <code>jcmd</code> and <code>jstack</code>, the slim image would also work, but using the
+        full image future-proofs the deployment as the bundled tooling expands in Phase 2.</p>
 
     <p>Example Kubernetes pod spec:</p>
     <div class="inline-terminal inline-terminal--static">
@@ -596,20 +593,8 @@ spec:<br>
     <p>The sidecar container does nothing by default. Operators exec into the sidecar to run
         diagnostic commands against the shared volume or the live application JVM:</p>
 
-    <p><strong>Inspect Eliya configuration via the asymm CLI:</strong></p>
-    <button type="button" class="inline-terminal"
-        onclick="copyToClipboard('kubectl exec -it my-app -c eliya-sidecar -- asymm eliya info')" aria-label="Copy command">
-        <code>kubectl exec -it my-app -c eliya-sidecar -- asymm eliya info</code>
-        <span class="copy-btn" aria-hidden="true">Copy</span>
-    </button>
-    <button type="button" class="inline-terminal"
-        onclick="copyToClipboard('kubectl exec -it my-app -c eliya-sidecar -- asymm eliya doctor')" aria-label="Copy command">
-        <code>kubectl exec -it my-app -c eliya-sidecar -- asymm eliya doctor</code>
-        <span class="copy-btn" aria-hidden="true">Copy</span>
-    </button>
-
-    <p><strong>With <code>shareProcessNamespace: true</code>, capture artefacts from the live
-        JVM:</strong></p>
+    <p><strong>With <code>shareProcessNamespace: true</code>, inspect the live JVM and capture
+        artefacts:</strong></p>
     <button type="button" class="inline-terminal"
         onclick="copyToClipboard('kubectl exec -it my-app -c eliya-sidecar -- jcmd 1 VM.flags')" aria-label="Copy command">
         <code>kubectl exec -it my-app -c eliya-sidecar -- jcmd 1 VM.flags</code>
@@ -692,14 +677,15 @@ spec:<br>
         by policy. For ad-hoc incident response in clusters that support it, prefer ephemeral
         containers above.</p>
 
-    <p><strong>Phase 1 vs Phase 2 in this pattern.</strong> Today, the sidecar runs Phase 1
-        tools: standard JDK utilities and the seven Phase 1 <code>asymm eliya</code> commands.
-        Heap analysis on captured dumps happens offline using Eclipse MAT or similar tools.
-        Phase 2 will bundle Eclipse MAT (headless) and async-profiler in the Eliya image and
-        add <code>asymm eliya analyze-heap</code>, <code>asymm eliya profile</code>, and
-        <code>asymm eliya jfr</code> family commands. The sidecar pattern doesn't change between
-        phases: the same pod spec works; the available diagnostic commands inside the
-        sidecar expand as Phase 2 ships.</p>
+    <p><strong>Phase 1 vs Phase 2 in this pattern.</strong> Today, the sidecar runs standard JDK
+        utilities (<code>jcmd</code>, <code>jstack</code>, <code>jmap</code>) plus the
+        <code>asymm</code> launcher for version and metadata. Heap analysis on captured dumps
+        happens offline using Eclipse MAT or similar tools. Phase 2 will bundle Eclipse MAT
+        (headless) and async-profiler in the Eliya image, with wrapping subcommands documented
+        in the
+        <a href="/product/eliya/user-guide/cli.html" class="org-link org-link--inline org-link--internal">asymm CLI reference</a>.
+        The sidecar pattern does not change between phases: the same pod spec works; the
+        available diagnostic commands inside the sidecar expand as Phase 2 ships.</p>
 
     <p><strong>Wave 7 (Q4 2026) with distroless app container.</strong> When the distroless Eliya
         variant ships (Wave 7, target Q4 2026), this pattern lets you split the two containers'
@@ -826,15 +812,15 @@ EXPOSE 9010</code>
 bool      EliyaConflictCheck  = true    {product} {default}</code>
     </div>
 
-    <p>Verify the asymm CLI is functional:</p>
+    <p>Verify the asymm launcher is on the image PATH:</p>
     <button type="button" class="inline-terminal"
-        onclick="copyToClipboard('docker run --rm ghcr.io/asymmsystems/eliya-jdk:25-lts asymm eliya info')" aria-label="Copy command">
-        <code>docker run --rm ghcr.io/asymmsystems/eliya-jdk:25-lts asymm eliya info</code>
+        onclick="copyToClipboard('docker run --rm ghcr.io/asymmsystems/eliya-jdk:25-lts asymm --version')" aria-label="Copy command">
+        <code>docker run --rm ghcr.io/asymmsystems/eliya-jdk:25-lts asymm --version</code>
         <span class="copy-btn" aria-hidden="true">Copy</span>
     </button>
 
-    <p>This confirms the image launches, the asymm CLI is present, and the CLI reports the JVM's
-        current state correctly.</p>
+    <p>This confirms the image launches, the <code>asymm</code> launcher is present, and prints
+        the Eliya version banner via the sibling <code>java</code> binary.</p>
 </section>
 
 <section class="aside-box">

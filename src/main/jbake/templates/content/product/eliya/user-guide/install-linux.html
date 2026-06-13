@@ -44,11 +44,12 @@
 </section>
 
 <section>
-    <h3>1. SDKman</h3>
-    <p>One command. SDKman manages multiple JDK versions side-by-side; install a newer
-        Eliya CPU later with <code>sdk install java &lt;version&gt;-eliya</code>, then switch with
-        <code>sdk use java &lt;version&gt;-eliya</code> (current shell) or
-        <code>sdk default java &lt;version&gt;-eliya</code> (persistent).</p>
+    <h3>1. SDKman (coming soon)</h3>
+    <p>The vendor ID <code>${eliyaVersion}-eliya</code> is reserved with SDKman; the
+        registration PR (<a href="https://github.com/sdkman/sdkman-db-migrations/pull/783" class="org-link org-link--inline org-link--external">sdkman/sdkman-db-migrations#783</a>)
+        is rolling out through the Foojay DISCO API to SDKman backend migration. For installation
+        today, use the tar.gz, .deb, .rpm, or Docker paths below. Once SDKman registration is
+        live, the install command will be:</p>
 
     <button type="button" class="inline-terminal"
         onclick="copyToClipboard('sdk install java ${eliyaVersion}-eliya')" aria-label="Copy command">

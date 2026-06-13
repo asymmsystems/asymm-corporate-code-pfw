@@ -87,7 +87,7 @@ status=published
             <tr>
                 <td><code>-XX:EliyaProfile=Production</code></td>
                 <td>Layer 2: profile</td>
-                <td>Activates production-readiness defaults: Phase 1: heap dump on OOM, native memory tracking, crash log path, container awareness, diagnostic VM options. Phase 2: continuous JFR recording and GC logging.</td>
+                <td>Activates production-readiness defaults. Phase 1 (today): heap-dump-on-OOM with structured path, exit-on-OOM, Native Memory Tracking summary, predictable crash log path, container support reinforced, diagnostic VM options unlocked. Phase 2 adds continuous JFR and unified GC logging.</td>
             </tr>
             <tr>
                 <td><code>-XX:EliyaProfile=None</code></td>
@@ -243,10 +243,10 @@ status=published
     <p>Each combined profile activates the documented union of capabilities
         from its component frameworks plus any framework-specific JVM
         settings the combination requires. The auditor sees one profile name
-        in <code>asymm eliya info</code> output, the capability list is
-        documented, and compliance attribution is unambiguous. Combined
-        profiles are designed by Asymm Systems based on customer demand
-        rather than left to ad-hoc stacking.</p>
+        in <code>asymm --info</code> output, the capability list is documented,
+        and compliance attribution is unambiguous. Combined profiles are
+        designed by Asymm Systems based on customer demand rather than left
+        to ad-hoc stacking.</p>
 
     <p>Demand signal for Phase 4:
         join the early-access list on the
