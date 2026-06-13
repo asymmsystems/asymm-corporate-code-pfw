@@ -3,8 +3,8 @@
 <header class="page-header">
     <span class="section-kicker">User guide</span>
     <h1>JRE curation: what's in the Eliya JRE and why</h1>
-    <p style="max-width: 60ch">The Eliya JRE downloads as a ~48&nbsp;MB tarball and extracts to
-        ~95&nbsp;MB. It includes the standard <code>java.se</code> module set <em>plus</em> nine
+    <p style="max-width: 60ch">The Eliya JRE downloads as a 49&nbsp;MB tarball and extracts to
+        74&nbsp;MB. It includes the standard <code>java.se</code> module set <em>plus</em> nine
         additional <code>jdk.*</code> modules (Flight Recorder, JMX, jcmd attach, PKCS#11, DNS SPI,
         and a few others). This page explains how the compact size is achieved and why we chose
         this module set.</p>
@@ -116,23 +116,27 @@
 
 <section>
     <h2 class="section-title">How the size stays compact</h2>
-    <p>The Eliya JRE adds 9 extra modules on top of the standard <code>java.se</code> set yet
-        still extracts to ~95&nbsp;MB. Three jlink flags do most of the size work:</p>
+    <p>The Eliya JRE adds 9 extra modules on top of the standard <code>java.se</code> set and
+        extracts to 74&nbsp;MB. Two jlink mechanisms account for most of the size win:</p>
 
     <ol>
-        <li><strong><code>--strip-debug</code></strong> drops DWARF debug symbols from
-            <code>libjvm.so</code> and the other shared libraries. Production runtimes do not
-            attach gdb to walk JVM frames; JVM hackers use the JDK. This is the dominant size
-            win: roughly ~50&nbsp;MB extracted-footprint reduction.</li>
-        <li><strong><code>--no-man-pages</code></strong> and <strong><code>--no-header-files</code></strong>
-            save another ~5-10&nbsp;MB.</li>
-        <li><strong><code>--compress</code></strong> applies module compression at jlink time, so
-            the extracted image and the download tarball both benefit.</li>
+        <li><strong>Module curation.</strong> The full upstream OpenJDK 25 module set is around
+            80 modules. Eliya's JRE includes only the modules production servers actually use
+            (the <code>java.se</code> aggregator plus the nine <code>jdk.*</code> modules listed
+            below). Modules not included are not present in the assembled runtime image at all.</li>
+        <li><strong>JIMAGE compression.</strong> jlink's <code>--compress</code> option compresses
+            the class files inside <code>lib/modules</code> at build time. The compression cost is
+            paid once at build; runtime decompression happens on demand and is negligible.</li>
     </ol>
 
-    <p>The 9 extra <code>jdk.*</code> modules add ~5-10&nbsp;MB collectively. Net: ~95&nbsp;MB
-        extracted with a more complete production module set than a <code>java.se</code>-only
-        baseline.</p>
+    <p>The 9 extra <code>jdk.*</code> modules add a few megabytes collectively. Net: a 49&nbsp;MB
+        compressed tarball that extracts to 74&nbsp;MB with a more complete production module set
+        than a <code>java.se</code>-only baseline.</p>
+
+    <p style="font-size: 0.9rem; opacity: 0.85">Note: jlink's <code>--strip-debug</code> flag
+        removes debug information from class files inside the modules. Stripping debug symbols
+        from native shared libraries (<code>libjvm.so</code>, etc.) is a separate operation that
+        runs in the build pipeline.</p>
 </section>
 
 <section>

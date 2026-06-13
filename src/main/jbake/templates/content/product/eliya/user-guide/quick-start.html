@@ -52,8 +52,8 @@
         heap-dump-on-OOM with structured path, exit-on-OOM, Native Memory Tracking summary,
         predictable crash log path, container support reinforced, and diagnostic VM options
         unlocked. Near-zero steady-state CPU overhead. The Phase 1 ergonomics either trigger
-        only on the actual event (heap-dump-on-OOM, crash log, exit-on-OOM) or carry &lt;0.5%
-        overhead (NMT summary). No GC tuning, no TLS overlay.</p>
+        only on the actual event (heap-dump-on-OOM, crash log, exit-on-OOM) or carry low
+        steady-state overhead (NMT summary mode). No GC tuning, no TLS overlay.</p>
     <p><strong>Phase 2 (planned)</strong> adds continuous JFR (24-hour rolling buffer at
         sub-1% overhead) + unified GC logging as defaults under the same flag, plus bundled
         Eclipse MAT + async-profiler. See

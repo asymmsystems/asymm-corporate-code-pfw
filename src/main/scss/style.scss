@@ -2510,6 +2510,68 @@ h2.news-entry-title {
     border-radius: 8px;
 }
 
+/* Citation button: inline superscript-style "i" with hover/focus tooltip showing
+   the supporting source. Used for performance-overhead claims and similar
+   quantitative statements where the source needs to be one click away. */
+.cite-ref {
+    position: relative;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    vertical-align: super;
+    font-size: 0.65em;
+    line-height: 1;
+    padding: 0;
+    margin-left: 0.15em;
+    border: 0;
+    background: transparent;
+    cursor: help;
+}
+.cite-ref .cite-icon {
+    display: inline-block;
+    min-width: 1.1em;
+    padding: 0 0.25em;
+    border: 1px solid currentColor;
+    border-radius: 3px;
+    font-style: italic;
+    font-family: var(--font-body);
+    color: var(--accent, #6b1e3e);
+    line-height: 1.15;
+}
+.cite-ref .cite-tooltip {
+    display: none;
+    position: absolute;
+    bottom: 150%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 280px;
+    padding: 0.6rem 0.75rem;
+    background: var(--surface-inverted, #1d1d1d);
+    color: var(--surface-base, #fafafa);
+    border-radius: 6px;
+    font-size: 0.85rem;
+    font-style: normal;
+    font-weight: normal;
+    line-height: 1.4;
+    z-index: 100;
+    box-shadow: 0 6px 18px rgba(0,0,0,0.18);
+    text-align: left;
+    pointer-events: auto;
+}
+.cite-ref:hover .cite-tooltip,
+.cite-ref:focus .cite-tooltip,
+.cite-ref:focus-within .cite-tooltip {
+    display: block;
+}
+.cite-ref .cite-link {
+    color: var(--surface-base, #fafafa);
+    text-decoration: underline;
+}
+.cite-ref:focus {
+    outline: 2px solid var(--accent, #6b1e3e);
+    outline-offset: 2px;
+}
+
 .technical-inset > * {
     max-width: 70ch;
 }

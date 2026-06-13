@@ -263,8 +263,8 @@
         single-framework values. Profiles are mutually exclusive by design; only one profile
         value is active at runtime. Each combined profile activates the documented union of
         capabilities from its component frameworks plus any framework-specific JVM settings the
-        combination requires. The auditor sees one profile name on the JVM command line; the
-        capability list is documented; compliance attribution is unambiguous.</p>
+        combination requires. The auditor sees one profile name in <code>asymm --info</code>
+        output; the capability list is documented; compliance attribution is unambiguous.</p>
 
     <p style="margin-top: 1rem">Phase 4 is demand-gated. Each profile ships when at least
         <strong>5 enterprise prospects</strong> have signed up with a specific framework requirement
@@ -309,10 +309,9 @@
             every OpenJDK build needs to be tested separately by its maker. Eliya is built from
             the same upstream OpenJDK 25 source, but the Eliya binary is its own build and has
             not yet been run against the TCK.</p>
-        <p style="margin-top: 1rem">Asymm Systems is applying for the Java SE 25 TCK under the
-            OpenJDK Community TCK License Agreement (OCTLA). The Eliya binary's own TCK run is a
-            Phase 2 deliverable; when complete, the result will be published here: pass cleanly
-            or document the deltas.</p>
+        <p style="margin-top: 1rem">The Eliya binary's own TCK run, under the OpenJDK Community
+            TCK License Agreement (OCTLA), is a Phase 2 deliverable. When complete, the result
+            will be published here: pass cleanly or document the deltas.</p>
         <p style="margin-top: 1rem; font-size: 0.9rem">
             Eliya does not claim certifications it has not earned.
         </p>

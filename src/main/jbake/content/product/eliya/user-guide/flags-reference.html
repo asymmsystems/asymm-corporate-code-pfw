@@ -241,7 +241,7 @@ status=published
         applies cleanly on top.</p>
 
     <p>Example, combine Eliya's observability with
-        Compact Object Headers (JEP 519, JDK 25):</p>
+        Compact Object Headers<button type="button" class="cite-ref" aria-label="Citation"><span class="cite-icon">i</span><span class="cite-tooltip"><a href="https://openjdk.org/jeps/519" class="cite-link">JEP 519</a> (Compact Object Headers, JDK 25). The JEP reports up to ~22% heap reduction on heap-intensive workloads.</span></button>:</p>
     <button type="button" class="inline-terminal"
         onclick="copyToClipboard('java -XX:EliyaProfile=Production -XX:+UseCompactObjectHeaders -jar app.jar')" aria-label="Copy command">
         <code>java -XX:EliyaProfile=Production -XX:+UseCompactObjectHeaders -jar app.jar</code>
@@ -375,7 +375,7 @@ status=published
             </tr>
             <tr>
                 <td>Native Memory Tracking <code>summary</code></td>
-                <td>&lt;0.5%</td>
+                <td>Low<button type="button" class="cite-ref" aria-label="Citation"><span class="cite-icon">i</span><span class="cite-tooltip"><a href="https://docs.oracle.com/en/java/javase/25/vm/native-memory-tracking.html" class="cite-link">Oracle's NMT documentation</a> cites 5-10% as a general range; summary mode aggregates by subsystem and sits at the lower end of that range.</span></button></td>
                 <td>~5-10 MB</td>
                 <td>None</td>
             </tr>
@@ -417,12 +417,14 @@ status=published
         sampling, allocation profiling) has higher overhead and is not the Eliya default.</em></p>
 
     <h3>Combined overhead</h3>
-    <p>In typical production workloads, total steady-state overhead is <strong>1-2% CPU</strong>:
-        roughly <strong>&lt;1% from continuous JFR recording (Phase 2)</strong> (the dominant
-        component) plus <strong>&lt;0.5% from NMT summary mode</strong> plus negligible
-        contributions from GC logging and the unlocked diagnostic options. The figure varies with
-        workload characteristics (allocation rate, GC pressure, lock contention) but stays within
-        this envelope for the workloads Eliya targets.</p>
+    <p>The dominant component once continuous JFR ships in Phase 2 is JFR itself
+        (<a href="https://openjdk.org/jeps/328" class="org-link org-link--inline org-link--external">JEP 328</a>
+        positions the default profile at &lt;1%). NMT summary mode adds a smaller amount on top
+        (<a href="https://docs.oracle.com/en/java/javase/25/vm/native-memory-tracking.html" class="org-link org-link--inline org-link--external">Oracle's NMT documentation</a>
+        cites 5-10% as a general range across modes, with summary mode at the lower end).
+        GC logging and the unlocked diagnostic options contribute negligibly. Actual overhead
+        varies with workload characteristics (allocation rate, GC pressure, lock contention);
+        measure for your workload before committing to a steady-state budget.</p>
 
     <p>JFR's overhead is the most-studied component and the one that historically drove operator
         concern. Multiple independent sources confirm sub-1% JFR overhead with the default profile:</p>
@@ -476,7 +478,7 @@ status=published
     <section class="technical-inset" >
             <h3>The trade-off, in plain language</h3>
             <p><strong>Phase 1 today (25.0.3):</strong> The six operational-readiness ergonomics
-                cost near-zero steady-state CPU (NMT summary &lt;0.5%; everything else triggers
+                cost low steady-state CPU (dominated by NMT summary mode; everything else triggers
                 only on the actual event). In exchange you have heap-dump-on-OOM landing in a
                 predictable structured path, NMT summary visible via <code>jcmd</code>, the
                 crash log where you expect it, and diagnostic options unlocked so JFR +
