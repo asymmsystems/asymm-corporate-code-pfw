@@ -126,8 +126,8 @@ status=published
     <ul>
         <li><strong>Always-on diagnostic sidecar.</strong> Run an Eliya container alongside the
             app container, sharing the diagnostic volume. Lower friction for scheduled tasks
-            (periodic heap dumps, JFR rotation) but pays ~100&ndash;150 MB memory and negligible
-            CPU per pod for an idle sidecar.</li>
+            (periodic heap dumps, JFR rotation) but pays ~40&nbsp;MB memory for the idle JVM (plus
+            container base-image overhead) and negligible CPU per pod for an idle sidecar.</li>
         <li><strong>Ephemeral debug containers.</strong> Recommended for incident-driven
             diagnostics on Kubernetes 1.23+. Zero baseline cost; injected on demand via
             <code>kubectl debug</code>. See the
@@ -172,9 +172,8 @@ status=published
             recordings, the second fails with <code>Recording already in progress</code>.
             Resolution: let one manage JFR, or coordinate with the vendor for shared recording
             access.</li>
-        <li><strong>Combined memory overhead.</strong> Eliya adds ~13&ndash;26 MB; APM agents add
-            another 50&ndash;300 MB depending on vendor. On containers with tight memory limits,
-            measure combined footprint before committing.</li>
+        <li><strong>Combined memory overhead.</strong> Eliya adds ~13&ndash;26 MB. APM agent overhead
+            varies by vendor: AppDynamics documents ~10&ndash;100 MB<button type="button" class="cite-ref" aria-label="Citation"><span class="cite-icon">i</span><span class="cite-tooltip"><a href="https://docs.appdynamics.com/22.2/en/application-monitoring/install-app-server-agents/java-agent/install-the-java-agent" class="cite-link">AppDynamics Java agent docs</a> cite ~10-100 MB plus ~100 MB heap.</span></button>, Dynatrace budgets ~200 MB<button type="button" class="cite-ref" aria-label="Citation"><span class="cite-icon">i</span><span class="cite-tooltip"><a href="https://docs.dynatrace.com/docs/ingest-from/dynatrace-oneagent/oa-requirements" class="cite-link">Dynatrace OneAgent requirements</a> budget ~200 MB.</span></button>; New Relic, Elastic APM, and Datadog publish no specific figure. On containers with tight memory limits, measure combined footprint before committing.</li>
     </ul>
 
     <p>For the architectural story (what APM is structurally good at, what JVM forensics

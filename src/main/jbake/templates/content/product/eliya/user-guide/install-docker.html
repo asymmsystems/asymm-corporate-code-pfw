@@ -152,8 +152,8 @@
         image, install the runtime libs explicitly:
         <code>apt-get install -y fontconfig libfreetype6</code>.</p>
 
-    <p><strong>Predictable lifecycle.</strong> Debian 12 (bookworm) enters Long Term Support on
-        2026-06-10 and is supported through 2028-06-30 for <code>amd64</code> and
+    <p><strong>Predictable lifecycle.</strong> Debian 12 (bookworm) enters its Long Term Support
+        phase on 2026-06-10 and receives LTS security updates through 2028-06-30<button type="button" class="cite-ref" aria-label="Citation"><span class="cite-icon">i</span><span class="cite-tooltip"><a href="https://wiki.debian.org/LTS" class="cite-link">Debian LTS</a> covers bookworm from 2026-06-10 to 2028-06-30 at a reduced package/architecture scope; <code>amd64</code> and <code>arm64</code> are included.</span></button> for <code>amd64</code> and
         <code>arm64</code>, both architectures Eliya targets. The Debian LTS team
         continues security updates during this window. ELTS (Extended LTS) is a commercial
         offering from Freexian, not an official Debian project, and is not load-bearing for
@@ -547,9 +547,9 @@ spec:<br>
             multi-tenant production where <code>kubectl debug</code> RBAC is restricted).</li>
     </ul>
 
-    <p><strong>Resource cost:</strong> ~100&ndash;150 MB memory and negligible CPU per pod for
-        an idle Eliya sidecar. A service with 10 replicas pays ~1.5 GB always-on for occasional
-        diagnostic capability. For incident-driven diagnostics in clusters that support
+    <p><strong>Resource cost:</strong> ~40&nbsp;MB memory for the idle JVM (plus container base-image
+        overhead) and negligible CPU per pod for an idle Eliya sidecar. A service with 10 replicas pays
+        roughly half a gigabyte always-on for occasional diagnostic capability. For incident-driven diagnostics in clusters that support
         ephemeral containers, the ephemeral pattern is cheaper and cleaner.</p>
 
     <p>The sidecar uses the full Eliya image (<code>25-lts</code>, not
@@ -781,7 +781,7 @@ EXPOSE 9010</code>
             <tr>
                 <td>Always-on diagnostic sidecar</td>
                 <td>Scheduled diagnostic tasks; clusters without ephemeral container support</td>
-                <td>Continuous resource cost (~100&ndash;150 MB per pod); sidecar uses full image</td>
+                <td>Continuous resource cost (~40&nbsp;MB JVM + container overhead per pod); sidecar uses full image</td>
             </tr>
             <tr>
                 <td>JMX over secure channel</td>
