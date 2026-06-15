@@ -18,7 +18,7 @@
         the standard Java class library (<code>java.*</code> modules), the JDK tooling modules
         (<code>jdk.*</code>: Flight Recorder, JMX/RMI agent, jcmd attach, PKCS#11, the javac compiler,
         javadoc, jlink itself, etc.), and the CLI tools in <code>bin/</code> (<code>java</code>,
-        <code>javac</code>, <code>jcmd</code>, <code>jlink</code>, etc.). A typical JDK is ~280&nbsp;MB.</p>
+        <code>javac</code>, <code>jcmd</code>, <code>jlink</code>, etc.). A typical JDK is ~300&nbsp;MB.</p>
 
     <h3>What "Java SE" actually means as a module</h3>
     <p>Java SE is the standardised Java surface: the API portfolio in the Java Language Specification
@@ -75,10 +75,11 @@
         runs independently; it doesn't need a JDK on the host.</p>
 
     <h3 style="margin-top: 2rem">The <code>--strip-debug</code> flag</h3>
-    <p>The <code>--strip-debug</code> option removes DWARF debug information from the shared libraries.
-        The library code still works; you just can't <code>gdb</code> into HotSpot frames. Production
-        runtimes don't need DWARF. Stripping reduces <code>libjvm.so</code> from ~30&nbsp;MB to ~12&nbsp;MB
-        and shrinks the overall runtime by ~50%.</p>
+    <p>The <code>--strip-debug</code> option strips debug attributes from the class files inside the
+        runtime image (line-number and local-variable tables); it does not strip native symbols from the
+        shared libraries. The class code still works; you just lose class-file debug metadata. The size
+        win comes from module curation plus class-file stripping, not from shrinking <code>libjvm.so</code>,
+        which ships with its native symbols intact.</p>
 
     <h3>The <code>--no-man-pages</code> and <code>--no-header-files</code> flags</h3>
     <p>These drop <code>man/man1/*.1</code> (the man-page snippets that are mostly redundant with
@@ -111,7 +112,7 @@
 
     <p style="margin-top: 1.5rem">Combined with <code>--strip-debug</code>, <code>--no-man-pages</code>,
         and <code>--no-header-files</code>, the resulting image is ~48&nbsp;MB compressed
-        (~95&nbsp;MB extracted).</p>
+        (~74&nbsp;MB extracted).</p>
 </section>
 
 <section>
@@ -134,9 +135,8 @@
         than a <code>java.se</code>-only baseline.</p>
 
     <p style="font-size: 0.9rem; opacity: 0.85">Note: jlink's <code>--strip-debug</code> flag
-        removes debug information from class files inside the modules. Stripping debug symbols
-        from native shared libraries (<code>libjvm.so</code>, etc.) is a separate operation that
-        runs in the build pipeline.</p>
+        strips class-file debug attributes inside the modules, not native symbols. The native shared
+        libraries (<code>libjvm.so</code>, etc.) retain their symbols in this build.</p>
 </section>
 
 <section>

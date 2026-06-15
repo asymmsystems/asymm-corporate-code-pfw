@@ -125,7 +125,7 @@
     <h2 class="section-title">What's in the Eliya JRE</h2>
     <p style="max-width: 60ch; margin-bottom: 1.5rem">The Eliya JRE is assembled with <code>jlink</code> from
         the standard Java SE module set plus nine commonly-needed production-diagnostic modules, and built
-        with <code>--strip-debug</code> for a smaller extracted footprint (~48&nbsp;MB compressed download / ~95&nbsp;MB extracted, vs ~140&nbsp;MB extracted for standard <code>java.se</code>-only JREs).
+        with <code>--strip-debug</code> for a smaller extracted footprint (~48&nbsp;MB compressed download / ~74&nbsp;MB extracted, vs ~108&nbsp;MB extracted for a standard <code>java.se</code>-only JRE).
         The added <code>jdk.*</code> modules are part of every OpenJDK distribution but are not in the
         standard Java SE module set that other vendors' JREs ship; bundling them by default matches the
         canonical server/CLI deployment pattern.</p>
@@ -169,7 +169,7 @@
     </button>
 
     <p style="font-size: 0.9rem; margin-top: 1rem">Available tags: <code>25-lts</code>,
-        <code>${eliyaVersion}</code>, <code>25-lts-slim</code>, <code>${eliyaVersion}-slim</code>.
+        <code>${eliyaVersion}</code> (and per-arch <code>-amd64</code> / <code>-arm64</code>).
         The moving <code>25-lts</code> tag tracks the latest CPU; pinned-version tags
         (<code>${eliyaVersion}</code>) stay frozen. Tag refresh schedule follows the
         <a href="/product/eliya/lifecycle.html" class="org-link org-link--inline org-link--internal">quarterly CPU calendar</a>.</p>

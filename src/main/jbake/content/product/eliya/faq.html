@@ -19,7 +19,7 @@ status=published
     Phase 1 ergonomics is dominated by Native Memory Tracking summary mode
     (Oracle documents this as very low) and by JFR when continuous recording ships in Phase 2
     (Oracle's JFR documentation positions the default profile at &lt;1% CPU). Negligible memory
-    overhead (~10-25 MB total). Disk usage capped at ~1.5 GB rolling once continuous JFR ships
+    overhead (~13-26 MB total). Disk usage capped at ~1.5 GB rolling once continuous JFR ships
     in Phase 2.</p>
 <p ><strong>Longer answer:</strong> the flag activates several
     observability defaults, each with documented overhead:</p>
@@ -95,7 +95,7 @@ status=published
 <h3>What about memory and disk overhead?</h3>
 <p ><strong>Memory:</strong> JFR's internal buffers consume ~8-16 MB
     regardless of recording duration (the buffers are circular). Native Memory Tracking
-    <code>summary</code> adds ~5-10 MB. Combined: 10-25 MB JVM memory overhead.</p>
+    <code>summary</code> adds ~5-10 MB. Combined: ~13-26 MB JVM memory overhead.</p>
 <p style="margin-top: 1rem"><strong>Disk:</strong> Eliya's defaults are
     bounded: JFR rolling buffer at 250 MB max, GC logs at 1 GB max (10 × 100 MB rotated),
     heap dumps only on OOM, crash logs only on JVM crash. Steady-state disk usage: ~1.25 GB
@@ -139,7 +139,7 @@ status=published
         </tr>
         <tr>
             <td>Datadog Continuous Profiler (built on JFR)</td>
-            <td>~1-2% CPU<button type="button" class="cite-ref" aria-label="Citation"><span class="cite-icon">i</span><span class="cite-tooltip"><a href="https://docs.datadoghq.com/profiler/" class="cite-link">Datadog Continuous Profiler documentation</a> describes the Java profiler as typically under 2% CPU on average, with 1-5% as the practical range across workloads.</span></button></td>
+            <td>Low (built on JFR)</td>
             <td>Production-suitable</td>
         </tr>
         <tr>

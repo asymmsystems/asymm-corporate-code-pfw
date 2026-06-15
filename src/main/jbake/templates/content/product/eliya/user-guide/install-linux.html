@@ -203,10 +203,12 @@ Environment="PATH=/opt/java-${eliyaVersion}-eliya/bin:/usr/bin:/bin"</code>
 
     <p>Expected output:</p>
     <div class="inline-terminal inline-terminal--static">
-        <code>openjdk version "${eliyaVersion}" 2026-01-20<br>
-OpenJDK Runtime Environment Eliya (build ${eliyaVersion}+1-Eliya)<br>
-OpenJDK 64-Bit Server VM Eliya (build ${eliyaVersion}+1-Eliya, mixed mode, sharing)</code>
+        <code>openjdk version "${eliyaVersion}" 2026-06-09<br>
+OpenJDK Runtime Environment Eliya-${eliyaVersion}+24 (build ${eliyaVersion}+24-Eliya)<br>
+OpenJDK 64-Bit Server VM Eliya-${eliyaVersion}+24 (build ${eliyaVersion}+24-Eliya, mixed mode, sharing)</code>
     </div>
+    <p style="font-size: 0.9rem; opacity: 0.85">The build number and date advance with each quarterly CPU;
+        the <code>sharing</code> suffix appears when class-data sharing is active.</p>
 
     <p>The "Eliya" identifier in the build string confirms the runtime vendor.</p>
 

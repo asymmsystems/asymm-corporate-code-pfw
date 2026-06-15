@@ -314,9 +314,8 @@ status=published
             vendor.</li>
     </ul>
     <p><strong>Memory overhead combined.</strong> Eliya's observability defaults add ~1&ndash;2%
-        CPU and ~13&ndash;26 MB memory. APM agents add another 50&ndash;300 MB memory and
-        2&ndash;10% CPU depending on the vendor. On containers with tight memory limits, the
-        combination may exceed budgets. Measure both independently and combined before committing.</p>
+        CPU and ~13&ndash;26 MB memory. APM agent overhead varies by vendor: AppDynamics documents
+        0&ndash;2% CPU and ~10&ndash;100 MB plus ~100 MB heap<button type="button" class="cite-ref" aria-label="Citation"><span class="cite-icon">i</span><span class="cite-tooltip"><a href="https://docs.appdynamics.com/22.2/en/application-monitoring/install-app-server-agents/java-agent/install-the-java-agent" class="cite-link">AppDynamics Java agent docs</a> cite 0-2% CPU and ~10-100 MB, with ~100 MB additional heap recommended.</span></button>; Dynatrace targets 1&ndash;3% CPU and budgets ~200 MB<button type="button" class="cite-ref" aria-label="Citation"><span class="cite-icon">i</span><span class="cite-tooltip"><a href="https://docs.dynatrace.com/docs/ingest-from/dynatrace-oneagent/oa-requirements" class="cite-link">Dynatrace OneAgent requirements</a> target 1-3% CPU and budget ~200 MB.</span></button>. New Relic, Elastic APM, and Datadog do not publish specific overhead figures. On containers with tight memory limits, measure both independently and combined before committing.</p>
     <p>For the full coexistence story, see
         <a href="/research/jvm-forensics-vs-apm.html" class="org-link org-link--inline org-link--internal">JVM forensics vs APM</a>.</p>
 
