@@ -2525,7 +2525,11 @@ h2.news-entry-title {
 .technical-inset {
     max-width: 70ch;
     margin: var(--space-xl) 0;
-    padding: 2rem 2.5rem;
+    /* !important so the box keeps its own padding when authored as a
+       <section> (it always is): the .page-body > section rhythm rules
+       have higher specificity and would otherwise flatten it to 3rem 0
+       — zero horizontal padding. Matches .aside-box / .note / .warning. */
+    padding: 2rem 2.5rem !important;
     background: var(--surface-section-alt);
     color: var(--text-primary);
     border: 1px solid var(--border-subtle);
@@ -2666,12 +2670,14 @@ h2.news-entry-title {
 
 .note > :first-child,
 .warning > :first-child,
+.technical-inset > :first-child,
 .aside-box h3:first-of-type {
     margin-top: 0;
 }
 
 .note > :last-child,
 .warning > :last-child,
+.technical-inset > :last-child,
 .aside-box > :last-child {
     margin-bottom: 0;
 }

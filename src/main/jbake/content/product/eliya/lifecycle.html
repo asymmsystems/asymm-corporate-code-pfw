@@ -18,14 +18,36 @@ status=published
 <section style="margin-bottom: 5rem">
     <h2 class="section-title">Supported versions</h2>
 
-    <div class="eliya-terminal-panel">
-<pre>
-  version       upstream          first GA             lts-support-through    eol-notification
-  ────────────────────────────────────────────────────────────────────────────────────────────
-  eliya-25      openjdk-25u       2026-06-10           2029-09   <span class="term-ok">✓ active</span>     12 months
-  eliya-29      openjdk-29u       2027-09 (planned)    aligned   <span class="term-dim">· planned</span>    -
-</pre>
-    </div>
+    <table class="clinical-table">
+        <thead>
+            <tr>
+                <th>Version</th>
+                <th>Upstream</th>
+                <th>First GA</th>
+                <th>LTS support through</th>
+                <th>Status</th>
+                <th>EOL notice</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code>eliya-25</code></td>
+                <td><code>openjdk-25u</code></td>
+                <td>2026-06-10</td>
+                <td>2029-09</td>
+                <td>Active</td>
+                <td>12 months</td>
+            </tr>
+            <tr>
+                <td><code>eliya-29</code></td>
+                <td><code>openjdk-29u</code></td>
+                <td>2027-09 (planned)</td>
+                <td>aligned</td>
+                <td>Planned</td>
+                <td>-</td>
+            </tr>
+        </tbody>
+    </table>
 
     <p style="margin-top: 2rem; font-size: 0.95rem">
         Eliya publishes the latest LTS. JDK&nbsp;21 is not a published target; anyone needing
@@ -53,21 +75,29 @@ status=published
         Tuesday of January, April, July, and October. From Eliya 25.0.4 onward, Eliya targets
         publication <strong>within two weeks</strong> of each upstream release.</p>
 
-    <div class="eliya-terminal-panel">
-<pre>
-  quarter     upstream cpu        eliya target          release      status
-  ────────────────────────────────────────────────────────────────────────────
-  Q2 2026     2026-04-21          2026-06-10 *          25.0.3       <span class="term-ok">✓ shipped</span>
-  Q3 2026     2026-07-21          ≤ 2026-07-24          25.0.4       <span class="term-pending">· scheduled</span>
-  Q4 2026     2026-10-20          ≤ 2026-10-23          25.0.5       <span class="term-dim">· scheduled</span>
-  Q1 2027     2027-01-19          ≤ 2027-01-22          25.0.6       <span class="term-dim">· scheduled</span>
-  Q2 2027     2027-04-20          ≤ 2027-04-23          25.0.7       <span class="term-dim">· scheduled</span>
-  Q3 2027     2027-07-20          ≤ 2027-07-23          25.0.8       <span class="term-dim">· scheduled</span>
-
-  <span class="term-dim"># * 25.0.3 was the first GA. 25.0.4 onward target within two weeks.</span>
-  <span class="term-dim"># upstream CPU window: 3rd Tuesday of Jan/Apr/Jul/Oct</span>
-</pre>
-    </div>
+    <table class="clinical-table">
+        <thead>
+            <tr>
+                <th>Quarter</th>
+                <th>Upstream CPU</th>
+                <th>Eliya target</th>
+                <th>Release</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Q2 2026</td><td>2026-04-21</td><td>2026-06-10 *</td><td>25.0.3</td><td>Shipped</td></tr>
+            <tr><td>Q3 2026</td><td>2026-07-21</td><td>&le;&nbsp;2026-07-24</td><td>25.0.4</td><td>Scheduled</td></tr>
+            <tr><td>Q4 2026</td><td>2026-10-20</td><td>&le;&nbsp;2026-10-23</td><td>25.0.5</td><td>Scheduled</td></tr>
+            <tr><td>Q1 2027</td><td>2027-01-19</td><td>&le;&nbsp;2027-01-22</td><td>25.0.6</td><td>Scheduled</td></tr>
+            <tr><td>Q2 2027</td><td>2027-04-20</td><td>&le;&nbsp;2027-04-23</td><td>25.0.7</td><td>Scheduled</td></tr>
+            <tr><td>Q3 2027</td><td>2027-07-20</td><td>&le;&nbsp;2027-07-23</td><td>25.0.8</td><td>Scheduled</td></tr>
+        </tbody>
+    </table>
+    <p style="margin-top: 1rem; font-size: 0.9rem">
+        * 25.0.3 was the first GA; 25.0.4 onward targets within two weeks. Upstream CPU window:
+        third Tuesday of January, April, July, and October.
+    </p>
 
     <p style="margin-top: 1.5rem; font-size: 0.95rem">
         Patch numbers follow OpenJDK's <a href="https://openjdk.org/jeps/322" class="org-link org-link--inline org-link--external">JEP&nbsp;322</a>
