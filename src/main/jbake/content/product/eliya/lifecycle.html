@@ -109,7 +109,7 @@ status=published
     <h2 class="section-title">Version pinning recommendations</h2>
     <p>Three patterns cover how operators typically pin Eliya:</p>
 
-    <h3 style="margin-top: 1.5rem">Pattern 1: Moving tag (<code>25-lts</code>, <code>25-lts-slim</code>)</h3>
+    <h3 style="margin-top: 1.5rem">Pattern 1: Moving tag (<code>25-lts</code>)</h3>
     <p>Pull policy determines update timing. With <code>imagePullPolicy: Always</code> in
         Kubernetes (or equivalent), each pod restart picks up the latest CPU. Best for teams that
         trust quarterly CPUs and want automatic adoption.</p>

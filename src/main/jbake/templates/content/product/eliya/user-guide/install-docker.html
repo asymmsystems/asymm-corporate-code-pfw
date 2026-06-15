@@ -36,9 +36,10 @@
             <code>${eliyaVersion}</code> for environments that pin to a specific version;
             the tag is immutable, so <code>docker pull</code> returns the same image every time.</li>
         <li><span class="check-yes" aria-hidden="true">&#10003;</span>
-            <code>-slim</code> variants for headless server workloads: smaller base
-            (Debian slim) with no fontconfig/freetype/X11. Default recommendation for application
-            containers.</li>
+            <code>-slim</code> (smaller Debian base), <code>-jre</code>, and
+            <code>-jre-distroless</code> variants ship in a post-GA refresh (Wave 7, Q4 2026); today
+            the full-JDK multi-arch <code>25-lts</code> / <code>${eliyaVersion}</code> image is the
+            published tag.</li>
         <li><span class="check-yes" aria-hidden="true">&#10003;</span>
             Full (non-slim) variants when your application uses AWT or Java2D for server-side
             rendering (PDF generation, chart images, font-metric calculations): the full
@@ -48,10 +49,11 @@
             <a href="#diagnostic-patterns" class="org-link org-link--inline org-link--internal">Production diagnostic patterns</a>).</li>
     </ul>
 
-    <p>Eliya ships images on two orthogonal axes: <strong>base image</strong>
+    <p>Eliya will ship images on two orthogonal axes: <strong>base image</strong>
         (Debian full vs slim vs distroless) and <strong>Java content</strong> (full JDK vs Eliya JRE).
-        Four published tag families per Eliya release. <code>-jre*</code> variants ship Wave 7
-        (after the first signed Linux GA lands on the storefront repo).</p>
+        First GA publishes the full-JDK multi-arch image (<code>25-lts</code> / <code>${eliyaVersion}</code>,
+        plus per-arch <code>-amd64</code> / <code>-arm64</code>); the <code>-slim</code>, <code>-jre</code>,
+        and <code>-jre-distroless</code> variants ship in a post-GA refresh (Wave 7, Q4 2026).</p>
 
     <table class="clinical-table">
         <thead>
@@ -69,7 +71,7 @@
                 <td><code>25-lts</code> / <code>${eliyaVersion}</code></td>
                 <td><code>debian:12</code></td>
                 <td>Full JDK</td>
-                <td>~270 MB</td>
+                <td>~550 MB compressed (~1.9 GB on disk)</td>
                 <td>Server-side AWT/Java2D rendering; multi-stage builder images; diagnostic
                     sidecars needing <code>jcmd</code>/<code>jmap</code></td>
                 <td>Available</td>
@@ -78,10 +80,10 @@
                 <td><code>25-lts-slim</code> / <code>${eliyaVersion}-slim</code></td>
                 <td><code>debian:12-slim</code></td>
                 <td>Full JDK</td>
-                <td>~230 MB</td>
+                <td>TBD</td>
                 <td>Headless apps that still need <code>javac</code>/<code>jlink</code> at runtime
                     (rare); slim-base CI runners</td>
-                <td>Available</td>
+                <td>Coming (post-GA refresh)</td>
             </tr>
             <tr>
                 <td><code>25-lts-jre</code> / <code>${eliyaVersion}-jre</code></td>
@@ -209,12 +211,12 @@
 
 
     <h3>Use as a base image</h3>
-    <p>The common pattern is to use Eliya's slim image as the runtime base for your application
+    <p>The common pattern is to use the Eliya image as the runtime base for your application
         container. The example below shows a minimal Dockerfile that runs a fat JAR with the
         <code>EliyaProfile=Production</code> profile active by default:</p>
 
     <div class="inline-terminal inline-terminal--static">
-        <code>FROM ghcr.io/asymmsystems/eliya-jdk:25-lts-slim<br>
+        <code>FROM ghcr.io/asymmsystems/eliya-jdk:25-lts<br>
 <br>
 COPY target/myapp.jar /app/myapp.jar<br>
 WORKDIR /app<br>
@@ -287,20 +289,20 @@ COPY src ./src<br>
 RUN chmod +x mvnw &amp;&amp; ./mvnw clean package -DskipTests<br>
 <br>
 # Stage 2: run the application<br>
-FROM ghcr.io/asymmsystems/eliya-jdk:25-lts-slim<br>
+FROM ghcr.io/asymmsystems/eliya-jdk:25-lts<br>
 COPY --from=builder /build/target/myapp.jar /app/myapp.jar<br>
 WORKDIR /app<br>
 ENV JAVA_TOOL_OPTIONS="-XX:EliyaProfile=Production"<br>
 ENTRYPOINT ["java", "-jar", "myapp.jar"]</code>
     </div>
 
-    <p>The final image contains only the slim runtime plus your application JAR. Build artifacts,
+    <p>The final image contains the Eliya runtime plus your application JAR. Build artifacts,
         Maven cache, and source files don't ship to runtime. The <code>chmod +x mvnw</code>
         step protects against the Maven wrapper losing its executable bit on cross-platform
         checkouts (typically Windows-originated commits).</p>
 
-    <p>If you use <code>jlink</code> to produce a minimal custom runtime image, the slim Eliya
-        image is the right runtime base: <code>jlink</code> output works the same way it
+    <p>If you use <code>jlink</code> to produce a minimal custom runtime image, the Eliya
+        image is a suitable runtime base: <code>jlink</code> output works the same way it
         does with upstream OpenJDK.</p>
 
 
@@ -312,10 +314,10 @@ ENTRYPOINT ["java", "-jar", "myapp.jar"]</code>
 
     <p><strong>Docker:</strong></p>
     <button type="button" class="inline-terminal"
-        onclick="copyToClipboard('docker run -d --name my-app -v /host/eliya-diagnostics:/var/log/eliya ghcr.io/asymmsystems/eliya-jdk:25-lts-slim')" aria-label="Copy command">
+        onclick="copyToClipboard('docker run -d --name my-app -v /host/eliya-diagnostics:/var/log/eliya ghcr.io/asymmsystems/eliya-jdk:25-lts')" aria-label="Copy command">
         <code>docker run -d --name my-app \<br>
 &nbsp;&nbsp;-v /host/eliya-diagnostics:/var/log/eliya \<br>
-&nbsp;&nbsp;ghcr.io/asymmsystems/eliya-jdk:25-lts-slim</code>
+&nbsp;&nbsp;ghcr.io/asymmsystems/eliya-jdk:25-lts</code>
         <span class="copy-btn" aria-hidden="true">Copy</span>
     </button>
 
@@ -552,13 +554,13 @@ spec:<br>
         roughly half a gigabyte always-on for occasional diagnostic capability. For incident-driven diagnostics in clusters that support
         ephemeral containers, the ephemeral pattern is cheaper and cleaner.</p>
 
-    <p>The sidecar uses the full Eliya image (<code>25-lts</code>, not
-        <code>25-lts-slim</code>). The full image's <code>fontconfig</code> and
-        <code>freetype</code> libraries are needed when Phase 2 diagnostic tools generate visual
-        reports: flame graphs from async-profiler, leak-suspects HTML from Eclipse MAT,
-        and JFR rendering from headless analysis. For Phase 1 sidecars running only
-        <code>jcmd</code> and <code>jstack</code>, the slim image would also work, but using the
-        full image future-proofs the deployment as the bundled tooling expands in Phase 2.</p>
+    <p>The sidecar uses the full Eliya image (<code>25-lts</code>), the only published image
+        today. Its <code>fontconfig</code> and <code>freetype</code> libraries are needed when
+        Phase 2 diagnostic tools generate visual reports: flame graphs from async-profiler,
+        leak-suspects HTML from Eclipse MAT, and JFR rendering from headless analysis. A smaller
+        <code>-slim</code> sidecar base (Wave 7) will suit Phase 1 sidecars running only
+        <code>jcmd</code> and <code>jstack</code>; the full image future-proofs the deployment as
+        the bundled tooling expands in Phase 2.</p>
 
     <p>Example Kubernetes pod spec:</p>
     <div class="inline-terminal inline-terminal--static">
