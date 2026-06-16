@@ -1,6 +1,10 @@
 title=JVM forensics vs APM: why both, when each, and where each stops
 description=APM tools aggregate metrics to a backend. JVM forensics captures artefacts on disk that survive incidents. Both have legitimate roles. This article documents the architectural distinction and the production scenarios where each is the right answer.
 type=page
+field=JVM DIAGNOSTICS
+format=ANALYSIS
+lifecycle=REFERENCE
+cta=Read &rarr;
 toc=true
 status=published
 ~~~~~~
@@ -52,55 +56,56 @@ status=published
             backend, database, and message-broker spans together.</li>
     </ul>
 
-    <p>Typical overhead bands across the major vendors (memory + steady-state CPU):</p>
+    <p>Most APM vendors do not publish a single official overhead figure; it depends heavily on
+        instrumentation depth and configuration. Where vendors publish, and where they do not:</p>
     <table class="clinical-table">
         <thead>
             <tr>
                 <th>APM</th>
-                <th>Memory overhead</th>
-                <th>CPU overhead</th>
+                <th>Published overhead</th>
                 <th>Notes</th>
             </tr>
         </thead>
         <tbody>
             <tr>
                 <td>AppDynamics</td>
-                <td>~50&ndash;200 MB</td>
-                <td>2&ndash;8%</td>
-                <td>SaaS or on-prem Controller; instruments business transactions, SQL, HTTP</td>
+                <td>0&ndash;2% CPU, ~10&ndash;100 MB (plus ~100 MB heap)
+                    <a href="https://docs.appdynamics.com/22.2/en/application-monitoring/install-app-server-agents/java-agent/install-the-java-agent" class="org-link org-link--inline org-link--external">[docs]</a></td>
+                <td>Official figure published</td>
             </tr>
             <tr>
                 <td>Dynatrace OneAgent</td>
-                <td>~100&ndash;300 MB</td>
-                <td>3&ndash;10%</td>
+                <td>1&ndash;3% CPU design target, ~200 MB budget
+                    <a href="https://docs.dynatrace.com/docs/ingest-from/dynatrace-oneagent/oa-requirements" class="org-link org-link--inline org-link--external">[docs]</a></td>
                 <td>Most aggressive instrumentation; separate native agent for system metrics</td>
             </tr>
             <tr>
-                <td>New Relic</td>
-                <td>~80&ndash;200 MB</td>
-                <td>2&ndash;5%</td>
-                <td>SaaS only; no self-host option for the agent</td>
+                <td>Elastic APM</td>
+                <td>Single-digit-microsecond latency, a few MB
+                    <a href="https://www.elastic.co/docs/reference/apm/agents/java/overhead-performance-tuning" class="org-link org-link--inline org-link--external">[docs]</a></td>
+                <td>Open-source; publishes a latency figure, not a CPU/memory band</td>
             </tr>
             <tr>
-                <td>Elastic APM</td>
-                <td>~50&ndash;150 MB</td>
-                <td>1&ndash;5%</td>
-                <td>Open-source; self-host the Elastic stack on-prem</td>
+                <td>New Relic</td>
+                <td>No official figure published</td>
+                <td>SaaS only; docs describe a memory circuit-breaker, not a baseline overhead</td>
             </tr>
             <tr>
                 <td>Datadog APM</td>
-                <td>~80&ndash;200 MB</td>
-                <td>2&ndash;6%</td>
-                <td>SaaS; Datadog Continuous Profiler uses JFR under the hood</td>
+                <td>No official figure published</td>
+                <td>SaaS; the separate Datadog Continuous Profiler is built on JFR</td>
             </tr>
             <tr>
                 <td>OpenTelemetry (Java auto-instrumentation)</td>
-                <td>~50&ndash;120 MB</td>
-                <td>1&ndash;4%</td>
-                <td>Open standard; vendor-neutral; same structural limitations as commercial APM</td>
+                <td>No single official estimate;
+                    <a href="https://opentelemetry.io/docs/zero-code/java/agent/performance/" class="org-link org-link--inline org-link--external">its own page</a>
+                    says to measure (community reports ~2&ndash;5% CPU, ~50&ndash;100 MB)</td>
+                <td>Open standard; same structural limitations as commercial APM</td>
             </tr>
         </tbody>
     </table>
+    <p>The point is not a precise number. Any in-process agent adds measurable CPU and memory, and the
+        amount varies enough by configuration that you have to measure it in your own deployment.</p>
 
 
     <h3>What APM tools structurally cannot do</h3>
@@ -297,7 +302,7 @@ status=published
     <p><strong>Phase 1 (current, shipped 25.0.3): <em>six operational-readiness ergonomics.</em></strong>
         Heap dump on OOM with structured path, exit-on-OOM, Native Memory Tracking summary,
         predictable crash log path, container support reinforced, diagnostic VM options unlocked
-        (which makes JFR + async-profiler trivially usable today via one-flag activation).
+        (which makes JFR and async-profiler usable with a single flag today).
         Defaults that survive incidents and crashes. Activated by
         <code>-XX:EliyaProfile=Production</code>; off by default, opt-in. Phase 2 (planned) adds
         continuous JFR recording (24-hour rolling buffer) and unified GC logging as defaults under
@@ -346,7 +351,7 @@ status=published
             </tr>
             <tr>
                 <td>You're at a development scale where forensic-grade artefacts are
-                    over-engineering for the questions you actually ask.</td>
+                    over-engineering for the questions you ask.</td>
                 <td>You need filesystem-encoded compliance audit trail and APM dashboards
                     aren't an auditable artefact for your framework.</td>
                 <td>You're a Datadog Continuous Profiler customer; Eliya's JFR defaults

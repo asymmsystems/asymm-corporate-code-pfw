@@ -1,6 +1,10 @@
 title=Choosing a JDK in 2026: an honest guide
-description=Comprehensive vendor-by-vendor comparison of OpenJDK distributions with use-case-specific recommendations. Written by the team behind Eliya JDK.
+description=A vendor-by-vendor comparison of OpenJDK distributions with use-case-specific recommendations. Written by the team behind Eliya JDK.
 type=page
+field=JDK SELECTION
+format=ANALYSIS
+lifecycle=GUIDE
+cta=Read &rarr;
 toc=true
 status=published
 ~~~~~~
@@ -9,7 +13,7 @@ status=published
     <span class="section-kicker">Asymm Research</span>
     <h1>Choosing a JDK in 2026: an honest guide</h1>
     <p style="max-width: 60ch">A vendor-by-vendor comparison of OpenJDK distributions,
-        with platform-specific guidance and an explicit view on where each one actually wins.</p>
+        with platform-specific guidance and an explicit view on where each one wins.</p>
     <p style="max-width: 60ch; font-size: 0.9rem; margin-top: 1rem">
         <em>This guide is written by the team behind
         <a href="/product/eliya.html" class="org-link org-link--inline org-link--internal">Eliya JDK</a>.
@@ -160,7 +164,7 @@ status=published
         <li><strong>One LTS at a time keeps Phase 2+ commitments fundable.</strong> Bundled diagnostics,
             FIPS variant, distroless/UBI images, DEB/RPM, macOS aarch64 (the differentiated work) has to
             outrank version sprawl. The discipline of saying no to JDK 26 frees resourcing for the work
-            that actually distinguishes Eliya.</li>
+            that distinguishes Eliya.</li>
     </ul>
 
     <p style="margin-top: 1rem">Eliya 25 is supported through <strong>September 2029</strong> (four years,
@@ -222,7 +226,7 @@ status=published
         <li>Recommended by VMware for the Spring Framework.</li>
         <li>Broadest platform matrix: Linux (x64, aarch64, aarch32, ppc64le, riscv), Alpine, Windows,
             macOS. Only major vendor covering 32-bit ARM and RISC-V.</li>
-        <li>8.5 years LTS support, longest among majors.</li>
+        <li>About 8.5 years LTS support (to 2034), among the longest of the majors (Azul's extended tier runs to 2035).</li>
         <li>Commercial support for Java 6/7 available.</li>
         <li>Product family: Liberica Standard, Liberica Full (with JavaFX + OpenWebStart), Liberica NIK
             (GraalVM Community-based native image kit), Alpaquita Linux (Alpine fork optimised for Java),
@@ -298,8 +302,10 @@ status=published
         <li>Open edition (GPLv2+CE) and certified edition (IBM licence).</li>
         <li>IBM Runtimes for Business is the commercial support offering.</li>
         <li>Excellent enterprise platform coverage.</li>
-        <li><strong>OpenJ9-specific benefit:</strong> lower steady-state memory footprint than HotSpot,
-            typically 20&ndash;40% reduction for the same workload. For containerised
+        <li><strong>OpenJ9-specific benefit:</strong> lower steady-state memory footprint than HotSpot.
+            Eclipse's own
+            <a href="https://eclipse.dev/openj9/performance/" class="org-link org-link--inline org-link--external">benchmarks</a>
+            report roughly 30&ndash;60% lower footprint depending on the workload phase. For containerised
             microservices where every replica's memory budget matters, this can translate to meaningful
             cost savings. Benchmark with your specific workload.</li>
     </ul>
@@ -382,11 +388,12 @@ status=published
             your perimeter.</li>
     </ul>
 
-    <p><strong>TCK status.</strong> Phase 1 ships as "based on TCK-certified upstream OpenJDK&nbsp;25":
-        the upstream codebase Eliya is built from is TCK-certified, and Eliya's source patches
-        are minimal and don't affect compatibility behaviours. Eliya self-certification (independent
-        TCK run of the Eliya binary itself) is Phase 2; this is the standard pattern most OpenJDK
-        distributions follow (TCK self-certification typically lags GA by 3&ndash;6 months).</p>
+    <p><strong>TCK status.</strong> Upstream OpenJDK&nbsp;25 source passes the Java SE&nbsp;25 TCK.
+        TCK conformance is a property of a specific built binary, not of the source code: every build
+        has to be tested by its maker. Eliya is built from that upstream source, but the Eliya binary
+        is its own build and has not yet been run against the TCK. Asymm Systems is applying under the
+        OpenJDK Community TCK License Agreement (OCTLA); the Eliya binary's own TCK run is a Phase 2
+        deliverable.</p>
 
     <p><strong>You should consider Eliya when:</strong></p>
     <ul>
