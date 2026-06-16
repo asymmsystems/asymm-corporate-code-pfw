@@ -175,7 +175,8 @@ CSS is gitignored — never edit it directly. Key classes:
 - **Page chrome:** `.page-header`, `.section-kicker`, `.section-title`
 - **Eliya microsite:** `.eliya-breadcrumb`, `.page-toc`, `.eliya-terminal-panel`
 - **Components:** `.product-feature-card`, `.clinical-table`, `.inline-terminal`,
-  `.technical-inset`, `.org-link` (with `--internal` / `--external` / `--inline` modifiers)
+  `.technical-inset`, `.note` / `.warning` (callout panels), `.org-link` (with
+  `--internal` / `--external` / `--inline` modifiers)
 - **Brand:** `.ide-status-bar` (global fixed bottom nav)
 
 Link convention: `<a class="org-link org-link--internal">link text</a>`. The `[[`, `]]`, and `→`
