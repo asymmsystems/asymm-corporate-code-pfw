@@ -114,7 +114,7 @@ status=published
     <h3 style="margin-top: 2.5rem">Out-of-cycle CVE rebuilds</h3>
     <p>When upstream OpenJDK publishes an out-of-cycle patch for a critical CVE (typically
         CVSS&nbsp;&ge;&nbsp;9.0 or actively-exploited per Oracle Security Alerts), Eliya targets
-        <strong>one week</strong> to ship the corresponding rebuild.</p>
+        one week to ship the corresponding rebuild.</p>
     <p style="margin-top: 1rem">Eliya tracks upstream's out-of-cycle releases; Eliya does not
         unilaterally determine what constitutes a critical CVE. If upstream treats an issue as
         quarterly-cycle, Eliya does too. This alignment ensures Eliya users get the same CVE
@@ -137,39 +137,68 @@ status=published
 
 <section style="margin-bottom: 5rem">
     <h2 class="section-title">Version pinning recommendations</h2>
-    <p>Three patterns cover how operators typically pin Eliya:</p>
+    <p>Four patterns cover how operators pin Eliya, two mutable (the tag moves under you) and
+        two immutable (the bits never change once pinned). Pick by how much you want the
+        deployment to follow the published cadence versus stay byte-frozen until you advance
+        it yourself. The 25.0.4-and-later examples below introduce the per-build
+        <code>r&lt;N&gt;</code> handle; the equivalent 25.0.3 pin is the bare <code>25.0.3</code>
+        tag plus SHA-256 (the per-build handle is a 25.0.4-onwards addition).</p>
 
-    <h3 style="margin-top: 1.5rem">Pattern 1: Moving tag (<code>25-lts</code>)</h3>
-    <p>Pull policy determines update timing. With <code>imagePullPolicy: Always</code> in
-        Kubernetes (or equivalent), each pod restart picks up the latest CPU. Best for teams that
-        trust quarterly CPUs and want automatic adoption.</p>
+    <h3 style="margin-top: 2rem">Pattern 1 &mdash; LTS-track moving tag <span style="font-weight: 400; color: var(--text-muted)">(mutable)</span></h3>
+    <p><code>:25-lts</code> advances on every quarterly CPU and every out-of-cycle CVE respin.
+        With <code>imagePullPolicy: Always</code> in Kubernetes (or equivalent), each pod
+        restart picks up the latest published build. Best for teams that trust the published
+        cadence and want automatic uptake of every build without operator action.</p>
+    <div class="inline-terminal inline-terminal--static">
+        <code>docker pull ghcr.io/asymmsystems/eliya-jdk:25-lts</code>
+    </div>
 
-    <h3 style="margin-top: 1.5rem">Pattern 2: Pinned version (<code>25.0.3</code>, <code>25.0.4</code>, &hellip;)</h3>
-    <p>You explicitly update the version string each CPU. Best for compliance-conscious
-        environments that require change-management approval for each version bump.</p>
-    <p>The bare CPU identifier (<code>25.0.3</code>, <code>25.0.4</code>) names the upstream
-        quarterly release. For per-build pinning within a CPU window (the cryptographic byte
-        pin compliance buyers and auditors require), use the <strong>SHA-256</strong> from the
-        signed <code>SHA256SUMS.txt.asc</code> for archive downloads, or the
-        <strong>OCI image digest</strong> (<code>@sha256:&lt;digest&gt;</code>) for container
-        pulls. From 25.0.4 onward, per-build human-readable handles are also available:
-        filenames carry <code>+&lt;upstream-build&gt;-r&lt;N&gt;</code> (e.g.,
-        <code>eliya-jdk-25.0.4+7-r1-linux-x64.tar.gz</code>) and Docker per-build immutable
-        tags carry <code>-r&lt;N&gt;</code> (e.g., <code>:25.0.4-r1</code>; Docker tags drop
-        the <code>+7</code> because the OCI tag character set excludes <code>+</code>).
-        See <a href="/product/eliya/user-guide/verify-download.html" class="org-link org-link--inline org-link--internal">verify your download</a>
-        for the canonical pin reference and the four-mechanism breakdown (SHA-256, OCI digest,
-        per-build <code>rN</code> handle, bare CPU tag).</p>
+    <h3 style="margin-top: 2rem">Pattern 2 &mdash; CPU-track moving tag <span style="font-weight: 400; color: var(--text-muted)">(mutable within a CPU window)</span></h3>
+    <p><code>:25.0.4</code> stays on the 25.0.4 quarterly window; it advances only when a
+        respin (out-of-cycle CVE rebuild) lands within that window, never to the next CPU.
+        You explicitly bump the tag string at each quarterly CPU (<code>:25.0.4</code> &rarr;
+        <code>:25.0.5</code>). Best for environments that require change-management sign-off
+        per quarter but want respins inside the quarter picked up automatically.</p>
+    <div class="inline-terminal inline-terminal--static">
+        <code>docker pull ghcr.io/asymmsystems/eliya-jdk:25.0.4</code>
+    </div>
 
-    <h3 style="margin-top: 1.5rem">Pattern 3: Frozen version with selective patches</h3>
-    <p>Stay on a specific version (e.g., <code>25.0.3</code>) indefinitely, applying only
-        CVE-triggered out-of-cycle rebuilds. Common in environments with heavy regression-testing
-        requirements.</p>
+    <h3 style="margin-top: 2rem">Pattern 3 &mdash; Per-build immutable handle <span style="font-weight: 400; color: var(--text-muted)">(immutable, 25.0.4 onwards)</span></h3>
+    <p>From 25.0.4, every Eliya build carries a revision ordinal <code>r&lt;N&gt;</code>: the
+        first build of 25.0.4 is <code>r1</code>, the first respin is <code>r2</code>, and so
+        on. The Docker tag <code>:25.0.4-r1</code> and the archive filename
+        <code>eliya-jdk-25.0.4+7-r1-linux-x64.tar.gz</code> (where <code>+7</code> is upstream
+        OpenJDK's GA promoted-build coordinate) point at one specific build and never advance.
+        Best for change-management sign-off per build, reproducible CI pipelines, and any
+        environment where "the exact same build" matters but a SHA digest is too unwieldy to
+        type or remember.</p>
+    <div class="inline-terminal inline-terminal--static">
+        <code>docker pull ghcr.io/asymmsystems/eliya-jdk:25.0.4-r1</code>
+    </div>
+    <div class="inline-terminal inline-terminal--static">
+        <code>curl -LO https://github.com/asymmsystems/eliya-jdk/releases/download/eliya-jdk-25.0.4+7-r1/eliya-jdk-25.0.4+7-r1-linux-x64.tar.gz</code>
+    </div>
 
-    <p style="margin-top: 1.5rem; font-size: 0.95rem">
-        For upgrade procedures, see the
-        <a href="/product/eliya/migration.html" class="org-link org-link--inline org-link--internal">migration guide</a>.
-    </p>
+    <h3 style="margin-top: 2rem">Pattern 4 &mdash; Cryptographic content pin <span style="font-weight: 400; color: var(--text-muted)">(immutable, byte-exact)</span></h3>
+    <p>The only pin that cryptographically guarantees byte-identical bits. For containers,
+        the OCI image digest <code>@sha256:&lt;digest&gt;</code>; for archives, the SHA-256
+        from the signed <code>SHA256SUMS.txt.asc</code> on each GitHub Release. Required by
+        compliance buyers and supply-chain auditors; recommended for any regulated environment.
+        See the <a href="/product/eliya/user-guide/verify-download.html" class="org-link org-link--inline org-link--internal">verify your download</a>
+        guide for the SHA-256 + GPG ceremony.</p>
+    <div class="inline-terminal inline-terminal--static">
+        <code>docker pull ghcr.io/asymmsystems/eliya-jdk@sha256:&lt;digest&gt;</code>
+    </div>
+    <div class="inline-terminal inline-terminal--static">
+        <code>sha256sum -c SHA256SUMS.txt && gpg --verify SHA256SUMS.txt.asc</code>
+    </div>
+
+    <p style="margin-top: 2rem; font-size: 0.95rem">A common operational practice layered on
+        top: stay on a specific version indefinitely (e.g., remain on <code>:25.0.4-r1</code>
+        beyond the next quarterly CPU), applying only respins for actively-exploited CVEs.
+        That's Pattern 3 or Pattern 4 with deferred quarterly bumps, not a separate pin
+        mechanism. For upgrade procedures, see the
+        <a href="/product/eliya/migration.html" class="org-link org-link--inline org-link--internal">migration guide</a>.</p>
 </section>
 
 <section style="margin-bottom: 5rem">

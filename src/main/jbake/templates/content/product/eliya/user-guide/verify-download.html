@@ -85,9 +85,9 @@
     <h3>Multi-channel cross-verification (mandatory ceremony)</h3>
     <p>The fingerprint is published on five independent channels. The
         publication is intentional (fingerprints are public identifiers by design) and
-        multi-channel agreement is what makes the imported key trustworthy. <strong>Cross-verify
-        against at least two of these channels</strong> before trusting the imported key. If one
-        channel ever shows a different fingerprint, that's the alarm: do not trust the key; report
+        multi-channel agreement is what makes the imported key trustworthy. Cross-verify against at
+        least two of these channels before trusting the imported key. If one channel ever shows a
+        different fingerprint, that's the alarm: do not trust the key; report
         to <a href="mailto:security@asymm.systems" class="org-link org-link--inline org-link--external">security@asymm.systems</a>.</p>
 
     <table class="clinical-table" style="max-width: 800px">
@@ -98,12 +98,12 @@
             <tr>
                 <td>1. This page</td>
                 <td><code>asymm.systems/product/eliya/user-guide/verify-download.html</code></td>
-                <td>Read above. Served over HTTPS from Asymm's primary domain.</td>
+                <td>Read above. Asymm's primary domain.</td>
             </tr>
             <tr>
                 <td>2. Security page</td>
                 <td><code>asymm.systems/product/eliya/security.html</code></td>
-                <td>Same HTTPS-secured domain, independent page editorial path. <a href="/product/eliya/security.html" class="org-link org-link--inline org-link--internal">Visit security page</a>.</td>
+                <td>Same primary domain, independent editorial page. <a href="/product/eliya/security.html" class="org-link org-link--inline org-link--internal">Visit security page</a>.</td>
             </tr>
             <tr>
                 <td>3. Dedicated key host</td>
@@ -125,19 +125,19 @@
 
     <h3>Step-by-step ceremony</h3>
     <ol>
-        <li><strong>Pick channel A and channel B</strong> from the table above. Independent channels
-            are best (different DNS zones, different operators); two channels on the same domain
-            (channel 1 + 2) provide weaker independence than one of those plus a public keyserver.</li>
-        <li><strong>Fetch the fingerprint from channel A</strong>. Record it.</li>
-        <li><strong>Fetch the fingerprint from channel B</strong>. Record it.</li>
-        <li><strong>Verify they match</strong> AND match the canonical value above
+        <li>Pick channel A and channel B from the table above. Independent channels are best
+            (different DNS zones, different operators); two channels on the same domain (channel
+            1 + 2) provide weaker independence than one of those plus a public keyserver.</li>
+        <li>Fetch the fingerprint from channel A. Record it.</li>
+        <li>Fetch the fingerprint from channel B. Record it.</li>
+        <li>Verify they match, and match the canonical value above
             (<code>076D E547 397A 5D27 EECE E0B3 07A9 0689 B71A 158F</code>). If any one disagrees,
             do not trust the imported key.</li>
-        <li><strong>Import the key</strong> (channels 3, 4, or 5 all serve the actual key material;
-            this page just states the fingerprint to compare against).</li>
-        <li><strong>Verify the release</strong> with <code>gpg --verify SHA256SUMS.txt.asc</code> as
-            shown in the one-command verification above. GPG checks the signature against your locally-
-            imported key. The signature is created by the dedicated signing subkey but <code>gpg</code>
+        <li>Import the key (channels 3, 4, or 5 all serve the actual key material; this page just
+            states the fingerprint to compare against).</li>
+        <li>Verify the release with <code>gpg --verify SHA256SUMS.txt.asc</code> as shown in the
+            one-command verification above. GPG checks the signature against your locally-imported
+            key. The signature is created by the dedicated signing subkey but <code>gpg</code>
             resolves the cert-chain automatically; you trust the certify key (whose fingerprint
             you verified) and accept the subkey signatures it certifies.</li>
     </ol>
@@ -160,10 +160,10 @@
 
 <section style="margin-top: 3rem">
     <h2 class="section-title">What pins to what</h2>
-    <p>SHA256 + GPG is the <strong>cryptographic per-build pin</strong>. It is the only pin
-        compliance buyers, container runtimes, and signature verifiers should consume; nothing
-        in the binary's banner string adds anti-forgery guarantees the cryptographic chain does
-        not already provide. Four canonical pin mechanisms cover every operational scenario:</p>
+    <p>SHA256 + GPG is the cryptographic per-build pin. It is the only pin compliance buyers,
+        container runtimes, and signature verifiers should consume; nothing in the binary's
+        banner string adds anti-forgery guarantees the cryptographic chain does not already
+        provide. Four canonical pin mechanisms cover every operational scenario:</p>
 
     <table class="clinical-table" style="max-width: 800px">
         <thead>
