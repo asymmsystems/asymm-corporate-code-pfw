@@ -19,7 +19,7 @@
             <#include "/macro/news.ftl">
             <#assign projects_count = 0>
             <#list all_content as item>
-                <#if item.uri?? && item.uri?contains("research/") && item.status == "published">
+                <#if item.uri?? && item.uri?contains("research/") && item.status == "published" && (item.type!"") != "survey">
                     <#assign projects_count = projects_count + 1>
                     <@renderNewsEntry
                         title=item.title

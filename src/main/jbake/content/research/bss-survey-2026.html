@@ -1,7 +1,7 @@
 title=BSS Engineering Practices Survey 2026
-description=A survey of ODA conformance and telecom integration practices across BSS teams.
-type=page
-field=ODA COMPLIANCE
+description=A survey of TMF standards adoption and conformance practices across telecom BSS teams.
+type=survey
+field=TMF CONFORMANCE
 format=SURVEY
 lifecycle=ACTIVE STUDY
 cta=Participate &rarr;
@@ -10,276 +10,343 @@ status=published
 
 <h1>BSS Engineering Practices Survey 2026</h1>
 
-<p>Asymm Systems is conducting research into BSS/OSS engineering practices in the telecom industry, with a focus on TMF
-    standards adoption and common deployment challenges.</p>
+<p>Asymm Systems is researching engineering practices in telecom BSS, with a focus on TMF standards
+    adoption and conformance. This survey takes about 7 minutes.</p>
 
-<p>This survey takes approximately 5 minutes to complete. Results will be published as an industry brief later this
-    year.</p>
+<p>Findings will be published as an industry brief and may be used in an academic paper. Only
+    aggregated results and a de-identified dataset will be published; never your individual response.</p>
 
-<p>Your participation helps us understand real-world engineering challenges facing the telecom development community.
-</p>
+<p>This survey is confidential, not anonymous. We ask for your email so we can remove duplicate
+    submissions and send you the results; your individual answers are never published or shared in any
+    form that identifies you or your organisation, and the published dataset contains no contact
+    details. Participation is voluntary and you may stop at any time.</p>
+
+<p>Questions: <a href="mailto:research@asymm.systems" class="org-link org-link--inline org-link--external">research@asymm.systems</a></p>
 
 <form id="bss-survey-form" method="POST">
 
-    <!-- Section 1: Profile -->
+    <!-- Honeypot: Formspree discards any submission where _gotcha is filled. Hidden from people. -->
+    <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" style="position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden;">
+
+    <!-- Section 1: About you -->
     <fieldset class="survey-section">
-        <legend>Section 1: Profile</legend>
+        <legend>Section 1: About you</legend>
+        <p class="form-note">Profile answers are used to screen, segment, and describe the sample.
+            Contact details are held confidentially and used only to remove duplicate responses and
+            send results. They never appear in any published output.</p>
 
         <div class="form-group">
-            <label for="area-of-work">What is your primary area of work? <span class="required">*</span></label>
-            <select id="area-of-work" name="area-of-work" class="form-control" required>
+            <label for="area-of-work">1. Primary area of work <span class="required">*</span></label>
+            <select id="area-of-work" name="area_of_work" class="form-control" required>
                 <option value="" disabled selected>Select your area of work</option>
-                <option value="Software Architecture">Software Architecture</option>
-                <option value="Software Development">Software Development</option>
-                <option value="SRE/ DevOps/ Infrastructure">SRE/ DevOps/ Infrastructure</option>
-                <option value="Business Analysis">Business Analysis</option>
-                <option value="Product Management">Product Management</option>
+                <option value="BSS">BSS</option>
+                <option value="OSS">OSS</option>
+                <option value="Both BSS and OSS">Both BSS and OSS</option>
+                <option value="Architecture / cross-cutting">Architecture / cross-cutting</option>
                 <option value="Other">Other</option>
             </select>
         </div>
 
         <div class="form-group">
-            <label for="seniority">What is your seniority level? <span class="required">*</span></label>
-            <select id="seniority" name="seniority" class="form-control" required>
-                <option value="" disabled selected>Select your seniority level</option>
-                <option value="Individual Contributor">Individual Contributor</option>
-                <option value="Senior / Staff Engineer">Senior / Staff Engineer</option>
-                <option value="Tech Lead / Architect">Tech Lead / Architect</option>
-                <option value="Engineering Manager / Senior Manager">Engineering Manager / Senior Manager</option>
-                <option value="Director / VP / C-level">Director / VP / C-level</option>
+            <label for="org-type">2. Organisation type <span class="required">*</span></label>
+            <select id="org-type" name="org_type" class="form-control" required>
+                <option value="" disabled selected>Select organisation type</option>
+                <option value="Communications service provider / operator">Communications service provider / operator</option>
+                <option value="BSS/OSS software vendor">BSS/OSS software vendor</option>
+                <option value="Systems integrator">Systems integrator</option>
+                <option value="Independent consultancy">Independent consultancy</option>
+                <option value="Other">Other</option>
             </select>
         </div>
 
         <div class="form-group">
-            <label for="experience">Years in telecom BSS/OSS? <span class="required">*</span></label>
-            <select id="experience" name="experience" class="form-control" required>
+            <label for="seniority">3. Seniority level <span class="required">*</span></label>
+            <select id="seniority" name="seniority" class="form-control" required>
+                <option value="" disabled selected>Select your seniority level</option>
+                <option value="Engineer / Developer">Engineer / Developer</option>
+                <option value="Senior / Lead Engineer">Senior / Lead Engineer</option>
+                <option value="Architect">Architect</option>
+                <option value="Manager">Manager</option>
+                <option value="Director / Executive">Director / Executive</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="experience">4. Years in telecom BSS/OSS <span class="required">*</span></label>
+            <select id="experience" name="years_experience" class="form-control" required>
                 <option value="" disabled selected>Select experience</option>
-                <option value="0-2">0 - 2</option>
-                <option value="3-5">3 - 5</option>
-                <option value="6-10">6 - 10</option>
-                <option value="11-15">11 - 15</option>
+                <option value="Under 2">Under 2</option>
+                <option value="2-5">2 - 5</option>
+                <option value="5-10">5 - 10</option>
+                <option value="10-15">10 - 15</option>
                 <option value="15+">15+</option>
             </select>
         </div>
 
         <div class="form-group">
-            <label for="name">Name <span class="optional">(optional)</span></label>
+            <label for="region">5. Region you have primarily worked in <span class="required">*</span></label>
+            <select id="region" name="region" class="form-control" required>
+                <option value="" disabled selected>Select region</option>
+                <option value="Africa">Africa</option>
+                <option value="Asia-Pacific">Asia-Pacific</option>
+                <option value="Europe">Europe</option>
+                <option value="Middle East">Middle East</option>
+                <option value="North America">North America</option>
+                <option value="Latin America">Latin America</option>
+                <option value="Multiple / global">Multiple / global</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="email">6. Email <span class="required">*</span></label>
+            <input type="email" id="email" name="email" class="form-control" placeholder="you@company.com" required>
+            <p class="form-note">Work email preferred. Held confidentially; used only to remove duplicate responses and to send you the published results. Never published.</p>
+        </div>
+
+        <div class="form-group">
+            <label for="name">7. Name <span class="optional">(optional)</span></label>
             <input type="text" id="name" name="name" class="form-control" placeholder="Your name">
         </div>
 
         <div class="form-group">
-            <label for="organisation">Organizations / Telcos you have worked for <span
-                    class="optional">(optional)</span></label>
-            <input type="text" id="organisation" name="organisation" class="form-control"
-                placeholder="Your organisations">
+            <label for="organisation">8. Organisation(s) you work for or have worked for <span class="optional">(optional)</span></label>
+            <input type="text" id="organisation" name="organisation" class="form-control" placeholder="Your organisation(s)">
+            <p class="form-note">Held confidentially; used to validate and segment responses, never published alongside your answers.</p>
         </div>
 
         <div class="form-group">
-            <label for="email">Email - to receive published results <span class="optional">(optional)</span></label>
-            <input type="email" id="email" name="email" class="form-control" placeholder="you@example.com">
+            <label class="checkbox-label"><input type="checkbox" name="contact_opt_in" value="Yes"> Open to being contacted about related research <span class="optional">(optional)</span></label>
         </div>
     </fieldset>
 
 
-    <!-- Section 2: BSS Deployment -->
+    <!-- Section 2: Deployment reality -->
     <fieldset class="survey-section">
-        <legend>Section 2: BSS Deployment</legend>
+        <legend>Section 2: Deployment reality</legend>
+        <p class="form-note">Question 9 is open and comes first deliberately. Please answer it before reading the options in Question 13.</p>
 
         <div class="form-group">
-            <label for="deployment-duration">Typical duration of a BSS platform deployment at your organisation? <span
-                    class="required">*</span></label>
+            <label for="late-causes">9. Thinking about the BSS transformation projects you have worked on: in your own words, what most often causes them to run late or over budget? <span class="optional">(optional)</span></label>
+            <textarea id="late-causes" name="late_causes_open" rows="4" class="form-control" placeholder="Your answer..."></textarea>
+        </div>
+
+        <div class="form-group">
+            <label for="deployment-duration">10. Typical duration of a BSS platform deployment or transformation at your organisation <span class="required">*</span></label>
             <select id="deployment-duration" name="deployment_duration" class="form-control" required>
                 <option value="" disabled selected>Select duration</option>
-                <option value="Less than 6 months">Less than 6 months</option>
+                <option value="Under 6 months">Under 6 months</option>
                 <option value="6-12 months">6 - 12 months</option>
                 <option value="1-2 years">1 - 2 years</option>
                 <option value="2-3 years">2 - 3 years</option>
-                <option value="3+ years">3+ years</option>
+                <option value="Over 3 years">Over 3 years</option>
+                <option value="Varies too much to give a single answer">Varies too much to give a single answer</option>
             </select>
         </div>
 
         <div class="form-group">
-            <label for="lead-time">What is the average lead time from contract signing to first live subscriber in your
-                recent BSS transformations? <span class="required">*</span></label>
+            <label for="lead-time">11. Average lead time from contract signing to first live subscriber in your recent BSS transformations <span class="required">*</span></label>
             <select id="lead-time" name="lead_time" class="form-control" required>
                 <option value="" disabled selected>Select lead time</option>
-                <option value="Less than 6 months">Less than 6 months</option>
+                <option value="Under 3 months">Under 3 months</option>
+                <option value="3-6 months">3 - 6 months</option>
                 <option value="6-12 months">6 - 12 months</option>
                 <option value="1-2 years">1 - 2 years</option>
-                <option value="2-3 years">2 - 3 years</option>
-                <option value="3+ years">3+ years</option>
-                <option value="Not applicable">Not applicable</option>
+                <option value="Over 2 years">Over 2 years</option>
+                <option value="Unsure">Unsure</option>
             </select>
         </div>
 
         <div class="form-group">
-            <label for="on-time">What percentage of BSS deployments you've been involved in were delivered on time and
-                within budget? <span class="required">*</span></label>
-            <select id="on-time" name="on_time_percentage" class="form-control" required>
-                <option value="" disabled selected>Select percentage</option>
-                <option value="Less than 25%">Less than 25%</option>
-                <option value="25-50%">25 - 50%</option>
-                <option value="50-75%">50 - 75%</option>
-                <option value="More than 75%">More than 75%</option>
+            <label for="on-time">12. Of the BSS deployments you have been involved in, roughly what proportion were delivered both on time and within budget? <span class="required">*</span></label>
+            <select id="on-time" name="on_time_proportion" class="form-control" required>
+                <option value="" disabled selected>Select proportion</option>
+                <option value="0-20%">0 - 20%</option>
+                <option value="21-40%">21 - 40%</option>
+                <option value="41-60%">41 - 60%</option>
+                <option value="61-80%">61 - 80%</option>
+                <option value="81-100%">81 - 100%</option>
+                <option value="Unsure">Unsure</option>
             </select>
         </div>
 
         <div class="form-group">
-            <label>What are the top 3 causes of BSS deployment delays? <span class="required">*</span> <span
-                    class="optional">(select up to 3)</span></label>
+            <label>13. Which of the following have been significant causes of delay in BSS projects you have worked on? <span class="required">*</span> <span class="optional">(select up to 3)</span></label>
             <div class="checkbox-group" data-max="3">
-                <label class="checkbox-label">
-                    <input type="checkbox" name="delay_causes" value="Requirements changes mid-project">
-                    Requirements changes mid-project
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox" name="delay_causes" value="Integration complexity across systems">
-                    Integration complexity across systems
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox" name="delay_causes" value="Vendor customisation limitations">
-                    Vendor customisation limitations
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox" name="delay_causes" value="Unreliable testing / QA cycles">
-                    Unreliable testing / QA cycles
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox" name="delay_causes" value="Resource and skill gaps">
-                    Resource and skill gaps
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox" name="delay_causes" value="Organisational and governance issues">
-                    Organisational and governance issues
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox" name="delay_causes"
-                        value="Unforeseen issues arising from legacy system migration">
-                    Unforeseen issues arising from legacy system migration
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox" name="delay_causes" value="Strict regulatory and compliance requirements">
-                    Strict regulatory and compliance requirements
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox" name="delay_causes" value="Other">
-                    Other
-                </label>
-                <input type="text" class="other-text" name="delay_causes_other" placeholder="Please specify..."
-                    style="display: none;">
+                <label class="checkbox-label"><input type="checkbox" name="delay_causes" value="Requirements changes mid-project"> Requirements changes mid-project</label>
+                <label class="checkbox-label"><input type="checkbox" name="delay_causes" value="Integration complexity across systems"> Integration complexity across systems</label>
+                <label class="checkbox-label"><input type="checkbox" name="delay_causes" value="Vendor customisation limitations"> Vendor customisation limitations</label>
+                <label class="checkbox-label"><input type="checkbox" name="delay_causes" value="Testing / QA reliability"> Testing / QA reliability</label>
+                <label class="checkbox-label"><input type="checkbox" name="delay_causes" value="Resource and skill gaps"> Resource and skill gaps</label>
+                <label class="checkbox-label"><input type="checkbox" name="delay_causes" value="Organisational / governance issues"> Organisational / governance issues</label>
+                <label class="checkbox-label"><input type="checkbox" name="delay_causes" value="Legacy system migration issues"> Legacy system migration issues</label>
+                <label class="checkbox-label"><input type="checkbox" name="delay_causes" value="TMF / standards conformance verification and rework"> TMF / standards conformance verification and rework</label>
+                <label class="checkbox-label"><input type="checkbox" name="delay_causes" value="Regulatory / legal compliance requirements"> Regulatory / legal compliance requirements</label>
+                <label class="checkbox-label"><input type="checkbox" name="delay_causes" value="None of these were significant"> None of these were significant</label>
+                <label class="checkbox-label"><input type="checkbox" name="delay_causes" value="Other"> Other</label>
+                <input type="text" class="other-text form-control" name="delay_causes_other" placeholder="Please specify..." style="display: none;">
             </div>
+        </div>
+
+        <div class="form-group">
+            <label for="conformance-frequency">14. On the projects you have seen run late or over budget, how often were TMF / standards conformance issues a significant contributor? <span class="optional">(optional)</span></label>
+            <select id="conformance-frequency" name="conformance_delay_frequency" class="form-control">
+                <option value="" disabled selected>Select frequency</option>
+                <option value="Never">Never</option>
+                <option value="Rarely">Rarely</option>
+                <option value="Sometimes">Sometimes</option>
+                <option value="Often">Often</option>
+                <option value="Almost always">Almost always</option>
+                <option value="Unsure">Unsure</option>
+            </select>
         </div>
     </fieldset>
 
 
-    <!-- Section 3: Standards and Compliance -->
+    <!-- Section 3: TMF standards: adoption and conformance -->
     <fieldset class="survey-section">
-        <legend>Section 3: Standards and Certification</legend>
+        <legend>Section 3: TMF standards: adoption and conformance</legend>
 
         <div class="form-group">
-            <label for="tmf-adoption">Has your organisation adopted or begun adopting TMF standards (Open APIs, eTOM,
-                SID, ODA)? <span class="required">*</span></label>
-            <select id="tmf-adoption" name="tmf_adoption" class="form-control" required>
-                <option value="" disabled selected>Select adoption status</option>
-                <option value="Yes, in production">Yes, in production</option>
-                <option value="Yes, in progress">Yes, in progress</option>
-                <option value="Evaluating">Evaluating</option>
-                <option value="No">No</option>
-                <option value="Not sure">Not sure</option>
-            </select>
+            <label>15. Which TMF standards has your organisation adopted or begun adopting? <span class="required">*</span> <span class="optional">(select all that apply)</span></label>
+            <div class="checkbox-group">
+                <label class="checkbox-label"><input type="checkbox" name="tmf_adopted" value="TMF Open APIs"> TMF Open APIs</label>
+                <label class="checkbox-label"><input type="checkbox" name="tmf_adopted" value="SID (information / data model)"> SID (information / data model)</label>
+                <label class="checkbox-label"><input type="checkbox" name="tmf_adopted" value="eTOM (process framework)"> eTOM (process framework)</label>
+                <label class="checkbox-label"><input type="checkbox" name="tmf_adopted" value="ODA (Open Digital Architecture components)"> ODA (Open Digital Architecture components)</label>
+                <label class="checkbox-label"><input type="checkbox" name="tmf_adopted" value="None of these"> None of these</label>
+                <label class="checkbox-label"><input type="checkbox" name="tmf_adopted" value="Unsure"> Unsure</label>
+            </div>
         </div>
 
         <div class="form-group">
-            <label for="compliance-stage">At what stage are TMF compliance issues mostly discovered in your projects?
-                <span class="required">*</span></label>
-            <select id="compliance-stage" name="compliance_discovery_stage" class="form-control" required>
+            <label>16. For the standards you work with, how difficult is it to achieve and verify conformance? <span class="required">*</span></label>
+            <table class="clinical-table survey-grid">
+                <thead>
+                    <tr><th>Standard</th><th>Not difficult</th><th>Somewhat difficult</th><th>Very difficult</th><th>Not applicable</th></tr>
+                </thead>
+                <tbody>
+                    <tr><td>TMF Open APIs</td>
+                        <td><input type="radio" name="difficulty_openapi" value="Not difficult"></td>
+                        <td><input type="radio" name="difficulty_openapi" value="Somewhat difficult"></td>
+                        <td><input type="radio" name="difficulty_openapi" value="Very difficult"></td>
+                        <td><input type="radio" name="difficulty_openapi" value="Not applicable"></td></tr>
+                    <tr><td>SID</td>
+                        <td><input type="radio" name="difficulty_sid" value="Not difficult"></td>
+                        <td><input type="radio" name="difficulty_sid" value="Somewhat difficult"></td>
+                        <td><input type="radio" name="difficulty_sid" value="Very difficult"></td>
+                        <td><input type="radio" name="difficulty_sid" value="Not applicable"></td></tr>
+                    <tr><td>eTOM</td>
+                        <td><input type="radio" name="difficulty_etom" value="Not difficult"></td>
+                        <td><input type="radio" name="difficulty_etom" value="Somewhat difficult"></td>
+                        <td><input type="radio" name="difficulty_etom" value="Very difficult"></td>
+                        <td><input type="radio" name="difficulty_etom" value="Not applicable"></td></tr>
+                    <tr><td>ODA components</td>
+                        <td><input type="radio" name="difficulty_oda" value="Not difficult"></td>
+                        <td><input type="radio" name="difficulty_oda" value="Somewhat difficult"></td>
+                        <td><input type="radio" name="difficulty_oda" value="Very difficult"></td>
+                        <td><input type="radio" name="difficulty_oda" value="Not applicable"></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="form-group">
+            <label for="discovery-stage">17. At what stage are TMF standards conformance issues most often discovered in your projects? <span class="required">*</span></label>
+            <select id="discovery-stage" name="conformance_discovery_stage" class="form-control" required>
                 <option value="" disabled selected>Select stage</option>
-                <option value="During development">During development</option>
-                <option value="During integration testing">During integration testing</option>
-                <option value="During UAT">During UAT</option>
-                <option value="During certification / audit">During certification / audit</option>
-                <option value="After go-live">After go-live</option>
-                <option value="We don't formally verify compliance">We don't formally verify compliance</option>
+                <option value="Requirements / design">Requirements / design</option>
+                <option value="Coding / implementation">Coding / implementation</option>
+                <option value="Unit / component testing">Unit / component testing</option>
+                <option value="Integration testing">Integration testing</option>
+                <option value="Pre-production / certification">Pre-production / certification</option>
+                <option value="Production / after go-live">Production / after go-live</option>
+                <option value="We do not systematically track this">We do not systematically track this</option>
             </select>
         </div>
 
         <div class="form-group">
-            <label for="verify-method">How does your team currently verify TMF compliance? <span
-                    class="required">*</span></label>
-            <select id="verify-method" name="compliance_verification_method" class="form-control" required>
-                <option value="" disabled selected>Select method</option>
-                <option value="Manual code review & Internal checklists">Manual code review & Internal checklists
-                </option>
-                <option value="Automated test suites">Automated test suites</option>
-                <option value="Third-party audit">Third-party audit</option>
-                <option value="We verify during integration testing only">We verify during integration testing only
-                </option>
-                <option value="We don't formally verify">We don't formally verify</option>
-                <option value="Other">Other</option>
-            </select>
-            <input type="text" class="other-text form-control" name="compliance_verification_other"
-                placeholder="Please specify..." style="display: none;">
+            <label>18. How does your team currently verify TMF standards conformance? <span class="required">*</span> <span class="optional">(select all that apply)</span></label>
+            <div class="checkbox-group">
+                <label class="checkbox-label"><input type="checkbox" name="verify_method" value="Manual code / design review against the specification"> Manual code / design review against the specification</label>
+                <label class="checkbox-label"><input type="checkbox" name="verify_method" value="TMF Conformance Test Kit (CTK) / official test suites"> TMF Conformance Test Kit (CTK) / official test suites</label>
+                <label class="checkbox-label"><input type="checkbox" name="verify_method" value="Third-party consultants or certification bodies"> Third-party consultants or certification bodies</label>
+                <label class="checkbox-label"><input type="checkbox" name="verify_method" value="Internally built scripts / tooling / linters"> Internally built scripts / tooling / linters</label>
+                <label class="checkbox-label"><input type="checkbox" name="verify_method" value="Automated checks in the CI/CD pipeline"> Automated checks in the CI/CD pipeline</label>
+                <label class="checkbox-label"><input type="checkbox" name="verify_method" value="We do not formally verify conformance"> We do not formally verify conformance</label>
+                <label class="checkbox-label"><input type="checkbox" name="verify_method" value="Unsure"> Unsure</label>
+            </div>
         </div>
 
         <div class="form-group">
-            <label>What are the most time-consuming aspects of BSS component development? <span
-                    class="required">*</span> <span class="optional">(select up to 3)</span></label>
+            <label for="conformance-confidence">19. How confident are you that the components your team ships are fully TMF-conformant? <span class="optional">(optional)</span></label>
+            <select id="conformance-confidence" name="conformance_confidence" class="form-control">
+                <option value="" disabled selected>Select confidence</option>
+                <option value="Not at all confident">Not at all confident</option>
+                <option value="Slightly confident">Slightly confident</option>
+                <option value="Moderately confident">Moderately confident</option>
+                <option value="Very confident">Very confident</option>
+                <option value="Completely confident">Completely confident</option>
+                <option value="Unsure">Unsure</option>
+            </select>
+        </div>
+    </fieldset>
+
+
+    <!-- Section 4: Cost of conformance -->
+    <fieldset class="survey-section">
+        <legend>Section 4: Cost of conformance</legend>
+
+        <div class="form-group">
+            <label for="conformance-effort">20. Roughly what share of total engineering effort on a typical BSS project goes to standards conformance work (verification, fixing conformance issues, and certification preparation)? <span class="required">*</span></label>
+            <select id="conformance-effort" name="conformance_effort_share" class="form-control" required>
+                <option value="" disabled selected>Select share</option>
+                <option value="Under 5%">Under 5%</option>
+                <option value="5-15%">5 - 15%</option>
+                <option value="15-30%">15 - 30%</option>
+                <option value="Over 30%">Over 30%</option>
+                <option value="Unsure">Unsure</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label for="cost-by-stage">21. In your experience, does the cost of fixing a standards conformance issue depend on when in the lifecycle it is found? <span class="required">*</span></label>
+            <select id="cost-by-stage" name="cost_by_stage" class="form-control" required>
+                <option value="" disabled selected>Select answer</option>
+                <option value="Roughly the same regardless of stage">Roughly the same regardless of stage</option>
+                <option value="Somewhat more expensive the later it is found">Somewhat more expensive the later it is found</option>
+                <option value="Much more expensive the later it is found">Much more expensive the later it is found</option>
+                <option value="Unsure">Unsure</option>
+            </select>
+        </div>
+
+        <div class="form-group">
+            <label>22. Which aspects of BSS component development are most time-consuming for your team? <span class="required">*</span> <span class="optional">(select up to 3)</span></label>
             <div class="checkbox-group" data-max="3">
-                <label class="checkbox-label">
-                    <input type="checkbox" name="time_consuming" value="Requirements analysis">
-                    Requirements analysis
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox" name="time_consuming" value="Architecture design">
-                    Architecture/ design
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox" name="time_consuming" value="Coding and implementation">
-                    Coding/ implementation
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox" name="time_consuming" value="Standards compliance verification">
-                    Standards compliance verification
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox" name="time_consuming" value="Integration testing">
-                    Integration testing
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox" name="time_consuming" value="Documentation">
-                    Documentation
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox" name="time_consuming" value="Certification process">
-                    Certification process
-                </label>
-                <label class="checkbox-label">
-                    <input type="checkbox" name="time_consuming" value="Other">
-                    Other
-                </label>
-                <input type="text" class="other-text" name="time_consuming_other" placeholder="Please specify..."
-                    style="display: none;">
+                <label class="checkbox-label"><input type="checkbox" name="time_consuming" value="Requirements analysis"> Requirements analysis</label>
+                <label class="checkbox-label"><input type="checkbox" name="time_consuming" value="Architecture / design"> Architecture / design</label>
+                <label class="checkbox-label"><input type="checkbox" name="time_consuming" value="Coding / implementation"> Coding / implementation</label>
+                <label class="checkbox-label"><input type="checkbox" name="time_consuming" value="Standards conformance verification"> Standards conformance verification</label>
+                <label class="checkbox-label"><input type="checkbox" name="time_consuming" value="Integration testing"> Integration testing</label>
+                <label class="checkbox-label"><input type="checkbox" name="time_consuming" value="Documentation"> Documentation</label>
+                <label class="checkbox-label"><input type="checkbox" name="time_consuming" value="Certification process"> Certification process</label>
+                <label class="checkbox-label"><input type="checkbox" name="time_consuming" value="Other"> Other</label>
+                <input type="text" class="other-text form-control" name="time_consuming_other" placeholder="Please specify..." style="display: none;">
             </div>
         </div>
     </fieldset>
 
 
-    <!-- Section 4: Open-Ended -->
+    <!-- Section 5: Open -->
     <fieldset class="survey-section">
-        <legend>Section 4: Open-Ended</legend>
+        <legend>Section 5: Open</legend>
 
         <div class="form-group">
-            <label for="biggest-cause">In post-mortem reviews, what is typically identified as the single biggest cause
-                of project delays? <span class="optional">(optional)</span></label>
-            <textarea id="biggest-cause" name="biggest_delay_cause" rows="4" class="form-control"
-                placeholder="Your answer..."></textarea>
+            <label for="one-change">23. If you could change one thing about how BSS components are built and delivered today, what would it be? <span class="optional">(optional)</span></label>
+            <textarea id="one-change" name="one_change" rows="4" class="form-control" placeholder="Your answer..."></textarea>
         </div>
 
         <div class="form-group">
-            <label for="one-change">If you could change one thing about how BSS components are built and delivered
-                today, what would it be? <span class="optional">(optional)</span></label>
-            <textarea id="one-change" name="one_change" rows="4" class="form-control"
-                placeholder="Your answer..."></textarea>
+            <label for="anything-else">24. Anything else about BSS engineering practices or standards conformance you would like to add? <span class="optional">(optional)</span></label>
+            <textarea id="anything-else" name="anything_else" rows="4" class="form-control" placeholder="Your answer..."></textarea>
         </div>
     </fieldset>
 
@@ -287,27 +354,27 @@ status=published
         <span class="org-link org-link--internal">Submit Survey</span>
     </button>
 
-    <p class="form-note">Your responses are confidential. We will not share individual responses.</p>
+    <p class="form-note">This survey is confidential, not anonymous. Your individual responses are
+        never published or shared in a form that identifies you or your organisation; only aggregated
+        findings and a de-identified dataset are released, with no contact details. Contact details are
+        used only to remove duplicates and send results.</p>
 
 </form>
 
 <div id="surveySuccess" class="survey-message survey-success" style="display: none;">
     <h3>Thank you for participating.</h3>
-    <p>Your responses have been recorded. We will publish aggregated findings as a research report later this year.
-    </p>
+    <p>Your responses have been recorded. We will publish aggregated findings as an industry brief, and
+        a de-identified dataset, later this year.</p>
 </div>
 
 <div id="surveyError" class="survey-message survey-error" style="display: none;">
     <h3>Something went wrong.</h3>
-    <p>Please try again or contact <a href="mailto:ping@asymm.systems"
-            class="org-link org-link--inline org-link--external">ping@asymm.systems</a> directly.
-    </p>
+    <p>Please try again or contact <a href="mailto:research@asymm.systems" class="org-link org-link--inline org-link--external">research@asymm.systems</a> directly.</p>
 </div>
 
 <hr>
 
-<p>If you have questions about this research, contact <a href="mailto:ping@asymm.systems"
-        class="org-link org-link--inline org-link--internal">research@asymm.systems</a>.</p>
+<p>If you have questions about this research, contact <a href="mailto:research@asymm.systems" class="org-link org-link--inline org-link--internal">research@asymm.systems</a>.</p>
 
 
 <script src="/js/validation.js"></script>

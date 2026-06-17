@@ -1,0 +1,9 @@
+# https://asymm.systems/robots.txt
+#
+# The BSS research survey is distributed by direct link only. Keep it out of
+# search indexes and crawler corpora (this covers compliant search-engine and
+# AI crawlers, which all read the User-agent: * group).
+User-agent: *
+Disallow: /research/bss-survey-2026.html
+
+Sitemap: https://asymm.systems/sitemap.xml
