@@ -15,7 +15,7 @@ Conforming a component to TM Forum standards is still a manual, after-the-fact e
 Dial turns the ODA specifications (TMF Open APIs, the SID, eTOM) into developer-facing constructs and verifies them at build time. If it compiles, it complies: a component that does not conform does not build, and the gap shows up in your build, not in an integration report three sprints later.
 
 ### Where we're headed
-Dial is pre-launch. The CI/CD ODA Validator and the public launch are targeted for late 2026. We are not claiming a finished product, only a working thesis, and we are looking for design partners to test it against real ODA workloads.
+Dial is pre-launch. The public launch is targeted for late 2026. We are looking for design partners to test it against real ODA workloads.
 
 We're accepting design-partner inquiries.
 
