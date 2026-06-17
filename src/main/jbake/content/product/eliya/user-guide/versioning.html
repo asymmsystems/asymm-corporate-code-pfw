@@ -15,7 +15,7 @@ status=published
         human-readable identifiers carry.</p>
 </header>
 
-<section style="margin-bottom: 5rem">
+<section id="what-each-field-means" style="margin-bottom: 5rem">
     <h2 class="section-title">What each field means</h2>
 
     <p>An Eliya 25.0.4 first GA reports:</p>
@@ -80,53 +80,108 @@ status=published
         for humans.</p>
 </section>
 
-<section style="margin-bottom: 5rem">
-    <h2 class="section-title">Four pin mechanisms</h2>
+<section id="pin-patterns" style="margin-bottom: 5rem">
+    <h2 class="section-title">Four pin patterns</h2>
 
-    <p>Pins divide into two layers. <strong>Machine-grade pins</strong> are cryptographic,
-        immutable, byte-exact; consumed by build tools, signature verifiers, container
-        runtimes. <strong>Human-grade pins</strong> are recognisable, rememberable, typeable;
-        consumed by operators, docs, support tickets. The two layers are not
-        interchangeable.</p>
+    <p>Pins divide into two layers. Machine-grade pins are cryptographic, immutable, byte-exact;
+        consumed by build tools, signature verifiers, container runtimes. Human-grade pins are
+        recognisable, rememberable, typeable; consumed by operators, docs, support tickets.
+        The two layers are not interchangeable.</p>
+
+    <p>Four patterns cover how operators pin Eliya, two mutable (the tag moves under you) and
+        two immutable (the bits never change once pinned). Pick by how much you want the
+        deployment to follow the published cadence versus stay byte-frozen until you advance
+        it yourself.</p>
+
+    <h3 id="pattern-1-lts" style="margin-top: 2rem">Pattern 1 &mdash; LTS-track moving tag <span style="font-weight: 400; color: var(--text-muted)">(mutable)</span></h3>
+    <p><code>:25-lts</code> advances on every quarterly CPU and every out-of-cycle CVE respin.
+        With <code>imagePullPolicy: Always</code> in Kubernetes (or equivalent), each pod restart
+        picks up the latest published build. Best for teams that trust the published cadence
+        and want automatic uptake of every build without operator action.</p>
+    <div class="inline-terminal inline-terminal--static">
+        <code>docker pull ghcr.io/asymmsystems/eliya-jdk:25-lts</code>
+    </div>
+
+    <h3 id="pattern-2-cpu" style="margin-top: 2rem">Pattern 2 &mdash; CPU-track moving tag <span style="font-weight: 400; color: var(--text-muted)">(mutable within a CPU window)</span></h3>
+    <p><code>:25.0.4</code> stays on the 25.0.4 quarterly window; it advances only when a
+        respin (out-of-cycle CVE rebuild) lands within that window, never to the next CPU.
+        You explicitly bump the tag string at each quarterly CPU (<code>:25.0.4</code> &rarr;
+        <code>:25.0.5</code>). Best for environments that require change-management sign-off
+        per quarter but want respins inside the quarter picked up automatically.</p>
+    <div class="inline-terminal inline-terminal--static">
+        <code>docker pull ghcr.io/asymmsystems/eliya-jdk:25.0.4</code>
+    </div>
+
+    <h3 id="pattern-3-per-build" style="margin-top: 2rem">Pattern 3 &mdash; Per-build immutable handle <span style="font-weight: 400; color: var(--text-muted)">(immutable, 25.0.4 onwards)</span></h3>
+    <p>From 25.0.4, every Eliya build carries a revision ordinal <code>r&lt;N&gt;</code>: the
+        first build of 25.0.4 is <code>r1</code>, the first respin is <code>r2</code>, and so
+        on. The Docker tag <code>:25.0.4-r1</code> and the archive filename
+        <code>eliya-jdk-25.0.4+7-r1-linux-x64.tar.gz</code> (where <code>+7</code> is upstream
+        OpenJDK's GA promoted-build coordinate) point at one specific build and never advance.
+        Best for change-management sign-off per build, reproducible CI pipelines, and any
+        environment where "the exact same build" matters but a SHA digest is too unwieldy
+        to type or remember.</p>
+    <div class="inline-terminal inline-terminal--static">
+        <code>docker pull ghcr.io/asymmsystems/eliya-jdk:25.0.4-r1</code>
+    </div>
+    <div class="inline-terminal inline-terminal--static">
+        <code>curl -LO https://github.com/asymmsystems/eliya-jdk/releases/download/eliya-jdk-25.0.4+7-r1/eliya-jdk-25.0.4+7-r1-linux-x64.tar.gz</code>
+    </div>
+
+    <h3 id="pattern-4-crypto" style="margin-top: 2rem">Pattern 4 &mdash; Cryptographic content pin <span style="font-weight: 400; color: var(--text-muted)">(immutable, byte-exact)</span></h3>
+    <p>The only pin that cryptographically guarantees byte-identical bits. For containers,
+        the OCI image digest <code>@sha256:&lt;digest&gt;</code>; for archives, the SHA-256
+        from the signed <code>SHA256SUMS.txt.asc</code> on each GitHub Release. Required by
+        compliance buyers and supply-chain auditors; recommended for any regulated environment.
+        See <a href="/product/eliya/user-guide/verify-download.html" class="org-link org-link--inline org-link--internal">verify your download</a>
+        for the SHA-256 + GPG ceremony.</p>
+    <div class="inline-terminal inline-terminal--static">
+        <code>docker pull ghcr.io/asymmsystems/eliya-jdk@sha256:&lt;digest&gt;</code>
+    </div>
+    <div class="inline-terminal inline-terminal--static">
+        <code>sha256sum -c SHA256SUMS.txt && gpg --verify SHA256SUMS.txt.asc</code>
+    </div>
+
+    <h3 style="margin-top: 2.5rem">Summary table</h3>
+    <p>The four patterns at a glance, with the operational scenario each fits:</p>
 
     <table class="clinical-table" style="max-width: 900px">
         <thead>
-            <tr><th>Scenario</th><th>Pin</th><th>Audience</th><th>Example</th></tr>
+            <tr><th>Pattern</th><th>Mutability</th><th>Scenario</th><th>Example</th></tr>
         </thead>
         <tbody>
             <tr>
-                <td>Compliance buyer requires byte-identical pin</td>
-                <td>SHA-256 from signed <code>SHA256SUMS.txt.asc</code></td>
-                <td>machines</td>
-                <td>record SHA on download, verify on each install</td>
+                <td><a href="#pattern-1-lts">Pattern 1</a> &mdash; LTS-track moving tag</td>
+                <td>mutable (every CPU + respin)</td>
+                <td>Automatic uptake of every published build</td>
+                <td><code>:25-lts</code></td>
             </tr>
             <tr>
-                <td>Container deployment requires immutable pin</td>
-                <td>OCI image digest <code>@sha256:&lt;digest&gt;</code></td>
-                <td>machines</td>
-                <td><code>ghcr.io/asymmsystems/eliya-jdk@sha256:&lt;digest&gt;</code></td>
+                <td><a href="#pattern-2-cpu">Pattern 2</a> &mdash; CPU-track moving tag</td>
+                <td>mutable within CPU window (respins only)</td>
+                <td>Per-quarter change-management sign-off, respins automatic</td>
+                <td><code>:25.0.4</code></td>
             </tr>
             <tr>
-                <td>CI pipeline requires per-build human-readable handle</td>
-                <td><code>r&lt;N&gt;</code>-suffixed filename or Docker tag</td>
-                <td>humans</td>
-                <td><code>eliya-jdk-25.0.4+7-r1-linux-x64.tar.gz</code>; Docker tag
-                    <code>:25.0.4-r1</code> (drops <code>+7</code> &mdash; OCI tag charset
-                    excludes <code>+</code>)</td>
+                <td><a href="#pattern-3-per-build">Pattern 3</a> &mdash; Per-build immutable handle</td>
+                <td>immutable</td>
+                <td>Per-build sign-off; reproducible CI; recognisable handle</td>
+                <td><code>:25.0.4-r1</code></td>
             </tr>
             <tr>
-                <td>CPU-track pin (accept respins within the CPU window)</td>
-                <td>Bare CPU identifier</td>
-                <td>humans</td>
-                <td><code>25.0.4</code>; Docker tag <code>:25.0.4</code></td>
+                <td><a href="#pattern-4-crypto">Pattern 4</a> &mdash; Cryptographic content pin</td>
+                <td>immutable, byte-exact</td>
+                <td>Compliance buyers, supply-chain auditors, regulated environments</td>
+                <td><code>@sha256:&lt;digest&gt;</code></td>
             </tr>
         </tbody>
     </table>
 
-    <p style="margin-top: 1rem; font-size: 0.95rem">A fifth pin not in the table: the
-        <strong>LTS-track moving tag</strong> (<code>:25-lts</code>), which advances on each
-        quarterly CPU plus any respins. Best for teams that want automatic uptake of every
-        published build.</p>
+    <p style="margin-top: 2rem; font-size: 0.95rem">A common operational practice layered on
+        top: stay on a specific version indefinitely (e.g., remain on <code>:25.0.4-r1</code>
+        beyond the next quarterly CPU), applying only respins for actively-exploited CVEs.
+        That's Pattern 3 or Pattern 4 with deferred quarterly bumps, not a separate pin
+        mechanism.</p>
 
     <h3 style="margin-top: 2.5rem">Which pin matches which audit framework?</h3>
     <p>Most compliance frameworks (PCI DSS, HIPAA, SOX, FedRAMP, EU CRA) call for signed
