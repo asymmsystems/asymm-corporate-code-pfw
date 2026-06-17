@@ -37,7 +37,7 @@ status=published
             <tr>
                 <td><code>$VNUM</code></td>
                 <td><code>25.0.4</code></td>
-                <td>JEP 322 dotted version &mdash; the upstream OpenJDK quarterly CPU identifier.</td>
+                <td>JEP 322 dotted version: the upstream OpenJDK quarterly CPU identifier.</td>
             </tr>
             <tr>
                 <td><code>$BUILD</code></td>
@@ -83,17 +83,18 @@ status=published
 <section id="pin-patterns" style="margin-bottom: 5rem">
     <h2 class="section-title">Four pin patterns</h2>
 
-    <p>Pins divide into two layers. Machine-grade pins are cryptographic, immutable, byte-exact;
-        consumed by build tools, signature verifiers, container runtimes. Human-grade pins are
-        recognisable, rememberable, typeable; consumed by operators, docs, support tickets.
-        The two layers are not interchangeable.</p>
+    <p>Pins divide into two layers. Machine-grade pins are cryptographic and byte-exact, and
+        build tools, signature verifiers, and container runtimes consume them. Human-grade pins
+        are the ones a person can read off a banner and type into a Dockerfile or a support
+        ticket. The two are not interchangeable, and each audience reaches for the one it can
+        actually use.</p>
 
     <p>Four patterns cover how operators pin Eliya, two mutable (the tag moves under you) and
         two immutable (the bits never change once pinned). Pick by how much you want the
         deployment to follow the published cadence versus stay byte-frozen until you advance
         it yourself.</p>
 
-    <h3 id="pattern-1-lts" style="margin-top: 2rem">Pattern 1 &mdash; LTS-track moving tag <span style="font-weight: 400; color: var(--text-muted)">(mutable)</span></h3>
+    <h3 id="pattern-1-lts" style="margin-top: 2rem">Pattern 1: LTS-track moving tag <span style="font-weight: 400; color: var(--text-muted)">(mutable)</span></h3>
     <p><code>:25-lts</code> advances on every quarterly CPU and every out-of-cycle CVE respin.
         With <code>imagePullPolicy: Always</code> in Kubernetes (or equivalent), each pod restart
         picks up the latest published build. Best for teams that trust the published cadence
@@ -102,7 +103,7 @@ status=published
         <code>docker pull ghcr.io/asymmsystems/eliya-jdk:25-lts</code>
     </div>
 
-    <h3 id="pattern-2-cpu" style="margin-top: 2rem">Pattern 2 &mdash; CPU-track moving tag <span style="font-weight: 400; color: var(--text-muted)">(mutable within a CPU window)</span></h3>
+    <h3 id="pattern-2-cpu" style="margin-top: 2rem">Pattern 2: CPU-track moving tag <span style="font-weight: 400; color: var(--text-muted)">(mutable within a CPU window)</span></h3>
     <p><code>:25.0.4</code> stays on the 25.0.4 quarterly window; it advances only when a
         respin (out-of-cycle CVE rebuild) lands within that window, never to the next CPU.
         You explicitly bump the tag string at each quarterly CPU (<code>:25.0.4</code> &rarr;
@@ -112,7 +113,7 @@ status=published
         <code>docker pull ghcr.io/asymmsystems/eliya-jdk:25.0.4</code>
     </div>
 
-    <h3 id="pattern-3-per-build" style="margin-top: 2rem">Pattern 3 &mdash; Per-build immutable handle <span style="font-weight: 400; color: var(--text-muted)">(immutable, 25.0.4 onwards)</span></h3>
+    <h3 id="pattern-3-per-build" style="margin-top: 2rem">Pattern 3: Per-build immutable handle <span style="font-weight: 400; color: var(--text-muted)">(immutable, 25.0.4 onwards)</span></h3>
     <p>From 25.0.4, every Eliya build carries a revision ordinal <code>r&lt;N&gt;</code>: the
         first build of 25.0.4 is <code>r1</code>, the first respin is <code>r2</code>, and so
         on. The Docker tag <code>:25.0.4-r1</code> and the archive filename
@@ -128,7 +129,7 @@ status=published
         <code>curl -LO https://github.com/asymmsystems/eliya-jdk/releases/download/eliya-jdk-25.0.4+7-r1/eliya-jdk-25.0.4+7-r1-linux-x64.tar.gz</code>
     </div>
 
-    <h3 id="pattern-4-crypto" style="margin-top: 2rem">Pattern 4 &mdash; Cryptographic content pin <span style="font-weight: 400; color: var(--text-muted)">(immutable, byte-exact)</span></h3>
+    <h3 id="pattern-4-crypto" style="margin-top: 2rem">Pattern 4: Cryptographic content pin <span style="font-weight: 400; color: var(--text-muted)">(immutable, byte-exact)</span></h3>
     <p>The only pin that cryptographically guarantees byte-identical bits. For containers,
         the OCI image digest <code>@sha256:&lt;digest&gt;</code>; for archives, the SHA-256
         from the signed <code>SHA256SUMS.txt.asc</code> on each GitHub Release. Required by
@@ -151,25 +152,25 @@ status=published
         </thead>
         <tbody>
             <tr>
-                <td><a href="#pattern-1-lts">Pattern 1</a> &mdash; LTS-track moving tag</td>
+                <td><a href="#pattern-1-lts">Pattern 1</a>: LTS-track moving tag</td>
                 <td>mutable (every CPU + respin)</td>
                 <td>Automatic uptake of every published build</td>
                 <td><code>:25-lts</code></td>
             </tr>
             <tr>
-                <td><a href="#pattern-2-cpu">Pattern 2</a> &mdash; CPU-track moving tag</td>
+                <td><a href="#pattern-2-cpu">Pattern 2</a>: CPU-track moving tag</td>
                 <td>mutable within CPU window (respins only)</td>
                 <td>Per-quarter change-management sign-off, respins automatic</td>
                 <td><code>:25.0.4</code></td>
             </tr>
             <tr>
-                <td><a href="#pattern-3-per-build">Pattern 3</a> &mdash; Per-build immutable handle</td>
+                <td><a href="#pattern-3-per-build">Pattern 3</a>: Per-build immutable handle</td>
                 <td>immutable</td>
                 <td>Per-build sign-off; reproducible CI; recognisable handle</td>
                 <td><code>:25.0.4-r1</code></td>
             </tr>
             <tr>
-                <td><a href="#pattern-4-crypto">Pattern 4</a> &mdash; Cryptographic content pin</td>
+                <td><a href="#pattern-4-crypto">Pattern 4</a>: Cryptographic content pin</td>
                 <td>immutable, byte-exact</td>
                 <td>Compliance buyers, supply-chain auditors, regulated environments</td>
                 <td><code>@sha256:&lt;digest&gt;</code></td>
@@ -200,9 +201,9 @@ status=published
 
     <h3 style="margin-top: 1.5rem">In the version string (banner / <code>JAVA_RUNTIME_VERSION</code>)</h3>
     <ul>
-        <li><code>$VNUM</code> (<code>25.0.4</code>) &mdash; JDK version</li>
-        <li>Upstream <code>$BUILD</code> (<code>+7</code>) &mdash; source-base coordinate</li>
-        <li>Eliya revision (<code>r1</code>) &mdash; per-build identity in <code>$OPT</code></li>
+        <li><code>$VNUM</code> (<code>25.0.4</code>): JDK version</li>
+        <li>Upstream <code>$BUILD</code> (<code>+7</code>): source-base coordinate</li>
+        <li>Eliya revision (<code>r1</code>): per-build identity in <code>$OPT</code></li>
     </ul>
 
     <h3 style="margin-top: 1.5rem">In dedicated brand-identity fields</h3>
@@ -215,11 +216,10 @@ status=published
 
     <h3 style="margin-top: 1.5rem">In machine-grade pin channels (not in the version string)</h3>
     <ul>
-        <li>Artefact SHA-256 &mdash; signed <code>SHA256SUMS.txt.asc</code>
+        <li>Artefact SHA-256: signed <code>SHA256SUMS.txt.asc</code>
             on each <a href="https://github.com/asymmsystems/eliya-jdk/releases" class="org-link org-link--inline org-link--external">GitHub Release</a></li>
-        <li>Docker image digest &mdash; OCI manifest, addressable via <code>@sha256:</code></li>
-        <li>Mirror commit SHA, upstream tag, upstream promoted-build number &mdash;
-            <code>release</code> file (<code>SOURCE</code>, <code>ELIYA_MIRROR_COMMIT</code>,
+        <li>Docker image digest: OCI manifest, addressable via <code>@sha256:</code></li>
+        <li>Mirror commit SHA, upstream tag, upstream promoted-build number: <code>release</code> file (<code>SOURCE</code>, <code>ELIYA_MIRROR_COMMIT</code>,
             <code>ELIYA_UPSTREAM_TAG</code>, <code>ELIYA_UPSTREAM_BUILD</code>)</li>
     </ul>
 </section>
@@ -276,7 +276,7 @@ status=published
     <p>Eliya 25.0.3 (published 2026-06-10) shipped with
         <code>java.runtime.version</code> = <code>25.0.3+24-Eliya</code>. The
         <code>+24</code> is the count of commits on the Eliya source mirror since the
-        upstream <code>jdk-25.0.3-ga</code> tag &mdash; a per-commit quantity, not a
+        upstream <code>jdk-25.0.3-ga</code> tag, a per-commit quantity, not a
         per-promoted-build counter. This is a JEP 322 grammar-valid string but a non-canonical
         derivation: a reader of the spec would expect <code>+24</code> to indicate 24
         promoted builds, when it actually indicates 24 commits past upstream GA.</p>
@@ -290,8 +290,8 @@ status=published
 
 <section class="aside-box">
     <h3>The cryptographic pin is the only authoritative pin</h3>
-    <p>Anything in the version string is a <em>human-readable identity readout</em> &mdash; useful
-        for recognition, navigation, audit annotation. The cryptographic chain (SHA-256 of the
+    <p>Anything in the version string is a <em>human-readable identity readout</em>, useful
+        for recognition, navigation, and audit annotation. The cryptographic chain (SHA-256 of the
         archive byte-matched against the signed <code>SHA256SUMS.txt.asc</code>, plus the GPG
         signature verified against the cross-channel-confirmed key fingerprint) is the only
         authoritative authenticity claim Eliya makes. No string in <code>java -version</code>
