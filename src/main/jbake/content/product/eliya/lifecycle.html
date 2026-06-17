@@ -10,7 +10,7 @@ status=published
     <h1>Lifecycle &amp; support</h1>
     <p style="max-width: 60ch">Eliya aligns with the upstream OpenJDK release and security
         cadence. LTS versions receive quarterly Critical Patch Updates; from Eliya 25.0.4 onward,
-        Eliya targets publication <strong>within ~2-3 calendar days</strong> of each upstream CPU.
+        Eliya targets publication within two weeks of each upstream CPU.
         The first signed GA (25.0.3, published 2026-06-10) was a special case during signing-
         infrastructure bring-up; subsequent quarterlies follow the tight wall-clock window.</p>
 </header>
@@ -18,14 +18,36 @@ status=published
 <section style="margin-bottom: 5rem">
     <h2 class="section-title">Supported versions</h2>
 
-    <div class="eliya-terminal-panel">
-<pre>
-  version       upstream          first GA             lts-support-through    eol-notification
-  ────────────────────────────────────────────────────────────────────────────────────────────
-  eliya-25      openjdk-25u       2026-06-10           2029-09   <span class="term-ok">✓ active</span>     12 months
-  eliya-29      openjdk-29u       2027-09 (planned)    aligned   <span class="term-dim">· planned</span>    -
-</pre>
-    </div>
+    <table class="clinical-table">
+        <thead>
+            <tr>
+                <th>Version</th>
+                <th>Upstream</th>
+                <th>First GA</th>
+                <th>LTS support through</th>
+                <th>Status</th>
+                <th>EOL notice</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code>eliya-25</code></td>
+                <td><code>openjdk-25u</code></td>
+                <td>2026-06-10</td>
+                <td>2029-09</td>
+                <td>Active</td>
+                <td>12 months</td>
+            </tr>
+            <tr>
+                <td><code>eliya-29</code></td>
+                <td><code>openjdk-29u</code></td>
+                <td>2027-09 (planned)</td>
+                <td>aligned</td>
+                <td>Planned</td>
+                <td>-</td>
+            </tr>
+        </tbody>
+    </table>
 
     <p style="margin-top: 2rem; font-size: 0.95rem">
         Eliya publishes the latest LTS. JDK&nbsp;21 is not a published target; anyone needing
@@ -43,7 +65,7 @@ status=published
     <p style="margin-top: 1rem; font-size: 0.95rem">
         Eliya tracks upstream OpenJDK&nbsp;25 LTS through Sept&nbsp;2029. Extended LTS beyond that
         is a commercial-support consideration; for 8+ year windows on JDK&nbsp;25, third-party
-        extended-LTS providers (Azul, BellSoft) are available today.
+        extended-LTS providers (Azul, BellSoft)<button type="button" class="cite-ref" aria-label="Citation"><span class="cite-icon">i</span><span class="cite-tooltip"><a href="https://endoflife.date/azul-zulu" class="cite-link">Azul Zulu</a> lists JDK&nbsp;25 support to 2033 (extended to 2035); <a href="https://endoflife.date/bellsoft-liberica" class="cite-link">BellSoft Liberica</a> to 2034.</span></button> are available today.
     </p>
 </section>
 
@@ -51,23 +73,31 @@ status=published
     <h2 class="section-title">Quarterly CPU calendar</h2>
     <p style="margin-bottom: 1.5rem">OpenJDK publishes Critical Patch Updates on the third
         Tuesday of January, April, July, and October. From Eliya 25.0.4 onward, Eliya targets
-        publication <strong>within ~2-3 calendar days</strong> of each upstream release.</p>
+        publication within two weeks of each upstream release.</p>
 
-    <div class="eliya-terminal-panel">
-<pre>
-  quarter     upstream cpu        eliya target          release      status
-  ────────────────────────────────────────────────────────────────────────────
-  Q2 2026     2026-04-21          2026-06-10 *          25.0.3       <span class="term-ok">✓ shipped</span>
-  Q3 2026     2026-07-21          ≤ 2026-07-24          25.0.4       <span class="term-pending">· scheduled</span>
-  Q4 2026     2026-10-20          ≤ 2026-10-23          25.0.5       <span class="term-dim">· scheduled</span>
-  Q1 2027     2027-01-19          ≤ 2027-01-22          25.0.6       <span class="term-dim">· scheduled</span>
-  Q2 2027     2027-04-20          ≤ 2027-04-23          25.0.7       <span class="term-dim">· scheduled</span>
-  Q3 2027     2027-07-20          ≤ 2027-07-23          25.0.8       <span class="term-dim">· scheduled</span>
-
-  <span class="term-dim"># * 25.0.3 was the first GA. 25.0.4 onward target ~2-3 calendar days.</span>
-  <span class="term-dim"># upstream CPU window: 3rd Tuesday of Jan/Apr/Jul/Oct</span>
-</pre>
-    </div>
+    <table class="clinical-table">
+        <thead>
+            <tr>
+                <th>Quarter</th>
+                <th>Upstream CPU</th>
+                <th>Eliya target</th>
+                <th>Release</th>
+                <th>Status</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>Q2 2026</td><td>2026-04-21</td><td>2026-06-10 *</td><td>25.0.3</td><td>Shipped</td></tr>
+            <tr><td>Q3 2026</td><td>2026-07-21</td><td>&le;&nbsp;2026-08-04</td><td>25.0.4</td><td>Scheduled</td></tr>
+            <tr><td>Q4 2026</td><td>2026-10-20</td><td>&le;&nbsp;2026-11-03</td><td>25.0.5</td><td>Scheduled</td></tr>
+            <tr><td>Q1 2027</td><td>2027-01-19</td><td>&le;&nbsp;2027-02-02</td><td>25.0.6</td><td>Scheduled</td></tr>
+            <tr><td>Q2 2027</td><td>2027-04-20</td><td>&le;&nbsp;2027-05-04</td><td>25.0.7</td><td>Scheduled</td></tr>
+            <tr><td>Q3 2027</td><td>2027-07-20</td><td>&le;&nbsp;2027-08-03</td><td>25.0.8</td><td>Scheduled</td></tr>
+        </tbody>
+    </table>
+    <p style="margin-top: 1rem; font-size: 0.9rem">
+        * 25.0.3 was the first GA; 25.0.4 onward targets within two weeks. Upstream CPU window:
+        third Tuesday of January, April, July, and October.
+    </p>
 
     <p style="margin-top: 1.5rem; font-size: 0.95rem">
         Patch numbers follow OpenJDK's <a href="https://openjdk.org/jeps/322" class="org-link org-link--inline org-link--external">JEP&nbsp;322</a>
@@ -109,7 +139,7 @@ status=published
     <h2 class="section-title">Version pinning recommendations</h2>
     <p>Three patterns cover how operators typically pin Eliya:</p>
 
-    <h3 style="margin-top: 1.5rem">Pattern 1: Moving tag (<code>25-lts</code>, <code>25-lts-slim</code>)</h3>
+    <h3 style="margin-top: 1.5rem">Pattern 1: Moving tag (<code>25-lts</code>)</h3>
     <p>Pull policy determines update timing. With <code>imagePullPolicy: Always</code> in
         Kubernetes (or equivalent), each pod restart picks up the latest CPU. Best for teams that
         trust quarterly CPUs and want automatic adoption.</p>
@@ -179,7 +209,7 @@ status=published
     </ul>
     <p style="margin-top: 1rem">For organisations requiring extended support beyond Eliya's Phase 1
         commitment, third-party LTS providers (Azul, BellSoft) offer 8+ year LTS windows for
-        JDK&nbsp;25. When Asymm Systems offers commercial support in Phase 2+, extended LTS
+        JDK&nbsp;25<button type="button" class="cite-ref" aria-label="Citation"><span class="cite-icon">i</span><span class="cite-tooltip"><a href="https://endoflife.date/azul-zulu" class="cite-link">Azul Zulu</a> to 2033/2035; <a href="https://endoflife.date/bellsoft-liberica" class="cite-link">BellSoft Liberica</a> to 2034.</span></button>. When Asymm Systems offers commercial support in Phase 2+, extended LTS
         becomes an in-scope contractual deliverable for paying customers.</p>
 </section>
 

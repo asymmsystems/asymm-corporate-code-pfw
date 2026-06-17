@@ -432,7 +432,8 @@ status=published
         <li><strong>Oracle benchmarks:</strong> JFR with the <code>default</code> profile is
             documented at sub-1% overhead and is designed for always-on production use
             (<a href="https://docs.oracle.com/en/java/java-components/jdk-mission-control/" class="org-link org-link--inline org-link--external">Oracle JDK Mission Control documentation</a>).</li>
-        <li><strong>JFR design intent:</strong> Marcus Hirt, original JFR architect at Oracle,
+        <li><strong>JFR design intent:</strong> Marcus Hirt, the OpenJDK JDK Mission Control (JMC)
+            project lead<button type="button" class="cite-ref" aria-label="Citation"><span class="cite-icon">i</span><span class="cite-tooltip"><a href="https://foojay.io/today/author/hirt/" class="cite-link">Marcus Hirt</a> leads OpenJDK JMC and works on profiling at Datadog; JFR itself originated in JRockit (Appeal Virtual Machines).</span></button>,
             has consistently positioned JFR as production-grade always-on instrumentation,
             including for performance-sensitive workloads.</li>
         <li><strong>Production deployments at scale:</strong> Datadog Continuous Profiler,
@@ -488,7 +489,7 @@ status=published
                 steady-state CPU overhead, in exchange for 24 hours of execution profile data
                 already on disk when an incident occurs.</p>
             <p>The Phase 2 economics: 1.5% CPU overhead on a 2 vCPU container at typical cloud
-                pricing (~$50/month) costs roughly <strong>$0.75/month per replica</strong>. A
+                pricing (~$50/month) costs roughly $0.75/month per replica. A
                 single major incident diagnosed without forensic data typically consumes
                 <strong>8&ndash;40 engineering hours</strong> at $200/hr: $1,600 to
                 $8,000 per incident, plus business impact during the time-to-root-cause. One

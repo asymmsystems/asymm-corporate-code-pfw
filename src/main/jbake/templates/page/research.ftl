@@ -18,22 +18,22 @@
         <div class="news-list" style="margin-top: 4rem;">
             <#include "/macro/news.ftl">
             <#assign projects_count = 0>
-            <#list all_content as project>
-                <#if project.type?? && project.type == "project" && project.status == "published">
+            <#list all_content as item>
+                <#if item.uri?? && item.uri?contains("research/") && item.status == "published">
                     <#assign projects_count = projects_count + 1>
                     <@renderNewsEntry
-                        title=project.title
-                        uri=project.uri
-                        description=(project.description!"")
-                        meta_left=(project.field!"RESEARCH")
-                        meta_mid=(project.format!"STUDY")
-                        meta_right=(project.lifecycle!"ACTIVE")
-                        cta_label="Participate" />
+                        title=item.title
+                        uri=item.uri
+                        description=(item.description!"")
+                        meta_left=(item.field!"RESEARCH")
+                        meta_mid=(item.format!"ANALYSIS")
+                        meta_right=(item.lifecycle!"")
+                        cta_label=(item.cta!"Read &rarr;") />
                 </#if>
             </#list>
 
             <#if projects_count == 0>
-                <p style="opacity: 0.5;">No active research tracks at this time. Check back later.</p>
+                <p style="opacity: 0.5;">No research published yet. Check back later.</p>
             </#if>
         </div>
 

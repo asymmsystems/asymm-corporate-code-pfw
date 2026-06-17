@@ -10,10 +10,10 @@
         <a href="/product/eliya/user-guide/verify-download.html" class="org-link org-link--inline org-link--internal">verify your download</a>.</p>
 </header>
 
-<section style="margin-bottom: 5rem">
+<section>
     <h2 class="section-title">SDKMAN! (in onboarding)</h2>
 
-    <aside style="background: #fff7ed; border-left: 4px solid #f59e0b; padding: 1rem 1.5rem; margin-bottom: 1.5rem; max-width: 700px">
+    <aside class="note">
         <p style="margin: 0; font-size: 0.95rem"><strong>SDKMAN! registration is in progress.</strong>
             Vendor-onboarding PR is at
             <a href="https://github.com/sdkman/sdkman-db-migrations/pull/783" class="org-link org-link--inline org-link--external">sdkman/sdkman-db-migrations#783</a>;
@@ -37,7 +37,7 @@
     </p>
 </section>
 
-<section id="direct-downloads" style="margin-bottom: 5rem">
+<section id="direct-downloads">
     <h2 class="section-title">Direct downloads</h2>
     <p style="margin-bottom: 2rem">GitHub Releases host every archive, checksum, and signature.
         Tags follow <code>eliya-jdk-25.0.N</code> (brand-first, no <code>v</code> prefix).</p>
@@ -121,11 +121,11 @@
     </p>
 </section>
 
-<section style="margin-bottom: 5rem">
+<section>
     <h2 class="section-title">What's in the Eliya JRE</h2>
     <p style="max-width: 60ch; margin-bottom: 1.5rem">The Eliya JRE is assembled with <code>jlink</code> from
         the standard Java SE module set plus nine commonly-needed production-diagnostic modules, and built
-        with <code>--strip-debug</code> for a smaller extracted footprint (~48&nbsp;MB compressed download / ~95&nbsp;MB extracted, vs ~140&nbsp;MB extracted for standard <code>java.se</code>-only JREs).
+        with <code>--strip-debug</code> for a smaller extracted footprint (~48&nbsp;MB compressed download / ~74&nbsp;MB extracted, vs ~108&nbsp;MB extracted for a standard <code>java.se</code>-only JRE).
         The added <code>jdk.*</code> modules are part of every OpenJDK distribution but are not in the
         standard Java SE module set that other vendors' JREs ship; bundling them by default matches the
         canonical server/CLI deployment pattern.</p>
@@ -157,7 +157,7 @@
         <a href="/product/eliya/user-guide/jre-curation.html" class="org-link org-link--inline org-link--internal">JRE curation guide</a>.</p>
 </section>
 
-<section style="margin-bottom: 5rem">
+<section>
     <h2 class="section-title">Container images</h2>
     <p style="margin-bottom: 1.5rem">Multi-arch OCI images on GitHub Container Registry:
         amd64 + arm64. Slim variants available.</p>
@@ -169,7 +169,7 @@
     </button>
 
     <p style="font-size: 0.9rem; margin-top: 1rem">Available tags: <code>25-lts</code>,
-        <code>${eliyaVersion}</code>, <code>25-lts-slim</code>, <code>${eliyaVersion}-slim</code>.
+        <code>${eliyaVersion}</code> (and per-arch <code>-amd64</code> / <code>-arm64</code>).
         The moving <code>25-lts</code> tag tracks the latest CPU; pinned-version tags
         (<code>${eliyaVersion}</code>) stay frozen. Tag refresh schedule follows the
         <a href="/product/eliya/lifecycle.html" class="org-link org-link--inline org-link--internal">quarterly CPU calendar</a>.</p>
@@ -192,7 +192,7 @@
     </div>
 </section>
 
-<section id="waitlist" style="margin-bottom: 5rem">
+<section id="waitlist">
     <h2 class="section-title">Get notified about Phase 2 deliverables</h2>
     <p>The macOS aarch64 binary and the FIPS variant build are Phase 2 deliverables.
         Hosted apt and yum repositories (<code>deb.asymm.systems</code>, <code>rpm.asymm.systems</code>)
@@ -237,4 +237,4 @@
     </div>
 
     <p style="margin-top: 2.5rem; font-size: 0.95rem">
-        Looking for <strong>Asymm Forensics</strong> (Phase 3, JVM diagnostic forensics platform)?
+        Looking for Asymm Forensics (Phase 3, JVM diagnostic forensics platform)?
