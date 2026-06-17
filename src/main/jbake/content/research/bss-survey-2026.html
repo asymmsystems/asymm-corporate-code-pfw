@@ -25,6 +25,9 @@ status=published
 
 <form id="bss-survey-form" method="POST">
 
+    <!-- Honeypot: Formspree discards any submission where _gotcha is filled. Hidden from people. -->
+    <input type="text" name="_gotcha" tabindex="-1" autocomplete="off" aria-hidden="true" style="position: absolute; left: -9999px; width: 1px; height: 1px; overflow: hidden;">
+
     <!-- Section 1: About you -->
     <fieldset class="survey-section">
         <legend>Section 1: About you</legend>
