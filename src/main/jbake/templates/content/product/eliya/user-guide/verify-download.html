@@ -158,6 +158,64 @@
     <p>SHA256 alone is not enough. Always run the GPG step.</p>
 </section>
 
+<section style="margin-top: 3rem">
+    <h2 class="section-title">What pins to what</h2>
+    <p>SHA256 + GPG is the <strong>cryptographic per-build pin</strong>. It is the only pin
+        compliance buyers, container runtimes, and signature verifiers should consume; nothing
+        in the binary's banner string adds anti-forgery guarantees the cryptographic chain does
+        not already provide. Four canonical pin mechanisms cover every operational scenario:</p>
+
+    <table class="clinical-table" style="max-width: 800px">
+        <thead>
+            <tr><th>Scenario</th><th>Pin</th><th>Audience</th></tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Compliance buyer requires byte-identical pin</td>
+                <td>SHA-256 from signed <code>SHA256SUMS.txt.asc</code></td>
+                <td>machines</td>
+            </tr>
+            <tr>
+                <td>Container deployment requires immutable pin</td>
+                <td>OCI image digest <code>@sha256:&lt;digest&gt;</code></td>
+                <td>machines</td>
+            </tr>
+            <tr>
+                <td>CI pipeline requires per-build human-readable handle (25.0.4+)</td>
+                <td>Filename suffix <code>+&lt;upstream-build&gt;-r&lt;N&gt;</code> (e.g., <code>eliya-jdk-25.0.4+7-r1-linux-x64.tar.gz</code>); Docker per-build tag <code>:25.0.4-r1</code></td>
+                <td>humans</td>
+            </tr>
+            <tr>
+                <td>CPU-track pin (accept respins within the CPU window)</td>
+                <td>Bare CPU identifier (<code>25.0.4</code>; Docker tag <code>:25.0.4</code>)</td>
+                <td>humans</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3 style="margin-top: 2rem">Reading the version string</h3>
+    <p>Running <code>java -version</code> emits a <em>build-identity readout</em>, not a pin.
+        From 25.0.4 onward the banner reads:</p>
+    <div class="inline-terminal inline-terminal--static">
+        <code>OpenJDK Runtime Environment Eliya-25.0.4 (build 25.0.4+7-r1)</code>
+    </div>
+    <p>where <code>+7</code> is upstream OpenJDK's GA promoted-build coordinate (the source
+        base Eliya was built from), and <code>r1</code> is Eliya's revision ordinal (the per-build
+        identity, incrementing 1, 2, 3, &hellip; within a CPU window). The <code>release</code>
+        file at <code>$JAVA_HOME/release</code> carries the same information in structured fields
+        (<code>JAVA_RUNTIME_VERSION</code>, <code>IMPLEMENTOR_VERSION</code>, <code>SOURCE</code>,
+        plus Eliya-specific <code>ELIYA_MIRROR_COMMIT</code>, <code>ELIYA_UPSTREAM_TAG</code>,
+        <code>ELIYA_UPSTREAM_BUILD</code>) for machines that parse it.</p>
+
+    <p style="margin-top: 1rem; font-size: 0.95rem">The currently-published <code>25.0.3</code>
+        release uses an earlier scheme (<code>java.runtime.version</code> reads
+        <code>25.0.3+24-Eliya</code>, where <code>+24</code> is a commit count rather than an
+        upstream promoted-build number). Both schemes verify against the same SHA-256 + GPG chain
+        shown above; the verification is scheme-independent. See
+        <a href="https://github.com/asymmsystems/eliya-jdk/blob/main/SECURITY.md" class="org-link org-link--inline org-link--external">SECURITY.md</a>
+        for the per-release derivation policy.</p>
+</section>
+
 <div class="page-back-nav">
     <a href="/product/eliya/user-guide/" class="org-link org-link--internal org-link--back">user guide</a>
 </div>

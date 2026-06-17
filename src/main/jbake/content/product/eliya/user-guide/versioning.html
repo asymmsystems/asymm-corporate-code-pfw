@@ -1,0 +1,250 @@
+title=Eliya Versioning
+description=The Eliya version string and per-build pin mechanisms, what each field means, and the four canonical pin scenarios.
+type=page
+toc=true
+status=draft
+~~~~~~
+
+<header class="page-header">
+    <span class="section-kicker">User guide</span>
+    <h1>Versioning</h1>
+    <p style="max-width: 70ch">From 25.0.4 onward, Eliya uses a structured version
+        identity that pins an Eliya binary to both its upstream OpenJDK source base and its
+        Eliya publication ordinal. The cryptographic pin is unchanged from 25.0.3 (SHA-256
+        on the signed checksums file plus the GPG signature); what changes is what the
+        human-readable identifiers carry.</p>
+</header>
+
+<section style="margin-bottom: 5rem">
+    <h2 class="section-title">What each field means</h2>
+
+    <p>An Eliya 25.0.4 first GA reports:</p>
+
+    <div class="inline-terminal inline-terminal--static" style="margin-bottom: 1.5rem">
+        <code>$ java -version<br>
+        openjdk version "25.0.4" 2026-08-04<br>
+        OpenJDK Runtime Environment Eliya-25.0.4 (build 25.0.4+7-r1)<br>
+        OpenJDK 64-Bit Server VM Eliya-25.0.4 (build 25.0.4+7-r1, mixed mode, sharing)</code>
+    </div>
+
+    <p>The canonical Eliya version is <code>25.0.4+7-r1</code>. It composes four pieces:</p>
+
+    <table class="clinical-table" style="max-width: 800px">
+        <thead>
+            <tr><th>Field</th><th>Value</th><th>Meaning</th></tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><code>$VNUM</code></td>
+                <td><code>25.0.4</code></td>
+                <td>JEP 322 dotted version &mdash; the upstream OpenJDK quarterly CPU identifier.</td>
+            </tr>
+            <tr>
+                <td><code>$BUILD</code></td>
+                <td><code>+7</code></td>
+                <td>Upstream OpenJDK's GA promoted-build number. Read once per quarterly cycle
+                    from <code>openjdk/jdk25u</code> tags; the integer N such that
+                    <code>jdk-25.0.4+N</code> and <code>jdk-25.0.4-ga</code> point at the same
+                    commit. Identifies the upstream source base Eliya patched and rebuilt.</td>
+            </tr>
+            <tr>
+                <td><code>$OPT</code></td>
+                <td><code>r1</code></td>
+                <td>Eliya's revision ordinal within this <code>$VNUM</code>.
+                    Increments 1, 2, 3, &hellip; per Eliya-promoted build (the first GA, then
+                    each respin if any). Resets to 1 when <code>$VNUM</code> advances at the
+                    next CPU.</td>
+            </tr>
+            <tr>
+                <td><code>vendor.version</code> (the banner prefix)</td>
+                <td><code>Eliya-25.0.4</code></td>
+                <td>Brand identification. Stays byte-identical across respins of the same
+                    <code>$VNUM</code>; per-build identity is in the
+                    <code>(build &hellip;)</code> portion above.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p style="margin-top: 1.5rem">A respin (r2, r3, &hellip;) keeps the upstream
+        <code>+7</code> and advances the <code>r</code> counter:</p>
+
+    <div class="inline-terminal inline-terminal--static">
+        <code>OpenJDK Runtime Environment Eliya-25.0.4 (build 25.0.4+7-r2)</code>
+    </div>
+
+    <p style="margin-top: 1rem; font-size: 0.95rem">The dedicated brand-identity system
+        properties (<code>java.vendor</code> = <code>Asymm Systems</code>;
+        <code>java.vendor.version</code> = <code>Eliya-25.0.4</code>) and the
+        <code>release</code> file (<code>$JAVA_HOME/release</code>) carry the same
+        information in structured fields for machines that parse it; the version string is
+        for humans.</p>
+</section>
+
+<section style="margin-bottom: 5rem">
+    <h2 class="section-title">Four pin mechanisms</h2>
+
+    <p>Pins divide into two layers. <strong>Machine-grade pins</strong> are cryptographic,
+        immutable, byte-exact; consumed by build tools, signature verifiers, container
+        runtimes. <strong>Human-grade pins</strong> are recognisable, rememberable, typeable;
+        consumed by operators, docs, support tickets. The two layers are not
+        interchangeable.</p>
+
+    <table class="clinical-table" style="max-width: 900px">
+        <thead>
+            <tr><th>Scenario</th><th>Pin</th><th>Audience</th><th>Example</th></tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td>Compliance buyer requires byte-identical pin</td>
+                <td>SHA-256 from signed <code>SHA256SUMS.txt.asc</code></td>
+                <td>machines</td>
+                <td>record SHA on download, verify on each install</td>
+            </tr>
+            <tr>
+                <td>Container deployment requires immutable pin</td>
+                <td>OCI image digest <code>@sha256:&lt;digest&gt;</code></td>
+                <td>machines</td>
+                <td><code>ghcr.io/asymmsystems/eliya-jdk@sha256:&lt;digest&gt;</code></td>
+            </tr>
+            <tr>
+                <td>CI pipeline requires per-build human-readable handle</td>
+                <td><code>r&lt;N&gt;</code>-suffixed filename or Docker tag</td>
+                <td>humans</td>
+                <td><code>eliya-jdk-25.0.4+7-r1-linux-x64.tar.gz</code>; Docker tag
+                    <code>:25.0.4-r1</code> (drops <code>+7</code> &mdash; OCI tag charset
+                    excludes <code>+</code>)</td>
+            </tr>
+            <tr>
+                <td>CPU-track pin (accept respins within the CPU window)</td>
+                <td>Bare CPU identifier</td>
+                <td>humans</td>
+                <td><code>25.0.4</code>; Docker tag <code>:25.0.4</code></td>
+            </tr>
+        </tbody>
+    </table>
+
+    <p style="margin-top: 1rem; font-size: 0.95rem">A fifth pin not in the table: the
+        <strong>LTS-track moving tag</strong> (<code>:25-lts</code>), which advances on each
+        quarterly CPU plus any respins. Best for teams that want automatic uptake of every
+        published build.</p>
+
+    <h3 style="margin-top: 2.5rem">Which pin matches which audit framework?</h3>
+    <p>Most compliance frameworks (PCI DSS, HIPAA, SOX, FedRAMP, EU CRA) call for signed
+        artefacts plus SBOMs plus vendor attestation. The SHA-256 + GPG chain is what they
+        ask for; the human-readable handles are operational ergonomics on top of that. If
+        you only record one identifier in your audit trail, record the SHA-256 of the bytes
+        you installed. Everything else is supporting context.</p>
+</section>
+
+<section style="margin-bottom: 5rem">
+    <h2 class="section-title">Where each piece of identity lives</h2>
+
+    <p>The version string carries per-build technical identity. Brand identity lives in
+        dedicated OpenJDK fields. Cryptographic identity lives in the signed checksums file
+        and the OCI manifest. Each surface has the field it actually uses.</p>
+
+    <h3 style="margin-top: 1.5rem">In the version string (banner / <code>JAVA_RUNTIME_VERSION</code>)</h3>
+    <ul>
+        <li><code>$VNUM</code> (<code>25.0.4</code>) &mdash; JDK version</li>
+        <li>Upstream <code>$BUILD</code> (<code>+7</code>) &mdash; source-base coordinate</li>
+        <li>Eliya revision (<code>r1</code>) &mdash; per-build identity in <code>$OPT</code></li>
+    </ul>
+
+    <h3 style="margin-top: 1.5rem">In dedicated brand-identity fields</h3>
+    <ul>
+        <li><code>java.vendor</code> = <code>Asymm Systems</code></li>
+        <li><code>java.vendor.version</code> = <code>Eliya-25.0.4</code></li>
+        <li><code>release</code> file <code>IMPLEMENTOR</code> = <code>Asymm Systems</code></li>
+        <li><code>release</code> file <code>IMPLEMENTOR_VERSION</code> = <code>r1</code></li>
+    </ul>
+
+    <h3 style="margin-top: 1.5rem">In machine-grade pin channels (not in the version string)</h3>
+    <ul>
+        <li>Artefact SHA-256 &mdash; signed <code>SHA256SUMS.txt.asc</code>
+            on each <a href="https://github.com/asymmsystems/eliya-jdk/releases" class="org-link org-link--inline org-link--external">GitHub Release</a></li>
+        <li>Docker image digest &mdash; OCI manifest, addressable via <code>@sha256:</code></li>
+        <li>Mirror commit SHA, upstream tag, upstream promoted-build number &mdash;
+            <code>release</code> file (<code>SOURCE</code>, <code>ELIYA_MIRROR_COMMIT</code>,
+            <code>ELIYA_UPSTREAM_TAG</code>, <code>ELIYA_UPSTREAM_BUILD</code>)</li>
+    </ul>
+</section>
+
+<section style="margin-bottom: 5rem">
+    <h2 class="section-title">Four exceptions to the canonical form</h2>
+
+    <p>The canonical Eliya version <code>25.0.4+7-r1</code> renders verbatim in most
+        surfaces. Four exceptions exist, each forced by an external standard. Listed for
+        completeness; you do not need to memorise them unless you write tooling that parses
+        Eliya identifiers across package formats.</p>
+
+    <table class="clinical-table" style="max-width: 900px">
+        <thead>
+            <tr><th>Exception</th><th>Surface</th><th>Deviation</th><th>Forced by</th></tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>RPM</strong></td>
+                <td>RPM filename + internal <code>Version: / Release:</code></td>
+                <td>Drops <code>+7</code>. Filename <code>eliya-jdk-25.0.4-r1.x86_64.rpm</code>;
+                    metadata <code>Version: 25.0.4 / Release: r1</code>.</td>
+                <td>RPM Version charset <code>[A-Za-z0-9.]</code> excludes <code>+</code></td>
+            </tr>
+            <tr>
+                <td><strong>Docker tag</strong></td>
+                <td>Per-build immutable + per-arch shadow</td>
+                <td>Drops <code>+7</code>. <code>:25.0.4-r1</code>,
+                    <code>:25.0.4-r1-amd64</code>, <code>:25.0.4-r1-arm64</code>.</td>
+                <td>OCI tag charset <code>[A-Za-z0-9_][A-Za-z0-9_.-]*</code> excludes <code>+</code></td>
+            </tr>
+            <tr>
+                <td><strong>SDKMAN ID</strong></td>
+                <td>Vendor identifier</td>
+                <td>Strips <code>+7</code> and <code>r1</code>. <code>25.0.4-eliya</code>.</td>
+                <td>SDKMAN cross-vendor convention <code>${VERSION}-${vendor-tag}</code></td>
+            </tr>
+            <tr>
+                <td><strong>DEB filename</strong></td>
+                <td>Filename field separators</td>
+                <td>Uses <code>_</code> as field separator.
+                    <code>eliya-jdk_25.0.4+7-r1_amd64.deb</code>. DEB internal
+                    <code>Version:</code> field is canonical (<code>25.0.4+7-r1</code>);
+                    <code>+</code> is legal in DEB upstream_version per Debian Policy &sect;5.6.12.</td>
+                <td>Debian filename convention <code>&lt;name&gt;_&lt;version&gt;_&lt;arch&gt;.deb</code></td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+<section style="margin-bottom: 5rem">
+    <h2 class="section-title">The 25.0.3 historical note</h2>
+
+    <p>Eliya 25.0.3 (published 2026-06-10) shipped with
+        <code>java.runtime.version</code> = <code>25.0.3+24-Eliya</code>. The
+        <code>+24</code> is the count of commits on the Eliya source mirror since the
+        upstream <code>jdk-25.0.3-ga</code> tag &mdash; a per-commit quantity, not a
+        per-promoted-build counter. This is a JEP 322 grammar-valid string but a non-canonical
+        derivation: a reader of the spec would expect <code>+24</code> to indicate 24
+        promoted builds, when it actually indicates 24 commits past upstream GA.</p>
+
+    <p>The 25.0.3 release stays frozen as published. The scheme described on this page
+        is effective from 25.0.4 onward. The
+        <a href="https://github.com/asymmsystems/eliya-jdk/blob/main/SECURITY.md" class="org-link org-link--inline org-link--external">SECURITY.md</a>
+        documents both schemes; the SHA-256 + GPG verification chain is unchanged across the
+        transition.</p>
+</section>
+
+<section class="aside-box">
+    <h3>The cryptographic pin is the only authoritative pin</h3>
+    <p>Anything in the version string is a <em>human-readable identity readout</em> &mdash; useful
+        for recognition, navigation, audit annotation. The cryptographic chain (SHA-256 of the
+        archive byte-matched against the signed <code>SHA256SUMS.txt.asc</code>, plus the GPG
+        signature verified against the cross-channel-confirmed key fingerprint) is the only
+        authoritative authenticity claim Eliya makes. No string in <code>java -version</code>
+        adds anti-forgery guarantees the cryptographic chain does not already provide.</p>
+    <p>See <a href="/product/eliya/user-guide/verify-download.html" class="org-link org-link--inline org-link--internal">verify your download</a>
+        for the full verification ceremony.</p>
+</section>
+
+<div class="page-back-nav">
+    <a href="/product/eliya/user-guide/" class="org-link org-link--internal org-link--back">user guide</a>
+</div>
