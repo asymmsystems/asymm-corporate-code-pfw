@@ -14,6 +14,15 @@
     .page-body--survey .checkbox-group { flex-direction: column; gap: 0.5rem; }
     .page-body--survey .survey-grid { display: block; overflow-x: auto; }
     .page-body--survey .survey-section { margin-bottom: 1rem; }
+    /* .form-control sets appearance: none, which strips the native select arrow.
+       Restore a chevron so dropdowns read as dropdowns. */
+    .page-body--survey select.form-control {
+        background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 10 6'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23888' stroke-width='1.5'/%3E%3C/svg%3E");
+        background-repeat: no-repeat;
+        background-position: right 1rem center;
+        background-size: 0.7rem;
+        padding-right: 2.5rem;
+    }
 </style>
 </head>
 <body>
