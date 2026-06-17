@@ -20,7 +20,7 @@
         javadoc, jlink itself, etc.), and the CLI tools in <code>bin/</code> (<code>java</code>,
         <code>javac</code>, <code>jcmd</code>, <code>jlink</code>, etc.). A typical JDK is ~300&nbsp;MB.</p>
 
-    <h3>What "Java SE" actually means as a module</h3>
+    <h3>What "Java SE" means as a module</h3>
     <p>Java SE is the standardised Java surface: the API portfolio in the Java Language Specification
         plus the Java Platform Specification. As a module, Java SE is named <code>java.se</code> in
         OpenJDK: an aggregator that <code>requires</code> every other <code>java.*</code> module
@@ -122,7 +122,7 @@
 
     <ol>
         <li><strong>Module curation.</strong> The full upstream OpenJDK 25 module set is around
-            80 modules. Eliya's JRE includes only the modules production servers actually use
+            80 modules. Eliya's JRE includes only the modules production servers use
             (the <code>java.se</code> aggregator plus the nine <code>jdk.*</code> modules listed
             below). Modules not included are not present in the assembled runtime image at all.</li>
         <li><strong>JIMAGE compression.</strong> jlink's <code>--compress</code> option compresses

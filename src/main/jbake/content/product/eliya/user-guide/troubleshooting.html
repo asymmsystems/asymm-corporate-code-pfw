@@ -176,7 +176,7 @@ status=published
         <code>-Deliya.*</code> system property, then <code>HOSTNAME</code> for service and replica
         names, then platform default for the base path). If a component resolved unexpectedly
         (for example, <code>ELIYA_SERVICE_NAME</code> coming from <code>HOSTNAME</code> when you
-        expected it to come from the env var), check whether the env var is actually set in the
+        expected it to come from the env var), check whether the env var is set in the
         JVM process's environment; orchestration platforms sometimes drop env vars that work in
         shells. If the path does not exist, the JVM creates it on first write; if permissions
         prevent writing, the heap-dump or JFR call fails with an explicit IO error.</p>
