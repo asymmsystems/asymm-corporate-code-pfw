@@ -147,6 +147,19 @@ status=published
     <h3 style="margin-top: 1.5rem">Pattern 2: Pinned version (<code>25.0.3</code>, <code>25.0.4</code>, &hellip;)</h3>
     <p>You explicitly update the version string each CPU. Best for compliance-conscious
         environments that require change-management approval for each version bump.</p>
+    <p>The bare CPU identifier (<code>25.0.3</code>, <code>25.0.4</code>) names the upstream
+        quarterly release. For per-build pinning within a CPU window (the cryptographic byte
+        pin compliance buyers and auditors require), use the <strong>SHA-256</strong> from the
+        signed <code>SHA256SUMS.txt.asc</code> for archive downloads, or the
+        <strong>OCI image digest</strong> (<code>@sha256:&lt;digest&gt;</code>) for container
+        pulls. From 25.0.4 onward, per-build human-readable handles are also available:
+        filenames carry <code>+&lt;upstream-build&gt;-r&lt;N&gt;</code> (e.g.,
+        <code>eliya-jdk-25.0.4+7-r1-linux-x64.tar.gz</code>) and Docker per-build immutable
+        tags carry <code>-r&lt;N&gt;</code> (e.g., <code>:25.0.4-r1</code>; Docker tags drop
+        the <code>+7</code> because the OCI tag character set excludes <code>+</code>).
+        See <a href="/product/eliya/user-guide/verify-download.html" class="org-link org-link--inline org-link--internal">verify your download</a>
+        for the canonical pin reference and the four-mechanism breakdown (SHA-256, OCI digest,
+        per-build <code>rN</code> handle, bare CPU tag).</p>
 
     <h3 style="margin-top: 1.5rem">Pattern 3: Frozen version with selective patches</h3>
     <p>Stay on a specific version (e.g., <code>25.0.3</code>) indefinitely, applying only
