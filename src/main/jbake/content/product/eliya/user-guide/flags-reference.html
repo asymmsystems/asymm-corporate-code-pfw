@@ -83,7 +83,7 @@ status=published
             <tr>
                 <td>Diagnostic options unlocked</td>
                 <td><code>-XX:+UnlockDiagnosticVMOptions -XX:+DebugNonSafepoints</code></td>
-                <td>Required for accurate JFR execution sampling and async-profiler usage; makes JFR + async-profiler trivially usable today via one-flag activation (<code>-XX:StartFlightRecording=&hellip;</code>). Safe in production with negligible overhead</td>
+                <td>Required for accurate JFR execution sampling and async-profiler usage; makes JFR + async-profiler usable today via one-flag activation (<code>-XX:StartFlightRecording=&hellip;</code>). Safe in production with negligible overhead</td>
             </tr>
         </tbody>
     </table>
@@ -102,7 +102,7 @@ status=published
             <tr>
                 <td>JFR continuous recording (Phase 2)</td>
                 <td><code>-XX:StartFlightRecording=settings=default,disk=true,maxage=24h,maxsize=250m,dumponexit=true,filename=&lt;path&gt;</code></td>
-                <td>24-hour rolling buffer at sub-1% overhead: last day of execution profile already on disk when failure happens, dumped on JVM exit. Today: opt-in via the same flag (the unlocked diagnostic options make it trivially usable)</td>
+                <td>24-hour rolling buffer at sub-1% overhead: last day of execution profile already on disk when failure happens, dumped on JVM exit. Today: opt-in via the same flag (the unlocked diagnostic options make it usable)</td>
             </tr>
             <tr>
                 <td>Unified GC logging (Phase 2)</td>
@@ -471,7 +471,7 @@ status=published
     </ul>
 
     <h3>Opting out</h3>
-    <p>If the trade-off doesn't fit your workload, simply don't set
+    <p>If the trade-off doesn't fit your workload, don't set
         <code>-XX:EliyaProfile=Production</code>. Eliya without the flag is functionally identical
         to upstream OpenJDK 25: same source tree, same JIT, same GC, same TLS defaults, same
         <code>java.security</code>. The flag is opt-in, not coercive.</p>
