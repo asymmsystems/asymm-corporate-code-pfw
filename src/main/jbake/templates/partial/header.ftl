@@ -41,6 +41,7 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <meta name="description" content="${metaDescription?xml}">
 <link rel="canonical" href="${canonicalUrl}">
+<link rel="alternate" type="application/atom+xml" title="Asymm Systems" href="${config.site_host}/feed.xml">
 <meta name="theme-color" content="#5295A3">
 <link rel="icon" href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>images/favicon.svg" type="image/svg+xml">
 <link rel="alternate icon" href="<#if (content.rootpath)??>${content.rootpath}<#else></#if>images/favicon.png" type="image/png">
