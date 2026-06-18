@@ -86,6 +86,8 @@
                 "label": "Decider",
                 "children": [
                     { "label": "FAQ",                "href": "/product/eliya/faq.html" },
+                    { "label": "Eliya for industry", "href": "/product/eliya/industries/" },
+                    { "label": "The policy point",   "href": "/research/the-policy-point.html" },
                     { "label": "Compare JDKs",       "href": "/research/choosing-a-jdk-2026.html" },
                     { "label": "JVM forensics vs APM","href": "/research/jvm-forensics-vs-apm.html" },
                     { "label": "Diff from upstream", "href": "/product/eliya/user-guide/diff-from-upstream.html" },
