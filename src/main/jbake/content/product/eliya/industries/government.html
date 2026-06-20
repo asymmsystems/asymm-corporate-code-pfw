@@ -15,7 +15,7 @@ status=published
         dependency.</p>
 </header>
 
-<h2>The requirement an external wrapper cannot meet</h2>
+<h2>One requirement an external wrapper cannot meet</h2>
 <p>Two examples sit outside what any external selector can do. ISO 27001 control A.8.15 expects logs to be
     produced and protected<button type="button" class="cite-ref" aria-label="Citation"><span class="cite-icon">i</span><span class="cite-tooltip"><a href="https://www.iso.org/standard/27001" class="cite-link">ISO/IEC 27001:2022, Annex A control 8.15 (Logging).</a> Logs of activities, exceptions and faults are to be produced, stored, protected and analysed.</span></button>, including the artefacts a process writes while it is crashing, by crash-path code only
     the VM runs. And change-control attestation wants proof that the running configuration is the approved one,
@@ -34,12 +34,13 @@ status=published
     OpenJDK 25 source tree and confirm the binary. It is GPLv2 with the Classpath Exception, on a quarterly LTS
     Critical Patch Update cadence.</p>
 
-<h2>An honest line on what is not here yet</h2>
-<p>Eliya is not FedRAMP authorised and does not ship a government compliance profile today. What it ships is
-    the policy point, protected crash-path diagnostics, reproducible signed builds, and local-only capture. A
-    FIPS 140-3 variant and compliance-aligned profile values are demand-gated on the
-    <a href="/product/eliya/roadmap.html" class="org-link org-link--inline org-link--internal">roadmap</a>
-    (Phase 2 and later), not in the 25.0.3 binary.</p>
+<h2>What does not ship today</h2>
+<p>Eliya is not FedRAMP authorised, and it does not ship a government compliance profile today. What it ships
+    is the policy point, protected crash-path diagnostics, reproducible signed builds, and local-only capture.
+    A FIPS 140-3 variant is a Phase 2 deliverable; compliance-aligned profile values are demand-gated and sit
+    in Phase 4. Neither is in the 25.0.3 binary; the
+    <a href="/product/eliya/roadmap.html" class="org-link org-link--inline org-link--internal">roadmap</a> sets
+    out the trajectory.</p>
 
 <hr class="section-divider" style="margin: 4rem 0;">
 <p>Next: <a href="/product/eliya/downloads.html" class="org-link org-link--inline org-link--internal">download Eliya</a>,

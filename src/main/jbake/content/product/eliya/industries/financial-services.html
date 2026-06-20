@@ -1,6 +1,6 @@
-title=OpenJDK for banking and BFSI
-seo_title=OpenJDK for banking and BFSI: PCI DSS-aware JVM
-description=Eliya is an OpenJDK 25 LTS distribution for banking, financial services, and fintech: a heap dump of a payment service is at-rest cardholder data, and that is a dump-writer problem inside the VM.
+title=OpenJDK for financial services
+seo_title=OpenJDK for financial services and payments
+description=Eliya is an OpenJDK 25 LTS distribution for financial services, payments, and fintech: a heap dump of a payment service is at-rest cardholder data, and that is a dump-writer problem inside the VM.
 type=page
 toc=true
 status=published
@@ -8,23 +8,23 @@ status=published
 
 <header class="page-header">
     <span class="section-kicker">Eliya for industry</span>
-    <h1>OpenJDK for banking and BFSI</h1>
-    <p style="max-width: 62ch">Banking, financial services, and fintech run Java where the data is regulated.
-        The diagnostic artefacts that production failures depend on, heap dumps and crash logs, are themselves
-        in scope. Eliya is an OpenJDK 25 LTS distribution that treats that as a property of the runtime, not an
-        afterthought for an external tool.</p>
+    <h1>OpenJDK for financial services</h1>
+    <p style="max-width: 62ch">Financial services, payments, and fintech run Java where the data is
+        regulated. The diagnostic artefacts that production failures depend on, heap dumps and crash logs, are
+        themselves in scope. Eliya is an OpenJDK 25 LTS distribution that treats that as a property of the
+        runtime, not an afterthought for an external tool.</p>
 </header>
 
-<h2>The requirement an external wrapper cannot meet</h2>
+<h2>One requirement an external wrapper cannot meet</h2>
 <p>PCI DSS Requirement 3.5.1 says the primary account number must be rendered unreadable anywhere it is
     stored<button type="button" class="cite-ref" aria-label="Citation"><span class="cite-icon">i</span><span class="cite-tooltip"><a href="https://www.pcisecuritystandards.org/document_library/" class="cite-link">PCI DSS v4.0, Requirement 3.5.1, PCI Security Standards Council.</a> v4.0.1 clarifies the requirement applies to PAN in non-primary storage such as audit logs.</span></button>. A heap dump of a payment service stores live card numbers in cleartext. That makes dump
     contents a dump-writer problem inside the JVM, not a flag anyone can set from outside it. No wrapper, chart,
-    or webhook can reach into how the VM serialises the heap. This is the
+    or webhook can reach into how the VM serialises the heap. It is one of several requirements that live in the
+    capability space, reachable only by whoever builds the runtime; the
     <a href="/research/the-policy-point.html" class="org-link org-link--inline org-link--internal">policy point</a>
-    argument applied to cardholder data: the behaviour you need lives in the capability space, reachable only by
-    whoever builds the runtime.</p>
+    essay sets out the general case.</p>
 
-<h2>What Eliya gives a BFSI workload today</h2>
+<h2>What Eliya gives a financial-services workload today</h2>
 <p>One flag, <code>-XX:EliyaProfile=Production</code>, activates the Phase 1 operational-readiness defaults:
     heap dump on OutOfMemoryError to a structured path, a predictable crash-log path, Native Memory Tracking
     (summary), reinforced container support, and exit on OutOfMemoryError. Crucially, all diagnostic capture
@@ -34,12 +34,14 @@ status=published
     Classpath Exception, with no API changes, and maintained on a quarterly Critical Patch Update cadence on an
     LTS line.</p>
 
-<h2>An honest line on what is not here yet</h2>
-<p>Eliya does not ship a "PCI" profile today, and it does not yet redact PAN inside a heap dump. What it ships
-    is the policy point and the structured diagnostic foundation that such controls require, plus local-only
-    capture so the dump never leaves your perimeter. A FIPS 140-3 variant and compliance-aligned profile values
-    are on the <a href="/product/eliya/roadmap.html" class="org-link org-link--inline org-link--internal">roadmap</a>
-    (Phase 2 and later, demand-gated), not in the 25.0.3 binary. We document what is built and what is not.</p>
+<h2>What does not ship today</h2>
+<p>Eliya does not ship a PCI-aligned profile today, and it does not yet redact PAN inside a heap dump. What it
+    ships is the policy point and the structured diagnostic foundation that such controls require, plus
+    local-only capture so the dump never leaves your perimeter. A FIPS 140-3 variant is a Phase 2 deliverable;
+    compliance-aligned profile values, such as a PCI-aligned profile, are demand-gated and sit in Phase 4.
+    Neither is in the 25.0.3 binary. The
+    <a href="/product/eliya/roadmap.html" class="org-link org-link--inline org-link--internal">roadmap</a> sets
+    out what is built and what is not.</p>
 
 <hr class="section-divider" style="margin: 4rem 0;">
 <p>Next: <a href="/product/eliya/downloads.html" class="org-link org-link--inline org-link--internal">download Eliya</a>,

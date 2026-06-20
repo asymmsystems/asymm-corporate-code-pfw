@@ -15,7 +15,7 @@ status=published
         treats the dump writer as part of the runtime, not an external concern.</p>
 </header>
 
-<h2>The requirement an external wrapper cannot meet</h2>
+<h2>One requirement an external wrapper cannot meet</h2>
 <p>A heap dump of a clinical service can hold patient identifiers and medical data in cleartext. Under HIPAA,
     electronic protected health information must be safeguarded wherever it is stored, and a heap dump is
     storage. How the VM writes that dump, and where it lands, is crash-path behaviour inside the runtime; no
@@ -33,7 +33,7 @@ status=published
     Eliya is the same Java you already run, on the upstream OpenJDK 25 source tree, GPLv2 with the Classpath
     Exception, on a quarterly LTS maintenance cadence.</p>
 
-<h2>An honest line on what is not here yet</h2>
+<h2>What does not ship today</h2>
 <p>Eliya does not ship a "HIPAA" profile, and it does not redact PHI inside a heap dump today. What it ships is
     the policy point, the structured diagnostic foundation, and local-only capture so that PHI never leaves
     your perimeter for diagnosis. Compliance-aligned profile values are demand-gated on the
