@@ -1349,58 +1349,6 @@ footer {
     }
 }
 
-/* Islamic Geometric Background Patterns */
-.hero::before,
-.section-block::before,
-footer::before {
-    content: '';
-    position: absolute;
-    pointer-events: none;
-    z-index: 0;
-    background-image: url('../images/pattern.webp');
-    background-size: 200px;
-    background-repeat: repeat;
-    opacity: 0.06;
-}
-
-/* Top-right corner spotlight */
-.hero::before {
-    top: 0;
-    right: 0;
-    width: 100%;
-    height: 100%;
-    -webkit-mask-image: radial-gradient(ellipse 35% 40% at 90% 10%, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 100%);
-    mask-image: radial-gradient(ellipse 35% 40% at 90% 10%, rgba(0, 0, 0, 0.8) 0%, rgba(0, 0, 0, 0) 100%);
-}
-
-/* Left-edge spotlight at mid-page */
-.section-block::before {
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    -webkit-mask-image: radial-gradient(ellipse 25% 30% at 5% 50%, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 100%);
-    mask-image: radial-gradient(ellipse 25% 30% at 5% 50%, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 100%);
-}
-
-footer {
-    position: relative;
-    z-index: 10;
-    overflow: hidden;
-}
-
-/* Bottom-left corner spotlight */
-footer::before {
-    bottom: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    -webkit-mask-image: radial-gradient(ellipse 30% 40% at 10% 90%, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 100%);
-    mask-image: radial-gradient(ellipse 30% 40% at 10% 90%, rgba(0, 0, 0, 0.7) 0%, rgba(0, 0, 0, 0) 100%);
-    filter: invert(1);
-    opacity: 0.08;
-}
-
 /* Inner Pages */
 .page-title {
     @extend .t-display-l;
