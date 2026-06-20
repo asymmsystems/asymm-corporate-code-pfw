@@ -1,0 +1,10 @@
+<svg xmlns="http://www.w3.org/2000/svg" width="1200" height="630" viewBox="0 0 1200 630">
+  <rect width="1200" height="630" fill="#16242e"/>
+  <rect x="0" y="0" width="14" height="630" fill="#5295A3"/>
+  <text x="80" y="118" font-family="sans-serif" font-size="26" letter-spacing="5" fill="#9CC8D1">ASYMM SYSTEMS</text>
+  <text x="76" y="280" font-family="serif" font-size="124" font-weight="700" fill="#ffffff">Eliya JDK</text>
+  <text x="80" y="356" font-family="sans-serif" font-size="40" fill="#F8DBA9">OpenJDK for compliance-conscious production</text>
+  <text x="80" y="412" font-family="sans-serif" font-size="27" fill="#9CC8D1">One flag puts the policy point inside the JVM.</text>
+  <text x="80" y="566" font-family="sans-serif" font-size="26" fill="#cfe0e6">asymm.systems</text>
+  <text x="1120" y="566" text-anchor="end" font-family="sans-serif" font-size="26" fill="#9CC8D1">JDK 25 LTS</text>
+</svg>
