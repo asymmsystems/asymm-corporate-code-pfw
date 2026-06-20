@@ -104,7 +104,8 @@ status=published
     <h4 style="margin-top: 1.5rem">FIPS-validated variant</h4>
     <p>Separate artifact (<code>eliya-jdk-fips</code>) with the <strong>Bouncy Castle FIPS provider
         (CMVP cert&nbsp;#4943)</strong> preinstalled and registered, with
-        <code>java.security</code> configured for FIPS-mode operation. Addresses procurement
+        <code>java.security</code> configured for FIPS-mode operation. It is targeted within the
+        Phase 2 window. Addresses procurement
         requirements for FedRAMP, FISMA, and other federal-aligned frameworks. FIPS variants
         carry additional CPU lag versus non-FIPS because of CMVP recertification; target one
         CPU cycle behind standard Eliya.</p>
@@ -220,7 +221,7 @@ status=published
         the same; the additions arrive as new bundled tools, new variants, new CLI subcommands, and
         new profile values within the existing <code>EliyaProfile</code> namespace.</p>
 
-    <p>If your requirements are specifically Phase 2+ (FIPS variant, bundled MAT, compliance
+    <p>If your requirements are specifically Phase 2+ (bundled MAT, compliance
         profiles), sign up on the relevant waitlist and adopt Phase 1 as the foundation now. Your
         signup is the demand signal that determines shipping order.</p>
 
@@ -231,8 +232,6 @@ status=published
         <li><strong>Phase 2 platform variants</strong> (macOS aarch64, distroless, UBI):
             ship when sustained signups indicate operational demand. Single waitlist on the
             downloads page.</li>
-        <li><strong>Phase 2 FIPS variant</strong>: ships when 5+ procurement-restricted
-            prospects sign up with FIPS as a requirement.</li>
         <li><strong>Phase 4 compliance profiles</strong>: each profile ships when 5+
             enterprise prospects have signed up with that specific framework requirement and
             provided usable use-case descriptions. PCI DSS, HIPAA, SOX are the highest-demand
