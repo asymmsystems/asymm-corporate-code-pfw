@@ -15,4 +15,16 @@
         <#if post.description??><summary>${post.description?xml}</summary></#if>
     </entry>
 </#list>
+<#-- Research / Laboratory articles (undated articles fall back to the build date) -->
+<#list published_content as c>
+    <#if ((c.uri!"")?starts_with("research/")) && (c.type!"") != "survey">
+    <entry>
+        <title>${c.title?xml}</title>
+        <link href="${config.site_host}/${c.uri}"/>
+        <id>${config.site_host}/${c.uri}</id>
+        <updated><#if c.date??>${c.date?string("yyyy-MM-dd'T'HH:mm:ss'Z'")}<#else>${published_date?string("yyyy-MM-dd'T'HH:mm:ss'Z'")}</#if></updated>
+        <#if c.description??><summary>${c.description?xml}</summary></#if>
+    </entry>
+    </#if>
+</#list>
 </feed>
