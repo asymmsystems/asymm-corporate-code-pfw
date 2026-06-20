@@ -24,8 +24,15 @@
   <#assign pageUri = pageUri?substring(0, pageUri?length - 10)>
 </#if>
 <#assign canonicalUrl = config.site_host + "/" + pageUri>
+<#-- og:image: explicit per-page override, else a per-product card, else the
+     Asymm Systems company card. og-image.png is the company default. -->
+<#assign pageUriForOg = (content.uri)!"">
 <#if (content.og_image)??>
   <#assign ogImage = config.site_host + "/images/" + content.og_image>
+<#elseif pageUriForOg?starts_with("product/eliya")>
+  <#assign ogImage = config.site_host + "/images/og-eliya.png">
+<#elseif pageUriForOg?starts_with("product/dial")>
+  <#assign ogImage = config.site_host + "/images/og-dial.png">
 <#else>
   <#assign ogImage = config.site_host + "/images/og-image.png">
 </#if>
