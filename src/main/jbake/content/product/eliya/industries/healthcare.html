@@ -20,9 +20,10 @@ status=published
     electronic protected health information must be safeguarded wherever it is stored, and a heap dump is
     storage. How the VM writes that dump, and where it lands, is crash-path behaviour inside the runtime; no
     sidecar can change it from outside. Just as important: sending a PHI-bearing dump to a third-party SaaS for
-    analysis introduces a new data processor into a regulated boundary. This is the
+    analysis introduces a new data processor into a regulated boundary. It is one of several
+    requirements that fall outside what external tooling can reach; the
     <a href="/research/the-policy-point.html" class="org-link org-link--inline org-link--internal">policy point</a>
-    argument applied to PHI.</p>
+    essay sets out the general case, here applied to PHI.</p>
 
 <h2>What Eliya gives a healthcare workload today</h2>
 <p>One flag, <code>-XX:EliyaProfile=Production</code>, activates the Phase 1 operational-readiness defaults:

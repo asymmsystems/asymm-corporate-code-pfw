@@ -20,9 +20,10 @@ status=published
     flag, a Helm value, or an environment variable and you are done. The hard ones do not. Reconstructing a
     failed charging transaction needs the last execution profile, the heap state, and the crash log to already
     exist at the moment the JVM dies. That is crash-path behaviour, run by the VM itself, and no wrapper script
-    or sidecar can guarantee the trace survives a process that is going down. This is the
+    or sidecar can guarantee the trace survives a process that is going down. It is one of several
+    requirements that fall outside what external tooling can reach; the
     <a href="/research/the-policy-point.html" class="org-link org-link--inline org-link--internal">policy point</a>
-    argument applied to carrier-grade operations.</p>
+    essay sets out the general case, here applied to carrier-grade operations.</p>
 
 <h2>What Eliya gives a telecom workload today</h2>
 <p>One flag, <code>-XX:EliyaProfile=Production</code>, activates the Phase 1 operational-readiness defaults:</p>

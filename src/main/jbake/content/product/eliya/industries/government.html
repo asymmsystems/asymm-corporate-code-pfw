@@ -20,9 +20,10 @@ status=published
     produced and protected<button type="button" class="cite-ref" aria-label="Citation"><span class="cite-icon">i</span><span class="cite-tooltip"><a href="https://www.iso.org/standard/27001" class="cite-link">ISO/IEC 27001:2022, Annex A control 8.15 (Logging).</a> Logs of activities, exceptions and faults are to be produced, stored, protected and analysed.</span></button>, including the artefacts a process writes while it is crashing, by crash-path code only
     the VM runs. And change-control attestation wants proof that the running configuration is the approved one,
     but a flag's origin, whether a profile set it or someone's command line did, is internal VM state, invisible
-    to any external tool. Both live in the capability space. This is the
+    to any external tool. Both live in the capability space, and they are two of several such
+    requirements; the
     <a href="/research/the-policy-point.html" class="org-link org-link--inline org-link--internal">policy point</a>
-    argument applied to public-sector assurance.</p>
+    essay sets out the general case, here applied to public-sector assurance.</p>
 
 <h2>What Eliya gives a public-sector workload today</h2>
 <p>One flag, <code>-XX:EliyaProfile=Production</code>, activates the Phase 1 operational-readiness defaults:
