@@ -33,6 +33,8 @@
   <#assign ogImage = config.site_host + "/images/og-eliya.png">
 <#elseif pageUriForOg?starts_with("product/dial")>
   <#assign ogImage = config.site_host + "/images/og-dial.png">
+<#elseif pageUriForOg?starts_with("product/forensics")>
+  <#assign ogImage = config.site_host + "/images/og-forensics.png">
 <#else>
   <#assign ogImage = config.site_host + "/images/og-image.png">
 </#if>
