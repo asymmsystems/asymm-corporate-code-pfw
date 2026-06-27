@@ -1,5 +1,5 @@
 title=Eliya roadmap
-description=Eliya's four-phase trajectory: operational-readiness defaults today; continuous observability Phase 2 ahead (Phase 1), bundled diagnostic tooling and FIPS variant (Phase 2), Asymm Forensics cross-correlation (Phase 3), compliance-aligned profiles (Phase 4).
+description=Eliya's four-phase trajectory: operational-readiness defaults today (Phase 1); continuous observability, bundled diagnostic tooling, and a FIPS variant (Phase 2); Asymm Forensics cross-correlation (Phase 3); compliance-aligned profiles (Phase 4).
 type=page
 toc=true
 status=published
@@ -29,14 +29,14 @@ status=published
             <tr>
                 <td>Phase 1</td>
                 <td>Current</td>
-                <td>Observability defaults (<code>EliyaProfile=Production</code>); three-level diagnostic path layout; <code>asymm</code> CLI Phase 1 surface; Linux x64 + aarch64; Docker multi-arch; FreeBSD Research Preview (planned, late 2026)</td>
+                <td>Observability defaults (<code>EliyaProfile=Production</code>); three-level diagnostic path layout; <code>asymm</code> CLI surface; Linux x64 + aarch64; Docker multi-arch; FreeBSD Research Preview (planned, late 2026)</td>
                 <td>Shipping</td>
             </tr>
             <tr>
                 <td>Phase 2</td>
                 <td>target H2 2026</td>
-                <td>Bundled Eclipse MAT (headless) + async-profiler; FIPS-validated variant (<code>eliya-jdk-fips</code>); macOS aarch64; DEB/RPM packages; <code>asymm</code> CLI Phase 2 subcommands</td>
-                <td>Demand-gated &middot; <a href="/product/eliya/downloads.html#waitlist" class="org-link org-link--inline org-link--internal">waitlist</a></td>
+                <td>Bundled Eclipse MAT (headless) + async-profiler; FIPS-validated variant (<code>eliya-jdk-fips</code>); macOS aarch64; DEB/RPM packages; <code>asymm</code> CLI subcommands</td>
+                <td>Planned</td>
             </tr>
             <tr>
                 <td>Phase 3</td>
@@ -68,7 +68,7 @@ status=published
         <li>Three-level diagnostic path layout
             (<code>${ELIYA_DIAGNOSTIC_PATH}/${service}/${replica}/${category}/</code>)
             for per-replica audit attribution</li>
-        <li><code>asymm</code> CLI Phase 1 surface (<code>info</code>, <code>version</code>,
+        <li><code>asymm</code> CLI surface (<code>info</code>, <code>version</code>,
             <code>help</code>)</li>
     </ul>
     <p>Full Phase 1 capability surface:
@@ -207,9 +207,9 @@ status=published
     <h3 style="margin-top: 3rem">Adoption planning across phases</h3>
     <p>Two questions matter for multi-year planning:</p>
 
-    <h4 style="margin-top: 1.5rem">"What can I count on today?"</h4>
+    <h4 id="today" style="margin-top: 1.5rem">"What can I count on today?"</h4>
     <p>Phase 1 is committed: <code>EliyaProfile=Production</code> + the diagnostic path layout +
-        <code>asymm</code> CLI Phase 1 surface. Linux x64, Linux aarch64, Docker multi-arch ship
+        <code>asymm</code> CLI surface. Linux x64, Linux aarch64, Docker multi-arch ship
         today. The quarterly CPU cadence is documented on the
         <a href="/product/eliya/lifecycle.html" class="org-link org-link--inline org-link--internal">lifecycle page</a>
         with concrete dates through Q3 2027.</p>

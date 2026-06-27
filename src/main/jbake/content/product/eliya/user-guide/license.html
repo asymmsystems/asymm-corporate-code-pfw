@@ -1,5 +1,5 @@
 title=Eliya license
-description=Eliya JDK is distributed under GPLv2 with the Classpath Exception, same as upstream OpenJDK. Trademark policy, redistribution scenarios, Phase 2 bundled-component licensing, TCK certification, export controls.
+description=Eliya JDK is distributed under GPLv2 with the Classpath Exception, same as upstream OpenJDK. Trademark policy, redistribution scenarios, bundled-component licensing for future releases, TCK status, export controls.
 type=page
 toc=true
 status=published
@@ -102,12 +102,12 @@ status=published
     passes the Java SE 25 Technology Compatibility Kit (TCK), but TCK conformance is a property
     of a specific built binary, not of the source code. The Eliya binary is its own build and
     has not yet been run against the TCK; the Eliya binary's own TCK run, under the OpenJDK
-    Community TCK License Agreement (OCTLA), is a Phase 2 deliverable.</p>
+    Community TCK License Agreement (OCTLA), is planned.</p>
 
 
-<h3>Bundled components in future phases</h3>
-<p>Phase 1 ships only the Eliya JDK itself, distributed under GPLv2+CE.</p>
-<p>Phase 2 will bundle additional diagnostic tooling with the JDK distribution. Each bundled
+<h3>Bundled components in future releases</h3>
+<p>Today, Eliya ships only the JDK itself, distributed under GPLv2+CE.</p>
+<p>Planned releases will bundle additional diagnostic tooling with the JDK distribution. Each bundled
     component retains its own licence:</p>
 <ul>
     <li><strong>Eclipse MAT (headless)</strong>: Eclipse Public License 2.0 (EPL-2.0).</li>
@@ -116,11 +116,11 @@ status=published
 <p>These licences are compatible with redistribution alongside Eliya's GPLv2+CE-licensed JDK. The
     Eliya distribution will include each component's licence text and copyright notices in the
     appropriate directories.</p>
-<p>Phase 2's FIPS-validated variant (<code>eliya-jdk-fips</code>) will bundle a FIPS-validated
+<p>The planned FIPS-validated variant (<code>eliya-jdk-fips</code>) will bundle a FIPS-validated
     provider distributed under a separate commercial licence. Customers of the FIPS variant will
     receive explicit licensing terms covering the bundled FIPS components.</p>
-<p>Phase 3 (Asymm Forensics) and Phase 4 (compliance profile values) maintain GPLv2+CE for the
-    Eliya JDK itself. Commercial components introduced in those phases (the Asymm Forensics
+<p>Asymm Forensics and the compliance profile values (both planned) maintain GPLv2+CE for the
+    Eliya JDK itself. Commercial components introduced with them (the Asymm Forensics
     commercial layer, compliance-profile maintenance subscriptions) are subject to separate Asymm
     commercial licensing terms.</p>
 
@@ -139,7 +139,7 @@ status=published
 
 <h3>Contributing back to upstream</h3>
 <p>When Eliya makes patches that benefit the broader OpenJDK community, those patches are
-    submitted back to upstream OpenJDK following the OpenJDK contribution process. Phase 1 source
+    submitted back to upstream OpenJDK following the OpenJDK contribution process. Today's source
     patches are Eliya-specific (the <code>EliyaProfile</code> flag namespace and three-level
     diagnostic path layout) and are not upstream candidates; future patches that benefit upstream
     will be contributed back and tracked in the project changelog.</p>

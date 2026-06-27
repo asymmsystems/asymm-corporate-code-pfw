@@ -1,5 +1,5 @@
 title=Eliya flags reference
-description=Complete reference for Eliya's Phase 1 flags: EliyaProfile (production-readiness profile) and EliyaConflictCheck (conflict-detection control). java.security is inherited from upstream JDK 25 unchanged.
+description=Complete reference for Eliya's flags: EliyaProfile (production-readiness profile) and EliyaConflictCheck (conflict-detection control). java.security is inherited from upstream JDK 25 unchanged.
 type=page
 toc=true
 status=published
@@ -8,13 +8,13 @@ status=published
 <header class="page-header">
     <span class="section-kicker">User guide</span>
     <h1>Flags reference</h1>
-    <p style="max-width: 60ch">Eliya keeps its JVM-flag surface small and explicit. Phase 1
-        ships two Eliya-namespaced flags: <code>EliyaProfile</code> (the production-readiness
+    <p style="max-width: 60ch">Eliya keeps its JVM-flag surface small and explicit. It
+        ships two Eliya-namespaced flags today: <code>EliyaProfile</code> (the production-readiness
         profile) and <code>EliyaConflictCheck</code> (the conflict-detection control). Everything
         else is upstream OpenJDK 25 behaviour; <code>java.security</code> included. The
         namespace is reserved for future capability flags and profile values; see
         <a href="/product/eliya/user-guide/flag-architecture.html" class="org-link org-link--inline org-link--internal">flag architecture</a>
-        for the two-layer taxonomy and Phase 2/4 roadmap.</p>
+        for the two-layer taxonomy and the roadmap.</p>
 </header>
 
 <section>
@@ -25,18 +25,18 @@ status=published
 
     <p>When <code>EliyaProfile=None</code> (the default), Eliya behaves identically to upstream
         OpenJDK 25 with no defaults applied. When <code>EliyaProfile=Production</code>,
-        Eliya activates <strong>six operational-readiness ergonomics</strong> (Phase 1, shipped
+        Eliya activates <strong>six operational-readiness ergonomics</strong> (shipped
         25.0.3): heap-dump-on-OOM with structured path, exit-on-OOM, Native Memory Tracking
         summary, predictable crash log path, container support reinforced, and diagnostic VM
         options unlocked. Every individual setting is applied via <code>FLAG_SET_ERGO</code>, so
         explicit command-line overrides always win.</p>
 
-    <p><strong>Continuous JFR + unified GC logging are planned for Phase 2</strong>
+    <p><strong>Continuous JFR and unified GC logging are planned, not yet available</strong>,
         alongside bundled local diagnostic tooling (Eclipse MAT headless, async-profiler),
-        the FIPS variant, macOS aarch64, and TCK + AQAvit quality-signal alignment. Phase 3
-        adds Asymm Forensics (cross-artefact correlation) and Windows x64. Phase 4
-        (demand-gated) adds compliance-aligned profile values (PCIDSS, HIPAA, SOX, FedRAMP,
-        GDPR, ISO27001, SOC2; see Available profile values below for the full Phase-4
+        the FIPS variant, macOS aarch64, and TCK + AQAvit quality-signal alignment. Further out,
+        Asymm Forensics (cross-artefact correlation) and Windows x64, then demand-gated
+        compliance-aligned profile values (PCIDSS, HIPAA, SOX, FedRAMP,
+        GDPR, ISO27001, SOC2; see Available profile values below for the full reserved
         namespace).</p>
 
     <p>What this flag deliberately does
@@ -45,7 +45,7 @@ status=published
         automatic ergonomics handle GC selection better than a distribution can guess; setting
         opinionated GC defaults helps some workloads and hurts others.</p>
 
-    <h3>What it sets: Phase 1 (shipped 25.0.3)</h3>
+    <h3>What it sets today (25.0.3)</h3>
     <table class="clinical-table" >
         <thead>
             <tr>
@@ -88,8 +88,8 @@ status=published
         </tbody>
     </table>
 
-    <h3>What it sets: Phase 2 (planned)</h3>
-    <p>Two additional ergonomics arrive in Phase 2 alongside the bundled diagnostic tools. They cannot use <code>FLAG_SET_ERGO</code> (the activation mechanism is not a product flag); they need <code>JfrOptionSet</code> / <code>LogConfiguration</code> hooks. </p>
+    <h3>Planned additions (not yet available)</h3>
+    <p>Two additional ergonomics are planned alongside the bundled diagnostic tools. They cannot use <code>FLAG_SET_ERGO</code> (the activation mechanism is not a product flag); they need <code>JfrOptionSet</code> / <code>LogConfiguration</code> hooks. </p>
     <table class="clinical-table" >
         <thead>
             <tr>
@@ -100,12 +100,12 @@ status=published
         </thead>
         <tbody>
             <tr>
-                <td>JFR continuous recording (Phase 2)</td>
+                <td>JFR continuous recording</td>
                 <td><code>-XX:StartFlightRecording=settings=default,disk=true,maxage=24h,maxsize=250m,dumponexit=true,filename=&lt;path&gt;</code></td>
                 <td>24-hour rolling buffer at sub-1% overhead: last day of execution profile already on disk when failure happens, dumped on JVM exit. Today: opt-in via the same flag (the unlocked diagnostic options make it usable)</td>
             </tr>
             <tr>
-                <td>Unified GC logging (Phase 2)</td>
+                <td>Unified GC logging</td>
                 <td><code>-Xlog:gc*:file=&lt;path&gt;:time,uptime,level,tags:filecount=10,filesize=100m</code></td>
                 <td>Continuous GC log with rotation. Audit-grade record of pause behaviour. Today: opt-in via the same flag</td>
             </tr>
@@ -251,18 +251,18 @@ status=published
         workloads. Verify dependency compatibility (libraries that introspect object layout) before
         enabling in production.</p>
 
-    <p>Example, disable JFR pre-emptively for Phase-2-ready environments:</p>
+    <p>Example, disable JFR pre-emptively ahead of the planned default:</p>
     <button type="button" class="inline-terminal"
         onclick="copyToClipboard('java -XX:EliyaProfile=Production -XX:-FlightRecorder -jar app.jar')" aria-label="Copy command">
         <code>java -XX:EliyaProfile=Production -XX:-FlightRecorder -jar app.jar</code>
         <span class="copy-btn" aria-hidden="true">Copy</span>
     </button>
-    <p>In Phase 1 today (25.0.3), JFR is not started by <code>EliyaProfile=Production</code>:
+    <p>Today (25.0.3), JFR is not started by <code>EliyaProfile=Production</code>:
         the profile only unlocks diagnostic options so operators can start JFR via
         <code>-XX:StartFlightRecording=&hellip;</code> in a separate flag. The <code>-XX:-FlightRecorder</code>
         switch is documented here so workloads that have measured unacceptable JFR overhead
-        (extreme allocation rates, some HFT workloads) can preemptively disable Phase-2's
-        continuous JFR default in advance of it landing. Once Phase 2 ships, the conflict
+        (extreme allocation rates, some HFT workloads) can pre-emptively disable the planned
+        continuous JFR default before it lands. When it ships, the conflict
         detection framework will issue a Tier 2 warning noting that the explicit
         <code>-FlightRecorder</code> overrides the profile-implied default.</p>
 
@@ -318,34 +318,34 @@ status=published
         <thead>
             <tr>
                 <th>Profile value</th>
-                <th>Phase</th>
+                <th>Availability</th>
                 <th>Effect</th>
             </tr>
         </thead>
         <tbody>
             <tr>
                 <td><code>None</code></td>
-                <td>Phase 1</td>
+                <td>Available</td>
                 <td>Default: no Eliya-specific defaults applied; equivalent to upstream OpenJDK 25</td>
             </tr>
             <tr>
                 <td><code>Production</code></td>
-                <td>Phase 1</td>
+                <td>Available</td>
                 <td>Production-readiness profile (documented above)</td>
             </tr>
             <tr>
                 <td><code>PCIDSS</code>, <code>HIPAA</code>, <code>SOX</code>, <code>FedRAMP</code>, <code>GDPR</code>, <code>ISO27001</code>, <code>SOC2</code></td>
-                <td>Phase 4 (reserved)</td>
+                <td>Reserved (demand-gated)</td>
                 <td>Single-framework compliance profiles; demand-gated</td>
             </tr>
             <tr>
                 <td>Combined profiles (e.g., <code>Healthcare-Payment</code>, <code>Financial-SaaS</code>, <code>Federal-Defense</code>)</td>
-                <td>Phase 4 (reserved)</td>
+                <td>Reserved (demand-gated)</td>
                 <td>Explicit unions of compliance frameworks for industries needing multiple, designed when customer demand justifies; never stacked from individual profiles</td>
             </tr>
         </tbody>
     </table>
-    <p>For the full Phase 1 surface and Phase 2/4 roadmap, see
+    <p>For the full flag surface and the roadmap, see
         <a href="/product/eliya/user-guide/flag-architecture.html" class="org-link org-link--inline org-link--internal">flag architecture</a>.</p>
 </section>
 
@@ -368,7 +368,7 @@ status=published
         </thead>
         <tbody>
             <tr>
-                <td>JFR <code>default</code> profile recording (Phase 2)</td>
+                <td>JFR <code>default</code> profile recording (planned)</td>
                 <td>&lt;1% typical, &lt;2% worst case (default profile only; <code>settings=profile</code> adds more)</td>
                 <td>~8-16 MB internal buffers</td>
                 <td>~250 MB rolling (configurable)</td>
@@ -380,7 +380,7 @@ status=published
                 <td>None</td>
             </tr>
             <tr>
-                <td>GC logging with rotation (Phase 2)</td>
+                <td>GC logging with rotation (planned)</td>
                 <td>Negligible</td>
                 <td>None</td>
                 <td>~1 GB total (10 × 100 MB)</td>
@@ -412,12 +412,12 @@ status=published
         </tbody>
     </table>
 
-    <p><em>The &lt;1% JFR overhead applies to the default JFR profile that Eliya configures by
-        default (<code>settings=default</code>). The <code>profile.jfc</code> template (deeper
-        sampling, allocation profiling) has higher overhead and is not the Eliya default.</em></p>
+    <p><em>The &lt;1% JFR overhead applies to the default JFR profile (<code>settings=default</code>)
+        that the planned continuous recording would use. The <code>profile.jfc</code> template (deeper
+        sampling, allocation profiling) has higher overhead and is not the planned default.</em></p>
 
     <h3>Combined overhead</h3>
-    <p>The dominant component once continuous JFR ships in Phase 2 is JFR itself
+    <p>The dominant component once continuous JFR ships is JFR itself
         (<a href="https://openjdk.org/jeps/328" class="org-link org-link--inline org-link--external">JEP 328</a>
         positions the default profile at &lt;1%). NMT summary mode adds a smaller amount on top
         (<a href="https://docs.oracle.com/en/java/javase/25/vm/native-memory-tracking.html" class="org-link org-link--inline org-link--external">Oracle's NMT documentation</a>
@@ -478,29 +478,29 @@ status=published
 
     <section class="technical-inset" >
             <h3>The trade-off, in plain language</h3>
-            <p><strong>Phase 1 today (25.0.3):</strong> The six operational-readiness ergonomics
+            <p><strong>Today (25.0.3):</strong> The six operational-readiness ergonomics
                 cost low steady-state CPU (dominated by NMT summary mode; everything else triggers
                 only on the actual event). In exchange you have heap-dump-on-OOM landing in a
                 predictable structured path, NMT summary visible via <code>jcmd</code>, the
                 crash log where you expect it, and diagnostic options unlocked so JFR +
                 async-profiler are one-flag-away when you need them.</p>
-            <p><strong>Phase 2:</strong> The trade-off changes once continuous
-                JFR + unified GC logging become defaults: an additional ~1&ndash;2%
+            <p><strong>With the planned defaults:</strong> The trade-off changes once continuous
+                JFR and unified GC logging become defaults: an additional ~1&ndash;2%
                 steady-state CPU overhead, in exchange for 24 hours of execution profile data
                 already on disk when an incident occurs.</p>
-            <p>The Phase 2 economics: 1.5% CPU overhead on a 2 vCPU container at typical cloud
+            <p>The economics: 1.5% CPU overhead on a 2 vCPU container at typical cloud
                 pricing (~$50/month) costs roughly $0.75/month per replica. A
                 single major incident diagnosed without forensic data typically consumes
                 <strong>8&ndash;40 engineering hours</strong> at $200/hr: $1,600 to
                 $8,000 per incident, plus business impact during the time-to-root-cause. One
-                avoided incident pays for years of Phase-2 continuous observability across a
+                avoided incident pays for years of continuous observability across a
                 sizeable fleet.</p>
-            <p>For compliance-conscious teams in regulated industries, the Phase 2 trade-off is
+            <p>For compliance-conscious teams in regulated industries, the trade-off is
                 almost always worth it; the alternative is realising you don't have
                 observability data <em>after</em> the incident has already happened. For
                 latency-sensitive workloads where every microsecond matters (HFT, low-latency
                 messaging gateways, real-time signalling), measure before committing once
-                Phase 2 ships.</p>
+                it ships.</p>
             <p>For where Eliya's forensic posture fits alongside SaaS APM platforms, see
                 <a href="/research/jvm-forensics-vs-apm.html" class="org-link org-link--inline org-link--internal">JVM forensics vs APM</a>.
                 For the vendor-by-vendor JDK comparison (and why Eliya doesn't tune GC), see

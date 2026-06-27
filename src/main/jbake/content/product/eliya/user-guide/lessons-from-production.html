@@ -103,12 +103,12 @@ Total: reserved=4194304KB, committed=2891024KB<br>
 
     <h3>Eliya's response</h3>
     <ul>
-        <li><strong>Phase 1 today (25.0.3):</strong> the unlocked diagnostic options make GC
+        <li><strong>Today (25.0.3):</strong> the unlocked diagnostic options make GC
             events visible via <code>jcmd &lt;pid&gt; JFR.start settings=default</code> against
             the running JVM in one step (no restart, no second flag); the deep options
             JFR needs to sample accurately are already in place. NMT summary surfaces native
             memory pressure that correlates with GC variance.</li>
-        <li><strong>Phase 2 (planned):</strong> continuous JFR + unified <code>-Xlog:gc*</code>
+        <li><strong>Planned:</strong> continuous JFR + unified <code>-Xlog:gc*</code>
             with rotation become defaults under <code>EliyaProfile=Production</code>. Every
             individual pause captured as a structured event; variance visible without operator
             action.</li>
@@ -145,14 +145,14 @@ Total: reserved=4194304KB, committed=2891024KB<br>
 
     <h3>Eliya's response</h3>
     <ul>
-        <li><strong>Phase 1 today (25.0.3):</strong> Eliya activates heap-dump-on-OOM with a
+        <li><strong>Today (25.0.3):</strong> Eliya activates heap-dump-on-OOM with a
             structured path, NMT summary, and unlocked diagnostic VM options; the post-incident
             forensic artefacts and the deep flags JFR + async-profiler need are already in place.
             When the incident happens an operator runs <code>jcmd &lt;pid&gt; JFR.start
             settings=default duration=10m filename=&lt;path&gt;</code> against the already-running
             JVM; the unlocked diagnostic options make the deep flags usable in one step rather than
             requiring a restart.</li>
-        <li><strong>Phase 2 (planned):</strong> Continuous JFR with a
+        <li><strong>Planned:</strong> Continuous JFR with a
             24-hour rolling buffer becomes the default under <code>EliyaProfile=Production</code>,
             eliminating the "start JFR and reproduce" step entirely; the recording covers the
             incident window without manual intervention.</li>
@@ -208,7 +208,7 @@ Total: reserved=4194304KB, committed=2891024KB<br>
             under <code>${ELIYA_DIAGNOSTIC_PATH}/${service}/${replica}/heap/</code>.</li>
         <li>The crash log path points to
             <code>${ELIYA_DIAGNOSTIC_PATH}/${service}/${replica}/crash/</code>.</li>
-        <li>Continuous JFR recording with <code>dumponexit=true</code> (Phase 2) will flush to disk on any
+        <li>Continuous JFR recording with <code>dumponexit=true</code> (planned) will flush to disk on any
             termination, including a fatal crash where the JVM has the chance to write before
             exiting.</li>
         <li>When operators mount <code>${ELIYA_DIAGNOSTIC_PATH}</code> as a persistent volume, all
@@ -225,12 +225,12 @@ Total: reserved=4194304KB, committed=2891024KB<br>
         in the data the JVM already produces, but only if observability is enabled before the
         incident occurs.</strong></p>
 
-    <p>Phase 1 today (25.0.3) puts the post-incident forensic artefacts in place by default:
+    <p>Today (25.0.3), Eliya puts the post-incident forensic artefacts in place by default:
         heap-dump-on-OOM with structured paths, NMT summary, crash log path, container support
         reinforced, and diagnostic VM options unlocked so JFR + async-profiler are
-        one-flag-away when you need them. Phase 2 (planned) makes the streaming data (continuous
-        JFR with a 24-hour rolling buffer, unified GC logging) defaults too,
-        so the recording covers the incident window without manual intervention.</p>
+        one-flag-away when you need them. Making the streaming data (continuous
+        JFR with a 24-hour rolling buffer, unified GC logging) defaults too is planned,
+        so the recording would cover the incident window without manual intervention.</p>
 
     <p>The pattern that emerges from 15+ years of
         JVM operations is not <em>"we need better debugging tools."</em> It's <em>"we need data
@@ -245,22 +245,22 @@ Total: reserved=4194304KB, committed=2891024KB<br>
         all of them.</p>
 
 
-    <h3>How these patterns motivate future phases</h3>
-    <p>The four patterns above motivate Eliya's Phase 1 operational-readiness defaults
-        (shipped 25.0.3). They also motivate the Phase 2 / 3 / 4 trajectory:</p>
+    <h3>How these patterns motivate the roadmap</h3>
+    <p>The four patterns above motivate Eliya's operational-readiness defaults
+        (shipped 25.0.3). They also motivate what's planned beyond today's release:</p>
     <ul>
-        <li><strong>Phase 2</strong> bundles Eclipse MAT (headless) for offline heap analysis
+        <li><strong>Bundled tooling</strong> brings Eclipse MAT (headless) for offline heap analysis
             (deeper Pattern 1 investigation) and async-profiler for hardware-counter profiling
             (deeper Pattern 2 investigation). Both run locally in the security perimeter.</li>
-        <li><strong>Phase 3</strong> Asymm Forensics will correlate JFR + heap + thread + GC +
+        <li><strong>Asymm Forensics</strong> will correlate JFR + heap + thread + GC +
             crash artifacts together, automating the "is this JVM or upstream?" diagnosis
             that Pattern 3 requires.</li>
-        <li><strong>Phase 4</strong> compliance profiles add framework-aligned audit trails to all
+        <li><strong>Compliance profiles</strong> add framework-aligned audit trails to all
             four patterns, so the same diagnostic data that resolves an incident also satisfies
             PCI&nbsp;DSS Section 10 / HIPAA Technical Safeguards / SOX IT general controls
             requirements.</li>
     </ul>
-    <p>The Phase 1 defaults are the foundation. Phase 2 / 3 / 4 capabilities are additive;
+    <p>Today's defaults are the foundation. The planned capabilities are additive;
         they extend the same observability discipline this page describes.</p>
 </section>
 

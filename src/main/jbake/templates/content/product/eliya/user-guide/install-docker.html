@@ -36,10 +36,10 @@
             <code>${eliyaVersion}</code> for environments that pin to a specific version;
             the tag is immutable, so <code>docker pull</code> returns the same image every time.</li>
         <li><span class="check-yes" aria-hidden="true">&#10003;</span>
-            <code>-slim</code> (smaller Debian base), <code>-jre</code>, and
-            <code>-jre-distroless</code> variants ship in a post-GA refresh (Wave 7, Q4 2026); today
-            the full-JDK multi-arch <code>25-lts</code> / <code>${eliyaVersion}</code> image is the
-            published tag.</li>
+            Today the full-JDK multi-arch <code>25-lts</code> / <code>${eliyaVersion}</code> image is the
+            published tag. The <code>-slim</code> (smaller Debian base), <code>-jre</code>, and
+            <code>-jre-distroless</code> variants are not yet available (planned Q4 2026); the tag
+            matrix below tracks each one.</li>
         <li><span class="check-yes" aria-hidden="true">&#10003;</span>
             Full (non-slim) variants when your application uses AWT or Java2D for server-side
             rendering (PDF generation, chart images, font-metric calculations): the full
@@ -49,11 +49,11 @@
             <a href="#diagnostic-patterns" class="org-link org-link--inline org-link--internal">Production diagnostic patterns</a>).</li>
     </ul>
 
-    <p>Eliya will ship images on two orthogonal axes: <strong>base image</strong>
+    <p>Eliya images vary on two orthogonal axes: <strong>base image</strong>
         (Debian full vs slim vs distroless) and <strong>Java content</strong> (full JDK vs Eliya JRE).
-        First GA publishes the full-JDK multi-arch image (<code>25-lts</code> / <code>${eliyaVersion}</code>,
-        plus per-arch <code>-amd64</code> / <code>-arm64</code>); the <code>-slim</code>, <code>-jre</code>,
-        and <code>-jre-distroless</code> variants ship in a post-GA refresh (Wave 7, Q4 2026).</p>
+        Today the published image is the full-JDK multi-arch <code>25-lts</code> / <code>${eliyaVersion}</code>
+        (plus per-arch <code>-amd64</code> / <code>-arm64</code>); the other combinations are tracked in
+        the tag matrix below.</p>
 
     <table class="clinical-table">
         <thead>
@@ -83,7 +83,7 @@
                 <td>TBD</td>
                 <td>Headless apps that still need <code>javac</code>/<code>jlink</code> at runtime
                     (rare); slim-base CI runners</td>
-                <td>Coming (post-GA refresh)</td>
+                <td>Coming Q4 2026</td>
             </tr>
             <tr>
                 <td><code>25-lts-jre</code> / <code>${eliyaVersion}-jre</code></td>
@@ -92,7 +92,7 @@
                 <td>~110 MB</td>
                 <td><strong>Recommended default for application containers</strong>: production
                     headless servers</td>
-                <td>Coming Q4 2026 (Wave 7)</td>
+                <td>Coming Q4 2026</td>
             </tr>
             <tr>
                 <td><code>25-lts-jre-distroless</code> / <code>${eliyaVersion}-jre-distroless</code></td>
@@ -101,7 +101,7 @@
                 <td>~80 MB</td>
                 <td>Hardened production: no shell, no package manager, minimal CVE attack surface.
                     For compliance-conscious deployments.</td>
-                <td>Coming Q4 2026 (Wave 7)</td>
+                <td>Coming Q4 2026</td>
             </tr>
         </tbody>
     </table>
@@ -162,8 +162,8 @@
         Eliya's support story. Eliya tracks Debian's release cycle and will migrate base images
         to Debian 13 (trixie) when it stabilises.</p>
 
-    <p><strong>An Alpine variant is not planned.</strong> A distroless Eliya variant ships
-        Wave 7 (target Q4 2026) per the published tag matrix above; the details and trade-offs
+    <p><strong>An Alpine variant is not planned.</strong> A distroless Eliya variant is not yet
+        available (planned Q4 2026) per the tag matrix above; the details and trade-offs
         are below.</p>
 
     <h4>Why no Alpine, and what about distroless?</h4>
@@ -201,13 +201,13 @@
         diagnostic tooling lives in a separate container) and validate their specific application
         thoroughly before production rollout.</p>
 
-    <p>A distroless Eliya variant ships Wave 7 (target Q4 2026), after the first signed Linux GA
+    <p>A distroless Eliya variant is planned for Q4 2026, after the first signed Linux GA
         lands on the storefront repo. Beyond a single Dockerfile, it requires supply-chain control
         over the included libraries, validation against representative Java application classes,
         and documentation of application-fit constraints. If your environment requires this level
         of minimisation (or a Red Hat UBI variant for procurement), sign up at
         <a href="/product/eliya/downloads.html#waitlist" class="org-link org-link--inline org-link--internal">downloads</a>;
-        your demand signal helps Wave 7 prioritisation.</p>
+        your demand signal helps us prioritise it.</p>
 
 
     <h3>Use as a base image</h3>
@@ -260,15 +260,16 @@ ENTRYPOINT ["java", "-jar", "myapp.jar"]</code>
 
 
     <h3>The <code>asymm</code> CLI inside the container</h3>
-    <p>Every Eliya image bundles the <code>asymm</code> CLI on <code>$PATH</code>. Phase 1 ships
-        three commands (<code>asymm</code>, <code>asymm --version</code>, <code>asymm --help</code>)
+    <p>Every Eliya image bundles the <code>asymm</code> CLI on <code>$PATH</code>. The CLI ships
+        three commands today (<code>asymm</code>, <code>asymm --version</code>, <code>asymm --help</code>)
         documented in the
         <a href="/product/eliya/user-guide/cli.html" class="org-link org-link--inline org-link--internal">asymm CLI reference</a>:
         the same surface, same behaviour, inside or outside a container.</p>
 
-    <p>Phase 2 will add diagnostic-tooling subcommands that wrap Eclipse MAT headless and
-        async-profiler (both Phase 2 bundled tools), and Phase 3 will add Asymm Forensics
-        subcommands. Three operational patterns for running diagnostics against a containerised
+    <p>Diagnostic-tooling subcommands that wrap Eclipse MAT headless and
+        async-profiler, and Asymm Forensics subcommands, are not yet available (planned, see the
+        <a href="/product/eliya/roadmap.html#today" class="org-link org-link--inline org-link--internal">roadmap</a>).
+        Three operational patterns for running diagnostics against a containerised
         JVM are documented below under
         <a href="#diagnostic-patterns" class="org-link org-link--inline org-link--internal">Production diagnostic patterns</a>.</p>
 
@@ -556,11 +557,11 @@ spec:<br>
 
     <p>The sidecar uses the full Eliya image (<code>25-lts</code>), the only published image
         today. Its <code>fontconfig</code> and <code>freetype</code> libraries are needed when
-        Phase 2 diagnostic tools generate visual reports: flame graphs from async-profiler,
+        the bundled diagnostic tools (not yet available) generate visual reports: flame graphs from async-profiler,
         leak-suspects HTML from Eclipse MAT, and JFR rendering from headless analysis. A smaller
-        <code>-slim</code> sidecar base (Wave 7) will suit Phase 1 sidecars running only
-        <code>jcmd</code> and <code>jstack</code>; the full image future-proofs the deployment as
-        the bundled tooling expands in Phase 2.</p>
+        <code>-slim</code> sidecar base (planned Q4 2026) would suit sidecars running only
+        <code>jcmd</code> and <code>jstack</code> today; the full image future-proofs the deployment as
+        the bundled tooling becomes available.</p>
 
     <p>Example Kubernetes pod spec:</p>
     <div class="inline-terminal inline-terminal--static">
@@ -679,23 +680,21 @@ spec:<br>
         by policy. For ad-hoc incident response in clusters that support it, prefer ephemeral
         containers above.</p>
 
-    <p><strong>Phase 1 vs Phase 2 in this pattern.</strong> Today, the sidecar runs standard JDK
+    <p><strong>What the sidecar runs today.</strong> The sidecar runs standard JDK
         utilities (<code>jcmd</code>, <code>jstack</code>, <code>jmap</code>) plus the
         <code>asymm</code> launcher for version and metadata. Heap analysis on captured dumps
-        happens offline using Eclipse MAT or similar tools. Phase 2 will bundle Eclipse MAT
-        (headless) and async-profiler in the Eliya image, with wrapping subcommands documented
-        in the
-        <a href="/product/eliya/user-guide/cli.html" class="org-link org-link--inline org-link--internal">asymm CLI reference</a>.
-        The sidecar pattern does not change between phases: the same pod spec works; the
-        available diagnostic commands inside the sidecar expand as Phase 2 ships.</p>
+        happens offline using Eclipse MAT or similar tools. Bundling Eclipse MAT
+        (headless) and async-profiler into the Eliya image, with wrapping subcommands, is not yet
+        available. When it lands, the sidecar pattern does not change: the same pod spec works; the
+        available diagnostic commands inside the sidecar simply expand.</p>
 
-    <p><strong>Wave 7 (Q4 2026) with distroless app container.</strong> When the distroless Eliya
-        variant ships (Wave 7, target Q4 2026), this pattern lets you split the two containers'
+    <p><strong>Distroless app container (planned Q4 2026).</strong> When the distroless Eliya
+        variant becomes available, this pattern lets you split the two containers'
         image sources:</p>
     <div class="inline-terminal inline-terminal--static">
         <code>containers:<br>
 &nbsp;&nbsp;- name: app<br>
-&nbsp;&nbsp;&nbsp;&nbsp;image: ghcr.io/asymmsystems/eliya-jdk:25-lts-jre-distroless&nbsp;&nbsp;# Wave 7 (Q4 2026)<br>
+&nbsp;&nbsp;&nbsp;&nbsp;image: ghcr.io/asymmsystems/eliya-jdk:25-lts-jre-distroless&nbsp;&nbsp;# planned Q4 2026<br>
 &nbsp;&nbsp;&nbsp;&nbsp;# no shell, no diagnostic tools, just runs the JVM<br>
 &nbsp;&nbsp;- name: eliya-sidecar<br>
 &nbsp;&nbsp;&nbsp;&nbsp;image: ghcr.io/asymmsystems/eliya-jdk:25-lts&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;# full diagnostic toolchain<br>
@@ -703,8 +702,9 @@ spec:<br>
     </div>
 
     <p>The distroless app container has no diagnostic surface area; all diagnostics happen in
-        the parallel Debian-based sidecar. In Phase 1, both containers use the same Debian-based
-        image (with the slim variant for the app, full for the sidecar).</p>
+        the parallel Debian-based sidecar. Today, both containers use the full Debian-based
+        image (the only one published); the slim or distroless app split becomes available with
+        those variants.</p>
 
     <h4>4. JMX over secure channel: legacy enterprise</h4>
     <p>Some traditional deployments expose the JVM's Management Extensions (JMX) over a secure
@@ -808,7 +808,7 @@ EXPOSE 9010</code>
         <span class="copy-btn" aria-hidden="true">Copy</span>
     </button>
 
-    <p>Expected output (Phase 1, no profile set on this invocation):</p>
+    <p>Expected output (no profile set on this invocation):</p>
     <div class="inline-terminal inline-terminal--static">
         <code>ccstr     EliyaProfile        = None    {product} {default}<br>
 bool      EliyaConflictCheck  = true    {product} {default}</code>
