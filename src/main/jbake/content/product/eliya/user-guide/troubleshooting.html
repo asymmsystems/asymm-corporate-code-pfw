@@ -33,7 +33,7 @@ status=published
         <span class="copy-btn" aria-hidden="true">Copy</span>
     </button>
 
-    <p>The first confirms the active JVM is Eliya. The second prints the six Phase 1 ergonomics
+    <p>The first confirms the active JVM is Eliya. The second prints the six ergonomics
         with their values and origins (look for <code>{ergonomic}</code> in the origin column on
         flags set by the profile). The third confirms the diagnostic-path root is writable.
         Attach these three outputs to any issue you file.</p>
@@ -68,11 +68,11 @@ status=published
         <li>Old: <code>-XX:+UseEliyaDefaults</code> (boolean toggle)</li>
         <li>New: <code>-XX:EliyaProfile=Production</code> (enum-value selector)</li>
     </ul>
-    <p>The rename is complete; Phase 1 ships only the <code>EliyaProfile</code> form. Scripts
+    <p>The rename is complete; Eliya ships only the <code>EliyaProfile</code> form today. Scripts
         or documents referencing <code>-XX:+UseEliyaDefaults</code> predate the public release and
         need updating.</p>
-    <p><strong>3. Pre-Phase-1 build.</strong> If you're running an alpha/preview Eliya build
-        that predates the May 2026 strategy revision, upgrade to the Phase 1 GA release. Phase 1
+    <p><strong>3. Pre-GA build.</strong> If you're running an alpha/preview Eliya build
+        that predates the May 2026 strategy revision, upgrade to the GA release. The GA build
         ships the <code>EliyaProfile</code> flag declaration; earlier internal builds may not.</p>
     <p>Verify which case applies:</p>
     <button type="button" class="inline-terminal"
@@ -89,21 +89,21 @@ status=published
     <h4>"Profile '&lt;X&gt;' is reserved for Phase 4"</h4>
     <p>If JVM startup fails with
         <code>[Eliya] Fatal: Profile '&lt;X&gt;' is reserved for Phase 4. Currently available:
-        None, Production.</code>, you've attempted to use a Phase 4 compliance profile in a Phase 1
-        build.</p>
-    <p>Phase 1 ships only two profile values:</p>
+        None, Production.</code>, you've attempted to use one of the reserved compliance profiles
+        named in the error; these are not yet available.</p>
+    <p>Eliya ships only two profile values today:</p>
     <ul>
         <li><code>EliyaProfile=None</code> (default; no Eliya defaults applied)</li>
         <li><code>EliyaProfile=Production</code> (observability defaults)</li>
     </ul>
-    <p>Phase 4 will add compliance-aligned profile values (<code>PCIDSS</code>, <code>HIPAA</code>,
+    <p>The compliance-aligned profile values (<code>PCIDSS</code>, <code>HIPAA</code>,
         <code>SOX</code>, <code>FedRAMP</code>, <code>GDPR</code>, <code>ISO27001</code>,
         <code>SOC2</code>) plus combined profiles (<code>Healthcare-Payment</code>,
-        <code>Financial-SaaS</code>, etc.) when customer demand justifies. Phase 4 is demand-gated;
-        sign up on the
+        <code>Financial-SaaS</code>, etc.) are planned and demand-gated; they will be added when
+        customer demand justifies. Sign up on the
         <a href="/product/eliya/security.html#waitlist" class="org-link org-link--inline org-link--internal">security page</a>
         to signal demand for a specific framework or combination.</p>
-    <p>For now, use <code>EliyaProfile=Production</code> to activate Eliya's Phase 1 observability
+    <p>For now, use <code>EliyaProfile=Production</code> to activate Eliya's observability
         defaults.</p>
 
     <h4><code>SHA256SUMS.txt</code> verification fails</h4>
@@ -265,8 +265,8 @@ status=published
         <li><strong>DirectByteBuffer or JNI growth</strong> &rarr; application or library leak in
             native code</li>
     </ul>
-    <p>For deeper analysis, Phase 2 will bundle Eclipse MAT (headless) and the full
-        async-profiler suite for native allocation tracing. For Phase 1, the NMT summary plus diff
+    <p>For deeper analysis, the planned bundled Eclipse MAT (headless) and full
+        async-profiler suite will add native allocation tracing. Today, the NMT summary plus diff
         is the canonical entry point for native memory diagnosis; APM tools don't have this
         visibility.</p>
 
@@ -321,7 +321,7 @@ status=published
 
 
     <h3>Looking forward</h3>
-    <p>Phase 2 will expand the troubleshooting toolkit:</p>
+    <p>Planned additions to the troubleshooting toolkit:</p>
     <ul>
         <li><strong>Bundled Eclipse MAT (headless)</strong> for offline heap analysis without
             Internet access, useful in air-gapped environments.</li>
@@ -330,13 +330,13 @@ status=published
         <li>Wrapping subcommands for the bundled tools, documented in the
             <a href="/product/eliya/user-guide/cli.html" class="org-link org-link--inline org-link--internal">asymm CLI reference</a>.</li>
     </ul>
-    <p>Phase 3 will add Asymm Forensics for cross-artifact correlation: analysing JFR + heap
+    <p>Asymm Forensics (planned) will add cross-artifact correlation: analysing JFR + heap
         dumps + thread dumps + GC logs + crash logs together rather than as separate analyses. Local
         execution, no SaaS dependency.</p>
-    <p>Phase 4 will add compliance-aligned profiles (PCI DSS, HIPAA, SOX, FedRAMP, etc.) plus
-        combined profiles for industries needing multiple frameworks.</p>
-    <p>The Phase 1 troubleshooting flow on this page remains the foundation across all phases.
-        Phase 2/3/4 capabilities are additive.</p>
+    <p>Compliance-aligned profiles (PCI DSS, HIPAA, SOX, FedRAMP, etc.) are planned and
+        demand-gated, plus combined profiles for industries needing multiple frameworks.</p>
+    <p>The troubleshooting flow on this page remains the foundation; the planned capabilities
+        are additive.</p>
 
 
     <h3>Filing an issue</h3>
@@ -346,7 +346,7 @@ status=published
     <ul>
         <li><code>asymm --version</code></li>
         <li><code>java -XX:EliyaProfile=Production -XX:+PrintFlagsFinal -version</code> output
-            (the six Phase 1 ergonomic flags filtered out)</li>
+            (the six ergonomic flags filtered out)</li>
         <li><code>test -w /var/log/eliya</code> result (writable check)</li>
         <li>OS, architecture, container image if applicable</li>
         <li>Full command line (flags, JAR path)</li>

@@ -35,11 +35,10 @@ status=published
         <span class="copy-btn" aria-hidden="true">Copy</span>
     </button>
     <p><strong>Note.</strong> The capability flag names above are
-        <strong>reserved namespace</strong>: <code>UseEliyaObservability</code>,
+        <strong>reserved namespace</strong>, not yet available: <code>UseEliyaObservability</code>,
         <code>UseEliyaDiagnostics</code>, <code>UseEliyaOperational</code>,
-        and <code>UseEliyaTooling</code> become operational in Phase 2;
-        <code>UseEliyaSecurityStrict</code> and <code>UseEliyaAudit</code>
-        in Phase 4. Phase 1 ships the profile flag only; the example is shown
+        and <code>UseEliyaTooling</code> are planned; <code>UseEliyaSecurityStrict</code> and
+        <code>UseEliyaAudit</code> are demand-gated. Today, Eliya ships the profile flag only; the example is shown
         here to illustrate the boolean syntax pattern.</p>
 
     <p>Capabilities are what
@@ -68,9 +67,9 @@ status=published
         underlying capabilities plus framework-specific settings.</p>
 
 
-    <h3>Phase 1: what's available today</h3>
-    <p>Phase 1 ships a single profile and reserves
-        the capability namespace for Phase 2. The profile is the canonical
+    <h3>What's available today</h3>
+    <p>Today, Eliya ships a single profile and reserves
+        the capability namespace for later. The profile is the canonical
         way to activate Eliya's defaults; capability flags are documented
         but not yet carved out as separate booleans.</p>
 
@@ -87,12 +86,12 @@ status=published
             <tr>
                 <td><code>-XX:EliyaProfile=Production</code></td>
                 <td>Layer 2: profile</td>
-                <td>Activates production-readiness defaults. Phase 1 (today): heap-dump-on-OOM with structured path, exit-on-OOM, Native Memory Tracking summary, predictable crash log path, container support reinforced, diagnostic VM options unlocked. Phase 2 adds continuous JFR and unified GC logging.</td>
+                <td>Activates production-readiness defaults. Today: heap-dump-on-OOM with structured path, exit-on-OOM, Native Memory Tracking summary, predictable crash log path, container support reinforced, diagnostic VM options unlocked. Continuous JFR and unified GC logging are planned.</td>
             </tr>
             <tr>
                 <td><code>-XX:EliyaProfile=None</code></td>
                 <td>Layer 2: profile</td>
-                <td>Explicit no-profile (default). Compose capabilities directly when they ship in Phase 2.</td>
+                <td>Explicit no-profile (default). Compose capabilities directly when they become available.</td>
             </tr>
             <tr>
                 <td><code>-XX:+EliyaConflictCheck</code></td>
@@ -108,60 +107,60 @@ status=published
         <a href="/product/eliya/user-guide/flags-reference.html" class="org-link org-link--inline org-link--internal">flags reference</a>.</p>
 
 
-    <h3>Reserved namespace (Phase 2 + Phase 4)</h3>
+    <h3>Reserved namespace (planned)</h3>
     <p>The following capability flags and profile
-        values are reserved. They are not implemented in Phase 1, but the
+        values are reserved. They are not implemented today, but the
         namespace is locked so future work cannot collide with these names.</p>
 
-    <h4>Layer 1 capabilities (Phase 2 + Phase 4)</h4>
+    <h4>Layer 1 capabilities (reserved)</h4>
     <table class="clinical-table" >
         <thead>
             <tr>
                 <th>Capability flag</th>
-                <th>Phase</th>
+                <th>Availability</th>
                 <th>Purpose</th>
             </tr>
         </thead>
         <tbody>
             <tr>
                 <td><code>UseEliyaObservability</code></td>
-                <td>Phase 2</td>
+                <td>Planned</td>
                 <td>Continuous data collection (JFR, GC logs, NMT)</td>
             </tr>
             <tr>
                 <td><code>UseEliyaDiagnostics</code></td>
-                <td>Phase 2</td>
+                <td>Planned</td>
                 <td>Incident-time artifact capture (heap dumps, crash logs)</td>
             </tr>
             <tr>
                 <td><code>UseEliyaOperational</code></td>
-                <td>Phase 2</td>
+                <td>Planned</td>
                 <td>Operational policy (ExitOnOOM, container support)</td>
             </tr>
             <tr>
                 <td><code>UseEliyaTooling</code></td>
-                <td>Phase 2</td>
+                <td>Planned</td>
                 <td>Foundation flags for diagnostic tools</td>
             </tr>
             <tr>
                 <td><code>UseEliyaSecurityBaseline</code></td>
-                <td>Phase 4</td>
+                <td>Demand-gated</td>
                 <td>Modest security hardening beyond upstream</td>
             </tr>
             <tr>
                 <td><code>UseEliyaSecurityStrict</code></td>
-                <td>Phase 4</td>
+                <td>Demand-gated</td>
                 <td>Aggressive security hardening</td>
             </tr>
             <tr>
                 <td><code>UseEliyaAudit</code></td>
-                <td>Phase 4</td>
+                <td>Demand-gated</td>
                 <td>Audit-grade logging extensions</td>
             </tr>
         </tbody>
     </table>
 
-    <h4>Layer 2 profile values (Phase 4 demand-gated)</h4>
+    <h4>Layer 2 profile values (demand-gated)</h4>
     <table class="clinical-table" >
         <thead>
             <tr>
@@ -201,8 +200,8 @@ status=published
         </tbody>
     </table>
 
-    <p>Phase 4 profile values
-        produce a startup error in Phase 1:
+    <p>These reserved profile values
+        produce a startup error today:
         <code>"Profile '&lt;Value&gt;' is reserved for Phase 4. Currently
         available: None, Production."</code></p>
 
@@ -213,7 +212,7 @@ status=published
         defence contractors need FedRAMP + CMMC. For these cases, Eliya
         ships <strong>explicit combined profile values</strong> rather than
         allowing operators to stack two profile flags. Example combined
-        values (Phase 4 demand-gated, naming illustrative):</p>
+        values (demand-gated, naming illustrative):</p>
     <table class="clinical-table">
         <thead>
             <tr>
@@ -248,7 +247,7 @@ status=published
         designed by Asymm Systems based on customer demand rather than left
         to ad-hoc stacking.</p>
 
-    <p>Demand signal for Phase 4:
+    <p>Demand signal:
         join the early-access list on the
         <a href="/product/eliya/security.html#waitlist" class="org-link org-link--inline org-link--internal">security page</a>
         and tell us which framework (or combination) your auditor requires.</p>
@@ -266,9 +265,9 @@ status=published
     <p><strong>Note on examples.</strong> The tier examples below illustrate
         the conflict-detection framework using capability flags
         (<code>UseEliyaObservability</code>, <code>UseEliyaSecurityStrict</code>)
-        and profile values (<code>PCIDSS</code>) that are reserved for Phase
-        2 and Phase 4. The framework itself is implemented in Phase 1; the
-        capability flags it references begin shipping in Phase 2. Phase 1
+        and profile values (<code>PCIDSS</code>) that are reserved and not yet
+        available. The framework itself ships today; the
+        capability flags it references do not yet. Today, Eliya
         ships the profile flag (<code>EliyaProfile=Production</code>) and
         the conflict-check control flag only.</p>
 
@@ -351,7 +350,7 @@ status=published
     </ol>
 
     <h3>Diagnostic path layout</h3>
-    <p>When the <code>Production</code> profile is active (or when Phase 2 capability flags that
+    <p>When the <code>Production</code> profile is active (or when the planned capability flags that
         activate diagnostic output are set), Eliya constructs filesystem paths from three resolved
         components:</p>
     <div class="inline-terminal inline-terminal--static">
