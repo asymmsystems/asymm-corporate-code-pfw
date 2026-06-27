@@ -5,13 +5,13 @@
     <span class="section-kicker">User guide</span>
     <h1>Install on macOS</h1>
     <p style="max-width: 60ch">Eliya targets Linux servers; the native macOS aarch64 binary is
-        Phase 2. macOS users can run Eliya in Linux-based Docker containers today, or wait for
-        the Phase 2 native binary.</p>
+        not yet available (planned, demand-gated). macOS users can run Eliya in Linux-based Docker
+        containers today, or wait for the native binary.</p>
 </header>
 
 <section>
     <h3>Today: run Eliya in Docker</h3>
-    <p>Until the Phase 2 macOS aarch64 binary ships, the recommended path on macOS is to run
+    <p>Until the native macOS aarch64 binary is available, the recommended path on macOS is to run
         Eliya inside a Linux-based Docker container. On Apple Silicon, prefer the
         <code>linux/arm64</code> variant; Eliya's multi-arch image manifest serves it
         natively, no emulation involved. Docker Desktop can also run <code>linux/amd64</code>
@@ -33,7 +33,7 @@
     <p>SDKman integration is coming soon for all platforms; the vendor ID
         <code>${eliyaVersion}-eliya</code> is reserved with SDKman, and the registration PR is
         rolling out through the Foojay DISCO API to SDKman backend migration. Once the macOS
-        aarch64 binary ships in Phase 2 and the SDKman registration is live, macOS users will be
+        aarch64 binary is available and the SDKman registration is live, macOS users will be
         able to install Eliya with:</p>
 
     <button type="button" class="inline-terminal inline-terminal--static">
@@ -44,21 +44,21 @@
 </section>
 
 <section id="waitlist" class="alt-bg">
-    <h3>Native aarch64 binary: Phase 2</h3>
+    <h3>Native aarch64 binary</h3>
     <p>Eliya is server-first. macOS support exists for developers running Dial workflows
         locally against the Eliya runtime, not because macOS is a production target. Native
-        aarch64 builds for Apple Silicon are a Phase 2 demand-gated deliverable; native
+        aarch64 builds for Apple Silicon are a planned, demand-gated deliverable; native
         <code>.pkg</code> installers and a Homebrew tap follow if demand signal warrants them.</p>
 
     <p>If you'd use a native macOS binary, join the early-access list. Your signup is a
-        meaningful demand signal that influences Phase 2 prioritisation.</p>
+        meaningful demand signal that influences prioritisation.</p>
 
     <@renderWaitlistForm
         formspree_url="https://formspree.io/f/mnjwnwjp"
         product_tag="macos"
         product_label="macOS"
         heading="Get notified when the macOS aarch64 binary is available"
-        body="Native aarch64 builds for Apple Silicon are a Phase 2 demand-gated deliverable. We'll email you the moment the binary ships."
+        body="Native aarch64 builds for Apple Silicon are a planned, demand-gated deliverable. We'll email you the moment the binary is available."
         submit_label="Notify me about macOS support" />
 </section>
 

@@ -100,7 +100,7 @@
             <tr><td><code>java.se</code></td><td>The Java SE aggregator: pulls in every standard Java SE module</td></tr>
             <tr><td><code>java.net.http</code></td><td>HTTP/2 client (explicit; also pulled via <code>java.se</code>, listed for visibility)</td></tr>
             <tr><td><code>jdk.unsupported</code></td><td>Effectively required by the JVM ecosystem (Netty, Caffeine, Hazelcast, …)</td></tr>
-            <tr><td><code>jdk.crypto.cryptoki</code></td><td>Forward-looking: HSM-backed crypto needed for Phase 4 hardware-token work</td></tr>
+            <tr><td><code>jdk.crypto.cryptoki</code></td><td>Forward-looking: HSM-backed crypto for planned hardware-token work</td></tr>
             <tr><td><code>jdk.jfr</code></td><td>Flight Recorder: the OpenJDK community has standardised on JFR for production profiling. Operators expect <code>jcmd &lt;pid&gt; JFR.start</code> to work without switching to the JDK.</td></tr>
             <tr><td><code>jdk.management.agent</code></td><td>JMX/RMI agent: Prometheus exporters, monitoring agents, and operational tools attach via JMX</td></tr>
             <tr><td><code>jdk.attach</code></td><td>The Attach API: local <code>jcmd</code> works without it; remote / external tool attach requires it</td></tr>
@@ -184,13 +184,13 @@
         </thead>
         <tbody>
             <tr><td>Full JDK (shipping in 25.0.3)</td><td>Everything in the JDK</td><td>Developer machines, CI builders</td></tr>
-            <tr><td><code>-slim</code> (Phase 2)</td><td>Eliya JRE minus <code>jdk.localedata</code> and other non-server modules</td><td>Container deployments, en_US production</td></tr>
-            <tr><td><code>-jre</code> (Phase 2)</td><td>The Eliya JRE as described on this page</td><td>Container-native applications</td></tr>
-            <tr><td><code>-jre-distroless</code> (Phase 2)</td><td>The Eliya JRE on <code>gcr.io/distroless/base</code> for minimal attack surface</td><td>Security-conscious containers</td></tr>
+            <tr><td><code>-slim</code> (planned)</td><td>Eliya JRE minus <code>jdk.localedata</code> and other non-server modules</td><td>Container deployments, en_US production</td></tr>
+            <tr><td><code>-jre</code> (planned)</td><td>The Eliya JRE as described on this page</td><td>Container-native applications</td></tr>
+            <tr><td><code>-jre-distroless</code> (planned)</td><td>The Eliya JRE on <code>gcr.io/distroless/base</code> for minimal attack surface</td><td>Security-conscious containers</td></tr>
         </tbody>
     </table>
 
-    <p style="margin-top: 1.5rem">When Eliya transitions to JDK 27 (post-Phase 1), the module set will be
+    <p style="margin-top: 1.5rem">When Eliya transitions to JDK 27 (a future release), the module set will be
         re-validated against JDK 27's module changes. JDK 27 may add modules (e.g. structured concurrency
         improvements) we want to include; we may also drop modules whose use case has receded.</p>
 </section>
