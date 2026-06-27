@@ -48,17 +48,18 @@
         <code>java -XX:EliyaProfile=Production -jar app.jar</code>
         <span class="copy-btn" aria-hidden="true">Copy</span>
     </button>
-    <p><strong>Phase 1 today (25.0.3) activates six ergonomics:</strong>
+    <p><strong>This activates six operational-readiness ergonomics today (25.0.3):</strong>
         heap-dump-on-OOM with structured path, exit-on-OOM, Native Memory Tracking summary,
         predictable crash log path, container support reinforced, and diagnostic VM options
-        unlocked. Near-zero steady-state CPU overhead. The Phase 1 ergonomics either trigger
-        only on the actual event (heap-dump-on-OOM, crash log, exit-on-OOM) or carry low
-        steady-state overhead (NMT summary mode). No GC tuning, no TLS overlay.</p>
-    <p><strong>Phase 2 (planned)</strong> adds continuous JFR (24-hour rolling buffer at
-        sub-1% overhead) + unified GC logging as defaults under the same flag, plus bundled
-        Eclipse MAT + async-profiler. See
+        unlocked. Steady-state CPU overhead is near zero: each either triggers
+        only on the actual event (heap-dump-on-OOM, crash log, exit-on-OOM) or carries low
+        steady-state cost (NMT summary mode). No GC tuning, no TLS overlay.</p>
+    <p>Continuous JFR and unified GC logging under the same flag, plus bundled
+        Eclipse MAT and async-profiler, are <strong>not yet available</strong> (planned, see the
+        <a href="/product/eliya/roadmap.html#today" class="org-link org-link--inline org-link--internal">roadmap</a>).
+        The
         <a href="/product/eliya/user-guide/flags-reference.html" class="org-link org-link--inline org-link--internal">flags reference</a>
-        for the full breakdown of Phase 1 + Phase 2 capabilities.</p>
+        details exactly what the flag sets today.</p>
 
 
     <h3>4. Inspect what the profile activated</h3>
@@ -67,7 +68,7 @@
         <code>java -XX:EliyaProfile=Production -XX:+PrintFlagsFinal -version 2&gt;&amp;1 | grep -E "HeapDumpOnOutOfMemoryError|ExitOnOutOfMemoryError|NativeMemoryTracking|ErrorFile|UseContainerSupport|UnlockDiagnosticVMOptions"</code>
         <span class="copy-btn" aria-hidden="true">Copy</span>
     </button>
-    <p>The output shows the six Phase 1 ergonomics with their values and origin. Flags with
+    <p>The output shows the six ergonomics with their values and origin. Flags with
         <code>{ergonomic}</code> in the origin column were set by <code>EliyaProfile=Production</code>;
         flags with <code>{default}</code> were already at the activated value upstream (this
         is the case for <code>UseContainerSupport</code> on JDK 25).</p>
@@ -104,7 +105,7 @@ switching from Corretto, Temurin, Zulu, or another OpenJDK distribution.</li>
 Maven/Gradle toolchains, Kubernetes, service mesh, logging stacks, APM
             coexistence.</li>
         <li><a href="/product/eliya/roadmap.html" class="org-link org-link--inline org-link--internal">Roadmap</a>:
-Phase 2/3/4 trajectory: FIPS variant, bundled diagnostic tooling, Asymm
+what's planned beyond today's release: FIPS variant, bundled diagnostic tooling, Asymm
             Forensics, compliance profiles.</li>
         <li><a href="/product/eliya/user-guide/troubleshooting.html" class="org-link org-link--inline org-link--internal">Troubleshooting</a>:
 common issues with concrete diagnostic commands.</li>

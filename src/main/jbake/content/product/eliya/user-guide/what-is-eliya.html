@@ -1,5 +1,5 @@
 title=What is Eliya?
-description=Eliya's positioning, what each phase delivers, and the observability and operational-readiness defaults that distinguish it from Corretto, Temurin, and Zulu.
+description=Eliya's positioning, what it delivers today and on the roadmap, and the observability and operational-readiness defaults that distinguish it from Corretto, Temurin, and Zulu.
 type=page
 toc=true
 status=published
@@ -20,7 +20,7 @@ status=published
         operational-readiness. A single flag <code>-XX:EliyaProfile=Production</code> activates
         heap dumps on OOM, native memory tracking, a predictable crash-log path, container support,
         and exit-on-OOM, and unlocks diagnostic options so Flight Recorder is one step away.
-        Continuous JFR and unified GC logging become defaults in Phase 2. The profile is opt-in,
+        Continuous JFR and unified GC logging are planned as defaults (not yet available). The profile is opt-in,
         not a coercive policy. See
         <a href="/product/eliya/user-guide/flags-reference.html" class="org-link org-link--inline org-link--internal">flags reference</a>
         for the exact capabilities activated.</p>
@@ -49,19 +49,19 @@ status=published
     <p>Full trajectory and demand-gating mechanics:
         <a href="/product/eliya/roadmap.html" class="org-link org-link--inline org-link--internal">roadmap</a>.</p>
 
-    <p>Across all phases, one principle holds: <strong>Eliya runs entirely inside your
+    <p>Across every release, one principle holds: <strong>Eliya runs entirely inside your
         perimeter.</strong> No SaaS dependencies, no telemetry, no phone-home. Diagnostic
         data (JFR recordings, heap dumps, GC logs, crash artifacts) stays on
-        your hardware. The Phase 2 bundled tools follow the same principle: local execution
+        your hardware. The planned bundled tools follow the same principle: local execution
         only.</p>
 
     <h3>Why use Eliya instead of Corretto, Temurin, or Zulu?</h3>
 
     <p>All four are honest OpenJDK builds. Eliya's distinct contribution is production-grade
         diagnostic, operational-readiness, and compliance tooling that runs entirely inside the
-        perimeter: Phase 1 (shipped 25.0.3) activates six operational-readiness defaults
-        via <code>-XX:EliyaProfile=Production</code>; later phases add continuous observability
-        (Phase 2), bundled local diagnostic tooling, and compliance
+        perimeter: today it activates six operational-readiness defaults
+        via <code>-XX:EliyaProfile=Production</code>, and planned releases add continuous observability,
+        bundled local diagnostic tooling, and compliance
         framework alignment that few other OpenJDK distributions offer without SaaS
         dependencies.</p>
 
@@ -88,56 +88,56 @@ status=published
                 <td>&#10003;</td>
                 <td>&#10003;</td>
                 <td>&#10003;</td>
-                <td>Phase 2 deliverable<sup>1</sup></td>
+                <td>&#9675; planned<sup>1</sup></td>
             </tr>
             <tr>
                 <td>JFR continuous recording by default</td>
                 <td>-</td>
                 <td>-</td>
                 <td>-</td>
-                <td>&#10003; (Phase 2)</td>
+                <td>&#9675; planned</td>
             </tr>
             <tr>
                 <td>Heap dump on OOM by default</td>
                 <td>-</td>
                 <td>-</td>
                 <td>-</td>
-                <td>&#10003; (Phase 1)</td>
+                <td>&#10003;</td>
             </tr>
             <tr>
                 <td>NMT by default</td>
                 <td>-</td>
                 <td>-</td>
                 <td>-</td>
-                <td>&#10003; (Phase 1)</td>
+                <td>&#10003;</td>
             </tr>
             <tr>
                 <td>GC logging by default</td>
                 <td>-</td>
                 <td>-</td>
                 <td>-</td>
-                <td>&#10003; (Phase 2)</td>
+                <td>&#9675; planned</td>
             </tr>
             <tr>
                 <td>Bundled local diagnostic tooling (MAT, async-profiler)</td>
                 <td>-</td>
                 <td>-</td>
                 <td>-</td>
-                <td>&#10003; (Phase 2)</td>
+                <td>&#9675; planned</td>
             </tr>
             <tr>
                 <td>FIPS-validated build variant</td>
                 <td>-</td>
                 <td>-</td>
                 <td>-</td>
-                <td>&#10003; (Phase 2)</td>
+                <td>&#9675; planned</td>
             </tr>
             <tr>
                 <td>Compliance-aligned profile flags (PCIDSS, HIPAA, SOX, FedRAMP, &hellip;)</td>
                 <td>-</td>
                 <td>-</td>
                 <td>-</td>
-                <td>&#10003; (Phase 4, demand-gated)</td>
+                <td>&#9675; planned (demand-gated)</td>
             </tr>
             <tr>
                 <td>Quarterly CPU within 2 weeks of upstream</td>
@@ -151,37 +151,41 @@ status=published
                 <td>-</td>
                 <td>-</td>
                 <td>-</td>
-                <td>&#10003; (Phase 1)</td>
+                <td>&#10003;</td>
             </tr>
             <tr>
                 <td>Cross-correlation forensic platform (no SaaS)</td>
                 <td>-</td>
                 <td>-</td>
                 <td>-</td>
-                <td>&#10003; (Phase 3: Asymm Forensics)</td>
+                <td>&#9675; planned (Asymm Forensics)</td>
             </tr>
             <tr>
                 <td>Local execution, no telemetry, no phone-home</td>
                 <td>&#10003;</td>
                 <td>&#10003;</td>
                 <td>&#10003;</td>
-                <td>&#10003; (architectural commitment across all phases)</td>
+                <td>&#10003; (architectural commitment)</td>
             </tr>
         </tbody>
     </table>
 
+    <p style="font-size: 0.95rem; opacity: 0.85;">In the Eliya column, <code>&#10003;</code> marks
+        capabilities available today; <code>&#9675; planned</code> marks roadmap items that are not
+        yet available.</p>
+
     <p><sup>1</sup> TCK conformance is a property of a specific built binary, not of source
         code. The Eliya binary is its own build and has not yet been run against the TCK
         separately. The Eliya binary's TCK run, under the OpenJDK Community TCK License
-        Agreement (OCTLA), is a Phase 2 deliverable. See
+        Agreement (OCTLA), is planned. See
         <a href="/product/eliya/security.html" class="org-link org-link--inline org-link--internal">TCK pedigree</a>.</p>
 
     <p>If your team already configures observability flags themselves and has no plans to
         adopt compliance-aligned profile flags or Asymm Forensics, Eliya offers less marginal
-        value in Phase 1; Temurin or Corretto remains a fine pick. Eliya's strategic
-        value compounds across phases: configured-by-default observability now, bundled local
+        value today; Temurin or Corretto remains a fine pick. Eliya's strategic
+        value compounds over time: configured-by-default observability now, bundled local
         diagnostic tooling next, compliance-aligned profiles when customer demand triggers
-        each framework, and Asymm Forensics when Phase 3 delivers.</p>
+        each framework, and Asymm Forensics when it ships.</p>
 
     <p>Eliya runs alongside APM tools (AppDynamics, Dynatrace, New Relic, Elastic APM, Datadog)
         via the standard <code>-javaagent:</code> API. For the architectural distinction
@@ -202,7 +206,7 @@ the precise breakdown of what <code>EliyaProfile=Production</code> activates,
 Maven / Gradle toolchains, Kubernetes patterns, service mesh, logging stacks,
             CI/CD, APM coexistence, cryptographic providers.</li>
         <li><a href="/product/eliya/roadmap.html" class="org-link org-link--inline org-link--internal">Roadmap</a>:
-consolidated Phase 1 to Phase 4 trajectory with demand-gating mechanics.</li>
+the consolidated trajectory with demand-gating mechanics.</li>
         <li><a href="/product/eliya/user-guide/lessons-from-production.html" class="org-link org-link--inline org-link--internal">Lessons from production</a>:
 the four recurring production patterns that motivated these defaults.</li>
     </ul>
