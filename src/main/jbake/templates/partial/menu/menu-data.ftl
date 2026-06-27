@@ -63,22 +63,26 @@
             {
                 "label": "Engineer",
                 "children": [
+                    { "label": "Quick start",       "href": "/product/eliya/user-guide/quick-start.html" },
                     { "label": "User Guide",        "href": "/product/eliya/user-guide/" },
                     { "label": "Flags reference",   "href": "/product/eliya/user-guide/flags-reference.html" },
-                    { "label": "Diff from upstream","href": "/product/eliya/user-guide/diff-from-upstream.html" },
-                    { "label": "asymm CLI",         "href": "/product/eliya/user-guide/cli.html" },
                     { "label": "Flag architecture", "href": "/product/eliya/user-guide/flag-architecture.html" },
-                    { "label": "Install",           "href": "/product/eliya/user-guide/install-linux.html" },
-                    { "label": "Migration",         "href": "/product/eliya/migration.html" }
+                    { "label": "asymm CLI",         "href": "/product/eliya/user-guide/cli.html" },
+                    { "label": "Diff from upstream","href": "/product/eliya/user-guide/diff-from-upstream.html" },
+                    { "label": "Migration",         "href": "/product/eliya/migration.html" },
+                    { "label": "GitHub source",     "href": "https://github.com/asymmsystems/eliya-jdk" }
                 ]
             },
             {
                 "label": "Operator",
                 "children": [
                     { "label": "Downloads",         "href": "/product/eliya/downloads.html" },
+                    { "label": "Install",           "href": "/product/eliya/user-guide/install-linux.html" },
+                    { "label": "Verify download",   "href": "/product/eliya/user-guide/verify-download.html" },
                     { "label": "Security",          "href": "/product/eliya/security.html" },
                     { "label": "Lifecycle",         "href": "/product/eliya/lifecycle.html" },
-                    { "label": "Verify download",   "href": "/product/eliya/user-guide/verify-download.html" },
+                    { "label": "Troubleshooting",   "href": "/product/eliya/user-guide/troubleshooting.html" },
+                    { "label": "Integrations",      "href": "/product/eliya/integrations.html" },
                     { "label": "Lessons from production", "href": "/product/eliya/user-guide/lessons-from-production.html" }
                 ]
             },
@@ -86,11 +90,11 @@
                 "label": "Decider",
                 "children": [
                     { "label": "FAQ",                "href": "/product/eliya/faq.html" },
-                    { "label": "Eliya for industry", "href": "/product/eliya/industries/" },
-                    { "label": "The policy point",   "href": "/research/the-policy-point.html" },
                     { "label": "Compare JDKs",       "href": "/research/choosing-a-jdk-2026.html" },
+                    { "label": "The policy point",   "href": "/research/the-policy-point.html" },
                     { "label": "JVM forensics vs APM","href": "/research/jvm-forensics-vs-apm.html" },
-                    { "label": "Diff from upstream", "href": "/product/eliya/user-guide/diff-from-upstream.html" },
+                    { "label": "Eliya for industry", "href": "/product/eliya/industries/" },
+                    { "label": "Roadmap",            "href": "/product/eliya/roadmap.html" },
                     { "label": "License",           "href": "/product/eliya/user-guide/license.html" },
                     { "label": "Release Notes",     "href": "/product/eliya/user-guide/release-notes.html" }
                 ]
@@ -107,6 +111,15 @@
             { "label": "product",    "href": "" },
             { "label": "eliya",      "href": "/product/eliya.html" },
             { "label": "user-guide", "href": "/product/eliya/user-guide/" }
+        ]
+    },
+    {
+        "match": "product/eliya/industries",
+        "trail": [
+            { "label": "asymm",      "href": "/" },
+            { "label": "product",    "href": "" },
+            { "label": "eliya",      "href": "/product/eliya.html" },
+            { "label": "industries", "href": "/product/eliya/industries/" }
         ]
     },
     {
