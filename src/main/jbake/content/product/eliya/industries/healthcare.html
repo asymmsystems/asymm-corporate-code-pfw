@@ -1,0 +1,47 @@
+title=OpenJDK for healthcare
+seo_title=OpenJDK for healthcare: PHI-safe JVM diagnostics
+description=Eliya is an OpenJDK 25 LTS distribution for healthcare and clinical systems: a heap dump can hold protected health information at rest, and diagnostic capture stays inside your perimeter, never a SaaS.
+type=page
+toc=true
+status=published
+~~~~~~
+
+<header class="page-header">
+    <span class="section-kicker">Eliya for industry</span>
+    <h1>OpenJDK for healthcare</h1>
+    <p style="max-width: 62ch">Healthcare and clinical systems run Java over protected health information. The
+        same diagnostic artefacts that make a production failure recoverable, heap dumps and crash logs, can
+        contain that PHI at rest. Eliya is an OpenJDK 25 LTS distribution that keeps the evidence local and
+        treats the dump writer as part of the runtime, not an external concern.</p>
+</header>
+
+<h2>One requirement an external wrapper cannot meet</h2>
+<p>A heap dump of a clinical service can hold patient identifiers and medical data in cleartext. Under HIPAA,
+    electronic protected health information must be safeguarded wherever it is stored, and a heap dump is
+    storage. How the VM writes that dump, and where it lands, is crash-path behaviour inside the runtime; no
+    sidecar can change it from outside. Just as important: sending a PHI-bearing dump to a third-party SaaS for
+    analysis introduces a new data processor into a regulated boundary. It is one of several
+    requirements that fall outside what external tooling can reach; the
+    <a href="/research/the-policy-point.html" class="org-link org-link--inline org-link--internal">policy point</a>
+    essay sets out the general case, here applied to PHI.</p>
+
+<h2>What Eliya gives a healthcare workload today</h2>
+<p>One flag, <code>-XX:EliyaProfile=Production</code>, activates the Phase 1 operational-readiness defaults:
+    heap dump on OutOfMemoryError to a structured path, a predictable crash-log path that survives the
+    container, Native Memory Tracking (summary), reinforced container support, and exit on OutOfMemoryError.</p>
+<p>All diagnostic capture and, in Phase 2, local analysis run on your own infrastructure. No SaaS, no
+    telemetry, no phone-home. PHI captured during an incident stays inside the boundary it was generated in.
+    Eliya is the same Java you already run, on the upstream OpenJDK 25 source tree, GPLv2 with the Classpath
+    Exception, on a quarterly LTS maintenance cadence.</p>
+
+<h2>What does not ship today</h2>
+<p>Eliya does not ship a "HIPAA" profile, and it does not redact PHI inside a heap dump today. What it ships is
+    the policy point, the structured diagnostic foundation, and local-only capture so that PHI never leaves
+    your perimeter for diagnosis. Compliance-aligned profile values are demand-gated on the
+    <a href="/product/eliya/roadmap.html" class="org-link org-link--inline org-link--internal">roadmap</a>, not
+    in the 25.0.3 binary.</p>
+
+<hr class="section-divider" style="margin: 4rem 0;">
+<p>Next: <a href="/product/eliya/downloads.html" class="org-link org-link--inline org-link--internal">download Eliya</a>,
+    read <a href="/research/the-policy-point.html" class="org-link org-link--inline org-link--internal">the thesis</a>,
+    or see <a href="/research/jvm-forensics-vs-apm.html" class="org-link org-link--inline org-link--internal">JVM forensics vs APM</a>.</p>

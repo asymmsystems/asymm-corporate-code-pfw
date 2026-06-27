@@ -1,0 +1,63 @@
+title=OpenJDK for telecom
+seo_title=OpenJDK for telecom: carrier-grade JVM evidence
+description=Eliya is an OpenJDK 25 LTS distribution for telecom and telco production: carrier-grade incident evidence on disk before failure, diagnostic data inside the operator perimeter, one flag.
+type=page
+toc=true
+status=published
+~~~~~~
+
+<header class="page-header">
+    <span class="section-kicker">Eliya for industry</span>
+    <h1>OpenJDK for telecom</h1>
+    <p style="max-width: 62ch">Carrier-grade Java runs the BSS and OSS stack: charging, mediation,
+        provisioning, order management. When one of those nodes fails, a telco operator needs to reconstruct
+        what happened, not re-run it. Eliya is an OpenJDK 25 LTS distribution that puts the evidence on disk
+        before the failure, and keeps it inside your perimeter.</p>
+</header>
+
+<h2>One requirement an external wrapper cannot meet</h2>
+<p>Most operational requirements in a telecommunications estate live in the configuration space: you set a
+    flag, a Helm value, or an environment variable and you are done. The hard ones do not. Reconstructing a
+    failed charging transaction needs the last execution profile, the heap state, and the crash log to already
+    exist at the moment the JVM dies. That is crash-path behaviour, run by the VM itself, and no wrapper script
+    or sidecar can guarantee the trace survives a process that is going down. It is one of several
+    requirements that fall outside what external tooling can reach; the
+    <a href="/research/the-policy-point.html" class="org-link org-link--inline org-link--internal">policy point</a>
+    essay sets out the general case, here applied to carrier-grade operations.</p>
+
+<h2>What Eliya gives a telecom workload today</h2>
+<p>One flag, <code>-XX:EliyaProfile=Production</code>, activates the Phase 1 operational-readiness defaults:</p>
+<ul style="line-height: 1.9">
+    <li>Heap dump on OutOfMemoryError, written to a structured, predictable path rather than the working
+        directory.</li>
+    <li>A crash-log path that does not die with the container, so post-incident reconstruction has something to
+        read.</li>
+    <li>Native Memory Tracking (summary) and reinforced container support, which matter when mediation and
+        charging nodes are packed into memory-limited pods.</li>
+    <li>Exit on OutOfMemoryError, so a wedged node fails fast and the orchestrator can replace it.</li>
+</ul>
+<p>Diagnostic data stays on operator infrastructure. No SaaS, no telemetry, no phone-home. For operators with
+    data-residency obligations, the evidence never leaves the network it was generated on.</p>
+
+<h2>Built for the cadence telecom runs on</h2>
+<p>Eliya ships quarterly Critical Patch Updates within two weeks of each upstream OpenJDK release, on an LTS
+    line, so a long-lived BSS platform can pin a version and still receive security maintenance. It is the same
+    Java you already run: the upstream OpenJDK 25 source tree, GPLv2 with the Classpath Exception, no API
+    changes, no custom JIT or GC.</p>
+
+<h2>Where this is going</h2>
+<p>Phase 2 adds continuous JFR and unified GC logging as defaults under the same flag, so the last day of
+    execution profile is on disk before a failure. Compliance-aligned profile values are demand-gated and
+    sit further out on the roadmap; they are not shipping today. The
+    <a href="/product/eliya/roadmap.html" class="org-link org-link--inline org-link--internal">roadmap</a> is
+    explicit about what is built and what is not.</p>
+
+<p style="margin-top: 1rem">Telecom is also where Asymm Systems builds
+    <a href="/product/dial.html" class="org-link org-link--inline org-link--internal">Dial</a>, its build-time
+    TMF Open Digital Architecture (ODA) conformance work, so the runtime and the ecosystem share the same
+    compliance-conscious premise.</p>
+
+<hr class="section-divider" style="margin: 4rem 0;">
+<p>Next: <a href="/product/eliya/downloads.html" class="org-link org-link--inline org-link--internal">download Eliya</a>,
+    read <a href="/research/the-policy-point.html" class="org-link org-link--inline org-link--internal">the thesis</a>,
+    or compare options in <a href="/research/choosing-a-jdk-2026.html" class="org-link org-link--inline org-link--internal">Choosing a JDK in 2026</a>.</p>

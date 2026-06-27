@@ -1,0 +1,93 @@
+title=The policy point
+seo_title=The policy point: where compliance belongs in the JVM
+description=Some production-evidence and compliance requirements cannot be set from outside the runtime. The thesis behind Eliya JDK and the EliyaProfile flag: name the intent as policy, implement it as mechanism in the VM, ship it as a default.
+type=page
+toc=true
+status=published
+~~~~~~
+
+<header class="page-header">
+    <span class="section-kicker">Asymm Research</span>
+    <h1>The policy point: where compliance belongs in the JVM</h1>
+    <p style="max-width: 62ch">Every configurable system has two spaces. Most of operations lives in one of
+        them. Production-evidence and compliance requirements lie partly in the other, and that is the whole
+        argument for <a href="/product/eliya.html" class="org-link org-link--inline org-link--internal">Eliya JDK</a>
+        and its one flag.</p>
+    <p style="max-width: 62ch; font-size: 0.9rem; margin-top: 1rem">
+        <em>This is the thesis behind Eliya. For what actually ships, see the
+        <a href="/product/eliya/user-guide/diff-from-upstream.html" class="org-link org-link--inline org-link--internal">diff from upstream</a>
+        and the <a href="/product/eliya/user-guide/flags-reference.html" class="org-link org-link--inline org-link--internal">flags reference</a>.</em>
+    </p>
+</header>
+
+<section class="technical-inset" style="margin-bottom: 5rem">
+    <div style="max-width: 800px; margin: 0 auto">
+        <h3>The placement claim, in one paragraph</h3>
+        <p style="margin-top: 1rem">Let F be the set of behaviours reachable by composing a runtime's existing
+            flags. Every wrapper script, Helm chart, and admission webhook is a selector over F. A requirement
+            that lies outside F cannot be met by any selector. It can only be met by extending the runtime
+            itself. Production-evidence and compliance requirements lie partly outside F. So the policy point
+            belongs inside the VM: named as policy, implemented as mechanism, shipped as a default.</p>
+    </div>
+</section>
+
+<h2>Two spaces</h2>
+<p>Every configurable system has two spaces. The <strong>configuration space</strong> is every behaviour you
+    can reach by setting the knobs the system already exposes. The <strong>capability space</strong> is the set
+    of behaviours that exist only if someone changes the system itself. Wrapper scripts, Helm charts, admission
+    webhooks, GitOps: all of it selects points in the configuration space. None of it extends the space. Only
+    whoever builds the runtime can do that.</p>
+<p>Most of operations is selection, and that is fine. Most requirements live inside the configuration space.
+    The interesting problems start when a requirement does not.</p>
+
+<h2>Policy and mechanism</h2>
+<p>Operating-systems research named this boundary fifty years ago: policy/mechanism separation<button type="button" class="cite-ref" aria-label="Citation"><span class="cite-icon">i</span><span class="cite-tooltip"><a href="https://dl.acm.org/doi/10.1145/800213.806531" class="cite-link">Levin, Cohen, Corwin, Pollack and Wulf, "Policy/mechanism separation in Hydra", Proceedings of the 5th ACM Symposium on Operating Systems Principles (SOSP), 1975.</a> The HYDRA kernel provided mechanisms; policies were expressed separately on top of them.</span></button>. Policy names an intent; mechanism implements it. A JVM flag like
+    <code>-XX:+HeapDumpOnOutOfMemoryError</code> is mechanism. "This JVM runs production workloads in a regulated
+    environment, so behave accordingly" is policy. The JVM exposes hundreds of the former and exactly none of
+    the latter.</p>
+<p>Two more pieces complete the thesis.</p>
+
+<h2>Defaults are policy</h2>
+<p>Defaults are policy, whether or not anyone intends them to be. Johnson and Goldstein measured organ-donor
+    consent at around 12% in Germany and over 99% in Austria<button type="button" class="cite-ref" aria-label="Citation"><span class="cite-icon">i</span><span class="cite-tooltip"><a href="https://www.science.org/doi/10.1126/science.1091721" class="cite-link">Johnson and Goldstein, "Do Defaults Save Lives?", Science 302(5649), 2003.</a> Effective consent rates differed by which box was pre-ticked: opt-in countries such as Germany sat near 12%, opt-out countries such as Austria near 99%.</span></button>, two culturally similar countries, on
+    nothing but which box was pre-ticked. People run what ships. Whatever a JDK distribution defaults to is, in
+    practice, the configuration of the fleet.</p>
+
+<h2>Every contact leaves a trace</h2>
+<p>Borrowed from forensic science: Locard's exchange principle holds that every contact leaves a trace.
+    Production incidents obey it too, but only if the runtime is configured to record the trace. An
+    out-of-the-box JVM is a crime scene that wipes itself: no GC log, no heap dump, and a crash log written to
+    an ephemeral path that dies with the container.</p>
+
+<h2>Where requirements fall outside F</h2>
+<p>Three concrete examples of requirements that no external selector can satisfy.</p>
+<ul style="line-height: 1.9">
+    <li><strong>PCI DSS Requirement 3.5.1</strong> says the primary account number must be rendered unreadable
+        anywhere it is stored<button type="button" class="cite-ref" aria-label="Citation"><span class="cite-icon">i</span><span class="cite-tooltip"><a href="https://www.pcisecuritystandards.org/document_library/" class="cite-link">PCI DSS v4.0, Requirement 3.5.1, PCI Security Standards Council.</a> v4.0.1 clarifies the requirement applies to PAN in non-primary storage such as audit logs.</span></button>. A heap dump of a payment service stores live card numbers in cleartext, which
+        makes dump contents a dump-writer problem inside the VM, not a flag anyone can set from outside it.</li>
+    <li><strong>SOX-style change control</strong> wants attestation that the running configuration is the
+        approved one. A flag's origin, whether the profile set it or someone's command line did, is internal VM
+        state, invisible to any external tool.</li>
+    <li><strong>ISO 27001 control A.8.15</strong> wants logs produced and protected<button type="button" class="cite-ref" aria-label="Citation"><span class="cite-icon">i</span><span class="cite-tooltip"><a href="https://www.iso.org/standard/27001" class="cite-link">ISO/IEC 27001:2022, Annex A control 8.15 (Logging).</a> Logs of activities, exceptions and faults are to be produced, stored, protected and analysed.</span></button>, including
+        artefacts written during a crash, by crash-path code that only the VM runs.</li>
+</ul>
+
+<h2>The cash value is one flag</h2>
+<p>The cash value of all this theory is a single flag:</p>
+<pre><code>java -XX:EliyaProfile=Production -jar app.jar</code></pre>
+<p>That flag ships in Eliya JDK 25.0.3, an OpenJDK 25 LTS distribution from Asymm Systems, built for
+    compliance-conscious production in telecom, banking, healthcare, and government. <code>EliyaProfile</code> is
+    the policy point the thesis calls for: a named enum, not a boolean, because policies are named things.
+    <code>Production</code> today; compliance-aligned values, demand-gated, later. It is the same Java you
+    already run, built from the upstream OpenJDK 25 source tree under GPLv2 with the Classpath Exception, with no
+    API changes. The difference shows up when something fails in production: the diagnostic evidence is already
+    on disk, and it stays inside your perimeter.</p>
+
+<h2>A note on the name</h2>
+<p>Eliya is short for Nuwara Eliya, the highland tea country of Sri Lanka. In Sinhala the word means light. Java
+    took its name from an Indonesian island that grows coffee; ours comes from highlands that grow tea.</p>
+
+<hr class="section-divider" style="margin: 4rem 0;">
+<p>Read next: <a href="/product/eliya.html" class="org-link org-link--inline org-link--internal">Eliya JDK</a>,
+    the <a href="/product/eliya/roadmap.html" class="org-link org-link--inline org-link--internal">four-phase roadmap</a>,
+    or <a href="/research/choosing-a-jdk-2026.html" class="org-link org-link--inline org-link--internal">Choosing a JDK in 2026</a>.</p>
