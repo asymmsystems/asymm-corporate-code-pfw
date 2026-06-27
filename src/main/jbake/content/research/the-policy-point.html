@@ -1,6 +1,6 @@
 title=The policy point
-seo_title=The policy point: where compliance belongs in the JVM
-description=Some production-evidence and compliance requirements cannot be set from outside the runtime. The thesis behind Eliya JDK and the EliyaProfile flag: name the intent as policy, implement it as mechanism in the VM, ship it as a default.
+seo_title=Where production policy belongs: the thesis behind Eliya
+description=The thesis behind Eliya JDK and the EliyaProfile flag. Some production-evidence and compliance requirements cannot be set from outside the runtime: name the intent as policy, implement it as mechanism in the VM, and ship it as a default.
 type=page
 toc=true
 status=published
@@ -8,84 +8,202 @@ status=published
 
 <header class="page-header">
     <span class="section-kicker">Asymm Research</span>
-    <h1>The policy point: where compliance belongs in the JVM</h1>
-    <p style="max-width: 62ch">Every configurable system has two spaces. Most of operations lives in one of
-        them. Production-evidence and compliance requirements lie partly in the other, and that is the whole
-        argument for <a href="/product/eliya.html" class="org-link org-link--inline org-link--internal">Eliya JDK</a>
-        and its one flag.</p>
+    <h1>Where production policy belongs</h1>
+    <p style="max-width: 62ch">An argument about where production intent belongs in a managed runtime, and the
+        OpenJDK distribution we built to act on it. This is the thesis behind
+        <a href="/product/eliya.html" class="org-link org-link--inline org-link--internal">Eliya JDK</a> and its
+        one flag.</p>
     <p style="max-width: 62ch; font-size: 0.9rem; margin-top: 1rem">
-        <em>This is the thesis behind Eliya. For what actually ships, see the
+        <em>First published on
+        <a href="https://foojay.io/today/where-production-policy-belongs-building-eliya-in-public/" class="org-link org-link--inline org-link--external">Foojay</a>.
+        For what actually ships, see the
         <a href="/product/eliya/user-guide/diff-from-upstream.html" class="org-link org-link--inline org-link--internal">diff from upstream</a>
         and the <a href="/product/eliya/user-guide/flags-reference.html" class="org-link org-link--inline org-link--internal">flags reference</a>.</em>
     </p>
 </header>
 
-<section class="technical-inset" style="margin-bottom: 5rem">
+<p>Every configurable system has two spaces. The <strong>configuration space</strong>: every behaviour you
+    can reach by setting the knobs the system already exposes. And there is the <strong>implementation
+    space</strong>: behaviour that only exists if someone goes in and changes the internals.</p>
+
+<p>A wrapper script can do a lot. Setting flags, launching a <code>-javaagent</code>, mounting a volume. That
+    is more than "selecting a flag"; it composes external system behaviour around the JVM. But notice the floor
+    it hits, and the floor is the point. It cannot rewrite the heap-dump byte stream as that stream is being
+    written. It cannot tell you a flag's origin, whether the value was derived internally or set on the command
+    line. Even a native JVMTI agent, the strongest external case, running in the JVM's own address space, works
+    through the runtime's published extension points. The boundary that matters is not how many knobs you can
+    reach from outside. It is whether you can change what the JVM's own code does on the inside, and a wrapper,
+    however elaborate, is always on the outside.</p>
+
+<p>Most operational requirements live well outside that boundary, and that is fine. Most requirements never
+    need the JVM's interior. The interesting problems start when one does.</p>
+
+<h2>Policy, mechanism, and a caveat</h2>
+<p>OS research named this separation fifty years ago, the HYDRA paper<button type="button" class="cite-ref" aria-label="Citation"><span class="cite-icon">i</span><span class="cite-tooltip"><a href="https://dl.acm.org/doi/10.1145/800213.806531" class="cite-link">Levin, Cohen, Corwin, Pollack and Wulf, "Policy/mechanism separation in Hydra", SOSP 1975.</a> The HYDRA kernel provided mechanisms; policies were expressed separately on top of them.</span></button>.
+    Policy names an intent; mechanism implements it. The JVM exposes mechanisms individually:
+    <code>-XX:+HeapDumpOnOutOfMemoryError</code> is a mechanism. The JVM has long exposed first-class flags for
+    some intents, like compilation (<code>-server</code>, tiered compilation) and memory. What it does not
+    expose is a policy that says "when this process dies, it should leave enough evidence to diagnose why".</p>
+
+<p>The upstream JDK is largely neutral, by design, so it does not ship the kind of opinionated defaults that
+    particular groups or industries would want as their baseline. A JDK distribution, however, can take that
+    opinion and cater to those groups with the policies built in.</p>
+
+<p>Why should such an opinionated distribution exist at all? <strong>Defaults are policy</strong>, whether
+    anyone intends them to be or not. Johnson and Goldstein measured organ-donor consent at around 12% in
+    Germany and over 99% in Austria<button type="button" class="cite-ref" aria-label="Citation"><span class="cite-icon">i</span><span class="cite-tooltip"><a href="https://www.science.org/doi/10.1126/science.1091721" class="cite-link">Johnson and Goldstein, "Do Defaults Save Lives?", Science 302(5649), 2003.</a> Effective consent differed by which box was pre-ticked: opt-in countries near 12%, opt-out countries near 99%.</span></button>,
+    two culturally similar countries, and the entire gap came down to which box was pre-ticked. People run what
+    ships. What a JDK distribution defaults to becomes, in practice, the configuration of the fleet. That
+    justifies shipping a distribution with production-grade defaults.</p>
+
+<p>It still does not justify patching a VM (which we did), because a wrapper could ship defaults too. Here is
+    the caveat. It is easy to overreach, so let us be exact about the limit. Separating policy from mechanism
+    does not mean policy has to live inside the mechanism. Plenty of systems externalise their policy correctly:
+    Kubernetes pushes authorisation to admission controllers, applications delegate access decisions to IAM. So
+    the claim is not "policy belongs in the runtime". The real claim is narrower, and harder to dispute:
+    <em>some</em> policies depend on what only the runtime can see or do, a flag's origin, the live object
+    graph, the bytes a dump writer is about to emit. Such policies require runtime intimacy, and externalising
+    them is not a style preference, it is simply not possible. An out-of-the-box JVM often leaves less evidence
+    than operators expect when something goes wrong. No GC log. No heap dump. A crash log written to some
+    ephemeral path that dies with the container. And recording those traces correctly (redacting what is
+    sensitive, signing what has to be tamper-evident, attesting what produced each setting) needs exactly that
+    runtime intimacy. That is the thing a wrapper cannot ship, and the only reason a patch exists.</p>
+
+<section class="technical-inset" style="margin: 3rem 0">
     <div style="max-width: 800px; margin: 0 auto">
-        <h3>The placement claim, in one paragraph</h3>
-        <p style="margin-top: 1rem">Let F be the set of behaviours reachable by composing a runtime's existing
-            flags. Every wrapper script, Helm chart, and admission webhook is a selector over F. A requirement
-            that lies outside F cannot be met by any selector. It can only be met by extending the runtime
-            itself. Production-evidence and compliance requirements lie partly outside F. So the policy point
-            belongs inside the VM: named as policy, implemented as mechanism, shipped as a default.</p>
+        <h3>The placement claim</h3>
+        <p style="margin-top: 1rem">Let C be the set of external controllers that configure the JVM, and B the
+            set of behaviors those controllers can produce. Every wrapper, Helm chart, or webhook is merely a
+            selector operating within C to pick a point inside B. But certain policies demand behaviors outside
+            B (call them B&prime;) because they depend entirely on what only the runtime can see or do. A
+            B&prime; behavior can be obtained only by changing the runtime itself. Therefore, the policy that
+            targets B&prime; is, narrowly, the one that belongs in the VM.</p>
     </div>
 </section>
 
-<h2>Two spaces</h2>
-<p>Every configurable system has two spaces. The <strong>configuration space</strong> is every behaviour you
-    can reach by setting the knobs the system already exposes. The <strong>capability space</strong> is the set
-    of behaviours that exist only if someone changes the system itself. Wrapper scripts, Helm charts, admission
-    webhooks, GitOps: all of it selects points in the configuration space. None of it extends the space. Only
-    whoever builds the runtime can do that.</p>
-<p>Most of operations is selection, and that is fine. Most requirements live inside the configuration space.
-    The interesting problems start when a requirement does not.</p>
+<p>Take an example where a requirement actually falls outside B, PCI DSS Requirement 3.5.1<button type="button" class="cite-ref" aria-label="Citation"><span class="cite-icon">i</span><span class="cite-tooltip"><a href="https://www.pcisecuritystandards.org/document_library/" class="cite-link">PCI DSS v4.0, Requirement 3.5.1, PCI Security Standards Council.</a> The PAN must be rendered unreadable anywhere it is stored.</span></button>,
+    which says the PAN (Primary Account Number) must be unreadable anywhere it is stored. A heap dump of a
+    payment service writes live card numbers to disk in cleartext. A critic is right that you can deal with this
+    from outside the VM by disabling heap dumps, or encrypting the volume. But look at what each one costs. By
+    disabling dumps you have thrown away the forensic evidence that was the whole reason for running this way;
+    volume encryption protects the disk while the dump still travels cleartext from memory to the writer inside
+    the trust boundary. Redacting the dump <em>as the stream is written</em>, inside the VM, kills the dilemma
+    instead of trading one risk for another. That is a dump-writer problem in HotSpot. You cannot implement that
+    behaviour purely by composing existing JVM flags.</p>
 
-<h2>Policy and mechanism</h2>
-<p>Operating-systems research named this boundary fifty years ago: policy/mechanism separation<button type="button" class="cite-ref" aria-label="Citation"><span class="cite-icon">i</span><span class="cite-tooltip"><a href="https://dl.acm.org/doi/10.1145/800213.806531" class="cite-link">Levin, Cohen, Corwin, Pollack and Wulf, "Policy/mechanism separation in Hydra", Proceedings of the 5th ACM Symposium on Operating Systems Principles (SOSP), 1975.</a> The HYDRA kernel provided mechanisms; policies were expressed separately on top of them.</span></button>. Policy names an intent; mechanism implements it. A JVM flag like
-    <code>-XX:+HeapDumpOnOutOfMemoryError</code> is mechanism. "This JVM runs production workloads in a regulated
-    environment, so behave accordingly" is policy. The JVM exposes hundreds of the former and exactly none of
-    the latter.</p>
-<p>Two more pieces complete the thesis.</p>
-
-<h2>Defaults are policy</h2>
-<p>Defaults are policy, whether or not anyone intends them to be. Johnson and Goldstein measured organ-donor
-    consent at around 12% in Germany and over 99% in Austria<button type="button" class="cite-ref" aria-label="Citation"><span class="cite-icon">i</span><span class="cite-tooltip"><a href="https://www.science.org/doi/10.1126/science.1091721" class="cite-link">Johnson and Goldstein, "Do Defaults Save Lives?", Science 302(5649), 2003.</a> Effective consent rates differed by which box was pre-ticked: opt-in countries such as Germany sat near 12%, opt-out countries such as Austria near 99%.</span></button>, two culturally similar countries, on
-    nothing but which box was pre-ticked. People run what ships. Whatever a JDK distribution defaults to is, in
-    practice, the configuration of the fleet.</p>
-
-<h2>Every contact leaves a trace</h2>
-<p>Borrowed from forensic science: Locard's exchange principle holds that every contact leaves a trace.
-    Production incidents obey it too, but only if the runtime is configured to record the trace. An
-    out-of-the-box JVM is a crime scene that wipes itself: no GC log, no heap dump, and a crash log written to
-    an ephemeral path that dies with the container.</p>
-
-<h2>Where requirements fall outside F</h2>
-<p>Three concrete examples of requirements that no external selector can satisfy.</p>
-<ul style="line-height: 1.9">
-    <li><strong>PCI DSS Requirement 3.5.1</strong> says the primary account number must be rendered unreadable
-        anywhere it is stored<button type="button" class="cite-ref" aria-label="Citation"><span class="cite-icon">i</span><span class="cite-tooltip"><a href="https://www.pcisecuritystandards.org/document_library/" class="cite-link">PCI DSS v4.0, Requirement 3.5.1, PCI Security Standards Council.</a> v4.0.1 clarifies the requirement applies to PAN in non-primary storage such as audit logs.</span></button>. A heap dump of a payment service stores live card numbers in cleartext, which
-        makes dump contents a dump-writer problem inside the VM, not a flag anyone can set from outside it.</li>
-    <li><strong>SOX-style change control</strong> wants attestation that the running configuration is the
-        approved one. A flag's origin, whether the profile set it or someone's command line did, is internal VM
-        state, invisible to any external tool.</li>
-    <li><strong>ISO 27001 control A.8.15</strong> wants logs produced and protected<button type="button" class="cite-ref" aria-label="Citation"><span class="cite-icon">i</span><span class="cite-tooltip"><a href="https://www.iso.org/standard/27001" class="cite-link">ISO/IEC 27001:2022, Annex A control 8.15 (Logging).</a> Logs of activities, exceptions and faults are to be produced, stored, protected and analysed.</span></button>, including
-        artefacts written during a crash, by crash-path code that only the VM runs.</li>
-</ul>
-
-<h2>The cash value is one flag</h2>
-<p>The cash value of all this theory is a single flag:</p>
+<h2>The flag</h2>
+<p>The whole argument comes down to one flag, which activates a policy group:</p>
 <pre><code>java -XX:EliyaProfile=Production -jar app.jar</code></pre>
-<p>That flag ships in Eliya JDK 25.0.3, an OpenJDK 25 LTS distribution from Asymm Systems, built for
-    compliance-conscious production in telecom, banking, healthcare, and government. <code>EliyaProfile</code> is
-    the policy point the thesis calls for: a named enum, not a boolean, because policies are named things.
-    <code>Production</code> today; compliance-aligned values, demand-gated, later. It is the same Java you
-    already run, built from the upstream OpenJDK 25 source tree under GPLv2 with the Classpath Exception, with no
-    API changes. The difference shows up when something fails in production: the diagnostic evidence is already
-    on disk, and it stays inside your perimeter.</p>
+<p>That flag ships in <a href="/product/eliya.html" class="org-link org-link--inline org-link--internal">Eliya</a>,
+    an OpenJDK 25 LTS distribution from Asymm Systems, built for compliance-conscious production in regulated
+    industries: telecom, banking and financial services, healthcare, government. <code>EliyaProfile</code> is
+    the policy point the thesis calls for: a <code>ccstr</code> enum. <code>Production</code>, the general set of
+    production-readiness defaults, is the value that ships today (Phase 1); further values are reserved, some on
+    the roadmap, the rest demand-gated.</p>
+<p>A quick word on the name. Eliya is short for Nuwara Eliya, the highland tea country of Sri Lanka. In Sinhala
+    the word means <em>light</em>. Java took its name from an Indonesian island that grows coffee; ours comes
+    from highlands that grow tea.</p>
 
-<h2>A note on the name</h2>
-<p>Eliya is short for Nuwara Eliya, the highland tea country of Sri Lanka. In Sinhala the word means light. Java
-    took its name from an Indonesian island that grows coffee; ours comes from highlands that grow tea.</p>
+<h2>The Production profile</h2>
+<p>The <code>Production</code> profile's ergonomic defaults:</p>
+<ol style="line-height: 1.9">
+    <li><strong>Heap dump on OOM</strong>, written to a structured path under
+        <code>${ELIYA_DIAGNOSTIC_PATH}/${service}/${replica}/heap-dumps/</code>.</li>
+    <li><strong>Exit on OOM</strong>, a clean shutdown so orchestration can restart you instead of leaving a
+        zombie JVM.</li>
+    <li><strong>Native Memory Tracking</strong> in <code>summary</code> mode.</li>
+    <li><strong>Crash log path</strong>, a predictable <code>hs_err_pidNNNN.log</code> location under the same
+        tree.</li>
+    <li><strong>Container support reinforced</strong>: <code>UseContainerSupport=true</code> is guaranteed under
+        the profile. Upstream JDK 25 already defaults it on, so today this is a no-op; it is there so the
+        guarantee survives a future upstream changing its mind.</li>
+    <li><strong>Diagnostic VM options unlocked</strong>, which JFR sampling and profiler attachment need to work
+        accurately.</li>
+</ol>
+<p>All six of these are existing HotSpot flags, and the structured path could be resolved by a wrapper script
+    and handed to <code>-XX:HeapDumpPath</code>. Phase 1 ships no behaviour a script could not reproduce.
+    Strictly speaking, <code>Production</code> is selection from the configuration space. So why patch the VM at
+    all, instead of shipping a wrapper?</p>
+<p>Because Phase 1 is not the capability, it is the boundary. <code>EliyaProfile</code> is a named policy point
+    established inside the runtime, and that is where the genuinely runtime-only capabilities of later phases
+    attach.</p>
+<p><code>Production</code> is a <em>fail-safe default</em> in the Saltzer-Schroeder sense: the VM sets its
+    ergonomics with ergonomic origin, so an operator who explicitly passes a value at the command line wins.
+    Normal JVM precedence (command line beats ergonomic) is respected. Production yields to the operator by
+    design.</p>
+<p>Two independent dimensions get conflated here, and they are worth separating:</p>
+<ol style="line-height: 1.9">
+    <li><strong>Enforcement style:</strong> does the profile actively defend an invariant by rejecting a
+        conflicting override, or does it only set a default and step aside? A profile could reject startup when
+        an override conflicts with a constraint it holds, but whether it should depends entirely on the second
+        dimension.</li>
+    <li><strong>Authority model:</strong> who owns the invariant, and who has the right to waive it? This is the
+        real difference. <code>Production</code>'s constraints are operational: they exist to serve the
+        operator's own goal, diagnosability. An operator who deliberately overrides one is making a call they
+        are entitled to make; they own the goal, so the consequence is theirs to accept, and the profile yields.
+        A compliance value's constraints are external: they exist to satisfy a regulator, not the operator. An
+        SRE saying "I accept card numbers in a world-readable dump" is not authorised to make that trade; the
+        regulation is. So a compliance profile fails closed at startup regardless of operator intent.</li>
+</ol>
+<p>Same flag, two authority models. Mandatory enforcement requires the orchestration plane to seal the profile
+    flag in the deployment manifest, so a random operator cannot bypass compliance by removing the flag
+    entirely.</p>
+<p>Everything else is upstream OpenJDK 25 unchanged. <code>java.security</code> is bit-identical to upstream:
+    TLS 1.0 / 1.1 disabled, weak ciphers blocked, and current minimum key-size requirements already in place. GC
+    selection is left to JDK 25's ergonomics. Outside the profile, Eliya stays intentionally close to upstream,
+    and <code>EliyaProfile=None</code> preserves upstream behaviour.</p>
+
+<h2>The 3 AM story</h2>
+<p>None of the theory above is how anyone experiences the problem. Here is the version everyone recognises.</p>
+<p>It is 3 AM. The pager goes off: the JVM running your settlement engine just OOM'd and the container
+    restarted. Your first instinct is to pull the GC logs. There are none, nobody enabled
+    <code>-Xlog:gc*</code>. Fine, the heap dump then. Also missing: nobody set
+    <code>-XX:+HeapDumpOnOutOfMemoryError</code>, and nobody set <code>-XX:HeapDumpPath</code> either, so even
+    if there were a dump it would be in whatever ephemeral container path the JVM happened to be running from.
+    The crash log? Same story.</p>
+<p>Everybody knows these flags. Most have negligible runtime cost. Yet production systems run without them,
+    because every shop builds its own answer to "what flags should be on?", usually after its first incident.
+    The configuration-errors literature says this is not carelessness: hand humans enough knobs and
+    misconfiguration becomes a dominant failure mode (Yin et al., SOSP 2011; Xu et al., FSE 2015). The remedy
+    the literature points to is the one the thesis points to: ship the answer in the system, as one intent-level
+    control, instead of re-deriving it per team as a dozen mechanism-level ones.</p>
+<p>If you are not in the audience that needs this, you are building an internal tool, or your team has already
+    done the flag work, a neutral upstream build is the right answer, and there are several good ones.</p>
+
+<h2>Where things stand</h2>
+<p>Phase 1, shipping today: one opt-in flag; Linux x86_64 and aarch64; <code>.tar.gz</code> / <code>.deb</code>
+    / <code>.rpm</code> / multi-arch GHCR Docker; signed and reproducible; quarterly upstream-CPU refreshes
+    within two weeks of each upstream CPU, through the JDK 25 LTS window (September 2029); GPLv2 with Classpath
+    Exception; corresponding source attached to each release. No JDK 21 build, deliberately. JDK 29 LTS arrives
+    at its GA with a 24-month overlap before Eliya 25 sunsets.</p>
+<p>Phase 2 (target H2 2026) builds on the same policy point with continuous JFR, bundled local-only diagnostics
+    tooling, and a FIPS-validated provider variant. It also brings unified GC logging (<code>-Xlog:gc*</code>)
+    under the profile, deferred from Phase 1 only because HotSpot's internal LogConfiguration initialises too
+    early for a safe ergonomic override without a deeper source patch.</p>
+<p>The rest gets built in public on
+    <a href="https://foojay.io/today/where-production-policy-belongs-building-eliya-in-public/" class="org-link org-link--inline org-link--external">Foojay</a>,
+    one piece at a time: reproducible builds, the glibc floor, signing and key hygiene, and the structured
+    diagnostic path (the one genuine source patch in Phase 1). The full trajectory is on the
+    <a href="/product/eliya/roadmap.html" class="org-link org-link--inline org-link--internal">roadmap</a>.</p>
+
+<h2>Verify it yourself</h2>
+<p>Do not take any of this on trust. Download the artefact and the signed checksums, fetch the signing key and
+    cross-check its fingerprint against an independent channel, then verify the signature and the checksum. With
+    the profile active, <code>-XX:+PrintFlagsFinal</code> shows <code>{ergonomic}</code> as the origin on each
+    flag the profile set; re-run with <code>EliyaProfile=None</code> to see the difference. The full
+    multi-channel ceremony is on the
+    <a href="/product/eliya/user-guide/verify-download.html" class="org-link org-link--inline org-link--internal">verify your download</a>
+    page.</p>
+
+<h2>References</h2>
+<ul style="line-height: 1.9; font-size: 0.95rem">
+    <li>Levin, Cohen, Corwin, Pollack &amp; Wulf, "Policy/Mechanism Separation in HYDRA", SOSP 1975.</li>
+    <li>Johnson &amp; Goldstein, "Do Defaults Save Lives?", Science 302, 2003.</li>
+    <li>Yin et al., "An Empirical Study on Configuration Errors", SOSP 2011.</li>
+    <li>Xu et al., "Hey, You Have Given Me Too Many Knobs!", ESEC/FSE 2015.</li>
+    <li>Saltzer &amp; Schroeder, "The Protection of Information in Computer Systems", Proc. IEEE 63(9), 1975.</li>
+    <li>PCI DSS v4.0 Requirement 3.5.1.</li>
+</ul>
 
 <hr class="section-divider" style="margin: 4rem 0;">
 <p>Read next: <a href="/product/eliya.html" class="org-link org-link--inline org-link--internal">Eliya JDK</a>,
