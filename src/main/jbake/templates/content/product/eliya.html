@@ -48,6 +48,36 @@
 </section>
 
 
+<!-- Eliya for your industry -->
+<section>
+    <div class="container">
+        <@renderSectionIntro
+            kicker="By industry"
+            title="Eliya for your industry"
+            text="The premise is the same in every regulated sector: some production-evidence and compliance requirements cannot be set from outside the runtime. What differs is the requirement each industry hits first." />
+        <div class="product-features" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); margin-top: 3rem;">
+            <div class="product-feature-card">
+                <h3><a href="/product/eliya/industries/telecom.html" class="org-link org-link--internal">Telecom &rarr;</a></h3>
+                <p>Carrier-grade incident evidence across BSS and OSS, kept inside the operator perimeter.</p>
+            </div>
+            <div class="product-feature-card">
+                <h3><a href="/product/eliya/industries/financial-services.html" class="org-link org-link--internal">Financial services &rarr;</a></h3>
+                <p>A heap dump of a payment service is at-rest cardholder data (PCI&nbsp;DSS 3.5.1), a dump-writer problem inside the VM.</p>
+            </div>
+            <div class="product-feature-card">
+                <h3><a href="/product/eliya/industries/healthcare.html" class="org-link org-link--internal">Healthcare &rarr;</a></h3>
+                <p>Heap dumps and logs can hold PHI at rest; diagnostic capture stays local, never a SaaS.</p>
+            </div>
+            <div class="product-feature-card">
+                <h3><a href="/product/eliya/industries/government.html" class="org-link org-link--internal">Government &rarr;</a></h3>
+                <p>Protected crash-path logs, attestable flag origin, and data sovereignty.</p>
+            </div>
+        </div>
+        <p style="margin-top: 1.5rem;"><a href="/product/eliya/industries/" class="org-link org-link--inline org-link--internal">All industries &rarr;</a></p>
+    </div>
+</section>
+
+
 <!-- What's actually different from upstream OpenJDK 25 -->
 <section>
     <div class="container">
@@ -220,22 +250,26 @@
             <div class="product-feature-card">
                 <h3>Engineer &uarr;</h3>
                 <ul style="margin: 0.75rem 0 0 0; padding-left: 1.2rem; line-height: 1.9;">
+                    <li><a href="/product/eliya/user-guide/quick-start.html" class="org-link org-link--inline org-link--internal">Quick start</a></li>
                     <li><a href="/product/eliya/user-guide/" class="org-link org-link--inline org-link--internal">User Guide</a></li>
                     <li><a href="/product/eliya/user-guide/flags-reference.html" class="org-link org-link--inline org-link--internal">Flags reference</a></li>
-                    <li><a href="/product/eliya/user-guide/diff-from-upstream.html" class="org-link org-link--inline org-link--internal">Diff from upstream</a></li>
-                    <li><a href="/product/eliya/user-guide/cli.html" class="org-link org-link--inline org-link--internal">asymm CLI</a></li>
                     <li><a href="/product/eliya/user-guide/flag-architecture.html" class="org-link org-link--inline org-link--internal">Flag architecture</a></li>
-                    <li><a href="/product/eliya/user-guide/install-linux.html" class="org-link org-link--inline org-link--internal">Install</a></li>
+                    <li><a href="/product/eliya/user-guide/cli.html" class="org-link org-link--inline org-link--internal">asymm CLI</a></li>
+                    <li><a href="/product/eliya/user-guide/diff-from-upstream.html" class="org-link org-link--inline org-link--internal">Diff from upstream</a></li>
                     <li><a href="/product/eliya/migration.html" class="org-link org-link--inline org-link--internal">Migration</a></li>
+                    <li><a href="https://github.com/asymmsystems/eliya-jdk" class="org-link org-link--inline org-link--external">GitHub source</a></li>
                 </ul>
             </div>
             <div class="product-feature-card">
                 <h3>Operator &uarr;</h3>
                 <ul style="margin: 0.75rem 0 0 0; padding-left: 1.2rem; line-height: 1.9;">
                     <li><a href="/product/eliya/downloads.html" class="org-link org-link--inline org-link--internal">Downloads</a></li>
+                    <li><a href="/product/eliya/user-guide/install-linux.html" class="org-link org-link--inline org-link--internal">Install</a></li>
+                    <li><a href="/product/eliya/user-guide/verify-download.html" class="org-link org-link--inline org-link--internal">Verify download</a></li>
                     <li><a href="/product/eliya/security.html" class="org-link org-link--inline org-link--internal">Security</a></li>
                     <li><a href="/product/eliya/lifecycle.html" class="org-link org-link--inline org-link--internal">Lifecycle</a></li>
-                    <li><a href="/product/eliya/user-guide/verify-download.html" class="org-link org-link--inline org-link--internal">Verify download</a></li>
+                    <li><a href="/product/eliya/user-guide/troubleshooting.html" class="org-link org-link--inline org-link--internal">Troubleshooting</a></li>
+                    <li><a href="/product/eliya/integrations.html" class="org-link org-link--inline org-link--internal">Integrations</a></li>
                     <li><a href="/product/eliya/user-guide/lessons-from-production.html" class="org-link org-link--inline org-link--internal">Lessons from production</a></li>
                 </ul>
             </div>
@@ -243,11 +277,11 @@
                 <h3>Decider &uarr;</h3>
                 <ul style="margin: 0.75rem 0 0 0; padding-left: 1.2rem; line-height: 1.9;">
                     <li><a href="/product/eliya/faq.html" class="org-link org-link--inline org-link--internal">FAQ</a></li>
-                    <li><a href="/product/eliya/industries/" class="org-link org-link--inline org-link--internal">Eliya for industry</a></li>
-                    <li><a href="/research/the-policy-point.html" class="org-link org-link--inline org-link--internal">The policy point</a></li>
                     <li><a href="/research/choosing-a-jdk-2026.html" class="org-link org-link--inline org-link--internal">Compare JDKs</a></li>
+                    <li><a href="/research/the-policy-point.html" class="org-link org-link--inline org-link--internal">The policy point</a></li>
                     <li><a href="/research/jvm-forensics-vs-apm.html" class="org-link org-link--inline org-link--internal">JVM forensics vs APM</a></li>
-                    <li><a href="/product/eliya/user-guide/diff-from-upstream.html" class="org-link org-link--inline org-link--internal">Diff from upstream</a></li>
+                    <li><a href="/product/eliya/industries/" class="org-link org-link--inline org-link--internal">Eliya for industry</a></li>
+                    <li><a href="/product/eliya/roadmap.html" class="org-link org-link--inline org-link--internal">Roadmap</a></li>
                     <li><a href="/product/eliya/user-guide/license.html" class="org-link org-link--inline org-link--internal">License</a></li>
                     <li><a href="/product/eliya/user-guide/release-notes.html" class="org-link org-link--inline org-link--internal">Release Notes</a></li>
                 </ul>
