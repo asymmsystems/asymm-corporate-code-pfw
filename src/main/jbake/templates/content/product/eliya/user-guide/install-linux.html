@@ -124,8 +124,11 @@ Environment="PATH=/opt/java-${eliyaVersion}-eliya/bin:/usr/bin:/bin"</code>
 
 
     <h3>3. .deb package (Debian, Ubuntu)</h3>
-    <p>Not yet available (planned Q4 2026). Today use SDKman or tar.gz.
-        <a href="/product/eliya/downloads.html#waitlist" class="org-link org-link--inline org-link--internal">Notify me when packages and the hosted apt repository (<code>deb.asymm.systems</code>) ship</a></p>
+    <p>The <code>.deb</code> packages (Linux x64 and aarch64) are available now from the
+        <a href="https://github.com/asymmsystems/eliya-jdk/releases" class="org-link org-link--inline org-link--external">GitHub Release</a>;
+        download one and install it with <code>dpkg</code>. The hosted apt repository
+        (<code>deb.asymm.systems</code>) for <code>apt install</code> is planned Q4 2026
+        (<a href="/product/eliya/downloads.html#waitlist" class="org-link org-link--inline org-link--internal">notify me</a>).</p>
 
     <div class="inline-terminal inline-terminal--static">
         <code>sudo dpkg -i eliya-jdk_${eliyaVersion}_amd64.deb</code>
@@ -153,13 +156,16 @@ Environment="PATH=/opt/java-${eliyaVersion}-eliya/bin:/usr/bin:/bin"</code>
     <p>This brings up an interactive prompt listing every registered JDK on the system. Enter the
         number corresponding to Eliya and press Enter to make it the default.</p>
 
-    <p>The hosted apt repository (<code>deb.asymm.systems</code>) ships alongside the package;
-        planned Q4 2026.</p>
+    <p>The hosted apt repository (<code>deb.asymm.systems</code>) for one-command install and
+        automatic updates is planned Q4 2026.</p>
 
 
     <h3>4. .rpm package (RHEL, Rocky, Fedora, openSUSE)</h3>
-    <p>Not yet available (planned Q4 2026). Today use SDKman or tar.gz.
-        <a href="/product/eliya/downloads.html#waitlist" class="org-link org-link--inline org-link--internal">Notify me when packages and the hosted yum repository (<code>rpm.asymm.systems</code>) ship</a></p>
+    <p>The <code>.rpm</code> packages (Linux x64 and aarch64) are available now from the
+        <a href="https://github.com/asymmsystems/eliya-jdk/releases" class="org-link org-link--inline org-link--external">GitHub Release</a>;
+        download one and install it with <code>rpm</code>. The hosted yum repository
+        (<code>rpm.asymm.systems</code>) for <code>yum</code> / <code>dnf install</code> is planned Q4 2026
+        (<a href="/product/eliya/downloads.html#waitlist" class="org-link org-link--inline org-link--internal">notify me</a>).</p>
 
     <div class="inline-terminal inline-terminal--static">
         <code>sudo rpm -i eliya-jdk-${eliyaVersion}.x86_64.rpm</code>
@@ -187,8 +193,8 @@ Environment="PATH=/opt/java-${eliyaVersion}-eliya/bin:/usr/bin:/bin"</code>
     <p>This brings up an interactive prompt listing every registered JDK on the system. Enter the
         number corresponding to Eliya and press Enter to make it the default.</p>
 
-    <p>The hosted yum repository (<code>rpm.asymm.systems</code>) ships alongside the package;
-        planned Q4 2026.</p>
+    <p>The hosted yum repository (<code>rpm.asymm.systems</code>) for one-command install and
+        automatic updates is planned Q4 2026.</p>
 
 
     <h3>5. Verify the installation</h3>

@@ -114,9 +114,10 @@ status=published
     <ul>
         <li><strong>macOS aarch64</strong>: native binary for Apple Silicon, demand-gated on
             developer-machine sign-ups.</li>
-        <li><strong>DEB / RPM packages</strong>: Q4 2026 target. Includes
-            <code>eliya-diagnostics</code> system group and automatic <code>update-alternatives</code>
-            registration.</li>
+        <li><strong>Hosted apt / yum repositories</strong> (<code>deb.asymm.systems</code> /
+            <code>rpm.asymm.systems</code>): Q4 2026 target, for one-command install and automatic
+            updates. The <code>.deb</code> / <code>.rpm</code> packages themselves ship today from
+            GitHub Releases, with automatic <code>update-alternatives</code> registration.</li>
         <li><strong>Distroless variant</strong> (<code>:25-lts-distroless</code>): minimal
             container image with no shell and no package manager, for compliance-conscious
             environments where attack surface is a primary concern. Demand-gated.</li>
