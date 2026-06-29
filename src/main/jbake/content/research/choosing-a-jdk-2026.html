@@ -56,10 +56,12 @@ status=published
 <!-- =============== Why the choice matters less =============== -->
 <section style="margin-bottom: 5rem">
     <h2 class="section-title">The choice matters less than it feels</h2>
-    <p >All major OpenJDK distributions (Temurin,
-        Corretto, Zulu, Liberica, Microsoft Build, Red Hat OpenJDK, SapMachine, Eliya) build from the
-        same upstream source and pass the same Technology Compatibility Kit. Swapping between them is an
-        operational task, not an application-code task. If your app runs on one, it runs on all of them.</p>
+    <p >The major OpenJDK distributions (Temurin,
+        Corretto, Zulu, Liberica, Microsoft Build, Red Hat OpenJDK, SapMachine) build from the
+        same upstream source and pass the same Technology Compatibility Kit. Eliya builds from that
+        same source; TCK conformance is a property of a specific built binary, so the Eliya binary's
+        own TCK run is planned (see below). Swapping between any of them is an operational task, not an
+        application-code task. If your app runs on one, it runs on all of them.</p>
     <p style="margin-top: 1rem">The real differences are:</p>
     <ul style="margin-top: 1rem">
         <li>How long each vendor promises to patch each LTS</li>
