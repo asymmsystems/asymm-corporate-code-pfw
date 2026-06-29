@@ -4,7 +4,7 @@
     <#-- Surveys are direct-link only; 404 is not a content page. -->
     <#if (content.type!"") != "survey" && content.uri != "404.html">
     <#assign loc = content.uri>
-    <#if loc?ends_with("index.html")><#assign loc = loc?substring(0, loc?length - 10)></#if>
+    <#if loc?ends_with("index.html")><#assign loc = loc?substring(0, loc?length - 10)><#elseif loc?ends_with(".html")><#assign loc = loc?substring(0, loc?length - 5)></#if>
     <url>
         <loc>${config.site_host}/${loc}</loc>
         <#if content.date??><lastmod>${content.date?string("yyyy-MM-dd")}</lastmod></#if>

@@ -18,10 +18,14 @@
   <#assign metaTitle = "Asymm Systems">
 </#if>
 <#assign metaDescription = (content.description)!siteDefaultDesc>
-<#-- Canonical / og:url: site_host + "/" + uri, trailing index.html stripped to the clean directory URL. -->
+<#-- Canonical / og:url: site_host + "/" + uri, reduced to the clean URL the host
+     serves. Cloudflare Pages serves extensionless URLs and 308-redirects *.html
+     to them, so strip index.html (directory pages) and the .html extension. -->
 <#assign pageUri = (content.uri)!"">
 <#if pageUri?ends_with("index.html")>
   <#assign pageUri = pageUri?substring(0, pageUri?length - 10)>
+<#elseif pageUri?ends_with(".html")>
+  <#assign pageUri = pageUri?substring(0, pageUri?length - 5)>
 </#if>
 <#assign canonicalUrl = config.site_host + "/" + pageUri>
 <#-- og:image: explicit per-page override, else a per-product card, else the

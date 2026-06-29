@@ -7,10 +7,11 @@
     <id>${config.site_host}/</id>
     <updated>${published_date?string("yyyy-MM-dd'T'HH:mm:ss'Z'")}</updated>
 <#list published_posts as post>
+    <#assign pl = post.uri><#if pl?ends_with(".html")><#assign pl = pl?substring(0, pl?length - 5)></#if>
     <entry>
         <title>${post.title?xml}</title>
-        <link href="${config.site_host}/${post.uri}"/>
-        <id>${config.site_host}/${post.uri}</id>
+        <link href="${config.site_host}/${pl}"/>
+        <id>${config.site_host}/${pl}</id>
         <updated>${post.date?string("yyyy-MM-dd'T'HH:mm:ss'Z'")}</updated>
         <#if post.description??><summary>${post.description?xml}</summary></#if>
     </entry>
@@ -18,10 +19,11 @@
 <#-- Research / Laboratory articles (undated articles fall back to the build date) -->
 <#list published_content as c>
     <#if ((c.uri!"")?starts_with("research/")) && (c.type!"") != "survey">
+    <#assign cl = c.uri><#if cl?ends_with(".html")><#assign cl = cl?substring(0, cl?length - 5)></#if>
     <entry>
         <title>${c.title?xml}</title>
-        <link href="${config.site_host}/${c.uri}"/>
-        <id>${config.site_host}/${c.uri}</id>
+        <link href="${config.site_host}/${cl}"/>
+        <id>${config.site_host}/${cl}</id>
         <updated><#if c.date??>${c.date?string("yyyy-MM-dd'T'HH:mm:ss'Z'")}<#else>${published_date?string("yyyy-MM-dd'T'HH:mm:ss'Z'")}</#if></updated>
         <#if c.description??><summary>${c.description?xml}</summary></#if>
     </entry>
