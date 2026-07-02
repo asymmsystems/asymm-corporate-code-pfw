@@ -11,22 +11,35 @@
   FAQPage is authored inline on faq.html (co-located with the Q&A markup).
   All dynamic strings pass through ?json_string for valid JSON escaping.
 -->
-<#-- Organization: sitewide -->
+<#-- Organization: sitewide. sameAs fuses the company's controlled profiles into
+     one Knowledge-Graph node; add LinkedIn company / Crunchbase / Wikidata (QID)
+     / X URLs here as they are created (see delivery/asymm-entity-profiles-pack). -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "Organization",
   "@id": "${config.site_host}/#organization",
   "name": "Asymm Systems",
+  "legalName": "Asymm (Pvt) Ltd",
   "url": "${config.site_host}/",
-  "logo": "${config.site_host}/images/favicon.png",
+  "logo": "${config.site_host}/images/asymm-mark.png",
+  "description": "Asymm Systems builds a developer ecosystem for compliance by compilation, turning industry specifications into compile-time guarantees verified before deployment, not after. Its first product is Eliya, an OpenJDK distribution for compliance-conscious industries.",
+  "foundingDate": "2025",
+  "foundingLocation": { "@type": "Place", "name": "Sri Lanka" },
   "founder": {
     "@type": "Person",
     "name": "Fahim Farook",
-    "jobTitle": "Chief Architect of Eliya"
+    "jobTitle": "Founder and Principal Architect",
+    "url": "https://fahimfarook.me/",
+    "sameAs": [
+      "https://github.com/fahimfarookme",
+      "https://linkedin.com/in/fahimfarookme",
+      "https://www.wikidata.org/wiki/Q140406496"
+    ]
   },
   "sameAs": [
-    "https://github.com/asymmsystems"
+    "https://github.com/asymmsystems",
+    "https://www.wikidata.org/wiki/Q140406273"
   ]
 }
 </script>
@@ -58,9 +71,10 @@
   "downloadUrl": "${config.site_host}/product/eliya/downloads",
   "license": "https://www.gnu.org/licenses/old-licenses/gpl-2.0.html",
   "isBasedOn": "https://openjdk.org/projects/jdk/25/",
+  "sameAs": "https://www.wikidata.org/wiki/Q140406475",
   "publisher": { "@id": "${config.site_host}/#organization" },
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-  "description": "Eliya JDK is an OpenJDK 25 LTS distribution from Asymm Systems that places a named policy point inside the JVM, the -XX:EliyaProfile flag, shipping production-evidence and compliance behaviour as defaults instead of leaving them to external wrappers. Built for compliance-conscious production in telecom, banking, healthcare, and government; Linux x86_64 and aarch64; GPLv2 with Classpath Exception; signed and reproducible."
+  "description": "Eliya JDK is an OpenJDK 25 LTS distribution from Asymm Systems that places a named policy point inside the JVM, the -XX:EliyaProfile flag, shipping production-evidence and compliance behaviour as defaults instead of leaving them to external wrappers. Built for compliance-conscious industries: telecom, financial services, healthcare, and government; Linux x86_64 and aarch64; GPLv2 with Classpath Exception; signed and reproducible."
 }
 </script>
 </#if>
