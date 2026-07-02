@@ -152,7 +152,7 @@ status=published
             that lost its assumption. APM aggregates around symptoms; JFR records causes.</li>
         <li><span class="check-no" aria-hidden="true">&#10007;</span>
             <strong>Work in air-gapped or data-egress-restricted environments.</strong> SaaS
-            APM requires continuous outbound connectivity to a vendor backend. BFSI settlement
+            APM requires continuous outbound connectivity to a vendor backend. financial services settlement
             systems with regulatory restrictions on production data leaving the perimeter,
             healthcare integrations under HIPAA, government and defence deployments under
             classification controls, air-gapped industrial control systems, sovereign-cloud
@@ -284,7 +284,7 @@ status=published
     </div>
 
     <h4>Eliya alone (compliance-restricted environment)</h4>
-    <p>A BFSI settlement system under regulatory data-egress restrictions: production data
+    <p>A financial services settlement system under regulatory data-egress restrictions: production data
         cannot leave the perimeter; SaaS APM is therefore prohibited. The team historically
         had JConsole for occasional inspection, ad-hoc heap dumps under suspicion of memory
         pressure, no continuous profiling at all. With Eliya, they now have automatic heap
@@ -344,7 +344,7 @@ status=published
             <tr>
                 <td>You need cross-service distributed tracing as the primary diagnostic surface,
                     and your environment permits SaaS data egress.</td>
-                <td>You operate under data-egress restrictions that prohibit SaaS APM (BFSI,
+                <td>You operate under data-egress restrictions that prohibit SaaS APM (financial services,
                     healthcare, public sector, air-gapped industrial).</td>
                 <td>You want APM for team-wide dashboards and alerting, plus Eliya for the
                     forensic data APM cannot capture, the dominant pattern at scale.</td>

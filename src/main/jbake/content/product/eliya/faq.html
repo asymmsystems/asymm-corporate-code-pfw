@@ -200,7 +200,7 @@ status=published
 <h3>Can I use Eliya in production?</h3>
 <p >Yes. Eliya is distributed under GPLv2 with the Classpath Exception
     the same licence as upstream OpenJDK. Production use is explicitly permitted. The audience
-    is compliance-conscious and quality-conscious teams in regulated industries (BFSI, healthcare,
+    is compliance-conscious and quality-conscious teams in regulated industries (financial services, healthcare,
     public sector, telecom) and any high-throughput Java environment that values engineering
     quality over convenience.</p>
 
@@ -243,7 +243,7 @@ status=published
     structurally cannot capture. Most production teams run both. Note that Datadog
     Continuous Profiler uses JFR under the hood, so Eliya's JFR activation
     feeds Datadog's pipeline directly.</p>
-<p>For environments where SaaS APM is prohibited (BFSI, healthcare, public sector under
+<p>For environments where SaaS APM is prohibited (financial services, healthcare, public sector under
     data-egress restrictions), Eliya provides forensic capability previously inaccessible
     without violating compliance. Self-hosted APM stacks (Elastic APM with on-prem
     Elasticsearch, OpenTelemetry with self-hosted collectors) align naturally with Eliya's
@@ -284,7 +284,7 @@ status=published
 
 <h3>Why no Windows build?</h3>
 <p >Eliya is server-first. The compliance-conscious workloads Eliya
-    targets (BFSI gateways, healthcare integrations, public-sector platforms, telecom BSS/OSS)
+    targets (financial services gateways, healthcare integrations, public-sector platforms, telecom BSS/OSS)
     deploy on Linux. Windows support is demand-gated. If enterprise users request it, the build
     matrix can be extended, but it's not a default.</p>
 
@@ -458,7 +458,7 @@ status=published
       "name": "Can I use Eliya in production?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Yes. Eliya is distributed under GPLv2 with the Classpath Exception the same licence as upstream OpenJDK. Production use is explicitly permitted. The audience is compliance-conscious and quality-conscious teams in regulated industries (BFSI, healthcare, public sector, telecom) and any high-throughput Java environment that values engineering quality over convenience."
+        "text": "Yes. Eliya is distributed under GPLv2 with the Classpath Exception the same licence as upstream OpenJDK. Production use is explicitly permitted. The audience is compliance-conscious and quality-conscious teams in regulated industries (financial services, healthcare, public sector, telecom) and any high-throughput Java environment that values engineering quality over convenience."
       }
     },
     {
@@ -482,7 +482,7 @@ status=published
       "name": "Does Eliya work with APM tools (AppDynamics, Dynatrace, New Relic, Elastic APM, Datadog)?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Yes. APM tools that use the Java Agent API coexist with Eliya without conflict: java -javaagent:/opt/your-apm-agent.jar -XX:EliyaProfile=Production -jar app.jar Copy APM tools and Eliya answer different questions. APM provides distributed tracing, real-time dashboards, and team-wide observability. Eliya provides forensic-grade artefacts on disk (JFR recordings, heap dumps, GC logs, crash logs) that APM tools structurally cannot capture. Most production teams run both. Note that Datadog Continuous Profiler uses JFR under the hood, so Eliya's JFR activation feeds Datadog's pipeline directly. For environments where SaaS APM is prohibited (BFSI, healthcare, public sector under data-egress restrictions), Eliya provides forensic capability previously inaccessible without violating compliance. Self-hosted APM stacks (Elastic APM with on-prem Elasticsearch, OpenTelemetry with self-hosted collectors) align naturally with Eliya's positioning and run alongside without compliance concerns. For the architectural distinction, the six specific APM limitations, the ten incident-response use cases, and the four-phase trajectory, see JVM forensics vs APM: why both, when each, and where each stops."
+        "text": "Yes. APM tools that use the Java Agent API coexist with Eliya without conflict: java -javaagent:/opt/your-apm-agent.jar -XX:EliyaProfile=Production -jar app.jar Copy APM tools and Eliya answer different questions. APM provides distributed tracing, real-time dashboards, and team-wide observability. Eliya provides forensic-grade artefacts on disk (JFR recordings, heap dumps, GC logs, crash logs) that APM tools structurally cannot capture. Most production teams run both. Note that Datadog Continuous Profiler uses JFR under the hood, so Eliya's JFR activation feeds Datadog's pipeline directly. For environments where SaaS APM is prohibited (financial services, healthcare, public sector under data-egress restrictions), Eliya provides forensic capability previously inaccessible without violating compliance. Self-hosted APM stacks (Elastic APM with on-prem Elasticsearch, OpenTelemetry with self-hosted collectors) align naturally with Eliya's positioning and run alongside without compliance concerns. For the architectural distinction, the six specific APM limitations, the ten incident-response use cases, and the four-phase trajectory, see JVM forensics vs APM: why both, when each, and where each stops."
       }
     },
     {
@@ -530,7 +530,7 @@ status=published
       "name": "Why no Windows build?",
       "acceptedAnswer": {
         "@type": "Answer",
-        "text": "Eliya is server-first. The compliance-conscious workloads Eliya targets (BFSI gateways, healthcare integrations, public-sector platforms, telecom BSS/OSS) deploy on Linux. Windows support is demand-gated. If enterprise users request it, the build matrix can be extended, but it's not a default."
+        "text": "Eliya is server-first. The compliance-conscious workloads Eliya targets (financial services gateways, healthcare integrations, public-sector platforms, telecom BSS/OSS) deploy on Linux. Windows support is demand-gated. If enterprise users request it, the build matrix can be extended, but it's not a default."
       }
     },
     {
