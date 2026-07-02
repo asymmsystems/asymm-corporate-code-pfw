@@ -11,19 +11,30 @@
   FAQPage is authored inline on faq.html (co-located with the Q&A markup).
   All dynamic strings pass through ?json_string for valid JSON escaping.
 -->
-<#-- Organization: sitewide -->
+<#-- Organization: sitewide. sameAs fuses the company's controlled profiles into
+     one Knowledge-Graph node; add LinkedIn company / Crunchbase / Wikidata (QID)
+     / X URLs here as they are created (see delivery/asymm-entity-profiles-pack). -->
 <script type="application/ld+json">
 {
   "@context": "https://schema.org",
   "@type": "Organization",
   "@id": "${config.site_host}/#organization",
   "name": "Asymm Systems",
+  "legalName": "Asymm Systems (Pvt) Ltd",
   "url": "${config.site_host}/",
-  "logo": "${config.site_host}/images/favicon.png",
+  "logo": "${config.site_host}/images/asymm-mark.png",
+  "description": "Asymm Systems builds developer tools that verify conformance to industry specifications before deployment. Its first product is Eliya, an OpenJDK distribution for compliance-conscious production.",
+  "foundingDate": "2025",
+  "foundingLocation": { "@type": "Place", "name": "Sri Lanka" },
   "founder": {
     "@type": "Person",
     "name": "Fahim Farook",
-    "jobTitle": "Chief Architect of Eliya"
+    "jobTitle": "Founder and Principal Architect",
+    "url": "https://fahimfarook.me/",
+    "sameAs": [
+      "https://github.com/fahimfarookme",
+      "https://linkedin.com/in/fahimfarookme"
+    ]
   },
   "sameAs": [
     "https://github.com/asymmsystems"
