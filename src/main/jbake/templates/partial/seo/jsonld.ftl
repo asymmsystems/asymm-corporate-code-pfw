@@ -20,10 +20,10 @@
   "@type": "Organization",
   "@id": "${config.site_host}/#organization",
   "name": "Asymm Systems",
-  "legalName": "Asymm Systems (Pvt) Ltd",
+  "legalName": "Asymm (Pvt) Ltd",
   "url": "${config.site_host}/",
   "logo": "${config.site_host}/images/asymm-mark.png",
-  "description": "Asymm Systems builds developer tools that verify conformance to industry specifications before deployment. Its first product is Eliya, an OpenJDK distribution for compliance-conscious production.",
+  "description": "Asymm Systems builds a developer ecosystem for compliance by compilation, turning industry specifications into compile-time guarantees verified before deployment, not after. Its first product is Eliya, an OpenJDK distribution for compliance-conscious industries.",
   "foundingDate": "2025",
   "foundingLocation": { "@type": "Place", "name": "Sri Lanka" },
   "founder": {
@@ -71,7 +71,7 @@
   "isBasedOn": "https://openjdk.org/projects/jdk/25/",
   "publisher": { "@id": "${config.site_host}/#organization" },
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
-  "description": "Eliya JDK is an OpenJDK 25 LTS distribution from Asymm Systems that places a named policy point inside the JVM, the -XX:EliyaProfile flag, shipping production-evidence and compliance behaviour as defaults instead of leaving them to external wrappers. Built for compliance-conscious production in telecom, banking, healthcare, and government; Linux x86_64 and aarch64; GPLv2 with Classpath Exception; signed and reproducible."
+  "description": "Eliya JDK is an OpenJDK 25 LTS distribution from Asymm Systems that places a named policy point inside the JVM, the -XX:EliyaProfile flag, shipping production-evidence and compliance behaviour as defaults instead of leaving them to external wrappers. Built for compliance-conscious industries: telecom, financial services, healthcare, and government; Linux x86_64 and aarch64; GPLv2 with Classpath Exception; signed and reproducible."
 }
 </script>
 </#if>

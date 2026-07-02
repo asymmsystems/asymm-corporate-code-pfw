@@ -1,4 +1,4 @@
-title=Choosing a JDK in 2026: an honest guide
+title=Choosing a JDK in 2026: a practical guide
 description=A vendor-by-vendor comparison of OpenJDK distributions with use-case-specific recommendations. Written by the team behind Eliya JDK.
 type=page
 field=JDK SELECTION
@@ -11,13 +11,13 @@ status=published
 
 <header class="page-header">
     <span class="section-kicker">Asymm Research</span>
-    <h1>Choosing a JDK in 2026: an honest guide</h1>
+    <h1>Choosing a JDK in 2026: a practical guide</h1>
     <p style="max-width: 60ch">A vendor-by-vendor comparison of OpenJDK distributions,
         with platform-specific guidance and an explicit view on where each one wins.</p>
     <p style="max-width: 60ch; font-size: 0.9rem; margin-top: 1rem">
         <em>This guide is written by the team behind
         <a href="/product/eliya.html" class="org-link org-link--inline org-link--internal">Eliya JDK</a>.
-        We make no effort to hide that we ship our own distribution, but this guide is written to help
+        We ship our own distribution; this guide is here to help
         you pick the right JDK for your situation, which is often not Eliya.</em>
     </p>
 </header>
@@ -44,8 +44,8 @@ status=published
                 runtime. Don't overthink it.</li>
             <li><strong>Building Quarkus native images:</strong> Red Hat Mandrel, the community default
                 for Quarkus native builds.</li>
-            <li><strong>Compliance-conscious production needing forensic-grade JVM diagnostics
-                (BFSI, healthcare, government, regulated industries):</strong> worth evaluating Eliya
+            <li><strong>Compliance-conscious industries needing forensic-grade JVM diagnostics
+                (financial services, healthcare, government):</strong> worth evaluating Eliya
                 JDK for the bundled <code>-XX:EliyaProfile=Production</code> observability profile
                 and (Phase 3+) Asymm Forensics platform.</li>
             <li><strong>Whatever you pick, pick LTS.</strong> In 2026 that's JDK 21 or JDK 25.</li>
@@ -344,12 +344,12 @@ status=published
     </ul>
 
     <h3>Eliya JDK</h3>
-    <p><strong>When to pick:</strong> compliance-conscious production where forensic-grade JVM
+    <p><strong>When to pick:</strong> compliance-conscious industries where forensic-grade JVM
         diagnostic data is required, especially in regulated industries with data-egress restrictions
         that prohibit SaaS APM.</p>
     <p>Eliya is a Linux-first OpenJDK&nbsp;25 distribution from Asymm Systems (Sri Lanka) positioned for
-        compliance-conscious production environments across BFSI, healthcare, telecom, government,
-        and other standards-driven industries.</p>
+        compliance-conscious industries across financial services, healthcare, telecom, government,
+        and other standards-driven sectors.</p>
 
     <p><strong>The actual value proposition.</strong> Eliya is a forensic-grade JVM platform across
         four phases:</p>
@@ -399,7 +399,7 @@ status=published
 
     <p><strong>You should consider Eliya when:</strong></p>
     <ul>
-        <li>Your environment prohibits SaaS APM due to data-egress restrictions (BFSI settlement
+        <li>Your environment prohibits SaaS APM due to data-egress restrictions (financial services settlement
             systems, healthcare integrations, government workloads, sovereign cloud) and you
             currently lack the forensic diagnostic data that compliance audits and incident response
             require.</li>
@@ -506,7 +506,7 @@ status=published
                 <td>No vendor preference in their docs. Any major LTS build works.</td>
             </tr>
             <tr>
-                <td>Compliance-conscious production in regulated industries (BFSI settlement, healthcare integration, government workloads, air-gapped deployments)</td>
+                <td>Compliance-conscious industries (financial services settlement, healthcare integration, government workloads, air-gapped deployments)</td>
                 <td>Eliya JDK (evaluate)</td>
                 <td><code>-XX:EliyaProfile=Production</code> activates forensic-grade operational-readiness defaults (Phase 1) + continuous observability (Phase 2) that survive incidents and crashes. Benchmark against Temurin if observability data isn't a primary requirement.</td>
             </tr>
@@ -561,9 +561,7 @@ status=published
         <h3>About this guide</h3>
         <p>Written by the team behind
             <a href="/product/eliya.html" class="org-link org-link--inline org-link--internal">Eliya JDK</a>,
-            a distribution we ship specifically for compliance-conscious production in regulated
-            industries where forensic-grade JVM diagnostic data is a requirement. We tried to be honest
-            about our own niche, and to send you to a better fit when Eliya isn't one. If you find an error or a
+            a distribution we ship specifically for compliance-conscious industries where forensic-grade JVM diagnostic data is a requirement. We aimed to map our own niche accurately, and to point you to a better fit when Eliya isn't one. If you find an error or a
             missing distribution, email
             <a href="mailto:research@asymm.systems" class="org-link org-link--inline org-link--external">research@asymm.systems</a>.</p>
         <p style="margin-top: 1rem">For how JDK choice relates to APM tools (which all JDKs can
