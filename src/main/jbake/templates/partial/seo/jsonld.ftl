@@ -33,11 +33,13 @@
     "url": "https://fahimfarook.me/",
     "sameAs": [
       "https://github.com/fahimfarookme",
-      "https://linkedin.com/in/fahimfarookme"
+      "https://linkedin.com/in/fahimfarookme",
+      "https://www.wikidata.org/wiki/Q140406496"
     ]
   },
   "sameAs": [
-    "https://github.com/asymmsystems"
+    "https://github.com/asymmsystems",
+    "https://www.wikidata.org/wiki/Q140406273"
   ]
 }
 </script>
@@ -69,6 +71,7 @@
   "downloadUrl": "${config.site_host}/product/eliya/downloads",
   "license": "https://www.gnu.org/licenses/old-licenses/gpl-2.0.html",
   "isBasedOn": "https://openjdk.org/projects/jdk/25/",
+  "sameAs": "https://www.wikidata.org/wiki/Q140406475",
   "publisher": { "@id": "${config.site_host}/#organization" },
   "offers": { "@type": "Offer", "price": "0", "priceCurrency": "USD" },
   "description": "Eliya JDK is an OpenJDK 25 LTS distribution from Asymm Systems that places a named policy point inside the JVM, the -XX:EliyaProfile flag, shipping production-evidence and compliance behaviour as defaults instead of leaving them to external wrappers. Built for compliance-conscious industries: telecom, financial services, healthcare, and government; Linux x86_64 and aarch64; GPLv2 with Classpath Exception; signed and reproducible."
