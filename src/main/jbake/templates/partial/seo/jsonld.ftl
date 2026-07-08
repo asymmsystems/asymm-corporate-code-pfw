@@ -40,7 +40,8 @@
   "sameAs": [
     "https://github.com/asymmsystems",
     "https://www.wikidata.org/wiki/Q140406273",
-    "https://www.crunchbase.com/organization/asymm-systems"
+    "https://www.crunchbase.com/organization/asymm-systems",
+    "https://x.com/asymmsystems"
   ]
 }
 </script>
