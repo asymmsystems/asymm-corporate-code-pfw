@@ -39,7 +39,8 @@
   },
   "sameAs": [
     "https://github.com/asymmsystems",
-    "https://www.wikidata.org/wiki/Q140406273"
+    "https://www.wikidata.org/wiki/Q140406273",
+    "https://www.crunchbase.com/organization/asymm-systems"
   ]
 }
 </script>
