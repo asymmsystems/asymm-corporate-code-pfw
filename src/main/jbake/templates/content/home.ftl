@@ -42,6 +42,12 @@
             </@renderBentoCard>
         </div>
 
+        <p class="bento-industries">Eliya is tuned for regulated industries:
+            <a href="/product/eliya/industries/telecom" class="org-link org-link--inline org-link--internal">telecom</a>,
+            <a href="/product/eliya/industries/financial-services" class="org-link org-link--inline org-link--internal">financial services</a>,
+            <a href="/product/eliya/industries/healthcare" class="org-link org-link--inline org-link--internal">healthcare</a>, and
+            <a href="/product/eliya/industries/government" class="org-link org-link--inline org-link--internal">government</a>.</p>
+
         <!-- Market context -->
         <div class="market-context">
             <p>Dial serves the <strong>TMF Open Digital Architecture</strong> ecosystem - the global standard for telecom digital transformation. We started with telecom because that's where we have 15 years of domain expertise. The approach is designed to extend to any industry with formal specifications.</p>
