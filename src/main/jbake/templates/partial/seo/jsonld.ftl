@@ -41,7 +41,8 @@
     "https://github.com/asymmsystems",
     "https://www.wikidata.org/wiki/Q140406273",
     "https://www.crunchbase.com/organization/asymm-systems",
-    "https://x.com/asymmsystems"
+    "https://x.com/asymmsystems",
+    "https://www.youtube.com/@asymmsystems"
   ]
 }
 </script>
