@@ -7,9 +7,9 @@
 <section class="products-bento fade-in">
     <div class="container">
         <div class="section-intro">
-            <span class="section-kicker">Developer Ecosystem</span>
-            <h2>Shift Compliance Left. Build Right the First Time.</h2>
-            <p>Our solutions move compliance and execution validation upstream, so what you build is verified, resilient, and production-ready before it reaches deployment.</p>
+            <span class="section-kicker">Compliance-by-Compilation</span>
+            <h2>Fail the build, not the audit.</h2>
+            <p>Compliance and conformance are usually found late, in integration, certification, or an audit. Asymm Systems makes them part of the build: a non-conforming architecture does not ship, because it does not compile.</p>
         </div>
         <div class="bento-grid">
 
