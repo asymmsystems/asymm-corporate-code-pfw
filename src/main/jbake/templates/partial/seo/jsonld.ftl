@@ -23,7 +23,7 @@
   "legalName": "Asymm (Pvt) Ltd",
   "url": "${config.site_host}/",
   "logo": "${config.site_host}/images/asymm-mark.png",
-  "description": "Asymm Systems builds Organization-as-Code: a framework for expressing an organization's compliance, governance, and operational architecture as code, so conformance is validated at build time rather than discovered at audit time. We call the approach Compliance-by-Compilation. The runtime foundation is Eliya, an OpenJDK 25 LTS distribution for compliance-conscious industries. Dial is the first industry profile, a TMF ODA-native developer ecosystem that makes telecom architecture conform by construction, with similar profiles planned for other regulated industries: financial services, healthcare, and government.",
+  "description": "Asymm Systems builds Organization-as-Code: a framework for expressing an organization's compliance, governance, operational, and functional architecture as code, so conformance is validated at build time rather than discovered at audit time. We call the approach Compliance-by-Compilation. The runtime foundation is Eliya, an OpenJDK 25 LTS distribution for compliance-conscious industries. Dial is the first industry profile, a TMF ODA-native developer ecosystem that makes telecom architecture conform by construction, with similar profiles planned for other regulated industries: financial services, healthcare, and government.",
   "slogan": "Compliance by Compilation",
   "knowsAbout": [
     "Organization-as-Code",
