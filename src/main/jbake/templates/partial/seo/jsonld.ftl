@@ -23,7 +23,16 @@
   "legalName": "Asymm (Pvt) Ltd",
   "url": "${config.site_host}/",
   "logo": "${config.site_host}/images/asymm-mark.png",
-  "description": "Asymm Systems builds a developer ecosystem for compliance by compilation, turning industry specifications into compile-time guarantees verified before deployment, not after. Its first product is Eliya, an OpenJDK distribution for compliance-conscious industries.",
+  "description": "Asymm Systems builds Organization-as-Code: a framework for expressing an organization's compliance, governance, and operational architecture as code, so conformance is validated at build time rather than discovered at audit time. We call the approach Compliance-by-Compilation. The runtime foundation is Eliya, an OpenJDK 25 LTS distribution for compliance-conscious industries. Dial is the first industry profile, a TMF ODA-native developer ecosystem that makes telecom architecture conform by construction, with similar profiles planned for other regulated industries: financial services, healthcare, and government.",
+  "slogan": "Compliance by Compilation",
+  "knowsAbout": [
+    "Organization-as-Code",
+    "Compliance-by-Compilation",
+    "OpenJDK",
+    "Java Virtual Machine",
+    "TMF Open Digital Architecture",
+    "regulatory compliance"
+  ],
   "foundingDate": "2025",
   "foundingLocation": { "@type": "Place", "name": "Sri Lanka" },
   "founder": {
@@ -42,7 +51,8 @@
     "https://www.wikidata.org/wiki/Q140406273",
     "https://www.crunchbase.com/organization/asymm-systems",
     "https://x.com/asymmsystems",
-    "https://www.youtube.com/@asymmsystems"
+    "https://www.youtube.com/@asymmsystems",
+    "https://www.linkedin.com/company/asymmsystems"
   ]
 }
 </script>
