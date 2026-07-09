@@ -1,0 +1,5 @@
+# Cloudflare Pages redirects.
+# Legacy "Asymm JDK" URL -> canonical Eliya product page (real 301, replaces
+# the old meta-refresh stub so Google merges the duplicate instead of indexing it).
+/product/jdk       /product/eliya   301
+/product/jdk.html  /product/eliya   301
