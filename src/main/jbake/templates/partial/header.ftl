@@ -9,7 +9,7 @@
     og_image    filename under /images/ for the social card (else og-image.png)
     og_type     open-graph type override (else "article" for posts, "website")
 -->
-<#assign siteDefaultDesc = "Developer tools that verify conformance to industry specifications - before deployment, not after.">
+<#assign siteDefaultDesc = "Asymm Systems builds Organization-as-Code: verify conformance to industry specifications at build time, not after deployment. Compliance-by-Compilation.">
 <#if (content.seo_title)??>
   <#assign metaTitle = content.seo_title>
 <#elseif (content.title)??>
