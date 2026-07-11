@@ -20,6 +20,7 @@
   "@type": "Organization",
   "@id": "${config.site_host}/#organization",
   "name": "Asymm Systems",
+  "alternateName": "Asymm",
   "legalName": "Asymm (Pvt) Ltd",
   "url": "${config.site_host}/",
   "logo": "${config.site_host}/images/asymm-mark.png",

@@ -12,7 +12,7 @@
 
 <div class="container" style="padding-top: 4rem; padding-bottom: 8rem; min-height: 70vh;">
     <article class="page-body">
-        <h1 class="page-title">The Laboratory</h1>
+        <h1 class="page-title">Research</h1>
         <p>Our goal is to drive ODA conformance and telecom innovation through developer-first empirical research.</p>
 
         <div class="news-list" style="margin-top: 4rem;">
