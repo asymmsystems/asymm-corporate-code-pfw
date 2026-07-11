@@ -48,7 +48,7 @@
         ]
     },
     { "label": "Research",       "href": "/research.html" },
-    { "label": "Registry",       "href": "/registry.html" },
+    { "label": "Newsroom",       "href": "/registry.html" },
     { "label": "About",          "href": "/about.html" },
     { "label": "Contact",        "href": "/about.html#contact" }
     <#-- Privacy and "© 2026 Asymm" are sitewide meta items; emitted by
