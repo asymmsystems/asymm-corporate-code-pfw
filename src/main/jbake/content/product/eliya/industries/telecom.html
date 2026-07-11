@@ -1,6 +1,6 @@
 title=OpenJDK for telecom
 seo_title=OpenJDK for telecom: carrier-grade JVM evidence
-description=Eliya is an OpenJDK 25 LTS distribution for telecom and telco production: carrier-grade incident evidence that exists when a node fails, diagnostic data inside the operator perimeter, one flag.
+description=Eliya is an OpenJDK 25 LTS distribution for telecom BSS and OSS: which of your JVMs is actually running the affected class, evidence that never leaves the operator perimeter, and PAN in charging-node heap dumps.
 type=page
 toc=true
 status=published
@@ -9,65 +9,117 @@ status=published
 <header class="page-header">
     <span class="section-kicker">Eliya for industry</span>
     <h1>OpenJDK for telecom</h1>
-    <p style="max-width: 62ch">Carrier-grade Java runs the BSS and OSS stack: charging, mediation,
-        provisioning, order management. When one of those nodes fails, a telco operator needs to reconstruct
-        what happened, not re-run it. Eliya is an OpenJDK 25 LTS distribution that makes sure the evidence
-        exists when a node fails, and keeps it inside your perimeter.</p>
+    <p style="max-width: 62ch">You remember the week. Not the vulnerability, the week. The vulnerability was
+        understood in hours. What took days was the question nobody could answer: which of our JVMs are actually
+        running the affected class?</p>
 </header>
 
-<h2>One requirement an external wrapper cannot meet</h2>
-<p>Most operational requirements in a telecommunications estate live in the configuration space: you set a
-    flag, a Helm value, or an environment variable, and you are done. Eliya does not pretend otherwise. The
-    Production profile below is mostly exactly that, existing HotSpot flags set as one coherent group, and a
-    wrapper script can set every one of them by hand. On an estate of charging, mediation, provisioning, and
-    order-management nodes, the reason to move them into the runtime is consistency, not capability: that flag
-    list is usually written after the first incident, and it drifts service by service.</p>
-<p>The requirement that genuinely does not fit is narrower, and it is not that a script cannot run it. It is
-    that an external tool necessarily acts at the wrong moment. A charging node holds subscriber identifiers in
-    the heap, and on the payment path, cardholder data. When that node dies on an OutOfMemoryError, the JVM's
-    own dump writer streams the heap to disk in cleartext. An external sanitiser, however good, can only open a
-    file that already contains that cleartext, inside the operator's trust boundary. There is no external
-    surface to attach redaction to at the moment the bytes are written, because the writer is native code
-    inside the VM. Volume encryption does not close it either: it decrypts transparently to anything with
-    filesystem access. That is a dump-writer problem, reachable only by whoever builds the runtime, and it is
-    why Eliya establishes the
-    <a href="/research/the-policy-point.html" class="org-link org-link--inline org-link--internal">policy point</a>
-    inside the JVM. Eliya does not redact that dump today; what ships is the policy point and the structured
-    diagnostic foundation such a control requires.</p>
+<h2>The next log4shell, across ten thousand JVMs</h2>
+<p>Your scanners told you what was in the images. That was not the question. Your BSS and OSS estate is a decade
+    of accumulated Java: charging, mediation, provisioning, inventory, order management, some of it
+    vendor-shipped as fat jars with shaded dependencies, much of it in long-lived processes that were last
+    restarted in a maintenance window you would have to look up. A jar on disk tells you nothing about a class
+    in a running process. Shading hides the version. Classloader precedence picks a winner you did not choose. A
+    canary that rolled back is still serving traffic on the old code.</p>
+<p>So teams did what teams do: they guessed, they restarted things defensively, and they wrote a remediation
+    report that said "patched" when what they meant was "we believe patched".</p>
+<p><strong>Eliya's loaded-code attestation makes that a query.</strong> Signed by the runtime, about itself:
+    class to jar-of-origin, classloader, load order, hashes. Not what shipped. What <strong>loaded</strong>.
+    Targeted at <strong>25.0.7</strong>.</p>
+<p>To be straight with you: a JVMTI agent can already enumerate loaded classes. The inventory is commodity, and
+    we will not sell it to you as though it were not. What an agent cannot do is <strong>attest</strong>: it can
+    be left unattached, refused by <code>-XX:-EnableDynamicAgentLoading</code>, or have its output rewritten by
+    in-process code. The differentiator is the signature and the non-defeatability, and at your estate size, the
+    difference between "a tool reported" and "the runtime attested" is the difference between a report and
+    evidence.</p>
 
-<h2>What Eliya gives a telecom workload today</h2>
-<p>One flag, <code>-XX:EliyaProfile=Production</code>, activates the Phase 1 operational-readiness defaults:</p>
-<ul style="line-height: 1.9">
-    <li>Heap dump on OutOfMemoryError, written to a structured, predictable path rather than the working
-        directory.</li>
-    <li>A crash-log path that does not die with the container, so post-incident reconstruction has something to
-        read.</li>
-    <li>Native Memory Tracking (summary) and reinforced container support, which matter when mediation and
-        charging nodes are packed into memory-limited pods.</li>
-    <li>Exit on OutOfMemoryError, so a wedged node fails fast and the orchestrator can replace it.</li>
-</ul>
-<p>Diagnostic data stays on operator infrastructure. No SaaS, no telemetry, no phone-home. For operators with
-    data-residency obligations, the evidence never leaves the network it was generated on.</p>
+<h2>Evidence that never leaves the operator perimeter</h2>
+<p><strong>Eliya sends nothing outward. No telemetry. No SaaS dependency.</strong></p>
+<p>Heap dumps, Flight Recorder files, GC logs, crash logs: every diagnostic artifact stays inside your network,
+    because there is no mechanism to send it anywhere. For an operator subject to lawful-intercept obligations,
+    national data-residency rules, or a regulator who takes a dim view of subscriber data transiting a vendor's
+    cloud, this is not a preference. It is a precondition.</p>
+<p>And your diagnostics carry subscriber data. A heap dump of a charging system holds MSISDNs, IMSIs, call
+    detail, and in a converged BSS, payment card data. Which brings the other problem.</p>
 
-<h2>Built for the cadence telecom runs on</h2>
-<p>Eliya ships quarterly Critical Patch Updates within two weeks of each upstream OpenJDK release, on an LTS
-    line, so a long-lived BSS platform can pin a version and still receive security maintenance. It is the same
-    Java you already run: the upstream OpenJDK 25 source tree, GPLv2 with the Classpath Exception, no API
-    changes, no custom JIT or GC.</p>
+<h2>Your charging system is in PCI scope</h2>
+<p>Operators tend to discover this late. If your BSS handles card payments (top-ups, subscriptions, device
+    financing), the JVMs that touch that data are in PCI DSS scope, and PCI DSS 3.5.1 says PAN must be rendered
+    unreadable <strong>anywhere it is stored</strong><button type="button" class="cite-ref" aria-label="Citation"><span class="cite-icon">i</span><span class="cite-tooltip"><a href="https://www.pcisecuritystandards.org/document_library/" class="cite-link">PCI DSS v4.0.1, Requirement 3.5.1, PCI Security Standards Council.</a> PAN is rendered unreadable anywhere it is stored, including in non-primary storage such as audit logs. Disk or partition encryption alone is not sufficient, because it decrypts transparently on access.</span></button>.</p>
+<p>A heap dump is storage. So when a charging node OOMs at peak and writes a dump, that file holds card numbers
+    in cleartext, and none of your at-rest encryption touched it, because the value was live in memory at the
+    instant of the write.</p>
+<p>The usual answer is to disable heap dumps across the estate and lose the forensic evidence exactly where you
+    most need it: in the high-volume, hard-to-reproduce failures that only happen under real load.
+    <strong>Eliya redacts at the serialisation boundary, inside the VM, as the stream is written</strong>
+    (<strong>25.0.4</strong>), so you keep the dump and lose the PAN.</p>
 
-<h2>Where this is going</h2>
-<p>Phase 2 adds continuous JFR and unified GC logging as defaults under the same flag, so the last day of
-    execution profile is on disk before a failure. Compliance-aligned profile values are demand-gated and
-    sit further out on the roadmap; they are not shipping today. The
-    <a href="/product/eliya/roadmap.html" class="org-link org-link--inline org-link--internal">roadmap</a> is
-    explicit about what is built and what is not.</p>
+<h2>What else the outside cannot close</h2>
+<table class="clinical-table">
+    <thead>
+        <tr>
+            <th>The problem</th>
+            <th>Why an outer layer cannot fix it</th>
+            <th>Eliya</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td>Subscriber data and PAN in heap dumps, crash logs and JFR files</td>
+            <td>The writer is native and inside the process, emitting cleartext as the stream is written.
+                Scrubbing acts on a file that already holds the data.</td>
+            <td><strong>25.0.4</strong></td>
+        </tr>
+        <tr>
+            <td>Which code is <em>actually running</em> across the estate</td>
+            <td>"Installed" is not "loaded": shading, classloader order, unrestarted processes.</td>
+            <td><strong>25.0.7</strong></td>
+        </tr>
+        <tr>
+            <td>Audit trails on nodes an attacker has reached</td>
+            <td>A SIEM seals what it <strong>received</strong>, and cannot detect a record suppressed before it
+                left the host. Absence looks like quiet.</td>
+            <td><strong>25.0.7</strong></td>
+        </tr>
+        <tr>
+            <td>Config drift across thousands of nodes</td>
+            <td>An admission controller validates the spec it can <em>see</em>, not
+                <code>JAVA_TOOL_OPTIONS</code> in an image layer nor a value changed after startup.</td>
+            <td><strong>25.0.5</strong></td>
+        </tr>
+        <tr>
+            <td>TLS that a library quietly weakened</td>
+            <td><code>java.security</code> is <em>settable</em>; a library building its own
+                <code>SSLContext</code> makes it not <em>enforceable</em>. Your mesh does not see the call to a
+                roaming partner's gateway.</td>
+            <td><strong>25.0.6</strong></td>
+        </tr>
+    </tbody>
+</table>
 
-<p style="margin-top: 1rem">Telecom is also where Asymm Systems builds
+<h2>Long-lived processes, and a cadence you can plan around</h2>
+<p>Telecom runs JVMs for months. That is a virtue for stability and a liability for patching, and it is exactly
+    why "installed" versus "loaded" bites operators harder than anyone else.</p>
+<p>What ships today is the thing you can build a maintenance calendar on: a quarterly security refresh within
+    about two weeks of upstream OpenJDK, critical CVEs targeted inside a week, committed through the JDK 25 LTS
+    window (<strong>September 2029</strong>). Signed releases with checksums and an SBOM, so your supply-chain
+    review has something real to look at.</p>
+
+<h2>What we do not claim</h2>
+<p>Eliya is a JDK. It will not do network security, it will not do lawful intercept, and it will not do your
+    NIS2 governance. Your platform team owns segmentation, your KMS owns keys, your SIEM owns retention and
+    correlation. Those are the right owners.</p>
+<p>We also have not yet decomposed telecom-specific frameworks (TM Forum, NIS2, the ETSI security
+    specifications) the way we have decomposed PCI DSS. If your estate is blocked on a specific control, tell us
+    which one. That is how the next round of the knowledge base gets written, and it is how we would rather
+    build than by guessing at a slide.</p>
+<p>Telecom is also where Asymm Systems builds
     <a href="/product/dial.html" class="org-link org-link--inline org-link--internal">Dial</a>, its build-time
     TMF Open Digital Architecture (ODA) conformance work, so the runtime and the ecosystem share the same
     compliance-conscious premise.</p>
 
 <hr class="section-divider" style="margin: 4rem 0;">
-<p>Next: <a href="/product/eliya/downloads.html" class="org-link org-link--inline org-link--internal">download Eliya</a>,
-    read <a href="/research/the-policy-point.html" class="org-link org-link--inline org-link--internal">the thesis</a>,
-    or compare options in <a href="/research/choosing-a-jdk-2026.html" class="org-link org-link--inline org-link--internal">Choosing a JDK in 2026</a>.</p>
+<p><a href="/about.html#contact" class="org-link org-link--inline org-link--internal">Talk to the Chief Architect</a>
+    about the CVE you could not answer. Or
+    <a href="/product/eliya/downloads.html" class="org-link org-link--inline org-link--internal">download Eliya</a>,
+    or read <a href="/research/the-policy-point.html" class="org-link org-link--inline org-link--internal">the policy point</a>.</p>

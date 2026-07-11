@@ -1,6 +1,6 @@
 title=OpenJDK for healthcare
 seo_title=OpenJDK for healthcare: PHI-safe JVM diagnostics
-description=Eliya is an OpenJDK 25 LTS distribution for healthcare and clinical systems: a heap dump can hold protected health information at rest, and diagnostic capture stays inside your perimeter, never a SaaS.
+description=Eliya is an OpenJDK 25 LTS distribution for healthcare and clinical systems: a heap dump holds ePHI in cleartext, storage-layer encryption never touched it, and diagnostics never leave your environment.
 type=page
 toc=true
 status=published
@@ -9,42 +9,111 @@ status=published
 <header class="page-header">
     <span class="section-kicker">Eliya for industry</span>
     <h1>OpenJDK for healthcare</h1>
-    <p style="max-width: 62ch">Healthcare and clinical systems run Java over protected health information. The
-        same diagnostic artefacts that make a production failure recoverable, heap dumps and crash logs, can
-        contain that PHI at rest. Eliya is an OpenJDK 25 LTS distribution that keeps the evidence local and
-        treats the dump writer as part of the runtime, not an external concern.</p>
+    <p style="max-width: 62ch">The HIPAA Security Rule is technology-neutral, which is usually described as
+        flexibility. In practice it means the Rule tells you the outcome and leaves you to prove you reached
+        it.</p>
 </header>
 
-<h2>One requirement an external wrapper cannot meet</h2>
-<p>A heap dump of a clinical service can hold patient identifiers and medical data in cleartext. Under HIPAA,
-    electronic protected health information must be safeguarded wherever it is stored, and a heap dump is
-    storage. Where that dump lands is a flag anyone can set from outside, and a wrapper script sets it fine.
-    What the dump contains is not. The VM's own writer streams the heap to disk in cleartext, so an external
-    sanitiser, however good, can only open a file that already holds the PHI, inside your regulated boundary.
-    There is no external surface to attach redaction to at the moment the bytes are written, because the writer
-    is native code inside the runtime. Just as important: sending a PHI-bearing dump to a third-party SaaS for
-    analysis introduces a new data processor into that boundary. It is one of several
-    requirements that fall outside what external tooling can reach; the
-    <a href="/research/the-policy-point.html" class="org-link org-link--inline org-link--internal">policy point</a>
-    essay sets out the general case, here applied to PHI.</p>
+<h2>The dump that holds your patients</h2>
+<p>45 CFR 164.312(a)(2)(iv) asks you to encrypt ePHI<button type="button" class="cite-ref" aria-label="Citation"><span class="cite-icon">i</span><span class="cite-tooltip"><a href="https://www.ecfr.gov/current/title-45/subtitle-A/subchapter-C/part-164/subpart-C/section-164.312" class="cite-link">45 CFR 164.312(a)(2)(iv), HIPAA Security Rule, technical safeguards.</a> Encryption and decryption: implement a mechanism to encrypt and decrypt electronic protected health information (addressable).</span></button>.
+    You did. The database is encrypted, the volumes are encrypted, the backups are encrypted, and your auditor
+    ticked the box.</p>
+<p>Then a JVM in your clinical system hits an <code>OutOfMemoryError</code> and writes a heap dump. That file
+    contains the live object graph: patient names, diagnoses, identifiers, whatever your service was holding in
+    memory at that instant, in cleartext, on disk. None of your encryption touched it, because the value was
+    <strong>live in memory</strong> at the moment of the write, and storage-layer encryption governs
+    storage.</p>
+<p>The same is true when the VM crashes and writes a fatal-error log, and when a Flight Recorder file captures
+    an exception message with a record in it.</p>
+<p>Your options today are to disable the diagnostics, which throws away the evidence you need when a clinical
+    system fails, or to scrub the file afterwards, which acts on a file that already contains the ePHI. The
+    disclosure has already happened by the time an external tool can act, because the writer is native, it is
+    inside the process, and it emits cleartext <strong>as the stream is written</strong>.</p>
+<p><strong>Eliya redacts at the serialisation boundary, inside the VM.</strong> Targeted at
+    <strong>25.0.4</strong>.</p>
 
-<h2>What Eliya gives a healthcare workload today</h2>
-<p>One flag, <code>-XX:EliyaProfile=Production</code>, activates the Phase 1 operational-readiness defaults:
-    heap dump on OutOfMemoryError to a structured path, a predictable crash-log path that survives the
-    container, Native Memory Tracking (summary), reinforced container support, and exit on OutOfMemoryError.</p>
-<p>All diagnostic capture and, in Phase 2, local analysis run on your own infrastructure. No SaaS, no
-    telemetry, no phone-home. PHI captured during an incident stays inside the boundary it was generated in.
-    Eliya is the same Java you already run, on the upstream OpenJDK 25 source tree, GPLv2 with the Classpath
-    Exception, on a quarterly LTS maintenance cadence.</p>
+<h2>Diagnostics that never leave your environment</h2>
+<p><strong>Eliya sends nothing outward. No telemetry. No SaaS dependency. No callback.</strong></p>
+<p>Every diagnostic artifact a JVM produces (heap, JFR, GC, crash log) stays inside your environment by design,
+    not by configuration you have to remember to apply. There is nothing to review in a data-processing
+    agreement, because there is no processing, and there is no third party.</p>
+<p>For a covered entity or a business associate, that is not a feature. It is the absence of a conversation you
+    would otherwise have to have with your privacy officer, your legal team, and eventually a regulator.</p>
 
-<h2>What does not ship today</h2>
-<p>Eliya does not ship a "HIPAA" profile, and it does not redact PHI inside a heap dump today. What it ships is
-    the policy point, the structured diagnostic foundation, and local-only capture so that PHI never leaves
-    your perimeter for diagnosis. Compliance-aligned profile values are demand-gated on the
-    <a href="/product/eliya/roadmap.html" class="org-link org-link--inline org-link--internal">roadmap</a>, not
-    in the 25.0.3 binary.</p>
+<h2>What HIPAA asks that a wrapper cannot answer</h2>
+<p>The Security Rule names outcomes rather than mechanisms, so the technical safeguards at 164.312 map cleanly
+    onto the same runtime controls that PCI exercises. That is why the concepts in our knowledge base are shared
+    across both.</p>
+<table class="clinical-table">
+    <thead>
+        <tr>
+            <th>Safeguard</th>
+            <th>The control</th>
+            <th>Why the outside cannot close it</th>
+            <th>Eliya</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>164.312(a)(2)(iv)</strong> encryption and decryption</td>
+            <td>ePHI never reaches a diagnostic artifact in cleartext</td>
+            <td>The writer emits as it streams. An external scrubber only ever opens a file that already holds
+                the record.</td>
+            <td><strong>25.0.4</strong></td>
+        </tr>
+        <tr>
+            <td><strong>164.312(b)</strong> audit controls</td>
+            <td>The audit trail cannot be silenced or suppressed from inside the process</td>
+            <td>A SIEM seals what it <strong>received</strong>, and cannot detect a record suppressed before it
+                left the host. Absence looks exactly like "nothing happened".</td>
+            <td><strong>25.0.7</strong></td>
+        </tr>
+        <tr>
+            <td><strong>164.312(c)(1)</strong> integrity</td>
+            <td>The record that arrives is the record that was emitted</td>
+            <td>A chain sealed <strong>at emission</strong>, inside the process, turns suppression into a
+                detectable gap. A collector cannot vouch for what it never saw.</td>
+            <td><strong>25.0.7</strong></td>
+        </tr>
+        <tr>
+            <td><strong>164.312(e)(1)</strong> transmission security</td>
+            <td>The negotiated TLS result actually holds</td>
+            <td>A library can build its own <code>SSLContext</code> and ignore <code>java.security</code>.
+                <em>Settable</em> from outside is not <em>enforceable</em> from outside.</td>
+            <td><strong>25.0.6</strong></td>
+        </tr>
+        <tr>
+            <td><strong>164.308(a)(1)(ii)(B)</strong> risk management</td>
+            <td>The <strong>fixed code is the code running</strong></td>
+            <td>"Installed" is not "loaded". A scanner reads the image; shading, classloader order and an
+                unrestarted process mean the vulnerable class can still be live.</td>
+            <td><strong>25.0.7</strong></td>
+        </tr>
+    </tbody>
+</table>
+
+<h2>What we do not claim</h2>
+<p>HIPAA is mostly not a JDK problem, and we will not pretend otherwise.</p>
+<p>Access control, workforce training, business-associate agreements, physical safeguards, breach notification,
+    contingency planning: none of these is something a runtime can satisfy or violate. Your identity provider
+    owns authentication. Your KMS owns key custody. Your SIEM owns retention and review. Those are the right
+    owners and Eliya does not compete with them.</p>
+<p>What we address is the residue: the small set of controls where the state lives inside the process, and the
+    ePHI in a heap dump is the clearest example any auditor will ever be shown.</p>
+<p>We also will not tell you a plan is a product. In-process redaction lands in <strong>25.0.4</strong>. It is
+    not shipped today. What ships today is a quarterly security cadence committed through September 2029, a
+    signed release with an SBOM, production-readiness defaults behind one flag, and provable flag provenance.</p>
+
+<h2>Where healthcare sits for us, honestly</h2>
+<p>Healthcare is a <strong>strategic</strong> segment for Eliya, not a deal-blocking one. We have seeded the
+    HIPAA Security Rule in our knowledge base for cross-standard reuse, and the runtime controls it needs are
+    the same ones we built for PCI. We have not yet decomposed it clause by clause the way we have decomposed
+    PCI DSS. A <code>HIPAA</code> profile value is reserved in the flag architecture and remains demand-gated.</p>
+<p>If you are a covered entity or a business associate running clinical or claims workloads on the JVM, tell us
+    which safeguard you cannot close. That is how the next round of the knowledge base gets written.</p>
 
 <hr class="section-divider" style="margin: 4rem 0;">
-<p>Next: <a href="/product/eliya/downloads.html" class="org-link org-link--inline org-link--internal">download Eliya</a>,
-    read <a href="/research/the-policy-point.html" class="org-link org-link--inline org-link--internal">the thesis</a>,
-    or see <a href="/research/jvm-forensics-vs-apm.html" class="org-link org-link--inline org-link--internal">JVM forensics vs APM</a>.</p>
+<p><a href="/about.html#contact" class="org-link org-link--inline org-link--internal">Talk to the Chief Architect</a>
+    about ePHI in memory. Or read
+    <a href="/research/the-policy-point.html" class="org-link org-link--inline org-link--internal">the policy point</a>,
+    or <a href="/research/jvm-forensics-vs-apm.html" class="org-link org-link--inline org-link--internal">JVM forensics vs APM</a>.</p>

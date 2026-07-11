@@ -1,32 +1,160 @@
 title=Eliya for your industry
 seo_title=Eliya: OpenJDK for regulated production by industry
-description=How Eliya, an OpenJDK 25 LTS distribution, maps to the evidence and compliance needs of telecom, financial services, healthcare, and government workloads.
+description=Eliya is an OpenJDK 25 LTS distribution that establishes the policy point inside the runtime, for the controls that cannot be reached from outside the process: financial services, healthcare, government, telecom.
 type=page
+toc=true
 status=published
 ~~~~~~
 
 <header class="page-header">
     <span class="section-kicker">Eliya for industry</span>
     <h1>Eliya for your industry</h1>
-    <p style="max-width: 62ch">Eliya is built for compliance-conscious industries. The premise is the same in
-        every regulated sector: a few production-evidence and compliance requirements cannot be reached from
-        outside the runtime, however good the external tooling, so Eliya establishes the
-        <a href="/research/the-policy-point.html" class="org-link org-link--inline org-link--internal">policy point</a>
-        inside the JVM. What differs is the specific requirement each industry runs into first.</p>
+    <p style="max-width: 62ch">Every regulated sector has a short list of requirements that pass an audit on
+        paper and fail in production. Not because the external tooling is weak. Because of where the relevant
+        state lives.</p>
 </header>
 
-<ul style="line-height: 2; font-size: 1.05rem; margin-top: 2rem">
-    <li><a href="/product/eliya/industries/telecom.html" class="org-link org-link--inline org-link--internal">OpenJDK for telecom</a>:
-        carrier-grade incident evidence across BSS and OSS, kept inside the operator perimeter.</li>
-    <li><a href="/product/eliya/industries/financial-services.html" class="org-link org-link--inline org-link--internal">OpenJDK for financial services</a>:
-        a heap dump of a payment service is at-rest cardholder data (PCI DSS 3.5.1), a dump-writer problem inside
-        the VM.</li>
-    <li><a href="/product/eliya/industries/healthcare.html" class="org-link org-link--inline org-link--internal">OpenJDK for healthcare</a>:
-        heap dumps and logs can hold PHI at rest; diagnostic capture stays local, never a SaaS.</li>
-    <li><a href="/product/eliya/industries/government.html" class="org-link org-link--inline org-link--internal">OpenJDK for government</a>:
-        durable crash-path evidence, reproducible signed builds, data sovereignty.</li>
+<h2>Some controls cannot be reached from outside the process</h2>
+<p>A wrapper script, a Helm chart, an admission webhook, a service mesh, a <code>-javaagent</code>: all of them
+    are powerful, and all of them stop at the same wall. They cannot change what the JVM's own code does on the
+    inside. A sidecar cannot rewrite the bytes a heap-dump writer is emitting while it emits them. A mesh has no
+    view of which crypto provider a library registered inside the process. A scanner reads the image on disk and
+    cannot tell you which classes the running JVM actually loaded.</p>
+<p>Eliya is an OpenJDK 25 LTS distribution that establishes the policy point <strong>inside</strong> the
+    runtime, for the small and characterisable set of controls that can only be completed there.</p>
+
+<h2>We can name that set, and cite the clause</h2>
+<p>We maintain a compliance knowledge base that decomposes standards clause by clause and asks one question of
+    every control: <strong>can an outer layer complete this end to end, against unaudited in-process
+    code?</strong></p>
+<p>Most of the time the answer is yes, and we say so. Network identity, authorisation between services, key
+    custody inside an HSM, log retention in WORM storage, patch delivery: an outer layer owns these, and Eliya
+    does not compete for them.</p>
+<p>For a specific set of controls the answer is no. They fail for one of two structural reasons.</p>
+
+<h3>Reach</h3>
+<p>There is no external surface to act on.</p>
+<ul style="line-height: 1.9">
+    <li>The runtime acts <em>before exposure</em>: a native writer emits cleartext as the stream is written, so
+        an external tool only ever sees a file that already contains the secret.</li>
+    <li>The runtime owns the <em>memory lifecycle</em>: an immutable <code>String</code>'s backing array cannot
+        be zeroed from outside, and a moving collector may already have left copies in vacated regions.</li>
+    <li>Only the runtime can <em>attest its own internal state</em>: an outside observer signs what it
+        <strong>saw</strong>, never what was internally <strong>true</strong>.</li>
 </ul>
 
-<p style="margin-top: 2rem">Each page states what ships in 25.0.3 today and what remains on the
-    <a href="/product/eliya/roadmap.html" class="org-link org-link--inline org-link--internal">roadmap</a>.
-    Compliance-aligned profile values are demand-gated and not shipping yet.</p>
+<h3>Non-overridability</h3>
+<p>A surface exists, but code inside the process defeats it.</p>
+<ul style="line-height: 1.9">
+    <li><code>Security.addProvider</code> registers a weaker provider at runtime.</li>
+    <li>A library builds its own <code>SSLContext</code> and ignores <code>java.security</code> entirely.</li>
+    <li><code>JAVA_TOOL_OPTIONS</code> wins flag precedence <em>after</em> the reviewed specification was
+        signed off.</li>
+</ul>
+<p><em>Settable from outside</em> and <em>enforceable from outside</em> are not the same property. Most of the
+    confusion in this area comes from conflating them.</p>
+<p>That analysis is the product. Name a control and we will show you the clause it comes from, the argument for
+    why a runtime is necessary, and the argument <strong>against</strong> it that we ran and failed to make
+    stick.</p>
+
+<h2>Choose your sector</h2>
+<table class="clinical-table">
+    <thead>
+        <tr>
+            <th>Sector</th>
+            <th>The control an outer layer cannot close</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><a href="/product/eliya/industries/financial-services.html" class="org-link org-link--inline org-link--internal">Financial services</a></td>
+            <td>A heap dump of a payment service is cardholder data at rest. PCI DSS 3.5.1 says PAN must be
+                unreadable <em>anywhere it is stored</em>, and a dump is storage.</td>
+        </tr>
+        <tr>
+            <td><a href="/product/eliya/industries/healthcare.html" class="org-link org-link--inline org-link--internal">Healthcare</a></td>
+            <td>The same dump holds ePHI. Diagnostics stay inside your environment: Eliya sends nothing
+                outward, ever.</td>
+        </tr>
+        <tr>
+            <td><a href="/product/eliya/industries/government.html" class="org-link org-link--inline org-link--internal">Government</a></td>
+            <td>A FIPS certificate attests the <em>module</em>. Only the process can prove the module actually
+                loaded, self-tested, and is operating in approved mode.</td>
+        </tr>
+        <tr>
+            <td><a href="/product/eliya/industries/telecom.html" class="org-link org-link--inline org-link--internal">Telecom</a></td>
+            <td>Carrier-scale CVE response across estates too large to answer by hand, with evidence that never
+                leaves the operator perimeter.</td>
+        </tr>
+    </tbody>
+</table>
+
+<h2>The release ladder, stated plainly</h2>
+<p>Eliya is a deliberately phased platform. We publish what is shipped, what is targeted at a
+    <strong>named release</strong>, and what is demand-gated. We do not blur the three, and we do not describe
+    a plan as a capability.</p>
+<table class="clinical-table">
+    <thead>
+        <tr>
+            <th>Release</th>
+            <th>Capability</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>Shipped (25.0.3)</strong></td>
+            <td>Production-readiness defaults behind one flag (<code>-XX:EliyaProfile=Production</code>).
+                Quarterly security refresh within about two weeks of upstream OpenJDK, critical CVEs targeted
+                inside a week, committed through the JDK 25 LTS window (September 2029). Signed releases
+                (Ed25519) with SHA-256 checksums and an SPDX SBOM. <strong>Provable flag provenance</strong>:
+                every value carries its origin, so <code>{default}</code>, <code>{ergonomic}</code> and
+                <code>{command line}</code> are distinguishable, and an auditor can prove where a setting
+                actually came from.</td>
+        </tr>
+        <tr>
+            <td><strong>25.0.4</strong></td>
+            <td><strong>In-process secret redaction</strong> at the serialisation boundary.
+                <strong>FIPS-validated cryptographic module.</strong> CycloneDX SBOM alongside SPDX, plus
+                signed SLSA v1.0 build provenance.</td>
+        </tr>
+        <tr>
+            <td><strong>25.0.5</strong></td>
+            <td><strong>Signed attestation of the resolved configuration</strong>: what the process actually
+                resolved to, not what the spec declared.</td>
+        </tr>
+        <tr>
+            <td><strong>25.0.6</strong></td>
+            <td><strong>Hardened TLS that holds</strong>, behind <code>-XX:+UseEliyaSecurityStrict</code>. The
+                default <code>java.security</code> stays bit-identical to upstream.</td>
+        </tr>
+        <tr>
+            <td><strong>25.0.7</strong></td>
+            <td><strong>Runtime security-event stream</strong> and the guarantee it <strong>cannot be
+                silenced</strong> from inside the process. <strong>Audit-stream integrity</strong> sealed at
+                emission. <strong>In-heap secret lifecycle</strong> for the JDK's own key material.
+                <strong>Loaded-code attestation</strong>. <strong>Runtime posture attestation</strong>,
+                including approved-mode. And the <strong><code>PCIDSS</code> profile</strong>
+                (<code>-XX:EliyaProfile=PCIDSS</code>), which fails closed rather than run in violation.</td>
+        </tr>
+        <tr>
+            <td><strong>Demand-gated</strong></td>
+            <td>The remaining compliance profile values (<code>HIPAA</code>, <code>SOX</code>,
+                <code>FedRAMP</code>, <code>GDPR</code>, <code>ISO27001</code>, <code>SOC2</code>). Reserved in
+                the flag architecture, built when a named customer asks.</td>
+        </tr>
+    </tbody>
+</table>
+<p style="margin-top: 1rem">Verification is yours to do: every release ships with checksums and a detached
+    signature, so you confirm the download independently. Our builds are reproducible and that is independently
+    verifiable on request.</p>
+
+<h2>Who this is not for</h2>
+<p>If Temurin or Corretto fits you, stay on them. They are good, they are free, and we will tell you so.</p>
+<p>Eliya is for the case where an outer layer has run out of room, and you can name the control it ran out of
+    room on.</p>
+
+<hr class="section-divider" style="margin: 4rem 0;">
+<p><a href="/about.html#contact" class="org-link org-link--inline org-link--internal">Talk to the Chief Architect</a>
+    about the control you cannot close. Or read
+    <a href="/research/the-policy-point.html" class="org-link org-link--inline org-link--internal">the policy point</a>,
+    the essay that sets out the general case.</p>

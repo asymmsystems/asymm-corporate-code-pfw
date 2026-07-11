@@ -1,6 +1,6 @@
 title=OpenJDK for financial services
 seo_title=OpenJDK for financial services and payments
-description=Eliya is an OpenJDK 25 LTS distribution for financial services, payments, and fintech: a heap dump of a payment service is at-rest cardholder data, and that is a dump-writer problem inside the VM.
+description=Eliya is an OpenJDK 25 LTS distribution for financial services, payments, and fintech: a heap dump of a payment service is cardholder data at rest, and that is a dump-writer problem inside the VM.
 type=page
 toc=true
 status=published
@@ -9,41 +9,135 @@ status=published
 <header class="page-header">
     <span class="section-kicker">Eliya for industry</span>
     <h1>OpenJDK for financial services</h1>
-    <p style="max-width: 62ch">Financial services, payments, and fintech run Java where the data is
-        regulated. The diagnostic artefacts that production failures depend on, heap dumps and crash logs, are
-        themselves in scope. Eliya is an OpenJDK 25 LTS distribution that treats that as a property of the
-        runtime, not an afterthought for an external tool.</p>
+    <p style="max-width: 62ch">PCI DSS 3.5.1 is not ambiguous. PAN must be rendered unreadable
+        <strong>anywhere it is stored</strong>. A heap dump is storage.</p>
 </header>
 
-<h2>One requirement an external wrapper cannot meet</h2>
-<p>PCI DSS Requirement 3.5.1 says the primary account number must be rendered unreadable anywhere it is
-    stored<button type="button" class="cite-ref" aria-label="Citation"><span class="cite-icon">i</span><span class="cite-tooltip"><a href="https://www.pcisecuritystandards.org/document_library/" class="cite-link">PCI DSS v4.0, Requirement 3.5.1, PCI Security Standards Council.</a> v4.0.1 clarifies the requirement applies to PAN in non-primary storage such as audit logs.</span></button>. A heap dump of a payment service stores live card numbers in cleartext. That makes dump
-    contents a dump-writer problem inside the JVM, not a flag anyone can set from outside it. No wrapper, chart,
-    or webhook can reach into how the VM serialises the heap. It is one of several requirements that live in the
-    capability space, reachable only by whoever builds the runtime; the
-    <a href="/research/the-policy-point.html" class="org-link org-link--inline org-link--internal">policy point</a>
-    essay sets out the general case.</p>
+<h2>Your heap dump is cardholder data at rest</h2>
+<p>An HPROF file serialises the entire live object graph to disk, so every card number your payment service was
+    holding as a <code>String</code> or a <code>byte[]</code> is written out in cleartext, at the exact moment
+    the JVM is in the most trouble<button type="button" class="cite-ref" aria-label="Citation"><span class="cite-icon">i</span><span class="cite-tooltip"><a href="https://www.pcisecuritystandards.org/document_library/" class="cite-link">PCI DSS v4.0.1, Requirement 3.5.1, PCI Security Standards Council.</a> PAN is rendered unreadable anywhere it is stored, including in non-primary storage such as audit logs. Disk or partition encryption alone is not sufficient, because it decrypts transparently on access.</span></button>.
+    The same is true of the fatal-error log when the VM crashes, and of a Flight Recorder file that captured an
+    exception message.</p>
+<p>You have two options today, and you already know both of them.</p>
+<p><strong>Turn the diagnostics off.</strong> Drop <code>-XX:+HeapDumpOnOutOfMemoryError</code>, forbid
+    <code>jmap</code> by policy, run a base image with no diagnostic tooling. Your compliance floor goes up and
+    your incident-response capability goes down, and you discover exactly how far down on the night you need it
+    most. You have traded away the single most valuable forensic artifact a JVM produces in order to satisfy a
+    clause about storage.</p>
+<p><strong>Scrub it afterwards.</strong> The tools are real and they are good. Every one of them opens a file
+    that already contains the card numbers. The control said the PAN must not be in the artifact. It was in the
+    artifact. You are now managing the consequences of a disclosure that already happened.</p>
+<p>Neither is a fix, because neither can stand where the problem is. The writer is native, it is inside the
+    process, and it emits cleartext <strong>as the stream is written</strong>. There is no moment at which an
+    outer layer holds those bytes and could decide otherwise.</p>
+<p><strong>Eliya redacts at the serialisation boundary, inside the VM, as the stream is written.</strong>
+    Targeted at <strong>25.0.4</strong>. It is the one place the control can be completed, and it kills the
+    dilemma instead of trading one risk for another.</p>
 
-<h2>What Eliya gives a financial-services workload today</h2>
-<p>One flag, <code>-XX:EliyaProfile=Production</code>, activates the Phase 1 operational-readiness defaults:
-    heap dump on OutOfMemoryError to a structured path, a predictable crash-log path, Native Memory Tracking
-    (summary), reinforced container support, and exit on OutOfMemoryError. Crucially, all diagnostic capture
-    runs locally: no SaaS, no telemetry. Cardholder and transaction data captured in an incident stays inside
-    your cardholder data environment rather than crossing into a third-party processor.</p>
-<p>Eliya is the same Java you already run, built from the upstream OpenJDK 25 source tree under GPLv2 with the
-    Classpath Exception, with no API changes, and maintained on a quarterly Critical Patch Update cadence on an
-    LTS line.</p>
+<h2>What else PCI asks that a wrapper cannot answer</h2>
+<p>We decomposed PCI DSS v4.0.1 clause by clause. These are the ones where an outer layer runs out of room.</p>
+<table class="clinical-table">
+    <thead>
+        <tr>
+            <th>PCI clause</th>
+            <th>The control</th>
+            <th>Why the outside cannot close it</th>
+            <th>Eliya</th>
+        </tr>
+    </thead>
+    <tbody>
+        <tr>
+            <td><strong>3.5.1</strong> PAN unreadable wherever stored</td>
+            <td>Secrets never reach a diagnostic artifact</td>
+            <td>The writer emits cleartext as it streams. Post-hoc scrubbing acts on a file that already
+                contains the PAN.</td>
+            <td><strong>25.0.4</strong></td>
+        </tr>
+        <tr>
+            <td><strong>3.3.1</strong> SAD not stored after authorization</td>
+            <td>Track data, CVV and PIN blocks unrecoverable, <em>including from memory</em></td>
+            <td>Since JEP 454 an application can hold <em>its own</em> secrets off-heap and zero them. It cannot
+                touch the <code>byte[]</code> inside a <code>SecretKeySpec</code> from
+                <code>KeyStore.getKey</code>, whose <code>destroy()</code> throws in the common providers, nor
+                the copies a moving collector left behind.</td>
+            <td><strong>25.0.7</strong></td>
+        </tr>
+        <tr>
+            <td><strong>3.6.1 / 3.7.1</strong> key custody and lifecycle</td>
+            <td>Key material controlled from birth to death</td>
+            <td>An HSM with non-extractable keys genuinely wins, and we say so. But nothing stops in-process
+                code loading a raw key, and <strong>envelope encryption structurally requires the plaintext
+                data key in process memory</strong>.</td>
+            <td><strong>25.0.7</strong></td>
+        </tr>
+        <tr>
+            <td><strong>4.2.1</strong> strong transit cryptography</td>
+            <td>The negotiated result actually holds</td>
+            <td><code>jdk.tls.disabledAlgorithms</code> is <em>settable</em>. A library can still build its own
+                <code>SSLContext</code> with a permissive <code>TrustManager</code> and negotiate whatever the
+                peer offers. A mesh does not see the call your app makes directly to a gateway.</td>
+            <td><strong>25.0.6</strong></td>
+        </tr>
+        <tr>
+            <td><strong>10.2.1 / 10.3.x</strong> audit logs enabled, active, protected</td>
+            <td>The trail cannot be silenced or suppressed from inside</td>
+            <td>A WORM store seals what it <strong>received</strong>. It cannot detect a record suppressed
+                before it ever left the host: absence is indistinguishable from "nothing happened".</td>
+            <td><strong>25.0.7</strong></td>
+        </tr>
+        <tr>
+            <td><strong>2.2.1</strong> configuration standards</td>
+            <td>The hardened config is the one <em>in force</em></td>
+            <td>An admission webhook validates the spec it can <strong>see</strong>. It cannot see
+                <code>JAVA_TOOL_OPTIONS</code> baked into an image layer, nor a value the process changes after
+                startup.</td>
+            <td><strong>25.0.5</strong></td>
+        </tr>
+        <tr>
+            <td><strong>6.3.3</strong> patches installed within a month</td>
+            <td>The <strong>fixed code is the code running</strong></td>
+            <td>"Installed" is not "loaded". A scanner reads the image. Shading, classloader order, and a
+                process nobody restarted mean the vulnerable class can still be live.</td>
+            <td><strong>25.0.7</strong></td>
+        </tr>
+    </tbody>
+</table>
 
-<h2>What does not ship today</h2>
-<p>Eliya does not ship a PCI-aligned profile today, and it does not yet redact PAN inside a heap dump. What it
-    ships is the policy point and the structured diagnostic foundation that such controls require, plus
-    local-only capture so the dump never leaves your perimeter. A FIPS 140-3 variant is a Phase 2 deliverable;
-    compliance-aligned profile values, such as a PCI-aligned profile, are demand-gated and sit in Phase 4.
-    Neither is in the 25.0.3 binary. The
-    <a href="/product/eliya/roadmap.html" class="org-link org-link--inline org-link--internal">roadmap</a> sets
-    out what is built and what is not.</p>
+<h2>A profile that fails closed</h2>
+<p>Those capabilities compose. In <strong>25.0.7</strong>, <code>-XX:EliyaProfile=PCIDSS</code> activates them
+    as a curated set and treats them as regulator-owned rather than operator-owned: a conflicting override is
+    refused at startup rather than quietly accepted, and the profile will not boot on a non-FIPS binary at all.
+    Redaction, hardened TLS, the audit stream, the secret lifecycle and both attestations become mandatory boot
+    artefacts rather than things somebody remembered to switch on.</p>
+<p>This is the one compliance profile that is not demand-gated. It is a named release deliverable because PCI is
+    where we decomposed the standard first.</p>
+
+<h2>What we do not claim</h2>
+<p>We will not sell you compliance. PCI DSS has twelve requirements and most of them are yours: network
+    segmentation, physical security, staff training, policy, vulnerability scanning. A JDK cannot satisfy or
+    violate any of them, and any vendor telling you otherwise is selling paperwork.</p>
+<p>We will not claim a control an outer layer already closes. Your KMS should hold your keys. Your SIEM should
+    retain and review your logs. Your gateway should tokenise at ingest so that SAD never enters your JVM at
+    all, and where you can do that, <strong>do it</strong>: it is the right answer and it dissolves the
+    problem.</p>
+<p>And we will not tell you a plan is a product. In-process redaction lands in <strong>25.0.4</strong>. It is
+    not shipped today. What ships today is the quarterly cadence, the signed release with an SBOM,
+    production-readiness defaults behind one flag, and provable flag provenance.</p>
+
+<h2>The evidence an assessor actually wants</h2>
+<p>Your QSA does not want a policy PDF. They want to know what was <strong>in force</strong>, not what was
+    <strong>declared</strong>.</p>
+<p>From <strong>25.0.5</strong>, Eliya emits a signed attestation of the configuration the process actually
+    resolved to, after every default, ergonomic decision, environment variable, container override and late
+    launch input has been applied. Today the foundation is already shipped: every flag value carries its origin,
+    so <code>{default}</code>, <code>{ergonomic}</code> and <code>{command line}</code> are distinguishable, and
+    an auditor can prove where a setting actually came from.</p>
+<p>That is the difference between "we configured it correctly" and "the runtime says this is what it resolved
+    to, and here is the signature".</p>
 
 <hr class="section-divider" style="margin: 4rem 0;">
-<p>Next: <a href="/product/eliya/downloads.html" class="org-link org-link--inline org-link--internal">download Eliya</a>,
-    read <a href="/research/the-policy-point.html" class="org-link org-link--inline org-link--internal">the thesis</a>,
-    or see the <a href="/product/eliya/security.html" class="org-link org-link--inline org-link--internal">security posture</a>.</p>
+<p><a href="/about.html#contact" class="org-link org-link--inline org-link--internal">Talk to the Chief Architect</a>
+    about Requirement 3. Or
+    <a href="/product/eliya/downloads.html" class="org-link org-link--inline org-link--internal">download Eliya</a>,
+    or read <a href="/research/the-policy-point.html" class="org-link org-link--inline org-link--internal">the policy point</a>.</p>
