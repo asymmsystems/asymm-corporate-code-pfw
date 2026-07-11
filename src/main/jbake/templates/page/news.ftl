@@ -43,29 +43,29 @@
 <div class="container" style="padding-top: 4rem; padding-bottom: 8rem; min-height: 70vh;">
     <article class="page-body">
 
-        <header class="pu-hero">
-            <span class="section-kicker">Press &amp; Updates</span>
-            <h1 class="page-title">Press &amp; Updates</h1>
-            <p class="pu-lede">Releases and milestones from Asymm Systems, and where Eliya and the company have
-                been covered.</p>
-        </header>
+        <h1 class="page-title">Press &amp; Updates</h1>
+        <p>Releases and milestones from Asymm Systems, and where Eliya and the company have been covered.</p>
 
         <#if (posts_to_list?size > 0)>
         <#assign featured = posts_to_list[0]>
+        <#-- Whole card is the link, so the CTA is a span: org-link is class-driven
+             and supplies the arrow, and nesting an <a> inside an <a> is invalid. -->
         <a class="pu-featured" href="${hrefOf(featured)}">
             <div class="pu-featured-meta">
-                <span class="pu-tag pu-tag--on-dark">${categoryOf(featured)}</span>
+                <span class="pu-tag">${categoryOf(featured)}</span>
                 <span class="pu-featured-date">${featured.date?string("dd MMMM yyyy")}</span>
             </div>
-            <h2 class="pu-featured-title">${featured.title}</h2>
-            <p class="pu-featured-desc">${(featured.description)!""}</p>
-            <span class="pu-featured-cta">Read the briefing &rarr;</span>
+            <h2>${featured.title}</h2>
+            <p>${(featured.description)!""}</p>
+            <span class="org-link org-link--inline org-link--internal">Read the briefing</span>
         </a>
         </#if>
 
-        <section class="pu-section">
-            <span class="section-kicker">Update feed</span>
-            <h2 class="pu-h2">Releases and milestones</h2>
+        <section>
+            <div class="section-intro">
+                <span class="section-kicker">Update feed</span>
+                <h2>Releases and milestones</h2>
+            </div>
 
             <#-- Revealed by JS only, so the feed degrades to a plain table without it. -->
             <div class="pu-controls" hidden>
@@ -104,7 +104,7 @@
                             <td class="pu-cell-date">${post.date?string("yyyy-MM-dd")}</td>
                             <td><span class="pu-tag pu-tag--${c?lower_case?replace(' ', '-')}">${c}</span></td>
                             <td class="pu-cell-headline">
-                                <a href="${hrefOf(post)}">${post.title}</a>
+                                <a href="${hrefOf(post)}" class="org-link org-link--inline org-link--internal">${post.title}</a>
                                 <span class="pu-cell-desc">${(post.description)!""}</span>
                             </td>
                         </tr>
@@ -118,17 +118,19 @@
             </#if>
         </section>
 
-        <section class="pu-section">
-            <span class="section-kicker">Media</span>
-            <h2 class="pu-h2">In the press</h2>
-            <p class="pu-lede-sm">Independent coverage and featured writing. For interviews or briefings, reach us at
-                <a href="mailto:ping@asymm.systems" class="org-link org-link--inline org-link--internal">ping@asymm.systems</a>.</p>
+        <section>
+            <div class="section-intro">
+                <span class="section-kicker">Media</span>
+                <h2>In the press</h2>
+                <p>Independent coverage and featured writing. For interviews or briefings, reach us at
+                    <a href="mailto:ping@asymm.systems" class="org-link org-link--inline org-link--internal">ping@asymm.systems</a>.</p>
+            </div>
 
             <div class="pu-press-grid">
                 <a class="pu-press-card" href="https://www.infoq.com/news/2026/06/eliya-jvm-diagnostic-profile/"
                     target="_blank" rel="noopener">
                     <span class="pu-press-pub">InfoQ</span>
-                    <span class="pu-press-title">Eliya 25 Brings a JVM-Level Diagnostic Profile to OpenJDK 25 LTS</span>
+                    <span class="pu-press-title org-link org-link--external">Eliya 25 Brings a JVM-Level Diagnostic Profile to OpenJDK 25 LTS</span>
                     <span class="pu-press-note">Coverage of the Eliya 25.0.3 release and the
                         <code>-XX:EliyaProfile</code> policy point. June 2026.</span>
                 </a>
@@ -136,28 +138,28 @@
                 <a class="pu-press-card" href="https://www.infoq.com/news/2026/06/java-news-roundup-jun22-2026/"
                     target="_blank" rel="noopener">
                     <span class="pu-press-pub">InfoQ</span>
-                    <span class="pu-press-title">Java News Roundup</span>
+                    <span class="pu-press-title org-link org-link--external">Java News Roundup</span>
                     <span class="pu-press-note">Eliya featured alongside the wider Java ecosystem. June 2026.</span>
                 </a>
 
                 <a class="pu-press-card" href="https://www.jvm-weekly.com/p/where-production-policy-belongs-building"
                     target="_blank" rel="noopener">
                     <span class="pu-press-pub">JVM Weekly</span>
-                    <span class="pu-press-title">Where Production Policy Belongs: Building Eliya in Public with Fahim Farook</span>
+                    <span class="pu-press-title org-link org-link--external">Where Production Policy Belongs: Building Eliya in Public with Fahim Farook</span>
                     <span class="pu-press-note">Volume 183.</span>
                 </a>
 
                 <a class="pu-press-card" href="https://foojay.io/today/where-production-policy-belongs-building-eliya-in-public/"
                     target="_blank" rel="noopener">
                     <span class="pu-press-pub">Foojay</span>
-                    <span class="pu-press-title">Where production policy belongs: building Eliya in public (part 1)</span>
+                    <span class="pu-press-title org-link org-link--external">Where production policy belongs: building Eliya in public (part 1)</span>
                     <span class="pu-press-note">The thesis behind EliyaProfile, by founder Fahim Farook.</span>
                 </a>
 
                 <a class="pu-press-card" href="https://nljug.org/foojay/where-production-policy-belongs-building-eliya-in-public-part-1/"
                     target="_blank" rel="noopener">
                     <span class="pu-press-pub">NLJUG</span>
-                    <span class="pu-press-title">Where production policy belongs: building Eliya in public (part 1)</span>
+                    <span class="pu-press-title org-link org-link--external">Where production policy belongs: building Eliya in public (part 1)</span>
                     <span class="pu-press-note">Syndicated to the Nederlandse Java User Group.</span>
                 </a>
             </div>

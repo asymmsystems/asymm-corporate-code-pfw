@@ -2927,34 +2927,27 @@ h2.news-entry-title {
     display: none;
 }
 
-.pu-hero {
-    margin-bottom: var(--space-xl);
-}
-.pu-lede {
-    font-size: var(--t-size-body);
-    color: var(--text-secondary);
-    max-width: 60ch;
-}
-.pu-lede-sm {
-    font-size: var(--t-size-ui);
-    color: var(--text-secondary);
-    max-width: 65ch;
-    margin-bottom: var(--space-lg);
-}
-
-/* Featured briefing */
+/* Featured briefing. An elevated card, matching .product-feature-card — the dark
+   surface is reserved for machine output (terminal, code block) and the footer,
+   not editorial content. Its heading, body copy and link come from the sitewide
+   .page-body h2 / p and .org-link rules, so nothing is restyled here. */
 .pu-featured {
     display: block;
-    padding: 3rem;
-    background: var(--surface-inverted);
-    color: var(--text-inverted);
+    margin-top: var(--space-xl);
+    padding: 2.5rem;
+    background: var(--surface-elevated);
+    border: 1px solid var(--border-subtle);
     border-radius: 8px;
     text-decoration: none;
-    transition: transform 0.3s ease, box-shadow 0.3s ease;
+    transition: border-color 0.3s ease;
 }
 .pu-featured:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
+    border-color: var(--color-rose);
+}
+/* .page-body h2 carries a 3rem top margin for prose rhythm; inside the card the
+   heading is the first element after the meta row, so drop it. */
+.pu-featured h2 {
+    margin-top: 0;
 }
 .pu-featured-meta {
     display: flex;
@@ -2964,33 +2957,7 @@ h2.news-entry-title {
 }
 .pu-featured-date {
     font-size: var(--t-size-caption);
-    opacity: 0.7;
-}
-.pu-featured-title {
-    font-size: var(--t-size-display-m);
-    line-height: 1.2;
-    margin: 0 0 var(--space-sm) 0;
-    color: var(--text-inverted);
-    max-width: 26ch;
-}
-.pu-featured-desc {
-    font-size: var(--t-size-ui);
-    opacity: 0.8;
-    max-width: 62ch;
-    margin-bottom: var(--space-md);
-}
-.pu-featured-cta {
-    font-size: var(--t-size-ui);
-    border-bottom: 1px solid currentColor;
-    padding-bottom: 2px;
-}
-
-.pu-section {
-    margin-top: 5rem;
-}
-.pu-h2 {
-    font-size: var(--t-size-display-m);
-    margin: var(--space-xs) 0 var(--space-lg) 0;
+    color: var(--text-secondary);
 }
 
 /* Feed controls */
@@ -3077,16 +3044,6 @@ h2.news-entry-title {
     white-space: nowrap;
     font-variant-numeric: tabular-nums;
 }
-.pu-cell-headline a {
-    font-size: var(--t-size-ui);
-    color: var(--text-primary);
-    text-decoration: none;
-    border-bottom: 1px solid transparent;
-    transition: border-color 0.2s ease;
-}
-.pu-cell-headline a:hover {
-    border-bottom-color: var(--color-rose);
-}
 .pu-cell-desc {
     display: block;
     margin-top: 0.4rem;
@@ -3116,11 +3073,6 @@ h2.news-entry-title {
 .pu-tag--engineering { background: #EAF2F4;                 border-color: var(--color-teal-light); color: #2F6470; }
 .pu-tag--perspective { background: #F6EBF0;                 border-color: var(--color-rose-light); color: #8A4763; }
 .pu-tag--community   { background: #EFF3EA;                 border-color: var(--color-olive-light);color: #566B3D; }
-.pu-tag--on-dark {
-    background: rgba(255, 255, 255, 0.12);
-    border-color: rgba(255, 255, 255, 0.2);
-    color: var(--text-inverted);
-}
 
 /* Press coverage cards */
 .pu-press-grid {
@@ -3149,10 +3101,10 @@ h2.news-entry-title {
     letter-spacing: 0.08em;
     color: var(--color-rose);
 }
+/* Colour, underline and the external arrow come from .org-link--external. */
 .pu-press-title {
     font-size: var(--t-size-ui);
     line-height: 1.4;
-    color: var(--text-primary);
 }
 .pu-press-note {
     font-size: var(--t-size-caption);
