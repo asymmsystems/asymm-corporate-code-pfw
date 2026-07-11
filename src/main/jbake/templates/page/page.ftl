@@ -34,6 +34,9 @@
 <div class="container">
     <article class="page-body page-body--breadcrumb<#if hasToc> page-body--toc</#if>" id="page-body">
         <@pageBody/>
+        <#-- Previous / user guide / next. Renders only on Eliya user-guide pages
+             that appear in the guide's reading order; a no-op everywhere else. -->
+        <#include "/partial/guide-nav.ftl">
     </article>
 </div>
 <#if hasToc>
