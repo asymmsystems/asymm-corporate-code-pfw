@@ -3129,3 +3129,38 @@ h2.news-entry-title {
     .pu-search { min-width: 100%; }
     .pu-cell-desc { display: none; }
 }
+
+/* --- User-guide pagination -------------------------------------------------
+   Previous / user guide / next at the foot of each guide page. Emitted by
+   partial/guide-nav.ftl from page/page.ftl, replacing the .page-back-nav each
+   guide page used to hand-roll. Link colour, underline and arrows come from
+   .org-link; the empty prev/next slots hold the centre link in place. */
+.guide-nav {
+    display: flex;
+    align-items: center;
+    gap: var(--space-md);
+    margin-top: var(--space-xl);
+    padding-top: var(--space-lg);
+    border-top: 1px solid var(--border-subtle);
+}
+.guide-nav-prev,
+.guide-nav-next {
+    flex: 1 1 0;
+}
+.guide-nav-next {
+    text-align: right;
+}
+.guide-nav-up {
+    flex: 0 0 auto;
+}
+
+@media (max-width: 640px) {
+    .guide-nav {
+        flex-direction: column;
+        align-items: flex-start;
+        gap: var(--space-sm);
+    }
+    .guide-nav-next {
+        text-align: left;
+    }
+}
