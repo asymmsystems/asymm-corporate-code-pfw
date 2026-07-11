@@ -2916,3 +2916,264 @@ h2.news-entry-title {
         font-size: 0.75rem;
     }
 }
+/* --- Press & Updates (/registry) -------------------------------------------
+   Featured briefing card, a filterable update feed, and press-coverage cards.
+   .pu-controls is hidden until JS reveals it, so the feed degrades to a plain
+   table; the [hidden] rules below are needed because display:flex would
+   otherwise beat the UA's [hidden] { display: none }. */
+.pu-controls[hidden],
+.pu-empty[hidden],
+.pu-row[hidden] {
+    display: none;
+}
+
+.pu-hero {
+    margin-bottom: var(--space-xl);
+}
+.pu-lede {
+    font-size: var(--t-size-body);
+    color: var(--text-secondary);
+    max-width: 60ch;
+}
+.pu-lede-sm {
+    font-size: var(--t-size-ui);
+    color: var(--text-secondary);
+    max-width: 65ch;
+    margin-bottom: var(--space-lg);
+}
+
+/* Featured briefing */
+.pu-featured {
+    display: block;
+    padding: 3rem;
+    background: var(--surface-inverted);
+    color: var(--text-inverted);
+    border-radius: 8px;
+    text-decoration: none;
+    transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+.pu-featured:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.18);
+}
+.pu-featured-meta {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-md);
+}
+.pu-featured-date {
+    font-size: var(--t-size-caption);
+    opacity: 0.7;
+}
+.pu-featured-title {
+    font-size: var(--t-size-display-m);
+    line-height: 1.2;
+    margin: 0 0 var(--space-sm) 0;
+    color: var(--text-inverted);
+    max-width: 26ch;
+}
+.pu-featured-desc {
+    font-size: var(--t-size-ui);
+    opacity: 0.8;
+    max-width: 62ch;
+    margin-bottom: var(--space-md);
+}
+.pu-featured-cta {
+    font-size: var(--t-size-ui);
+    border-bottom: 1px solid currentColor;
+    padding-bottom: 2px;
+}
+
+.pu-section {
+    margin-top: 5rem;
+}
+.pu-h2 {
+    font-size: var(--t-size-display-m);
+    margin: var(--space-xs) 0 var(--space-lg) 0;
+}
+
+/* Feed controls */
+.pu-controls {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: var(--space-xs) var(--space-sm);
+    margin-bottom: var(--space-md);
+}
+.pu-search {
+    font: inherit;
+    font-size: var(--t-size-ui);
+    padding: 0.6rem 0.9rem;
+    min-width: 16rem;
+    background: var(--surface-elevated);
+    color: var(--text-primary);
+    border: 1px solid var(--border-subtle);
+    border-radius: 4px;
+}
+.pu-search:focus {
+    outline: none;
+    border-color: var(--color-rose);
+}
+.pu-chips {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-xs);
+}
+.pu-chip {
+    font: inherit;
+    font-size: var(--t-size-caption);
+    padding: 0.5rem 0.9rem;
+    background: transparent;
+    color: var(--text-secondary);
+    border: 1px solid var(--border-subtle);
+    border-radius: 100px;
+    cursor: pointer;
+    transition: background 0.2s ease, border-color 0.2s ease, color 0.2s ease;
+}
+.pu-chip:hover {
+    border-color: var(--color-rose);
+    color: var(--text-primary);
+}
+.pu-chip.is-active {
+    background: var(--surface-inverted);
+    border-color: var(--surface-inverted);
+    color: var(--text-inverted);
+}
+
+/* Feed table */
+.pu-table-wrap {
+    overflow-x: auto;
+}
+.pu-table {
+    width: 100%;
+    border-collapse: collapse;
+}
+.pu-table th {
+    text-align: left;
+    font-size: var(--t-size-kicker);
+    font-weight: 500;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--text-secondary);
+    white-space: nowrap;
+    padding: var(--space-sm) var(--space-sm) var(--space-sm) 0;
+    border-bottom: 1px solid var(--border-subtle);
+}
+.pu-table td {
+    padding: 1.25rem var(--space-sm) 1.25rem 0;
+    vertical-align: top;
+}
+.pu-row {
+    border-bottom: 1px solid var(--border-subtle);
+    transition: background 0.2s ease;
+}
+.pu-row:hover {
+    background: var(--surface-section-alt);
+}
+.pu-cell-date {
+    font-size: var(--t-size-caption);
+    color: var(--text-secondary);
+    white-space: nowrap;
+    font-variant-numeric: tabular-nums;
+}
+.pu-cell-headline a {
+    font-size: var(--t-size-ui);
+    color: var(--text-primary);
+    text-decoration: none;
+    border-bottom: 1px solid transparent;
+    transition: border-color 0.2s ease;
+}
+.pu-cell-headline a:hover {
+    border-bottom-color: var(--color-rose);
+}
+.pu-cell-desc {
+    display: block;
+    margin-top: 0.4rem;
+    font-size: var(--t-size-caption);
+    color: var(--text-secondary);
+    max-width: 62ch;
+}
+.pu-empty {
+    color: var(--text-secondary);
+    padding: var(--space-lg) 0;
+}
+
+/* Category tag */
+.pu-tag {
+    display: inline-block;
+    font-size: var(--t-size-kicker);
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    white-space: nowrap;
+    padding: 0.3rem 0.6rem;
+    border-radius: 4px;
+    background: var(--color-mist);
+    color: var(--text-secondary);
+    border: 1px solid var(--border-subtle);
+}
+.pu-tag--release     { background: var(--color-sand-light); border-color: var(--color-sand);       color: #6B4E12; }
+.pu-tag--engineering { background: #EAF2F4;                 border-color: var(--color-teal-light); color: #2F6470; }
+.pu-tag--perspective { background: #F6EBF0;                 border-color: var(--color-rose-light); color: #8A4763; }
+.pu-tag--community   { background: #EFF3EA;                 border-color: var(--color-olive-light);color: #566B3D; }
+.pu-tag--on-dark {
+    background: rgba(255, 255, 255, 0.12);
+    border-color: rgba(255, 255, 255, 0.2);
+    color: var(--text-inverted);
+}
+
+/* Press coverage cards */
+.pu-press-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(16rem, 1fr));
+    gap: 1.25rem;
+}
+.pu-press-card {
+    display: flex;
+    flex-direction: column;
+    gap: 0.6rem;
+    padding: 1.75rem;
+    background: var(--surface-elevated);
+    border: 1px solid var(--border-subtle);
+    border-radius: 8px;
+    text-decoration: none;
+    transition: border-color 0.3s ease, transform 0.3s ease;
+}
+.pu-press-card:hover {
+    border-color: var(--color-rose);
+    transform: translateY(-2px);
+}
+.pu-press-pub {
+    font-size: var(--t-size-kicker);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+    color: var(--color-rose);
+}
+.pu-press-title {
+    font-size: var(--t-size-ui);
+    line-height: 1.4;
+    color: var(--text-primary);
+}
+.pu-press-note {
+    font-size: var(--t-size-caption);
+    line-height: 1.5;
+    color: var(--text-secondary);
+}
+
+.pu-visually-hidden {
+    position: absolute;
+    width: 1px;
+    height: 1px;
+    padding: 0;
+    margin: -1px;
+    overflow: hidden;
+    clip: rect(0 0 0 0);
+    white-space: nowrap;
+    border: 0;
+}
+
+@media (max-width: 640px) {
+    .pu-featured { padding: 2rem; }
+    .pu-search { min-width: 100%; }
+    .pu-cell-desc { display: none; }
+}
