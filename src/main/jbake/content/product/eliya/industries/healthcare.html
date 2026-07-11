@@ -18,9 +18,12 @@ status=published
 <h2>One requirement an external wrapper cannot meet</h2>
 <p>A heap dump of a clinical service can hold patient identifiers and medical data in cleartext. Under HIPAA,
     electronic protected health information must be safeguarded wherever it is stored, and a heap dump is
-    storage. How the VM writes that dump, and where it lands, is crash-path behaviour inside the runtime; no
-    sidecar can change it from outside. Just as important: sending a PHI-bearing dump to a third-party SaaS for
-    analysis introduces a new data processor into a regulated boundary. It is one of several
+    storage. Where that dump lands is a flag anyone can set from outside, and a wrapper script sets it fine.
+    What the dump contains is not. The VM's own writer streams the heap to disk in cleartext, so an external
+    sanitiser, however good, can only open a file that already holds the PHI, inside your regulated boundary.
+    There is no external surface to attach redaction to at the moment the bytes are written, because the writer
+    is native code inside the runtime. Just as important: sending a PHI-bearing dump to a third-party SaaS for
+    analysis introduces a new data processor into that boundary. It is one of several
     requirements that fall outside what external tooling can reach; the
     <a href="/research/the-policy-point.html" class="org-link org-link--inline org-link--internal">policy point</a>
     essay sets out the general case, here applied to PHI.</p>

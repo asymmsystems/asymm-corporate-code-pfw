@@ -1,6 +1,6 @@
 title=OpenJDK for government
 seo_title=OpenJDK for government and public sector JVM
-description=Eliya is an OpenJDK 25 LTS distribution for government and public-sector systems: protected crash-path logs, attestable flag origin, and diagnostic data that stays inside your boundary.
+description=Eliya is an OpenJDK 25 LTS distribution for government and public-sector systems: durable crash-path evidence, reproducible signed builds, and diagnostic data that stays inside your boundary.
 type=page
 toc=true
 status=published
@@ -11,17 +11,25 @@ status=published
     <h1>OpenJDK for government</h1>
     <p style="max-width: 62ch">Government and public-sector systems carry long retention obligations, strict
         audit expectations, and data-sovereignty rules. Eliya is an OpenJDK 25 LTS distribution that produces
-        protected diagnostic evidence during failures and keeps it inside your boundary, with no external
+        durable diagnostic evidence during failures and keeps it inside your boundary, with no external
         dependency.</p>
 </header>
 
 <h2>One requirement an external wrapper cannot meet</h2>
-<p>Two examples sit outside what any external selector can do. ISO 27001 control A.8.15 expects logs to be
-    produced and protected<button type="button" class="cite-ref" aria-label="Citation"><span class="cite-icon">i</span><span class="cite-tooltip"><a href="https://www.iso.org/standard/27001" class="cite-link">ISO/IEC 27001:2022, Annex A control 8.15 (Logging).</a> Logs of activities, exceptions and faults are to be produced, stored, protected and analysed.</span></button>, including the artefacts a process writes while it is crashing, by crash-path code only
-    the VM runs. And change-control attestation wants proof that the running configuration is the approved one,
-    but a flag's origin, whether a profile set it or someone's command line did, is internal VM state, invisible
-    to any external tool. Both live in the capability space, and they are two of several such
-    requirements; the
+<p>Two examples sit outside what an external tool can reach, and in both the problem is timing or proof, not
+    that a script cannot run the command. ISO 27001 control A.8.15 expects logs to be produced and protected<button type="button" class="cite-ref" aria-label="Citation"><span class="cite-icon">i</span><span class="cite-tooltip"><a href="https://www.iso.org/standard/27001" class="cite-link">ISO/IEC 27001:2022, Annex A control 8.15 (Logging).</a> Logs of activities, exceptions and faults are to be produced, stored, protected and analysed.</span></button>, and that includes the fatal-error log a JVM writes while it is
+    crashing. The handler has already written that file, with the command line, system properties, and
+    environment variables in it, in a constrained crash context, before any external tool gets a turn. On a
+    terminating pod there may be no "after" you control, and redacting the file as it is written has no external
+    surface to attach to.</p>
+<p>The second is attestation. Change control wants proof that the configuration which actually ran is the
+    approved one. This is not a visibility gap: HotSpot already reports a flag's resolved value and its origin,
+    whether a profile, a command line, or ergonomics set it (<code>-XX:+PrintFlagsFinal</code>,
+    <code>jcmd &lt;pid&gt; VM.flags</code>), and Eliya relies on that existing primitive. The gap is proof. That
+    output is unsigned, opt-in stdout the workload itself controls, and it covers only <code>-XX</code> flags.
+    An external tool can sign what it observed; only the runtime can vouch for what was internally true. A
+    signed attestation bound to the process is therefore a runtime capability, and it is not in today's build.
+    The
     <a href="/research/the-policy-point.html" class="org-link org-link--inline org-link--internal">policy point</a>
     essay sets out the general case, here applied to public-sector assurance.</p>
 
@@ -37,9 +45,10 @@ status=published
 
 <h2>What does not ship today</h2>
 <p>Eliya is not FedRAMP authorised, and it does not ship a government compliance profile today. What it ships
-    is the policy point, protected crash-path diagnostics, reproducible signed builds, and local-only capture.
-    A FIPS 140-3 variant is a Phase 2 deliverable; compliance-aligned profile values are demand-gated and sit
-    in Phase 4. Neither is in the 25.0.3 binary; the
+    is the policy point, predictable crash-path diagnostics, reproducible signed builds, and local-only capture.
+    It does not redact the fatal-error log, and it does not yet emit a signed attestation of the resolved
+    runtime posture. A FIPS 140-3 variant is a Phase 2 deliverable; compliance-aligned profile values are
+    demand-gated and sit in Phase 4. None of these is in the 25.0.3 binary; the
     <a href="/product/eliya/roadmap.html" class="org-link org-link--inline org-link--internal">roadmap</a> sets
     out the trajectory.</p>
 

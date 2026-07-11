@@ -1,6 +1,6 @@
 title=OpenJDK for telecom
 seo_title=OpenJDK for telecom: carrier-grade JVM evidence
-description=Eliya is an OpenJDK 25 LTS distribution for telecom and telco production: carrier-grade incident evidence on disk before failure, diagnostic data inside the operator perimeter, one flag.
+description=Eliya is an OpenJDK 25 LTS distribution for telecom and telco production: carrier-grade incident evidence that exists when a node fails, diagnostic data inside the operator perimeter, one flag.
 type=page
 toc=true
 status=published
@@ -11,19 +11,29 @@ status=published
     <h1>OpenJDK for telecom</h1>
     <p style="max-width: 62ch">Carrier-grade Java runs the BSS and OSS stack: charging, mediation,
         provisioning, order management. When one of those nodes fails, a telco operator needs to reconstruct
-        what happened, not re-run it. Eliya is an OpenJDK 25 LTS distribution that puts the evidence on disk
-        before the failure, and keeps it inside your perimeter.</p>
+        what happened, not re-run it. Eliya is an OpenJDK 25 LTS distribution that makes sure the evidence
+        exists when a node fails, and keeps it inside your perimeter.</p>
 </header>
 
 <h2>One requirement an external wrapper cannot meet</h2>
 <p>Most operational requirements in a telecommunications estate live in the configuration space: you set a
-    flag, a Helm value, or an environment variable and you are done. The hard ones do not. Reconstructing a
-    failed charging transaction needs the last execution profile, the heap state, and the crash log to already
-    exist at the moment the JVM dies. That is crash-path behaviour, run by the VM itself, and no wrapper script
-    or sidecar can guarantee the trace survives a process that is going down. It is one of several
-    requirements that fall outside what external tooling can reach; the
+    flag, a Helm value, or an environment variable, and you are done. Eliya does not pretend otherwise. The
+    Production profile below is mostly exactly that, existing HotSpot flags set as one coherent group, and a
+    wrapper script can set every one of them by hand. On an estate of charging, mediation, provisioning, and
+    order-management nodes, the reason to move them into the runtime is consistency, not capability: that flag
+    list is usually written after the first incident, and it drifts service by service.</p>
+<p>The requirement that genuinely does not fit is narrower, and it is not that a script cannot run it. It is
+    that an external tool necessarily acts at the wrong moment. A charging node holds subscriber identifiers in
+    the heap, and on the payment path, cardholder data. When that node dies on an OutOfMemoryError, the JVM's
+    own dump writer streams the heap to disk in cleartext. An external sanitiser, however good, can only open a
+    file that already contains that cleartext, inside the operator's trust boundary. There is no external
+    surface to attach redaction to at the moment the bytes are written, because the writer is native code
+    inside the VM. Volume encryption does not close it either: it decrypts transparently to anything with
+    filesystem access. That is a dump-writer problem, reachable only by whoever builds the runtime, and it is
+    why Eliya establishes the
     <a href="/research/the-policy-point.html" class="org-link org-link--inline org-link--internal">policy point</a>
-    essay sets out the general case, here applied to carrier-grade operations.</p>
+    inside the JVM. Eliya does not redact that dump today; what ships is the policy point and the structured
+    diagnostic foundation such a control requires.</p>
 
 <h2>What Eliya gives a telecom workload today</h2>
 <p>One flag, <code>-XX:EliyaProfile=Production</code>, activates the Phase 1 operational-readiness defaults:</p>
