@@ -53,23 +53,9 @@
         Planned late 2026; first Preview archive pending.
     </p>
 
-    <button type="button" class="inline-terminal"
-        onclick="copyToClipboard('fetch https://github.com/asymmsystems/eliya-jdk/releases/download/v${eliyaVersion}-preview/eliya-jdk-${eliyaVersion}-freebsd-amd64.tar.gz')" aria-label="Copy command">
-        <code>fetch https://github.com/asymmsystems/eliya-jdk/releases/download/v${eliyaVersion}-preview/eliya-jdk-${eliyaVersion}-freebsd-amd64.tar.gz</code>
-        <span class="copy-btn" aria-hidden="true">Copy</span>
-    </button>
-
-    <button type="button" class="inline-terminal"
-        onclick="copyToClipboard('sudo tar -xzf eliya-jdk-${eliyaVersion}-freebsd-amd64.tar.gz -C /usr/local')" aria-label="Copy command">
-        <code>sudo tar -xzf eliya-jdk-${eliyaVersion}-freebsd-amd64.tar.gz -C /usr/local</code>
-        <span class="copy-btn" aria-hidden="true">Copy</span>
-    </button>
-
-    <button type="button" class="inline-terminal"
-        onclick="copyToClipboard('setenv JAVA_HOME /usr/local/java-${eliyaVersion}-eliya; setenv PATH $JAVA_HOME/bin:$PATH')" aria-label="Copy command">
-        <code>setenv JAVA_HOME /usr/local/java-${eliyaVersion}-eliya; setenv PATH $JAVA_HOME/bin:$PATH</code>
-        <span class="copy-btn" aria-hidden="true">Copy</span>
-    </button>
+    <div class="inline-terminal inline-terminal--static">
+        <code># Download, extract, and JAVA_HOME setup commands will appear here when the first FreeBSD Preview archive is published (target: late 2026). Join the waitlist below if your team would adopt Eliya on FreeBSD.</code>
+    </div>
 
 
     <h3>Verify</h3>

@@ -69,18 +69,18 @@
         instead; runtime tarball extraction is an anti-pattern for image-based deploys.)</p>
 
     <button type="button" class="inline-terminal"
-        onclick="copyToClipboard('curl -LO https://github.com/asymmsystems/eliya-jdk/releases/download/v${eliyaVersion}/java-${eliyaVersion}-eliya-linux-x64.tar.gz')" aria-label="Copy command">
-        <code>curl -LO https://github.com/asymmsystems/eliya-jdk/releases/download/v${eliyaVersion}/java-${eliyaVersion}-eliya-linux-x64.tar.gz</code>
+        onclick="copyToClipboard('curl -LO https://github.com/asymmsystems/eliya-jdk/releases/download/eliya-jdk-${eliyaVersion}/eliya-jdk-${eliyaVersion}-linux-x64.tar.gz')" aria-label="Copy command">
+        <code>curl -LO https://github.com/asymmsystems/eliya-jdk/releases/download/eliya-jdk-${eliyaVersion}/eliya-jdk-${eliyaVersion}-linux-x64.tar.gz</code>
         <span class="copy-btn" aria-hidden="true">Copy</span>
     </button>
     <button type="button" class="inline-terminal"
-        onclick="copyToClipboard('sudo tar -xzf java-${eliyaVersion}-eliya-linux-x64.tar.gz -C /opt')" aria-label="Copy command">
-        <code>sudo tar -xzf java-${eliyaVersion}-eliya-linux-x64.tar.gz -C /opt</code>
+        onclick="copyToClipboard('sudo tar -xzf eliya-jdk-${eliyaVersion}-linux-x64.tar.gz -C /opt')" aria-label="Copy command">
+        <code>sudo tar -xzf eliya-jdk-${eliyaVersion}-linux-x64.tar.gz -C /opt</code>
         <span class="copy-btn" aria-hidden="true">Copy</span>
     </button>
     <button type="button" class="inline-terminal"
-        onclick="copyToClipboard('export JAVA_HOME=/opt/java-${eliyaVersion}-eliya &amp;&amp; export PATH=$JAVA_HOME/bin:$PATH')" aria-label="Copy command">
-        <code>export JAVA_HOME=/opt/java-${eliyaVersion}-eliya && export PATH=$JAVA_HOME/bin:$PATH</code>
+        onclick="copyToClipboard('export JAVA_HOME=/opt/eliya-jdk-${eliyaVersion} &amp;&amp; export PATH=$JAVA_HOME/bin:$PATH')" aria-label="Copy command">
+        <code>export JAVA_HOME=/opt/eliya-jdk-${eliyaVersion} && export PATH=$JAVA_HOME/bin:$PATH</code>
         <span class="copy-btn" aria-hidden="true">Copy</span>
     </button>
 
@@ -94,8 +94,8 @@
 
     <p><h4>Per user (developer machines, interactive shells):</h4></p>
     <button type="button" class="inline-terminal"
-        onclick="copyToClipboard(&quot;echo 'export JAVA_HOME=/opt/java-${eliyaVersion}-eliya' &gt;&gt; ~/.bashrc &amp;&amp; echo 'export PATH=\$JAVA_HOME/bin:\$PATH' &gt;&gt; ~/.bashrc &amp;&amp; source ~/.bashrc&quot;)" aria-label="Copy command">
-        <code>echo 'export JAVA_HOME=/opt/java-${eliyaVersion}-eliya' &gt;&gt; ~/.bashrc &amp;&amp; echo 'export PATH=$JAVA_HOME/bin:$PATH' &gt;&gt; ~/.bashrc &amp;&amp; source ~/.bashrc</code>
+        onclick="copyToClipboard(&quot;echo 'export JAVA_HOME=/opt/eliya-jdk-${eliyaVersion}' &gt;&gt; ~/.bashrc &amp;&amp; echo 'export PATH=\$JAVA_HOME/bin:\$PATH' &gt;&gt; ~/.bashrc &amp;&amp; source ~/.bashrc&quot;)" aria-label="Copy command">
+        <code>echo 'export JAVA_HOME=/opt/eliya-jdk-${eliyaVersion}' &gt;&gt; ~/.bashrc &amp;&amp; echo 'export PATH=$JAVA_HOME/bin:$PATH' &gt;&gt; ~/.bashrc &amp;&amp; source ~/.bashrc</code>
         <span class="copy-btn" aria-hidden="true">Copy</span>
     </button>
     <p>For zsh, replace <code>~/.bashrc</code> with <code>~/.zshrc</code>.</p>
@@ -103,7 +103,7 @@
     <p><h4>System-wide (shared servers, all users and shells):</h4></p>
     <div class="inline-terminal inline-terminal--static">
         <code>sudo tee /etc/profile.d/eliya.sh &gt; /dev/null &lt;&lt;'EOF'<br>
-export JAVA_HOME=/opt/java-${eliyaVersion}-eliya<br>
+export JAVA_HOME=/opt/eliya-jdk-${eliyaVersion}<br>
 export PATH=$JAVA_HOME/bin:$PATH<br>
 EOF<br>
 sudo chmod +x /etc/profile.d/eliya.sh</code>
@@ -112,8 +112,8 @@ sudo chmod +x /etc/profile.d/eliya.sh</code>
     <p><h4>Per service (systemd-managed JVMs, the production pattern):</h4></p>
     <div class="inline-terminal inline-terminal--static">
         <code># in your unit file's [Service] section<br>
-Environment="JAVA_HOME=/opt/java-${eliyaVersion}-eliya"<br>
-Environment="PATH=/opt/java-${eliyaVersion}-eliya/bin:/usr/bin:/bin"</code>
+Environment="JAVA_HOME=/opt/eliya-jdk-${eliyaVersion}"<br>
+Environment="PATH=/opt/eliya-jdk-${eliyaVersion}/bin:/usr/bin:/bin"</code>
     </div>
 
     <p>The systemd pattern matters operationally: <code>systemd</code> services do not read shell
