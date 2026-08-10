@@ -17,7 +17,7 @@
         <p style="margin: 0; font-size: 0.95rem"><strong>SDKMAN! registration is in progress.</strong>
             Vendor-onboarding PR is at
             <a href="https://github.com/sdkman/sdkman-db-migrations/pull/783" class="org-link org-link--inline org-link--external">sdkman/sdkman-db-migrations#783</a>;
-            <code>sdk install java ${eliyaVersion}-eliya</code> will work once that PR merges and Eliya's
+            <code>sdk install java ${eliyaSdkmanId}</code> will work once that PR merges and Eliya's
             credentials are issued. For installation today, use the
             <a href="#direct-downloads" class="org-link org-link--inline org-link--internal">direct downloads</a> below.</p>
     </aside>
@@ -26,8 +26,8 @@
         SDKMAN! installed. Handles upgrades automatically.</p>
 
     <button type="button" class="inline-terminal" style="max-width: 600px"
-        onclick="copyToClipboard('sdk install java ${eliyaVersion}-eliya')" aria-label="Copy command">
-        <code>sdk install java ${eliyaVersion}-eliya</code>
+        onclick="copyToClipboard('sdk install java ${eliyaSdkmanId}')" aria-label="Copy command">
+        <code>sdk install java ${eliyaSdkmanId}</code>
         <span class="copy-btn" aria-hidden="true">Copy</span>
     </button>
 
@@ -68,7 +68,7 @@
                 <td>Linux</td>
                 <td>x64</td>
                 <td>.rpm</td>
-                <td><a href="https://github.com/asymmsystems/eliya-jdk/releases/download/eliya-jdk-${eliyaVersion}/eliya-jdk-${eliyaVersion}.x86_64.rpm" class="org-link org-link--inline org-link--external">download</a></td>
+                <td><a href="https://github.com/asymmsystems/eliya-jdk/releases/download/eliya-jdk-${eliyaVersion}/eliya-jdk-${eliyaDockerTag}.x86_64.rpm" class="org-link org-link--inline org-link--external">download</a></td>
             </tr>
             <tr>
                 <td>Linux</td>
@@ -86,7 +86,7 @@
                 <td>Linux</td>
                 <td>aarch64</td>
                 <td>.rpm</td>
-                <td><a href="https://github.com/asymmsystems/eliya-jdk/releases/download/eliya-jdk-${eliyaVersion}/eliya-jdk-${eliyaVersion}.aarch64.rpm" class="org-link org-link--inline org-link--external">download</a></td>
+                <td><a href="https://github.com/asymmsystems/eliya-jdk/releases/download/eliya-jdk-${eliyaVersion}/eliya-jdk-${eliyaDockerTag}.aarch64.rpm" class="org-link org-link--inline org-link--external">download</a></td>
             </tr>
             <tr>
                 <td>Docker (multi-arch)</td>
@@ -168,10 +168,13 @@
         <span class="copy-btn" aria-hidden="true">Copy</span>
     </button>
 
-    <p style="font-size: 0.9rem; margin-top: 1rem">Available tags: <code>25-lts</code>,
-        <code>${eliyaVersion}</code> (and per-arch <code>-amd64</code> / <code>-arm64</code>).
-        The moving <code>25-lts</code> tag tracks the latest CPU; pinned-version tags
-        (<code>${eliyaVersion}</code>) stay frozen. Tag refresh schedule follows the
+    <p style="font-size: 0.9rem; margin-top: 1rem">Available tags: <code>25-lts</code> and
+        <code>${eliyaVnum}</code> (both moving pointers that advance on each release),
+        plus <code>${eliyaDockerTag}</code> (per-build immutable pin), with per-arch
+        <code>-amd64</code> / <code>-arm64</code> shadow tags on each. <code>25-lts</code>
+        tracks the latest LTS; <code>${eliyaVnum}</code> tracks the latest quarterly CPU;
+        <code>${eliyaDockerTag}</code> pins to one specific Eliya build and never moves.
+        Tag refresh schedule follows the
         <a href="/product/eliya/lifecycle.html" class="org-link org-link--inline org-link--internal">quarterly CPU calendar</a>.</p>
 </section>
 

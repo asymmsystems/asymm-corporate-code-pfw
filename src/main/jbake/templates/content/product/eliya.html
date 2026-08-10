@@ -174,7 +174,7 @@
             <@renderInlineTerminal command=eliyaCurlCommand max_width="100%" />
 
             <p class="code-comment"># Developer machines: SDKman registration in progress (target Q2 2026)</p>
-            <@renderInlineTerminal command="sdk install java ${eliyaVersion}-eliya" max_width="100%" copyable=false />
+            <@renderInlineTerminal command="sdk install java ${eliyaSdkmanId}" max_width="100%" copyable=false />
 
             <p class="code-comment"># Activate operational-readiness defaults (Phase 1)</p>
             <@renderInlineTerminal command="java -XX:EliyaProfile=Production -jar your-app.jar" max_width="100%" />

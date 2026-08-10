@@ -30,13 +30,13 @@
             to pick up the new image. With the default <code>imagePullPolicy: IfNotPresent</code>,
             a pod that already has the old image will keep running it indefinitely. To ensure
             each pod restart picks up the latest CPU, set <code>imagePullPolicy: Always</code> on
-            the container spec, or pin to a specific <code>${eliyaVersion}</code> tag and bump
+            the container spec, or pin to a specific <code>${eliyaVnum}</code> tag and bump
             explicitly on each CPU.</li>
         <li><span class="check-yes" aria-hidden="true">&#10003;</span>
-            <code>${eliyaVersion}</code> for environments that pin to a specific version;
-            the tag is immutable, so <code>docker pull</code> returns the same image every time.</li>
+            <code>${eliyaDockerTag}</code> for environments that pin to a specific build;
+            the per-build tag is immutable, so <code>docker pull</code> returns the same image every time.</li>
         <li><span class="check-yes" aria-hidden="true">&#10003;</span>
-            Today the full-JDK multi-arch <code>25-lts</code> / <code>${eliyaVersion}</code> image is the
+            Today the full-JDK multi-arch <code>25-lts</code> / <code>${eliyaVnum}</code> image is the
             published tag. The <code>-slim</code> (smaller Debian base), <code>-jre</code>, and
             <code>-jre-distroless</code> variants are not yet available (planned Q4 2026); the tag
             matrix below tracks each one.</li>
@@ -51,7 +51,7 @@
 
     <p>Eliya images vary on two orthogonal axes: <strong>base image</strong>
         (Debian full vs slim vs distroless) and <strong>Java content</strong> (full JDK vs Eliya JRE).
-        Today the published image is the full-JDK multi-arch <code>25-lts</code> / <code>${eliyaVersion}</code>
+        Today the published image is the full-JDK multi-arch <code>25-lts</code> / <code>${eliyaVnum}</code>
         (plus per-arch <code>-amd64</code> / <code>-arm64</code>); the other combinations are tracked in
         the tag matrix below.</p>
 
@@ -68,7 +68,7 @@
         </thead>
         <tbody>
             <tr>
-                <td><code>25-lts</code> / <code>${eliyaVersion}</code></td>
+                <td><code>25-lts</code> / <code>${eliyaVnum}</code></td>
                 <td><code>debian:12</code></td>
                 <td>Full JDK</td>
                 <td>~550 MB compressed (~1.9 GB on disk)</td>
@@ -77,7 +77,7 @@
                 <td>Available</td>
             </tr>
             <tr>
-                <td><code>25-lts-slim</code> / <code>${eliyaVersion}-slim</code></td>
+                <td><code>25-lts-slim</code> / <code>${eliyaVnum}-slim</code></td>
                 <td><code>debian:12-slim</code></td>
                 <td>Full JDK</td>
                 <td>TBD</td>
@@ -86,7 +86,7 @@
                 <td>Coming Q4 2026</td>
             </tr>
             <tr>
-                <td><code>25-lts-jre</code> / <code>${eliyaVersion}-jre</code></td>
+                <td><code>25-lts-jre</code> / <code>${eliyaVnum}-jre</code></td>
                 <td><code>debian:12-slim</code></td>
                 <td>Eliya JRE</td>
                 <td>~110 MB</td>
@@ -95,7 +95,7 @@
                 <td>Coming Q4 2026</td>
             </tr>
             <tr>
-                <td><code>25-lts-jre-distroless</code> / <code>${eliyaVersion}-jre-distroless</code></td>
+                <td><code>25-lts-jre-distroless</code> / <code>${eliyaVnum}-jre-distroless</code></td>
                 <td><code>gcr.io/distroless/java-base:nonroot</code></td>
                 <td>Eliya JRE</td>
                 <td>~80 MB</td>

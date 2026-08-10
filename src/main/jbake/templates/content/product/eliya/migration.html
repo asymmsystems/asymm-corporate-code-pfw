@@ -58,7 +58,7 @@
         <p style="margin: 0; font-size: 0.95rem"><strong>SDKMAN! registration is in progress.</strong>
             Vendor-onboarding PR is at
             <a href="https://github.com/sdkman/sdkman-db-migrations/pull/783" class="org-link org-link--inline org-link--external">sdkman/sdkman-db-migrations#783</a>;
-            the <code>sdk install java ${eliyaVersion}-eliya</code> command below will work once that PR
+            the <code>sdk install java ${eliyaSdkmanId}</code> command below will work once that PR
             merges. Until then, install Eliya via
             <a href="/product/eliya/downloads.html" class="org-link org-link--inline org-link--internal">direct tar.gz / .deb / .rpm</a>
             and use <code>update-alternatives</code> for side-by-side coexistence with your current JDK.</p>
@@ -84,18 +84,18 @@
 
     <p style="margin-bottom: 1rem; font-size: 0.95rem"><strong>Install and switch to Eliya:</strong></p>
     <button type="button" class="inline-terminal" style="max-width: 600px; margin-bottom: 1rem"
-        onclick="copyToClipboard('sdk install java ${eliyaVersion}-eliya')" aria-label="Copy command">
-        <code>sdk install java ${eliyaVersion}-eliya</code>
+        onclick="copyToClipboard('sdk install java ${eliyaSdkmanId}')" aria-label="Copy command">
+        <code>sdk install java ${eliyaSdkmanId}</code>
         <span class="copy-btn" aria-hidden="true">Copy</span>
     </button>
     <button type="button" class="inline-terminal" style="max-width: 600px; margin-bottom: 1rem"
-        onclick="copyToClipboard('sdk use java ${eliyaVersion}-eliya')" aria-label="Copy command">
-        <code>sdk use java ${eliyaVersion}-eliya</code>
+        onclick="copyToClipboard('sdk use java ${eliyaSdkmanId}')" aria-label="Copy command">
+        <code>sdk use java ${eliyaSdkmanId}</code>
         <span class="copy-btn" aria-hidden="true">Copy</span>
     </button>
     <button type="button" class="inline-terminal" style="max-width: 600px"
-        onclick="copyToClipboard('sdk default java ${eliyaVersion}-eliya')" aria-label="Copy command">
-        <code>sdk default java ${eliyaVersion}-eliya</code>
+        onclick="copyToClipboard('sdk default java ${eliyaSdkmanId}')" aria-label="Copy command">
+        <code>sdk default java ${eliyaSdkmanId}</code>
         <span class="copy-btn" aria-hidden="true">Copy</span>
     </button>
 
