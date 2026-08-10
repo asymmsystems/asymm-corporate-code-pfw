@@ -80,7 +80,7 @@
   "name": "Eliya JDK",
   "applicationCategory": "DeveloperApplication",
   "operatingSystem": "Linux x86_64, Linux aarch64",
-  "softwareVersion": "25.0.3",
+  "softwareVersion": "${eliyaVnum}",
   "url": "${config.site_host}/product/eliya",
   "downloadUrl": "${config.site_host}/product/eliya/downloads",
   "license": "https://www.gnu.org/licenses/old-licenses/gpl-2.0.html",

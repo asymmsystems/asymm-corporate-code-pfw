@@ -30,7 +30,7 @@
                 badge="Platform Foundation"
                 title="The JDK Built for Telecom"
                 text="OpenJDK for compliance-conscious industries. Operational-readiness defaults out of the box (heap dump on OOM, NMT, crash log path, JFR one flag away). Diagnostic data stays inside your perimeter. Coming to SDKMAN."
-                install_cmd="sdk install java ${eliyaVersion}-eliya"
+                install_cmd="sdk install java ${eliyaSdkmanId}"
                 cta_label="Download"
                 cta_href="/product/eliya.html">
                 <div class="bento-watermark bento-watermark-eliya">

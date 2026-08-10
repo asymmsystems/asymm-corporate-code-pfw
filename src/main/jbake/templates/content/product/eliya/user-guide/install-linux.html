@@ -45,15 +45,15 @@
 
 <section>
     <h3>1. SDKman (coming soon)</h3>
-    <p>The vendor ID <code>${eliyaVersion}-eliya</code> is reserved with SDKman; the
+    <p>The vendor ID <code>${eliyaSdkmanId}</code> is reserved with SDKman; the
         registration PR (<a href="https://github.com/sdkman/sdkman-db-migrations/pull/783" class="org-link org-link--inline org-link--external">sdkman/sdkman-db-migrations#783</a>)
         is rolling out through the Foojay DISCO API to SDKman backend migration. For installation
         today, use the tar.gz, .deb, .rpm, or Docker paths below. Once SDKman registration is
         live, the install command will be:</p>
 
     <button type="button" class="inline-terminal"
-        onclick="copyToClipboard('sdk install java ${eliyaVersion}-eliya')" aria-label="Copy command">
-        <code>sdk install java ${eliyaVersion}-eliya</code>
+        onclick="copyToClipboard('sdk install java ${eliyaSdkmanId}')" aria-label="Copy command">
+        <code>sdk install java ${eliyaSdkmanId}</code>
         <span class="copy-btn" aria-hidden="true">Copy</span>
     </button>
 
@@ -168,7 +168,7 @@ Environment="PATH=/opt/eliya-jdk-${eliyaVersion}/bin:/usr/bin:/bin"</code>
         (<a href="/product/eliya/downloads.html#waitlist" class="org-link org-link--inline org-link--internal">notify me</a>).</p>
 
     <div class="inline-terminal inline-terminal--static">
-        <code>sudo rpm -i eliya-jdk-${eliyaVersion}.x86_64.rpm</code>
+        <code>sudo rpm -i eliya-jdk-${eliyaDockerTag}.x86_64.rpm</code>
     </div>
 
     <p>The .rpm package will:</p>
