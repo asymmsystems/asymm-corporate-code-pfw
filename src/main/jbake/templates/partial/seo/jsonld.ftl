@@ -2,6 +2,10 @@
   JSON-LD structured data. Included from header.ftl, so pageUri / canonicalUrl /
   metaDescription assigned there are in scope here.
 
+  release.ftl is included below so eliyaVnum / eliyaVersion / eliyaDockerTag
+  resolve regardless of whether the calling page includes release.ftl itself
+  (e.g. page/product/home.ftl does not).
+
   Emits, by page:
     Organization        every page (sitewide entity)
     WebSite             home only
@@ -11,6 +15,7 @@
   FAQPage is authored inline on faq.html (co-located with the Q&A markup).
   All dynamic strings pass through ?json_string for valid JSON escaping.
 -->
+<#include "/macro/release.ftl">
 <#-- Organization: sitewide. sameAs fuses the company's controlled profiles into
      one Knowledge-Graph node; add LinkedIn company / Crunchbase / Wikidata (QID)
      / X URLs here as they are created (see delivery/asymm-entity-profiles-pack). -->
@@ -80,7 +85,7 @@
   "name": "Eliya JDK",
   "applicationCategory": "DeveloperApplication",
   "operatingSystem": "Linux x86_64, Linux aarch64",
-  "softwareVersion": "25.0.3",
+  "softwareVersion": "${eliyaVnum}",
   "url": "${config.site_host}/product/eliya",
   "downloadUrl": "${config.site_host}/product/eliya/downloads",
   "license": "https://www.gnu.org/licenses/old-licenses/gpl-2.0.html",
