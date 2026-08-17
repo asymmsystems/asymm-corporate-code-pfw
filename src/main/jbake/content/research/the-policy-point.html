@@ -17,7 +17,7 @@ status=published
         <em>First published on
         <a href="https://foojay.io/today/where-production-policy-belongs-building-eliya-in-public/" class="org-link org-link--inline org-link--external">Foojay</a>.
         This in-house rewrite is the corrected canonical version: the
-        diagnostic path uses <code>heap-dumps/</code> (not <code>heap/</code>);
+        diagnostic path uses <code>heap-dump/</code> (not <code>heap/</code>);
         the verify ceremony leads with SHA-256 + GPG cryptographic pinning as the
         authoritative claim (see the
         <a href="/product/eliya/user-guide/verify-download.html" class="org-link org-link--inline org-link--internal">verify your download</a>
@@ -115,7 +115,7 @@ status=published
 <p>The <code>Production</code> profile's ergonomic defaults:</p>
 <ol style="line-height: 1.9">
     <li><strong>Heap dump on OOM</strong>, written to a structured path under
-        <code>${ELIYA_DIAGNOSTIC_PATH}/${service}/${replica}/heap-dumps/</code>.</li>
+        <code>${ELIYA_DIAGNOSTIC_PATH}/${service}/${replica}/heap-dump/</code>.</li>
     <li><strong>Exit on OOM</strong>, a clean shutdown so orchestration can restart you instead of leaving a
         zombie JVM.</li>
     <li><strong>Native Memory Tracking</strong> in <code>summary</code> mode.</li>
@@ -178,12 +178,12 @@ status=published
     done the flag work, a neutral upstream build is the right answer, and there are several good ones.</p>
 
 <h2>Where things stand</h2>
-<p>Phase 1, shipping today: one opt-in flag; Linux x86_64 and aarch64; <code>.tar.gz</code> / <code>.deb</code>
+<p>Phase 1 (25.0.3), shipped 2026-06: one opt-in flag; Linux x86_64 and aarch64; <code>.tar.gz</code> / <code>.deb</code>
     / <code>.rpm</code> / multi-arch GHCR Docker; signed and reproducible; quarterly upstream-CPU refreshes
     within two weeks of each upstream CPU, through the JDK 25 LTS window (September 2029); GPLv2 with Classpath
     Exception; corresponding source attached to each release. No JDK 21 build, deliberately. JDK 29 LTS arrives
     at its GA with a 24-month overlap before Eliya 25 sunsets.</p>
-<p>Phase 2 (target H2 2026) builds on the same policy point with continuous JFR, bundled local-only diagnostics
+<p>Phase 2 (25.0.4 shipping August 2026 through 25.0.7 shipping May 2027) builds on the same policy point with continuous JFR, bundled local-only diagnostics
     tooling, and a FIPS-validated provider variant. It also brings unified GC logging (<code>-Xlog:gc*</code>)
     under the profile, deferred from Phase 1 only because HotSpot's internal LogConfiguration initialises too
     early for a safe ergonomic override without a deeper source patch.</p>
