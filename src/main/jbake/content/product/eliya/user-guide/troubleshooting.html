@@ -166,7 +166,7 @@ status=published
         <code>-XX:+HeapDumpOnOutOfMemoryError</code> fires but the heap dump isn't where you
         expect, verify the resolved path matches the three-level layout. Paths include service
         name and (usually) replica name:
-        <code>${ELIYA_DIAGNOSTIC_PATH}/${service}/${replica}/heap/java_pid&lt;PID&gt;.hprof</code>.</p>
+        <code>${ELIYA_DIAGNOSTIC_PATH}/${service}/${replica}/heap-dumps/java_pid&lt;PID&gt;.hprof</code>.</p>
     <button type="button" class="inline-terminal"
         onclick="copyToClipboard('docker exec my-app env | grep -E &quot;ELIYA_|HOSTNAME&quot;')" aria-label="Copy command">
         <code>docker exec my-app env | grep -E "ELIYA_|HOSTNAME"</code>
