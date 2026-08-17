@@ -31,7 +31,7 @@ status=published
         <code>-XX:EliyaProfile=Production</code>.</strong> None are upstream defaults.</p>
     <ol>
         <li><strong>Heap dump on OOM</strong>:
-            <code>-XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=${ELIYA_DIAGNOSTIC_PATH}/${service_name}/${replica_name}/heap/</code></li>
+            <code>-XX:+HeapDumpOnOutOfMemoryError -XX:HeapDumpPath=${ELIYA_DIAGNOSTIC_PATH}/${service_name}/${replica_name}/heap-dump/</code></li>
         <li><strong>Exit on OOM</strong>: <code>-XX:+ExitOnOutOfMemoryError</code></li>
         <li><strong>Native Memory Tracking</strong>: <code>-XX:NativeMemoryTracking=summary</code></li>
         <li><strong>Crash log path</strong>:

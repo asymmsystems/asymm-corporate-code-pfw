@@ -169,7 +169,7 @@ status=published
     <p>Production app OOMs every 18 hours. APM shows heap pressure but cannot identify what's
         holding references. With Eliya, <code>HeapDumpOnOutOfMemoryError</code> is configured
         by default; when OOM occurs the heap dump lands at
-        <code>/var/log/eliya/${service}/${replica}/heap/java_pid&lt;PID&gt;.hprof</code>.
+        <code>/var/log/eliya/${service}/${replica}/heap-dump/java_pid&lt;PID&gt;.hprof</code>.
         Eclipse MAT's Leak Suspects report identifies the dominator tree and retainer paths.
         APM gave a graph saying memory grew; Eliya gives the dump telling you which objects,
         which classloader, which paths.</p>
