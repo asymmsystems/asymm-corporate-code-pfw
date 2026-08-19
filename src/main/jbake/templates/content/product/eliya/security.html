@@ -169,10 +169,13 @@
     <p >A FIPS 140-3 compliant Eliya variant
         (<code>eliya-25-fips.tar.gz</code>) is a Phase 2 deliverable. The standard
         <code>eliya-25.tar.gz</code> distribution ships with SunJCE (not FIPS-validated). The FIPS
-        variant will ship with the Bouncy Castle FIPS provider (CMVP cert #4943, Active per NIST CMVP; sunset 2027-01-16)
-        pre-installed and registered, with <code>java.security</code> configured for FIPS-mode operation.
-        The cert sunset date is a scheduled migration milestone: Eliya 25.0.6 (Q1 2027 CPU) transitions to the
-        next BC-FJA cert generation before #4943 sunsets.</p>
+        variant ships with the Bouncy Castle FIPS provider (CMVP cert #4943, interim; sunset 2027-01-16)
+        pre-registered at provider slot 1, SunJCE excluded from <code>java.base</code> at build time,
+        patched <code>java.security.Security</code> refusing non-FIPS provider mutations at runtime,
+        and BC-FJA approved-only mode engaged from an Eliya-owned system property. The full
+        four-layer enforcement architecture, Interim Validation caveat, sunset commitment, and
+        buyer FAQ live on the dedicated
+        <a href="/product/eliya/fips.html" class="org-link org-link--inline org-link--internal">FIPS variant page</a>.</p>
 
     <p style="margin-top: 1.5rem">If your organisation requires FIPS-validated
         cryptography for procurement (financial services, healthcare, government), join the early access list to

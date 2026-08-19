@@ -1,0 +1,281 @@
+title=Eliya FIPS 140-3 variant
+description=Eliya JDK's FIPS 140-3 compliant variant. Bundles Bouncy Castle FIPS (CMVP cert #4943, interim; sunset 2027-01-16). BC-FJA at provider slot 1; SunJCE excluded from java.base at build time; patched Security refuses non-FIPS provider mutations at runtime. Four-layer defense-in-depth architecture; buyer-comprehensible enforcement guarantees.
+type=page
+toc=true
+status=published
+~~~~~~
+
+<header class="page-header">
+    <span class="section-kicker">Eliya</span>
+    <h1>FIPS 140-3 variant</h1>
+    <p style="max-width: 60ch">A separate Eliya JDK build for deployments that require FIPS 140-3 validated
+        cryptography (federal procurement, financial services, healthcare, government contracting). Bundles
+        Bouncy Castle's Java FIPS API (BC-FJA, CMVP cert #4943, interim); ships with SunJCE removed from
+        <code>java.base</code>; enforces the crypto boundary through four independent defense layers.</p>
+</header>
+
+<section style="margin-bottom: 5rem">
+    <h2 class="section-title">What ships in the FIPS variant</h2>
+    <p>The FIPS variant is a build-time-hardened Eliya JDK 25 image, not a runtime toggle. When you install
+        <code>eliya-jdk-fips</code>, the following differences from the standard <code>eliya-jdk</code>
+        variant are baked into the image:</p>
+    <ul>
+        <li>Bouncy Castle FIPS provider (<strong>BC-FJA 2.1.1</strong>, CMVP cert #4943) pre-registered as
+            the JCE provider at slot 1 in <code>${JAVA_HOME}/conf/security/java.security</code>.</li>
+        <li>SunJCE excluded from <code>java.base</code> at build time (the class is not on the shipped
+            module path; user code cannot re-register it via classpath). Related legacy providers
+            (SunEC's non-FIPS surface, SunRsaSign non-FIPS paths) are similarly excluded per the
+            cascade-breakage analysis in the FIPS integration research note.</li>
+        <li>Patched <code>java.security.Security</code>: <code>addProvider</code>,
+            <code>insertProviderAt</code>, and <code>removeProvider</code> refuse mutations that would
+            add a non-FIPS provider or remove a FIPS provider. Runtime provider-list attacks (including
+            reflection-based ones) throw <code>SecurityException</code>.</li>
+        <li>BC-FJA approved-only mode engaged (<code>org.bouncycastle.fips.approved_only=true</code>)
+            from an Eliya-owned system property that user launcher args cannot override.</li>
+        <li><code>security.overridePropertiesFile=false</code> baked into the shipped
+            <code>java.security</code>. User cannot swap providers via
+            <code>-Djava.security.properties=&lt;file&gt;</code>.</li>
+        <li><code>java -version</code> banner and <code>release</code> file's
+            <code>IMPLEMENTOR_VERSION</code> both mark the FIPS variant unambiguously for procurement
+            records.</li>
+    </ul>
+</section>
+
+<section style="margin-bottom: 5rem">
+    <h2 class="section-title">Certificate details</h2>
+    <table class="clinical-table">
+        <thead>
+            <tr><th>Field</th><th>Value</th></tr>
+        </thead>
+        <tbody>
+            <tr><td>Module name</td><td>BC-FJA (Bouncy Castle FIPS Java API)</td></tr>
+            <tr><td>CMVP certificate number</td><td><strong>#4943</strong> (<em>interim certificate</em>)</td></tr>
+            <tr><td>FIPS standard</td><td>FIPS 140-3</td></tr>
+            <tr><td>Overall Level</td><td>Level 1</td></tr>
+            <tr><td>Software version</td><td>2.1.1</td></tr>
+            <tr><td>Certificate status</td><td>Active per NIST CMVP as of 2026-08-11</td></tr>
+            <tr><td>Sunset date</td><td>2027-01-16</td></tr>
+            <tr><td>Vendor</td><td>Legion of the Bouncy Castle Inc. (Ascot Vale, Victoria 3032, Australia)</td></tr>
+            <tr><td>Tested Operational Environments</td><td>Java SE Runtime Environment v8, v11, v17, v21 on Ubuntu 22.04 LTS on Intel NUC 11 Pro with 11th Gen Intel Core i7</td></tr>
+            <tr><td>G.5 affirmation for Java 25</td><td>BC-FJA 2.1.2 and 2.1.3 (both tested on Java 25) with the CMVP lab as of 2026-08-18 per Bouncy Castle's direct confirmation; estimated 10-12 weeks to final validation; final validation will issue a <strong>new cert number</strong> (cert #4943 is interim by design)</td></tr>
+            <tr><td>NIST CMVP entry</td><td><a href="https://csrc.nist.gov/projects/cryptographic-module-validation-program/certificate/4943" class="org-link org-link--inline org-link--external">csrc.nist.gov/projects/cryptographic-module-validation-program/certificate/4943</a></td></tr>
+        </tbody>
+    </table>
+</section>
+
+<section style="margin-bottom: 5rem">
+    <h2 class="section-title">Interim Validation caveat</h2>
+    <p>NIST records cert #4943 with the following caveat verbatim on the certificate detail page:</p>
+    <blockquote style="border-left: 3px solid var(--color-accent); padding-left: 1rem; margin: 1.5rem 0; font-style: italic">
+        "Interim Validation. When operated in approved mode. The module generates SSPs (e.g., keys) whose
+        strengths are modified by available entropy."
+    </blockquote>
+    <p>The caveat carries two operator responsibilities that Eliya's variant addresses on your behalf:</p>
+    <ol>
+        <li><strong>Operated in approved mode.</strong> The cert applies only when BC-FJA is configured
+            in FIPS-approved mode. Eliya's FIPS variant ships pre-configured for approved mode; the
+            configuration is baked into the image and cannot be flipped by user launcher arguments.</li>
+        <li><strong>SSPs (keys) with strengths modified by available entropy.</strong> Cryptographic
+            strength of Sensitive Security Parameters generated by the module depends on entropy available
+            at generation time. This is an <em>operator responsibility</em>: ensure your deployment target
+            (VM, container, embedded system) has an adequate entropy source (hardware RNG, sufficient boot
+            entropy, non-blocking <code>/dev/urandom</code> configured correctly). Low-entropy environments
+            may produce weaker-than-nominal keys even under a validated module.</li>
+    </ol>
+    <p>Compliance officers doing buyer-side due diligence will read the cert page and see this caveat.
+        We document it here verbatim to close that diligence path without surprises.</p>
+</section>
+
+<section style="margin-bottom: 5rem">
+    <h2 class="section-title">Sunset commitment</h2>
+    <p>Cert #4943 sunsets 2027-01-16. Eliya's commitment: <strong>25.0.6 (Q1 2027 CPU release, target
+        2027-02-02) transitions the FIPS variant to whichever new BC-FJA cert (2.1.2 or 2.1.3) is by
+        then issued by the CMVP lab.</strong></p>
+    <p>Bouncy Castle confirmed to us on 2026-08-18 that both 2.1.2 and 2.1.3 are with the lab and both
+        are tested on Java 25 (which addresses the G.5 affirmation gap for JDK 25 operational
+        environment). The estimated lab timeline is 10-12 weeks. Final validation will issue a new
+        certificate number; #4943's interim status ends at that point.</p>
+    <p>If the CMVP lab process runs longer than the estimate and the new cert has not issued by
+        25.0.6's Q1 2027 window, Eliya has three fallback paths (in order of preference):</p>
+    <ol>
+        <li>Extend #4943 in Eliya 25.0.6 with an operator-visible disclosure of the extended interim
+            status.</li>
+        <li>Freeze the 25.0.5 FIPS variant as the operational reference until the new cert issues,
+            release non-FIPS 25.0.6 to keep the standard variant on CPU cadence.</li>
+        <li>Contract with a second Java FIPS module vendor as an emergency path if the CMVP delay
+            extends past 25.0.7.</li>
+    </ol>
+</section>
+
+<section style="margin-bottom: 5rem">
+    <h2 class="section-title">Enforcement architecture: four layers</h2>
+    <p>Every existing FIPS-Java integration (Red Hat OpenJDK FIPS mode, IBM Semeru RestrictedSecurity,
+        Azul Zulu FIPS, bare Bouncy Castle) has at least one runtime path a user's code can take to
+        defeat the FIPS boundary from user space. Eliya's variant composes four independent enforcement
+        layers so that no single user action defeats the boundary:</p>
+    <ul>
+        <li><strong>L1 (build time)</strong>: SunJCE and other non-FIPS provider classes are excluded
+            from <code>java.base</code> at image build. The classes are not on the shipped module path
+            at all; user code calling <code>Class.forName("com.sun.crypto.provider.SunJCE")</code> gets
+            <code>ClassNotFoundException</code>.</li>
+        <li><strong>L2 (HotSpot parse-time)</strong>: launcher arguments that would compromise FIPS
+            enforcement (<code>-Djava.security.properties=</code>,
+            <code>-Dsecurity.overridePropertiesFile=true</code>,
+            <code>-Dorg.bouncycastle.fips.approved_only=false</code>) are refused before Java code
+            runs. The JVM aborts with an operator-visible message naming the offending argument.</li>
+        <li><strong>L3 (Java static-init + runtime mutation refusal)</strong>: at
+            <code>java.security.Security</code> class initialization, Eliya verifies the effective
+            provider chain matches the FIPS-approved list. The same patched Security class refuses
+            <code>addProvider</code>, <code>insertProviderAt</code>, and <code>removeProvider</code>
+            mutations that would violate the FIPS invariant, for the entire JVM lifetime. The
+            temporal-swap attack (first <code>Cipher.getInstance</code> against BC, provider swapped
+            mid-flight, second <code>Cipher.getInstance</code> against injected non-FIPS provider) is
+            blocked at the moment the swap is attempted.</li>
+        <li><strong>L4 (first-crypto-use verification)</strong>: on the first JCA <code>getService</code>
+            invocation, Eliya re-checks the provider chain as a defense-in-depth consistency check on
+            the post-boot state. If the check fails (indicating an L1/L2/L3 bypass this design has not
+            anticipated), the JVM refuses the crypto call with an explicit "FIPS integrity violation"
+            <code>SecurityException</code>.</li>
+    </ul>
+    <p>The layered enforcement architecture is documented at length in the FIPS integration research
+        note (internal reference). A public technical write-up of how existing FIPS-Java integrations
+        can be defeated, and how Eliya's variant addresses those defeat paths, is in preparation.</p>
+</section>
+
+<section style="margin-bottom: 5rem">
+    <h2 class="section-title">What the FIPS variant does NOT cover</h2>
+    <p>Standard FIPS 140-3 boundary conventions apply. Eliya's FIPS variant asserts:</p>
+    <ul>
+        <li><strong>Cryptographic algorithms used through JCA are routed to a FIPS-validated module.</strong>
+            AES, SHA-2/3, HMAC, RSA (with FIPS-approved parameters), ECDSA, DRBG-based
+            <code>SecureRandom</code>, and TLS 1.2 / 1.3 handshakes (via BC-JSSE) all go through
+            BC-FJA.</li>
+        <li><strong>Non-crypto JDK surface is not FIPS-validated.</strong> The JVM itself, garbage
+            collector, class loader, JIT compiler, java.util collections, java.io streams, etc. are
+            not within the cert boundary. This is standard FIPS 140-3 module scoping; the boundary is
+            the cryptographic module, not the runtime that hosts it.</li>
+        <li><strong>Application-level cryptography that bypasses JCA is your responsibility.</strong>
+            If your application code directly links a native crypto library (e.g. JNI to OpenSSL), that
+            path is outside Eliya's enforcement and outside cert #4943's boundary. Use JCA for all
+            application crypto if FIPS compliance is required.</li>
+        <li><strong>Entropy is your responsibility.</strong> Per the Interim Validation caveat above,
+            SSP strength depends on your deployment target's entropy source. Verify entropy is adequate
+            on VMs, containers, and embedded systems before treating a FIPS deployment as trusted.</li>
+    </ul>
+</section>
+
+<section style="margin-bottom: 5rem">
+    <h2 class="section-title">Comparison to the standard variant</h2>
+    <table class="clinical-table">
+        <thead>
+            <tr>
+                <th>Aspect</th>
+                <th>Standard variant (<code>eliya-jdk</code>)</th>
+                <th>FIPS variant (<code>eliya-jdk-fips</code>)</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr><td>SunJCE provider</td><td>Present, registered</td><td>Excluded from <code>java.base</code></td></tr>
+            <tr><td>Bouncy Castle FIPS</td><td>Not bundled (add manually if needed)</td><td>Pre-bundled at provider slot 1</td></tr>
+            <tr><td><code>java.security</code> file</td><td>Upstream defaults</td><td>FIPS-configured overlay, <code>security.overridePropertiesFile=false</code></td></tr>
+            <tr><td>User can add non-FIPS provider at runtime</td><td>Yes (JCA default behaviour)</td><td>No (<code>SecurityException</code> on mutation)</td></tr>
+            <tr><td>Approved-only enforcement</td><td>Off</td><td>On (BC-FJA <code>approved_only=true</code>)</td></tr>
+            <tr><td>Cert boundary</td><td>N/A</td><td>CMVP cert #4943 (interim; successor Q4 2026 - Q1 2027)</td></tr>
+            <tr><td>Performance vs standard</td><td>Baseline</td><td>Slightly lower for AES on modern x86 (BC-FJA is Java, not native AES-NI hardware-accelerated); JIT-optimised so overhead is measured single-digit percent for most workloads</td></tr>
+            <tr><td>Buyer</td><td>General-purpose Java deployments</td><td>Federal, financial-services, healthcare, government-contracting deployments with a FIPS 140-3 procurement requirement</td></tr>
+        </tbody>
+    </table>
+</section>
+
+<section style="margin-bottom: 5rem">
+    <h2 class="section-title">Getting started</h2>
+    <p>The FIPS variant ships as a separate artifact with distinct filenames and Docker tags:</p>
+    <ul>
+        <li>Tarball: <code>eliya-jdk-fips-25.0.4+7-r1-linux-x64.tar.gz</code></li>
+        <li>DEB: <code>eliya-jdk-fips_25.0.4+7-r1_amd64.deb</code></li>
+        <li>RPM: <code>eliya-jdk-fips-25.0.4-r1.x86_64.rpm</code></li>
+        <li>Docker: <code>ghcr.io/asymmsystems/eliya-jdk-fips:25.0.4-r1</code></li>
+    </ul>
+    <p>Install and use exactly like the standard variant. No <code>-D</code> flags to remember; no
+        runtime toggles to set. The variant is FIPS-enforcing from first launch.</p>
+    <p>For SHA-256 checksum and GPG signature verification, see the
+        <a href="/product/eliya/user-guide/verify-download.html" class="org-link org-link--inline org-link--internal">verify download page</a>.
+        The FIPS variant is signed by the same Eliya signing key as the standard variant.</p>
+</section>
+
+<section style="margin-bottom: 5rem">
+    <h2 class="section-title">Verify you are in FIPS mode</h2>
+    <p>After installing the FIPS variant, confirm the enforcement is active:</p>
+    <div class="inline-terminal inline-terminal--static">
+<pre>$ java -version
+openjdk version "25.0.4" 2026-08-19
+OpenJDK Runtime Environment Eliya-25.0.4-fips (build 25.0.4+7-r1)
+OpenJDK 64-Bit Server VM Eliya-25.0.4-fips (build 25.0.4+7-r1, mixed mode, sharing)
+
+$ java -XshowSettings:security 2&gt;&amp;1 | grep -i provider
+    security.provider.1 = BCFIPS
+    security.provider.2 = BCJSSE
+    ... (no SunJCE row)
+
+$ jshell &lt;&lt;&lt; 'System.out.println(java.security.Security.getProviders()[0].getName());'
+BCFIPS</pre>
+    </div>
+    <p>If any of these outputs differ, the variant may have been tampered with in transit. Re-verify
+        the SHA-256 and GPG signature against the published values.</p>
+</section>
+
+<section style="margin-bottom: 5rem">
+    <h2 class="section-title">FAQ</h2>
+
+    <h3 style="margin-top: 2rem">Is Eliya itself FIPS-certified?</h3>
+    <p>No. FIPS 140-3 certifies cryptographic modules, not JDKs or runtimes that host them. Eliya's
+        FIPS variant bundles a FIPS-certified module (BC-FJA #4943) and enforces the boundary through
+        the layered architecture above. The cert boundary is BC-FJA, not Eliya.</p>
+
+    <h3 style="margin-top: 2rem">Why does the cert page say "Interim Validation"?</h3>
+    <p>See the Interim Validation caveat section above. Interim status means the module has been
+        validated with two acknowledged operator responsibilities (approved mode + adequate entropy).
+        The interim status also means a new final certificate is coming; per Bouncy Castle's 2026-08-18
+        confirmation, BC-FJA 2.1.2 and 2.1.3 are with the CMVP lab, estimated 10-12 weeks to
+        completion. Eliya will migrate to the new cert in 25.0.6.</p>
+
+    <h3 style="margin-top: 2rem">Can I use my own crypto provider on the FIPS variant?</h3>
+    <p>No. The FIPS variant refuses non-FIPS provider registration. If you need a specific
+        third-party provider, use the standard <code>eliya-jdk</code> variant. Mixing a non-FIPS
+        provider into a FIPS-labelled deployment would defeat the compliance purpose of the variant.</p>
+
+    <h3 style="margin-top: 2rem">Does the FIPS variant support macOS or Windows?</h3>
+    <p>Phase 2 ships Linux x86_64 and aarch64 first (Ubuntu, RHEL, Amazon Linux verified). macOS
+        aarch64 and Windows x86_64 support is on the roadmap; both depend on FIPS variant demand.
+        Contact us if either is procurement-blocking for you.</p>
+
+    <h3 style="margin-top: 2rem">Does the FIPS variant pass every FIPS 140-3 test I might run?</h3>
+    <p>Every JCA-routed crypto call goes through BC-FJA #4943, which passes NIST's Cryptographic
+        Algorithm Validation Program (CAVP) tests for its approved-mode algorithm set. Direct-JNI
+        crypto or non-JCA paths in your own application code are outside the enforcement boundary and
+        will not be covered by the cert. If your compliance auditor runs your entire application
+        through a FIPS-mode test harness, ensure your application code uses JCA for all crypto.</p>
+
+    <h3 style="margin-top: 2rem">What happens on 2027-01-16 when cert #4943 sunsets?</h3>
+    <p>Eliya 25.0.6 (targeted 2027-02-02) migrates to the new BC-FJA cert (2.1.2 or 2.1.3) that will
+        by then have completed lab validation. If for any reason the migration slips, see the "Sunset
+        commitment" section above for the three fallback paths.</p>
+
+    <h3 style="margin-top: 2rem">How does Eliya's FIPS variant compare to Red Hat's or IBM Semeru's?</h3>
+    <p>A detailed comparison of every existing FIPS-Java integration (Red Hat, IBM Semeru, Azul
+        Zulu, Amazon Corretto, bare Bouncy Castle) is in preparation as a technical article. The
+        short version: every existing integration has at least one runtime provider-swap path
+        reachable from user code; Eliya's four-layer architecture is the first to close all of them
+        at once.</p>
+</section>
+
+<section style="margin-bottom: 5rem">
+    <h2 class="section-title">Related pages</h2>
+    <ul>
+        <li><a href="/product/eliya/security.html" class="org-link org-link--inline org-link--internal">Eliya Security</a> — vulnerability reporting, release signing, security inheritance from upstream</li>
+        <li><a href="/product/eliya/downloads.html" class="org-link org-link--inline org-link--internal">Downloads</a> — waitlist and installation artifacts</li>
+        <li><a href="/product/eliya/lifecycle.html" class="org-link org-link--inline org-link--internal">Lifecycle &amp; support</a> — CPU cadence, LTS support windows</li>
+        <li><a href="/product/eliya/roadmap.html" class="org-link org-link--inline org-link--internal">Roadmap</a> — Phase 2 + Phase 3+ plans</li>
+        <li><a href="/product/eliya/user-guide/verify-download.html" class="org-link org-link--inline org-link--internal">Verify download</a> — SHA-256 + GPG verification</li>
+    </ul>
+</section>
