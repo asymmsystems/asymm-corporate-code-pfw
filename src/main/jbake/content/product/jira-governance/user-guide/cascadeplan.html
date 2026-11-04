@@ -1,0 +1,91 @@
+title=CascadePlan User & Admin Guide
+description=Visual sprint baseline control, commitment delta tracking (+%), scope creep detection, resource allocation heatmap, and shift approvals for Jira Cloud.
+type=page
+toc=true
+status=published
+og_image=product/jira-governance/cascadeplan/banner.png
+~~~~~~
+
+<header class="page-header">
+    <span class="section-kicker">CascadePlan Guide</span>
+    <h1>CascadePlan User &amp; Administrator Guide</h1>
+    <p style="max-width: 65ch">How to structure project delivery with interactive Work Breakdown Structure (WBS) trees, 
+        freeze sprint baselines, detect and quantify mid-sprint scope creep, balance team workloads with resource heatmaps, 
+        and govern commitment changes through formal shift approvals.</p>
+</header>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">1. The Silent Scope Creep Problem</h2>
+    <p>In high-velocity software engineering, sprint commitments erode quietly. During sprint planning, a team commits to a discrete set of deliverables. 
+        Over the next two weeks, additional tasks are inserted, issue estimates expand, and unplanned bugs are attached without leadership visibility. 
+        At the end of the sprint, the team misses their target, yet standard Jira reports cannot distinguish between failed execution and unapproved scope expansion.</p>
+    <p><strong>CascadePlan introduces formal sprint baseline governance.</strong> At sprint planning cutoff, the project manager freezes a cryptographic baseline snapshot. 
+        CascadePlan continuously computes commitment deltas (+%), highlights mid-flight scope creep, and requires authorized shift approvals before baselines can be modified.</p>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">2. Visual Work Breakdown Structure (WBS) Planner</h2>
+    <p>CascadePlan replaces flat Jira backlogs with an interactive, hierarchical Work Breakdown Structure:</p>
+    <ul>
+        <li><strong>Multi-Level Hierarchy:</strong> Organize Epics, Stories, Sub-tasks, and Spikes in a clean, expandable tree structure.</li>
+        <li><strong>Inline Editing:</strong> Update estimates, assignees, and priorities directly inside the planner without opening individual Jira issue pages.</li>
+        <li><strong>Dependency Mapping:</strong> Visualize blockers and task sequencing directly on the board.</li>
+    </ul>
+
+    <div style="margin: 2rem 0; text-align: center;">
+        <img src="/images/product/jira-governance/cascadeplan/01-wbs-tree.png" alt="CascadePlan Visual WBS Tree" style="max-width: 100%; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <p style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 1: Interactive visual Work Breakdown Structure (WBS) tree view for project planning.</p>
+    </div>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">3. Resource Allocation Utilization Heatmap</h2>
+    <p>Prevent team burnout and bottlenecking with real-time capacity visualization:</p>
+    <ul>
+        <li><strong>Assignee x Time Grid:</strong> View committed hours and story points allocated to each engineer across upcoming weeks and sprints.</li>
+        <li><strong>Visual Utilization Heatmap:</strong> Color-coded thresholds highlight balanced workload (green), near-capacity (amber), and over-allocated engineers (red).</li>
+        <li><strong>Rebalancing:</strong> Drag tasks between assignees in the grid to balance velocity before the sprint begins.</li>
+    </ul>
+
+    <div style="margin: 2rem 0; text-align: center;">
+        <img src="/images/product/jira-governance/cascadeplan/02-resource-heatmap.png" alt="CascadePlan Resource Heatmap" style="max-width: 100%; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <p style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 2: Resource allocation utilization heatmap identifying capacity bottlenecks.</p>
+    </div>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">4. Freezing Sprint Baselines &amp; Scope Creep Alerts</h2>
+    <p>To lock in a sprint commitment:</p>
+    <ol>
+        <li>At the conclusion of sprint planning, click <strong>Freeze Baseline</strong>.</li>
+        <li>CascadePlan captures an immutable snapshot of all committed issues, estimates, and assignees.</li>
+        <li>As the sprint progresses, any newly inserted ticket or modified estimate triggers an automated commitment delta calculation.</li>
+        <li>When scope expansion exceeds your configured threshold (e.g. +10%), CascadePlan raises a prominent <strong>Scope Creep Alert</strong> badge.</li>
+    </ol>
+
+    <div style="margin: 2rem 0; text-align: center;">
+        <img src="/images/product/jira-governance/cascadeplan/03-scope-creep-alert.png" alt="CascadePlan Scope Creep Alert" style="max-width: 100%; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <p style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 3: Scope creep alert lozenge displaying positive variance against frozen baseline.</p>
+    </div>
+
+    <div style="margin: 2rem 0; text-align: center;">
+        <img src="/images/product/jira-governance/cascadeplan/04-baseline-settings.png" alt="CascadePlan Baseline Settings" style="max-width: 100%; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <p style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 4: Baseline configuration settings defining freeze triggers and variance thresholds.</p>
+    </div>
+</section>
+
+<section style="margin-bottom: 5rem">
+    <h2 class="section-title">5. Formal Shift Approval Governance</h2>
+    <p>When additional scope is mandatory and approved by management:</p>
+    <ol>
+        <li>A project lead clicks <strong>Request Shift Approval</strong> on the baseline view.</li>
+        <li>The modal summarizes the variance (e.g. <em>+8 Story Points, 2 New Issues Added</em>).</li>
+        <li>An authorized approver enters a formal change rationale (e.g. <code>Executive priority: Expedited client compliance deliverable per Q4 steering committee</code>).</li>
+        <li>Upon confirmation, a new baseline revision is stamped, resetting the scope delta to 0% while preserving historical baseline revisions for audit review.</li>
+    </ol>
+
+    <div style="margin: 2rem 0; text-align: center;">
+        <img src="/images/product/jira-governance/cascadeplan/05-shift-approval.png" alt="CascadePlan Shift Approval Modal" style="max-width: 100%; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <p style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 5: Scope shift approval workflow modal capturing mandatory justification for baseline expansion.</p>
+    </div>
+</section>

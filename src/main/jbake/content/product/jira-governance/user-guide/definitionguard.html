@@ -1,0 +1,122 @@
+title=DefinitionGuard User & Admin Guide
+description=Enforceable Definition of Done checklists, mandatory evidence links, non-assignee peer review enforcement, and workflow transition gates for Jira Cloud.
+type=page
+toc=true
+status=published
+og_image=product/jira-governance/definitionguard/banner.png
+~~~~~~
+
+<header class="page-header">
+    <span class="section-kicker">DefinitionGuard Guide</span>
+    <h1>DefinitionGuard User &amp; Administrator Guide</h1>
+    <p style="max-width: 65ch">How to define and enforce Definition of Done (DoD) criteria with mandatory proof links, 
+        non-assignee peer review rules, audited waivers, workflow transition gates, and compliance audit exports.</p>
+</header>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">1. The Ungated Done Problem</h2>
+    <p>Agile teams rely on Definition of Done checklists to ensure code quality, unit test coverage, security reviews, and documentation standards. 
+        However, in native Jira or generic checklist plugins, checklists operate on the honor system: assignees tick their own boxes 
+        without attaching proof, skip peer reviews when under release pressure, and drag tickets into <em>Done</em> without technical verification.</p>
+    <p><strong>DefinitionGuard turns the Definition of Done into enforceable code.</strong> Checklists are defined per issue type, 
+        require mandatory evidence links (such as pull request URLs or test reports), enforce non-assignee peer review rules, and physically block 
+        the Jira workflow transition into <em>Done</em> until every requirement is fulfilled or formally waived with an audited reason.</p>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">2. Operating the DoD Checklist on an Issue</h2>
+    <p>When working on a Jira issue:</p>
+    <ol>
+        <li>Open the issue panel to locate the <strong>DefinitionGuard Checklist</strong>.</li>
+        <li>Review the criteria configured for this specific issue type (e.g. <em>Story</em> vs <em>Bug</em> vs <em>Task</em>).</li>
+        <li>For standard items, click the checkbox to mark the criterion as satisfied.</li>
+        <li>For items configured with mandatory evidence, a modal prompts you to enter a verified URL link (e.g. Git PR, SonarQube dashboard, Confluence architecture spec) and an optional note.</li>
+    </ol>
+
+    <div style="margin: 2rem 0; text-align: center;">
+        <img src="/images/product/jira-governance/definitionguard/01-checklist-open.png" alt="DefinitionGuard Issue DoD Checklist" style="max-width: 100%; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <p style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 1: Issue DoD checklist displaying open mandatory criteria and progress lozenge.</p>
+    </div>
+
+    <div style="margin: 2rem 0; text-align: center;">
+        <img src="/images/product/jira-governance/definitionguard/02-evidence-link.png" alt="DefinitionGuard Evidence Link Modal" style="max-width: 100%; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <p style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 2: Prompt requiring mandatory proof URL and review note before item completion.</p>
+    </div>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">3. Non-Assignee Peer Review Enforcement</h2>
+    <p>Compliance standards such as SOC 2 (CC8.1) and ISO 27001 (A.8.32) mandate separation of duties. 
+        DefinitionGuard includes an automated non-assignee reviewer rule:</p>
+    <ul>
+        <li>When enabled on a criterion (e.g. <em>Code Review Sign-off</em> or <em>QA Acceptance</em>), the ticket assignee is blocked from ticking the box.</li>
+        <li>Only another team member who is <strong>not</strong> the assignee can verify and complete the item.</li>
+        <li>Every completed item records the verified user account ID and ISO-8601 timestamp in the immutable audit trail.</li>
+    </ul>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">4. Audited Waivers</h2>
+    <p>When an emergency release or edge case requires skipping a mandatory DoD item:</p>
+    <ol>
+        <li>An authorized team member clicks <strong>Waive Item</strong>.</li>
+        <li>A mandatory justification dialog requires a documented explanation (e.g. <code>Hotfix emergency: security team granted 24-hour testing deferral per INC-402</code>).</li>
+        <li>DefinitionGuard records the waiver, the authorizing user, timestamp, and justification reason.</li>
+        <li>The item displays a distinctive amber waived lozenge, maintaining full audit visibility without stopping emergency deployments.</li>
+    </ol>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">5. Workflow Transition Gate into Done</h2>
+    <p>DefinitionGuard includes a native Jira Cloud Workflow Validator that physically gates transitions:</p>
+    <ol>
+        <li>In <strong>Project Settings &gt; Workflows</strong>, edit your workflow draft.</li>
+        <li>Select the transition into <em>Done</em> (or your terminal release status).</li>
+        <li>Add the <strong>DefinitionGuard Validator</strong>.</li>
+        <li>Choose whether to enforce 100% item completion, require evidence links, or reject unresolved waivers.</li>
+        <li>Publish the workflow.</li>
+    </ol>
+    <p>If an engineer attempts to drag an issue to Done with unfulfilled or incomplete checklist criteria, Jira rejects the transition with a descriptive error:</p>
+
+    <div style="margin: 2rem 0; text-align: center;">
+        <img src="/images/product/jira-governance/definitionguard/03-transition-blocked.png" alt="DefinitionGuard Transition Blocked" style="max-width: 100%; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <p style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 3: Jira workflow transition blocked due to incomplete Definition of Done criteria.</p>
+    </div>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">6. Project Settings &amp; Checklist Configuration</h2>
+    <p>Project administrators can customize DoD requirements without touching Jira workflow schemes:</p>
+    <ol>
+        <li>Navigate to <strong>Project Settings &gt; DefinitionGuard</strong>.</li>
+        <li>Select the issue type to configure (e.g. <em>Story</em>, <em>Bug</em>, <em>Spike</em>, <em>Epic</em>).</li>
+        <li>Add, edit, or reorder checklist criteria.</li>
+        <li>Toggle requirements:
+            <ul>
+                <li><strong>Mandatory:</strong> Issue cannot transition to Done without this item.</li>
+                <li><strong>Require Evidence:</strong> Requires a valid URL link.</li>
+                <li><strong>Non-Assignee Reviewer:</strong> Requires verification by someone other than the assignee.</li>
+            </ul>
+        </li>
+    </ol>
+
+    <div style="margin: 2rem 0; text-align: center;">
+        <img src="/images/product/jira-governance/definitionguard/04-project-settings.png" alt="DefinitionGuard Project Settings" style="max-width: 100%; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <p style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 4: Project settings editor for defining per-issue-type DoD criteria and validation rules.</p>
+    </div>
+</section>
+
+<section style="margin-bottom: 5rem">
+    <h2 class="section-title">7. Audit History &amp; Evidence Export</h2>
+    <p>For internal audits and external compliance reviews (SOC 2, ISO 27001), DefinitionGuard provides an exportable JSON audit record:</p>
+    <ul>
+        <li>Click <strong>Export Audit Record (JSON)</strong> on any issue panel.</li>
+        <li>The JSON export contains the complete chronological event stream: who ticked each box, what evidence URL was attached, who approved waivers, and exact timestamps.</li>
+        <li>All data is stored inside customer tenant Forge KVS and can be archived alongside release tags.</li>
+    </ul>
+
+    <div style="margin: 2rem 0; text-align: center;">
+        <img src="/images/product/jira-governance/definitionguard/05-audit-export.png" alt="DefinitionGuard Full Audit Export" style="max-width: 100%; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <p style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 5: Full chronological audit history export view for compliance auditors.</p>
+    </div>
+</section>

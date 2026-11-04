@@ -20,6 +20,9 @@
         <a href="/product/eliya.html" class="status-item">
             <img src="/images/eliya-logo-short.png" class="status-icon-img" alt="Eliya" /> Eliya
         </a>
+        <a href="/product/jira-governance.html" class="status-item">
+            <img src="/images/product/jira-governance/ledgerseal/icon.png" class="status-icon-img" alt="Jira Governance" /> Jira Governance
+        </a>
         <a href="/product/dial.html" class="status-item">
             <img src="/images/dial-logo-short.png" class="status-icon-img" alt="Dial" /> Dial
         </a>
@@ -59,6 +62,9 @@
             <span class="drawer-label">// PRODUCTS</span>
             <a href="/product/eliya.html" class="drawer-link">
                 <img src="/images/eliya-logo-short.png" class="status-icon-img" style="margin-right: 0.7rem;" alt="Eliya" /> Eliya
+            </a>
+            <a href="/product/jira-governance.html" class="drawer-link">
+                <img src="/images/product/jira-governance/ledgerseal/icon.png" class="status-icon-img" style="margin-right: 0.7rem;" alt="Jira Governance" /> Jira Governance
             </a>
             <a href="/product/dial.html" class="drawer-link">
                 <img src="/images/dial-logo-short.png" class="status-icon-img" style="margin-right: 0.7rem;" alt="Dial" /> Dial
