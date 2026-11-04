@@ -103,12 +103,13 @@ status=published
 
     <h4 style="margin-top: 1.5rem">FIPS-validated variant</h4>
     <p>Separate artifact (<code>eliya-jdk-fips</code>) with the <strong>Bouncy Castle FIPS provider
-        (CMVP cert&nbsp;#4943)</strong> preinstalled and registered, with
+        (CMVP cert&nbsp;#4943, sunset 2027-01-16)</strong> preinstalled and registered, with
         <code>java.security</code> configured for FIPS-mode operation. It is targeted within the
         Phase 2 window. Addresses procurement
         requirements for FedRAMP, FISMA, and other federal-aligned frameworks. FIPS variants
         carry additional CPU lag versus non-FIPS because of CMVP recertification; target one
-        CPU cycle behind standard Eliya.</p>
+        CPU cycle behind standard Eliya. Eliya 25.0.6 (Q1 2027 CPU) transitions to the next
+        BC-FJA cert generation before #4943 sunsets.</p>
 
     <h4 style="margin-top: 1.5rem">Platform expansion</h4>
     <ul>

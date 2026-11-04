@@ -169,8 +169,13 @@
     <p >A FIPS 140-3 compliant Eliya variant
         (<code>eliya-25-fips.tar.gz</code>) is a Phase 2 deliverable. The standard
         <code>eliya-25.tar.gz</code> distribution ships with SunJCE (not FIPS-validated). The FIPS
-        variant will ship with the Bouncy Castle FIPS provider (CMVP cert #4943) pre-installed and
-        registered, with <code>java.security</code> configured for FIPS-mode operation.</p>
+        variant ships with the Bouncy Castle FIPS provider (CMVP cert #4943, interim; sunset 2027-01-16)
+        pre-registered at provider slot 1, SunJCE excluded from <code>java.base</code> at build time,
+        patched <code>java.security.Security</code> refusing non-FIPS provider mutations at runtime,
+        and BC-FJA approved-only mode engaged from an Eliya-owned system property. The full
+        four-layer enforcement architecture, Interim Validation caveat, sunset commitment, and
+        buyer FAQ live on the dedicated
+        <a href="/product/eliya/fips.html" class="org-link org-link--inline org-link--internal">FIPS variant page</a>.</p>
 
     <p style="margin-top: 1.5rem">If your organisation requires FIPS-validated
         cryptography for procurement (financial services, healthcare, government), join the early access list to
@@ -180,7 +185,7 @@
         formspree_url="https://formspree.io/f/mgodvdvb"
         product_tag="fips"
         heading="Get notified when the FIPS variant is available"
-        body="A FIPS 140-3 compliant Eliya variant (<code>eliya-25-fips.tar.gz</code>) with Bouncy Castle FIPS provider pre-installed is a Phase 2 deliverable. If your organisation requires FIPS-validated cryptography (financial services, healthcare, government procurement), join the list to be notified when the FIPS variant ships."
+        body="A FIPS 140-3 compliant Eliya variant (<code>eliya-25-fips.tar.gz</code>) with Bouncy Castle FIPS provider (CMVP cert #4943, sunset 2027-01-16) pre-installed is a Phase 2 deliverable. If your organisation requires FIPS-validated cryptography (financial services, healthcare, government procurement), join the list to be notified when the FIPS variant ships."
         submit_label="Notify me about FIPS variant" />
 </section>
 

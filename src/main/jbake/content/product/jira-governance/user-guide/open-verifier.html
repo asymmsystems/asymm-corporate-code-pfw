@@ -1,0 +1,116 @@
+title=Open Offline Cryptographic Verifier
+description=Standalone, zero-dependency Node.js CLI tool for independently verifying LedgerSeal Ed25519 signatures, SHA-256 snapshot hashes, and hash chains offline.
+type=page
+toc=true
+status=published
+og_image=product/jira-governance/ledgerseal/banner.png
+~~~~~~
+
+<header class="page-header">
+    <span class="section-kicker">Open Verifier Guide</span>
+    <h1>Open-Source Offline Cryptographic Verifier</h1>
+    <p style="max-width: 65ch">A zero-dependency Node.js CLI verification tool allowing compliance auditors and security teams 
+        to independently verify LedgerSeal signatures, snapshot hashes, and audit chains completely offline without trusting Jira or Asymm Systems.</p>
+</header>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">1. Why Offline Verification Matters</h2>
+    <p>In enterprise audits (SOC 2, ISO 27001, FDA 21 CFR Part 11), a critical principle of evidence integrity is <em>independent reproducibility</em>. 
+        If compliance evidence can only be validated by querying the proprietary software that generated it, the evidence is subject to circular trust and vendor compromise.</p>
+    <p><strong>LedgerSeal provides complete cryptographic independence.</strong> Every approved ticket can export a standalone evidence JSON document. 
+        Our open-source verifier (<code>verify-evidence.mjs</code>) executes entirely on an auditor laptop with zero external network connectivity, 
+        using only the Node.js standard library.</p>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">2. Zero-Dependency Architecture</h2>
+    <p>The verifier is engineered for extreme audit portability:</p>
+    <ul>
+        <li><strong>Zero npm Dependencies:</strong> Requires only standard Node.js (v18 or higher) utilizing native <code>node:crypto</code> and <code>node:fs</code>.</li>
+        <li><strong>Air-Gapped Execution:</strong> Runs completely offline on isolated, air-gapped auditor workstations.</li>
+        <li><strong>Open-Source Transparency:</strong> 100% open source under the Apache-2.0 license. The script is under 300 lines of readable JavaScript.</li>
+    </ul>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">3. Command-Line Usage</h2>
+    <p>The verifier supports both named CLI flags and positional arguments:</p>
+
+    <div class="inline-terminal inline-terminal--static" style="margin: 1.5rem 0;">
+        <code># Positional argument syntax<br/>
+node verify-evidence.mjs evidence.json public-key.pem<br/><br/>
+# Named argument syntax<br/>
+node verify-evidence.mjs --evidence evidence.json --public-key public-key.pem</code>
+    </div>
+
+    <h3>Expected Success Output</h3>
+    <div class="inline-terminal inline-terminal--static" style="margin: 1.5rem 0;">
+        <code>[LEDGERSEAL VERIFIER] Loading evidence: evidence.json<br/>
+[LEDGERSEAL VERIFIER] Loading public key: public-key.pem<br/>
+[OK] Canonical JSON serialization verified.<br/>
+[OK] SHA-256 snapshot hash matched: a8f4b2c1...d9e3<br/>
+[OK] Ed25519 digital signature valid for approver: qm:128938a4-0982<br/>
+[OK] Hash-chain continuity verified across 3 sealed blocks.<br/>
+======================================================<br/>
+RESULT: EVIDENCE VERIFIED AUTHENTIC &amp; UNTAMPERED</code>
+    </div>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">4. Cryptographic Verification Mechanics</h2>
+    <p>When executed, <code>verify-evidence.mjs</code> performs four discrete cryptographic checks:</p>
+
+    <table class="clinical-table" style="margin-top: 1.5rem">
+        <thead>
+            <tr>
+                <th>Phase</th>
+                <th>Cryptographic Standard</th>
+                <th>Validation Logic</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>1. Canonical Normalization</strong></td>
+                <td>RFC 8785 (JSON Canonicalization)</td>
+                <td>Normalizes key sorting, whitespace, and Unicode formatting to guarantee deterministic byte serialization.</td>
+            </tr>
+            <tr>
+                <td><strong>2. Snapshot Hash Check</strong></td>
+                <td>SHA-256 (FIPS 180-4)</td>
+                <td>Recomputes the cryptographic digest of covered fields and attachments, verifying it matches the recorded snapshot hash.</td>
+            </tr>
+            <tr>
+                <td><strong>3. Signature Verification</strong></td>
+                <td>Ed25519 (RFC 8032)</td>
+                <td>Verifies the asymmetric Ed25519 digital signature over the snapshot digest using the published Asymm public key.</td>
+            </tr>
+            <tr>
+                <td><strong>4. Chain Continuity Check</strong></td>
+                <td>Hash Chain Linking</td>
+                <td>Inspects every block in the reseal history, validating that <code>prev_hash</code> references the exact SHA-256 digest of the preceding block.</td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">5. Exit Codes for CI/CD &amp; Automated Audits</h2>
+    <p>Security teams can embed the verifier into automated release pipelines or compliance cron monitors:</p>
+    <ul>
+        <li><code>0</code> - <strong>SUCCESS:</strong> Evidence is completely valid, authentic, and untampered.</li>
+        <li><code>1</code> - <strong>TAMPERED SNAPSHOT:</strong> Computed SHA-256 digest does not match recorded snapshot hash.</li>
+        <li><code>2</code> - <strong>INVALID SIGNATURE:</strong> Ed25519 signature verification failed against supplied public key.</li>
+        <li><code>3</code> - <strong>BROKEN HASH CHAIN:</strong> Hash chain continuity failure between reseal blocks.</li>
+        <li><code>4</code> - <strong>INVALID INPUT:</strong> File not found, invalid JSON syntax, or unreadable public key.</li>
+    </ul>
+</section>
+
+<section style="margin-bottom: 5rem">
+    <h2 class="section-title">6. Public Verification Keys &amp; Source Code</h2>
+    <p>Public keys are published and maintained in the open-source repository:</p>
+    <ul>
+        <li><strong>Repository:</strong> <a href="https://github.com/asymmsystems/jira-governance-code-system/tree/master/tools/verifier" class="org-link org-link--inline org-link--external">tools/verifier/ in GitHub Monorepo</a></li>
+        <li><strong>Dev Public Key:</strong> <code>keys/ls-dev-2026-11.pub.pem</code></li>
+        <li><strong>Key Algorithm:</strong> Ed25519 public key (SPKI PEM format).</li>
+    </ul>
+</section>

@@ -1,0 +1,121 @@
+title=LedgerSeal User & Admin Guide
+description=Cryptographic approval seals, post-approval change detection, resealing workflows, and workflow transition validator setup for Jira Cloud.
+type=page
+toc=true
+status=published
+og_image=product/jira-governance/ledgerseal/banner.png
+~~~~~~
+
+<header class="page-header">
+    <span class="section-kicker">LedgerSeal Guide</span>
+    <h1>LedgerSeal User &amp; Administrator Guide</h1>
+    <p style="max-width: 65ch">How to seal approved Jira issues, detect and attribute unauthorized post-approval modifications, 
+        reseal tickets with audited justifications, configure workflow transition gates, and export compliance evidence.</p>
+</header>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">1. The Approved Ticket Problem</h2>
+    <p>In standard Jira, a developer submits an issue, a product lead or release manager reviews and approves it, and the ticket moves toward release. 
+        However, between approval and production deployment, ticket parameters often change: descriptions are altered, acceptance criteria are edited, 
+        or architectural attachments are replaced. Jira records that an edit occurred in ticket history, but native Jira cannot prove whether what was built 
+        and deployed matches what was approved.</p>
+    <p><strong>LedgerSeal solves this by introducing cryptographic snapshot seals.</strong> When an authorized lead approves a ticket, 
+        LedgerSeal captures a canonical SHA-256 hash snapshot of covered fields, comments, and attachments, signs it using an Ed25519 digital signature, 
+        and binds it to an immutable hash chain.</p>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">2. Sealing a Jira Issue</h2>
+    <p>To seal an issue:</p>
+    <ol>
+        <li>Open the target Jira issue in your project.</li>
+        <li>In the right-hand panel sidebar, locate the <strong>LedgerSeal Audit Gate</strong> panel.</li>
+        <li>Review the covered fields displayed in the panel (Summary, Description, Acceptance Criteria, Attachments).</li>
+        <li>Click <strong>Seal Issue</strong>.</li>
+        <li>Select your approval declaration meaning (e.g. <code>Approved for Release</code>, <code>Reviewed &amp; Accepted</code>, <code>Security Sign-off</code>).</li>
+        <li>Click <strong>Confirm &amp; Seal</strong>.</li>
+    </ol>
+    <p>The lozenge turns green <code>[SEALED]</code>, displaying the approver account, timestamp, and unique cryptographic certificate ID.</p>
+
+    <div style="margin: 2rem 0; text-align: center;">
+        <img src="/images/product/jira-governance/ledgerseal/01-sealed-panel.png" alt="LedgerSeal Sealed Issue Panel" style="max-width: 100%; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <p style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 1: Issue panel in Sealed state with approver attribution and certificate ID.</p>
+    </div>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">3. Tamper Detection &amp; Diff Attribution</h2>
+    <p>If any user modifies a covered field, edits an acceptance criterion, adds or deletes an attachment, or modifies covered comments after the seal is applied:</p>
+    <ul>
+        <li>The LedgerSeal panel immediately turns amber <code>[CHANGED]</code> or red <code>[COMPROMISED]</code>.</li>
+        <li>The panel highlights the exact field that was altered (e.g. <code>description</code>, <code>acceptance_criteria</code>).</li>
+        <li>The author of the change and the exact timestamp are recorded.</li>
+        <li>A visual diff view compares the approved snapshot against current ticket state.</li>
+    </ul>
+
+    <div style="margin: 2rem 0; text-align: center;">
+        <img src="/images/product/jira-governance/ledgerseal/02-tamper-detected.png" alt="LedgerSeal Tamper Detection Alert" style="max-width: 100%; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <p style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 2: Tamper detection alert attributing unauthorized modifications after approval.</p>
+    </div>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">4. Resealing with Audited Justification</h2>
+    <p>When changes after approval are intentional and legitimate (e.g. minor typo fix, updated deployment parameter per CAB):</p>
+    <ol>
+        <li>An authorized approver who is <strong>not</strong> the author of the edit reviews the diff (enforcing Separation of Duties).</li>
+        <li>Click <strong>Reseal Issue</strong>.</li>
+        <li>In the mandatory justification box, provide the rationale for the change (e.g. <code>Approved revised timeout threshold per CAB-892</code>).</li>
+        <li>Click <strong>Confirm Reseal</strong>.</li>
+    </ol>
+    <p>LedgerSeal appends a new block to the ticket hash chain, preserving the previous seal, the change incident, and the new seal in an unbroken audit trail.</p>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">5. Workflow Transition Gate (The Validator)</h2>
+    <p>To prevent unsealed or tampered issues from accidentally reaching production, LedgerSeal provides a Jira Cloud Workflow Validator:</p>
+    <ol>
+        <li>Navigate to <strong>Project Settings &gt; Workflows</strong> and edit your active workflow.</li>
+        <li>Select the transition into your release state (e.g. <em>In Review</em> or <em>Done</em>).</li>
+        <li>Click <strong>Validators &gt; Add validator</strong>.</li>
+        <li>Select <strong>LedgerSeal Approval Validator</strong> from the list.</li>
+        <li>Configure validation rules (e.g. require state to be <code>SEALED</code>, reject <code>TAMPERED</code> or <code>UNSEALED</code>).</li>
+        <li>Publish the workflow draft.</li>
+    </ol>
+    <p>If an engineer attempts to transition an issue that has been altered without resealing, Jira displays a clear blocking message preventing the transition:</p>
+
+    <div style="margin: 2rem 0; text-align: center;">
+        <img src="/images/product/jira-governance/ledgerseal/03-transition-blocked.png" alt="Workflow Transition Blocked by LedgerSeal" style="max-width: 100%; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <p style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 3: Jira workflow transition blocked due to detected post-approval modification.</p>
+    </div>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">6. Administrator &amp; Policy Settings</h2>
+    <p>LedgerSeal adheres to the Asymm Uniform Permission Management Standard. Jira administrators can define which Jira groups or project roles possess approval authority:</p>
+    <ul>
+        <li><strong>Administer:</strong> Jira System Administrators and Project Administrators can modify approver groups and covered field sets.</li>
+        <li><strong>Approve:</strong> Designated release managers, QA directors, and tech leads can apply seals and authorize reseals.</li>
+        <li><strong>View:</strong> Developers and auditors can view seal lozenges, diffs, and cryptographic evidence.</li>
+    </ul>
+
+    <div style="margin: 2rem 0; text-align: center;">
+        <img src="/images/product/jira-governance/ledgerseal/04-admin-approvers.png" alt="LedgerSeal Admin Policy Configuration" style="max-width: 100%; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <p style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 4: Admin policy configuration specifying authorized approver groups.</p>
+    </div>
+</section>
+
+<section style="margin-bottom: 5rem">
+    <h2 class="section-title">7. Exporting Standalone Evidence</h2>
+    <p>Auditors do not need to log into Jira to inspect approval evidence. In the LedgerSeal issue panel, click <strong>Export Audit Evidence (JSON)</strong> to download a standalone cryptographic evidence file.</p>
+    <p>The exported file contains the canonical snapshot, the hash chain history, and the Ed25519 digital signature. You can independently verify this evidence using our zero-dependency CLI tool:</p>
+
+    <div style="margin: 2rem 0; text-align: center;">
+        <img src="/images/product/jira-governance/ledgerseal/05-certificate.png" alt="LedgerSeal Certificate View" style="max-width: 100%; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <p style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 5: Cryptographic certificate panel and evidence export interface.</p>
+    </div>
+
+    <div style="margin-top: 1.5rem;">
+        <a href="/product/jira-governance/user-guide/open-verifier.html" class="org-link org-link--inline org-link--internal">Read Open Verifier CLI Documentation</a>
+    </div>
+</section>

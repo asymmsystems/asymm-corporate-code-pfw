@@ -9,10 +9,12 @@ status=published
     <span class="section-kicker">Eliya</span>
     <h1>Lifecycle &amp; support</h1>
     <p style="max-width: 60ch">Eliya aligns with the upstream OpenJDK release and security
-        cadence. LTS versions receive quarterly Critical Patch Updates; from Eliya 25.0.4 onward,
+        cadence. LTS versions receive quarterly Critical Patch Updates; from Eliya 25.0.5 onward,
         Eliya targets publication within two weeks of each upstream CPU.
         The first signed GA (25.0.3, published 2026-06-10) was a special case during signing-
-        infrastructure bring-up; subsequent quarterlies follow the tight wall-clock window.</p>
+        infrastructure bring-up; 25.0.4 lands the Phase 2 delivery cutover (ADR-29 version
+        identity, FIPS variant, hardened pipeline) alongside the July CPU and ships within four
+        weeks of upstream; 25.0.5 onward follows the tight two-week window.</p>
 </header>
 
 <section style="margin-bottom: 5rem">
@@ -72,8 +74,9 @@ status=published
 <section style="margin-bottom: 5rem">
     <h2 class="section-title">Quarterly CPU calendar</h2>
     <p style="margin-bottom: 1.5rem">OpenJDK publishes Critical Patch Updates on the third
-        Tuesday of January, April, July, and October. From Eliya 25.0.4 onward, Eliya targets
-        publication within two weeks of each upstream release.</p>
+        Tuesday of January, April, July, and October. From Eliya 25.0.5 onward, Eliya targets
+        publication within two weeks of each upstream release. 25.0.4 is a Phase 2 delivery
+        cutover on the July CPU and extends this window to four weeks for that quarter only.</p>
 
     <table class="clinical-table">
         <thead>
@@ -95,8 +98,9 @@ status=published
         </tbody>
     </table>
     <p style="margin-top: 1rem; font-size: 0.9rem">
-        * 25.0.3 was the first GA; 25.0.4 onward targets within two weeks. Upstream CPU window:
-        third Tuesday of January, April, July, and October.
+        * 25.0.3 was the first GA; 25.0.4 is the Phase 2 delivery cutover (within four weeks
+        of the July CPU); 25.0.5 onward targets within two weeks of each upstream CPU.
+        Upstream CPU window: third Tuesday of January, April, July, and October.
     </p>
 
     <p style="margin-top: 1.5rem; font-size: 0.95rem">

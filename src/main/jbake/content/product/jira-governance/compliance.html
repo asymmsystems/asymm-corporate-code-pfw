@@ -1,0 +1,175 @@
+title=Enterprise Compliance & Security Mapping
+description=Formal regulatory mappings for SOC 2 Type II CC8.1, ISO/IEC 27001:2022 A.8.32, FDA 21 CFR Part 11, and InfoSec Vendor Security Assessment (CAIQ/SIG-lite).
+type=page
+toc=true
+status=published
+og_image=product/jira-governance/ledgerseal/banner.png
+~~~~~~
+
+<header class="page-header">
+    <span class="section-kicker">Compliance &amp; Security</span>
+    <h1>Enterprise Compliance &amp; Regulatory Mapping</h1>
+    <p style="max-width: 65ch">Detailed control mappings for SOC 2 Type II, ISO/IEC 27001:2022, and FDA 21 CFR Part 11, 
+        alongside pre-filled InfoSec vendor assessment answers for enterprise security procurement.</p>
+</header>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">Compliance Disclaimer &amp; Boundaries</h2>
+    <p>Asymm Systems apps provide technical enforcement mechanisms that support compliance with industry frameworks. 
+        However, software tools alone cannot confer certification. Your external qualified auditor decides whether your change management policies 
+        and implementation satisfy regulatory mandates. Customers remain responsible for validating standard operating procedures, training personnel, 
+        and configuring appropriate workflow gates within Jira Cloud.</p>
+</section>
+
+<section style="margin-bottom: 5rem">
+    <h2 class="section-title">1. SOC 2 Type II (Trust Services Criteria CC8.1)</h2>
+    <p>AICPA TSC CC8.1 mandates that organizations authorize, design, develop or acquire, configure, test, approve, and implement changes to infrastructure, data, software, and procedures:</p>
+
+    <table class="clinical-table" style="margin-top: 1.5rem">
+        <thead>
+            <tr>
+                <th>SOC 2 CC8.1 Control Focus</th>
+                <th>Asymm Suite App</th>
+                <th>Technical Enforcement Mechanism</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Formal Change Authorization</strong></td>
+                <td>LedgerSeal</td>
+                <td>Captures Ed25519 digital signatures and SHA-256 snapshots upon approval. Rejects unapproved release transitions via Jira workflow validators.</td>
+            </tr>
+            <tr>
+                <td><strong>Post-Approval Integrity</strong></td>
+                <td>LedgerSeal</td>
+                <td>Detects modifications to ticket descriptions, criteria, or attachments post-approval. Alerts approvers and blocks release until resealed.</td>
+            </tr>
+            <tr>
+                <td><strong>Separation of Duties</strong></td>
+                <td>DefinitionGuard &amp; LedgerSeal</td>
+                <td>Enforces non-assignee peer reviews on DoD criteria. Prevents the author of post-approval changes from resealing their own ticket.</td>
+            </tr>
+            <tr>
+                <td><strong>Verification &amp; Testing Evidence</strong></td>
+                <td>DefinitionGuard</td>
+                <td>Requires mandatory URL links to CI test reports, security scans, and code reviews before an issue can transition into Done.</td>
+            </tr>
+            <tr>
+                <td><strong>Scope Creep &amp; Baseline Control</strong></td>
+                <td>CascadePlan</td>
+                <td>Freezes sprint baselines and flags scope variance (+%), ensuring unplanned work receives formal managerial authorization.</td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+<section style="margin-bottom: 5rem">
+    <h2 class="section-title">2. ISO/IEC 27001:2022 (Control A.8.32 - Change Management)</h2>
+    <p>ISO 27001 Control A.8.32 requires that changes to information processing facilities and information systems be subject to change management procedures:</p>
+
+    <table class="clinical-table" style="margin-top: 1.5rem">
+        <thead>
+            <tr>
+                <th>ISO 27001 A.8.32 Requirement</th>
+                <th>Asymm Suite Implementation</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Identification &amp; Record of Changes</strong></td>
+                <td>All ticket modifications, seal creations, reseals, DoD item completions, and baseline freezes record ISO-8601 timestamps and user account IDs.</td>
+            </tr>
+            <tr>
+                <td><strong>Evaluation of Potential Impact</strong></td>
+                <td>FourRealities evaluates cross-reality drift (RAI) to prevent unreviewed architectural impact between Confluence specifications and Git code.</td>
+            </tr>
+            <tr>
+                <td><strong>Formal Approval Requirements</strong></td>
+                <td>Workflow validators enforce mandatory approval seals and completed Definition of Done items prior to release state transitions.</td>
+            </tr>
+            <tr>
+                <td><strong>Audit Trail Continuity</strong></td>
+                <td>LedgerSeal implements cryptographic hash chaining, where each reseal block references the SHA-256 digest of the preceding block.</td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+<section style="margin-bottom: 5rem">
+    <h2 class="section-title">3. FDA 21 CFR Part 11 (Electronic Records &amp; Signatures)</h2>
+    <p>For life sciences, pharmaceutical, and medical device organizations subject to FDA 21 CFR Part 11 regulations:</p>
+
+    <table class="clinical-table" style="margin-top: 1.5rem">
+        <thead>
+            <tr>
+                <th>21 CFR Part 11 Section</th>
+                <th>Regulatory Requirement</th>
+                <th>LedgerSeal Technical Implementation</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>&sect; 11.10(e) Audit Trails</strong></td>
+                <td>Secure, computer-generated, time-stamped audit trails to independently record operator actions.</td>
+                <td>LedgerSeal captures immutable, hash-chained records of seals, detected modifications, justifications, and reseals. Exportable to standalone JSON.</td>
+            </tr>
+            <tr>
+                <td><strong>&sect; 11.50 Signature Manifestations</strong></td>
+                <td>Signatures must manifest: printed name of signer, date/time, and meaning (review, approval, responsibility).</td>
+                <td>Every seal explicitly records and displays the approver Atlassian account ID, ISO-8601 timestamp, and selectable declaration meaning.</td>
+            </tr>
+            <tr>
+                <td><strong>&sect; 11.70 Signature Linking</strong></td>
+                <td>Electronic signatures must be linked to their respective records to ensure signatures cannot be excised or transferred.</td>
+                <td>Ed25519 digital signatures are computed directly over the canonical SHA-256 snapshot hash of ticket fields, rendering signatures non-transferable.</td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+<section style="margin-bottom: 5rem">
+    <h2 class="section-title">4. Vendor Security Assessment (CAIQ-Lite / SIG-Lite)</h2>
+    <p>Pre-filled answers to standard enterprise InfoSec vendor questionnaires:</p>
+
+    <table class="clinical-table" style="margin-top: 1.5rem">
+        <thead>
+            <tr>
+                <th>Questionnaire Domain</th>
+                <th>Standard Question</th>
+                <th>Asymm Systems Answer</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Architecture &amp; Hosting</strong></td>
+                <td>Where does application compute and storage reside?</td>
+                <td>100% within Atlassian Cloud. Compute runs on Atlassian Forge Lambda runtimes. Data is persisted in customer tenant Atlassian Forge KVS. Asymm operates no external servers.</td>
+            </tr>
+            <tr>
+                <td><strong>Data Egress &amp; Exfiltration</strong></td>
+                <td>Does the application transmit data to external APIs?</td>
+                <td>No. The Forge manifest declares zero egress endpoints. All hashing and verification logic executes locally within Atlassian infrastructure.</td>
+            </tr>
+            <tr>
+                <td><strong>Data Encryption</strong></td>
+                <td>How is data encrypted at rest and in transit?</td>
+                <td>Encrypted at rest with AES-256 and in transit with TLS 1.3, enforced directly by Atlassian Cloud underlying storage infrastructure.</td>
+            </tr>
+            <tr>
+                <td><strong>Authentication &amp; Access</strong></td>
+                <td>How are user permissions authenticated?</td>
+                <td>Delegated entirely to Atlassian ID OAuth 2.0. App permissions respect the Uniform Permission Standard mapped to Jira roles and groups.</td>
+            </tr>
+            <tr>
+                <td><strong>AI / LLM Ingestion</strong></td>
+                <td>Are customer tickets sent to external LLMs?</td>
+                <td>No. Zero third-party AI APIs are used. All scoring, hashing, and drift detection algorithms are deterministic, local code.</td>
+            </tr>
+            <tr>
+                <td><strong>Vulnerability Management</strong></td>
+                <td>How do you handle security vulnerabilities?</td>
+                <td>Responsible disclosure address: <code>security@asymm.systems</code>. Initial response within 72 hours; critical remediation target within 30 days.</td>
+            </tr>
+        </tbody>
+    </table>
+</section>

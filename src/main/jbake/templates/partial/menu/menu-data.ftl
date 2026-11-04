@@ -43,8 +43,9 @@
     {
         "label": "Products",
         "children": [
-            { "label": "Eliya", "href": "/product/eliya.html" },
-            { "label": "Dial",  "href": "/product/dial.html" }
+            { "label": "Eliya",           "href": "/product/eliya.html" },
+            { "label": "Jira Governance", "href": "/product/jira-governance.html" },
+            { "label": "Dial",            "href": "/product/dial.html" }
         ]
     },
     { "label": "Research",       "href": "/research.html" },
@@ -100,10 +101,57 @@
                 ]
             }
         ]
+    },
+    {
+        "match": "product/jira-governance",
+        "items": [
+            {
+                "label": "Apps",
+                "children": [
+                    { "label": "LedgerSeal",       "href": "/product/jira-governance/user-guide/ledgerseal.html" },
+                    { "label": "DefinitionGuard",  "href": "/product/jira-governance/user-guide/definitionguard.html" },
+                    { "label": "FourRealities",    "href": "/product/jira-governance/user-guide/fourrealities.html" },
+                    { "label": "CascadePlan",      "href": "/product/jira-governance/user-guide/cascadeplan.html" }
+                ]
+            },
+            {
+                "label": "Guides",
+                "children": [
+                    { "label": "User Guide Hub",   "href": "/product/jira-governance/user-guide/" },
+                    { "label": "Open Verifier",    "href": "/product/jira-governance/user-guide/open-verifier.html" },
+                    { "label": "Compliance &amp; Security", "href": "/product/jira-governance/compliance.html" },
+                    { "label": "Pricing &amp; FAQ", "href": "/product/jira-governance/faq.html" }
+                ]
+            },
+            {
+                "label": "Suite",
+                "children": [
+                    { "label": "Overview",         "href": "/product/jira-governance.html" },
+                    { "label": "GitHub Monorepo",  "href": "https://github.com/asymmsystems/jira-governance-code-system" }
+                ]
+            }
+        ]
     }
 ]>
 
 <#assign breadcrumbContexts = [
+    {
+        "match": "product/jira-governance/user-guide",
+        "trail": [
+            { "label": "asymm",           "href": "/" },
+            { "label": "product",         "href": "" },
+            { "label": "jira-governance", "href": "/product/jira-governance.html" },
+            { "label": "user-guide",      "href": "/product/jira-governance/user-guide/" }
+        ]
+    },
+    {
+        "match": "product/jira-governance",
+        "trail": [
+            { "label": "asymm",           "href": "/" },
+            { "label": "product",         "href": "" },
+            { "label": "jira-governance", "href": "/product/jira-governance.html" }
+        ]
+    },
     {
         "match": "product/eliya/user-guide",
         "trail": [

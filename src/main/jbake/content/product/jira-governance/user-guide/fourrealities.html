@@ -1,0 +1,97 @@
+title=FourRealities User & Admin Guide
+description=Cross-reality delivery alignment, Reality Alignment Index (RAI), rework loop detection, and architectural drift resolution for Jira Cloud.
+type=page
+toc=true
+status=published
+og_image=product/jira-governance/fourrealities/banner.png
+~~~~~~
+
+<header class="page-header">
+    <span class="section-kicker">FourRealities Guide</span>
+    <h1>FourRealities User &amp; Administrator Guide</h1>
+    <p style="max-width: 65ch">How to measure cross-reality delivery alignment, calculate the Reality Alignment Index (RAI), 
+        detect unproductive rework loops, and resolve architectural drift between Confluence specs, Jira issues, and Git pull requests.</p>
+</header>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">1. The Disjoint Realities Problem</h2>
+    <p>Software development in modern organizations takes place across four distinct, disconnected realities:</p>
+    <ol>
+        <li><strong>Intent (The Architecture):</strong> Architectural Decision Records (ADRs), requirement specifications, and API contracts authored in Confluence.</li>
+        <li><strong>Process (The Tracking):</strong> Sprints, tasks, epics, estimations, and workflow transitions in Jira Cloud.</li>
+        <li><strong>Code (The Implementation):</strong> Git branches, commits, pull requests, and CI/CD runs in GitHub, GitLab, or Bitbucket.</li>
+        <li><strong>Audit (The Reality):</strong> Actual deployment history, changelogs, operational telemetry, and activity logs.</li>
+    </ol>
+    <p>In standard teams, these four realities diverge quickly. Code is merged that contradicts Confluence specs; Jira tickets are marked Done while pull requests remain open; 
+        and tickets bounce back and forth between In Review and In Progress without management visibility. 
+        <strong>FourRealities reconciles all four perspectives into an objective delivery integrity score.</strong></p>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">2. The Reality Alignment Index (RAI)</h2>
+    <p>FourRealities evaluates every project and issue against an objective 0 to 100 <strong>Reality Alignment Index (RAI)</strong>:</p>
+    <ul>
+        <li><strong>90 - 100 (Optimal Alignment):</strong> Code matches specifications, Jira statuses reflect active Git branch states, and no unresolved rework loops exist.</li>
+        <li><strong>70 - 89 (Moderate Drift):</strong> Minor discrepancies detected (e.g. PR merged but ticket pending transition, or remote links missing).</li>
+        <li><strong>Below 70 (Severe Drift):</strong> Code merged without specification links, tickets marked Done with open PRs, or multiple rework cycles detected.</li>
+    </ul>
+
+    <div style="margin: 2rem 0; text-align: center;">
+        <img src="/images/product/jira-governance/fourrealities/01-dashboard.png" alt="FourRealities Project Dashboard" style="max-width: 100%; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <p style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 1: Project-wide delivery integrity dashboard displaying aggregate RAI scores and drift alerts.</p>
+    </div>
+
+    <div style="margin: 2rem 0; text-align: center;">
+        <img src="/images/product/jira-governance/fourrealities/02-rai-glance.png" alt="FourRealities Issue Glance" style="max-width: 100%; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <p style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 2: Issue panel glance providing instant visibility into individual ticket alignment.</p>
+    </div>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">3. Rework Loop Detection &amp; Bounce Alerts</h2>
+    <p>One of the largest hidden costs in software engineering is the <em>rework loop</em>: issues repeatedly rejected by QA or code review, 
+        bouncing between <em>In Review</em> and <em>In Progress</em>. Standard Jira burndown charts treat reopened tickets the same as newly started work.</p>
+    <p>FourRealities monitors workflow oscillation:</p>
+    <ul>
+        <li>Flags any issue that transitions backwards through the workflow two or more times.</li>
+        <li>Calculates rework cycle time and engineering effort lost to ambiguous requirements or unstable code.</li>
+        <li>Triggers an amber or red alert lozenge on the Jira issue panel to prompt architectural triage.</li>
+    </ul>
+
+    <div style="margin: 2rem 0; text-align: center;">
+        <img src="/images/product/jira-governance/fourrealities/03-rework-alert.png" alt="FourRealities Rework Loop Alert" style="max-width: 100%; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <p style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 3: Rework loop detection alert on repeatedly bounced issue.</p>
+    </div>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">4. Zero-Egress Connectivity &amp; Settings</h2>
+    <p>Unlike third-party analytics platforms, FourRealities operates with <strong>zero external network egress</strong>. 
+        It does not make outbound HTTP requests to external Git or Confluence APIs:</p>
+    <ul>
+        <li><strong>Confluence Integration:</strong> Reads Jira native remote links connecting issues to Confluence pages within your tenant.</li>
+        <li><strong>Git Integration:</strong> Reads Jira native Development Information (dev-status) populated by your existing GitHub, Bitbucket, or GitLab Jira integrations.</li>
+        <li><strong>Administration:</strong> Configure alignment weightings and rework thresholds under <strong>Project Settings &gt; FourRealities</strong>.</li>
+    </ul>
+
+    <div style="margin: 2rem 0; text-align: center;">
+        <img src="/images/product/jira-governance/fourrealities/04-settings.png" alt="FourRealities Project Settings" style="max-width: 100%; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <p style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 4: Project settings for customizing reality alignment weights and rework thresholds.</p>
+    </div>
+</section>
+
+<section style="margin-bottom: 5rem">
+    <h2 class="section-title">5. Resolving Drift &amp; Remediation Workflow</h2>
+    <p>When an issue displays low RAI scoring or drift warnings:</p>
+    <ol>
+        <li>Click <strong>Show Drift Breakdown</strong> on the issue panel.</li>
+        <li>Inspect which reality failed alignment (e.g. <em>Intent: Missing Confluence Spec Link</em> or <em>Code: Unmerged Pull Request</em>).</li>
+        <li>Link the missing architectural artifact or complete the code review.</li>
+        <li>Click <strong>Re-calculate Alignment</strong>. The RAI updates immediately, restoring healthy project delivery metrics.</li>
+    </ol>
+
+    <div style="margin: 2rem 0; text-align: center;">
+        <img src="/images/product/jira-governance/fourrealities/05-drift-breakdown.png" alt="FourRealities Drift Breakdown" style="max-width: 100%; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <p style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 5: Detailed breakdown isolating specific sources of reality divergence.</p>
+    </div>
+</section>

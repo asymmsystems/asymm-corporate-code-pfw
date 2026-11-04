@@ -1,0 +1,125 @@
+title=Jira Governance User Guide
+description=Comprehensive user and administrator documentation for the Asymm Systems Jira Governance Suite: LedgerSeal, DefinitionGuard, FourRealities, and CascadePlan.
+type=page
+toc=true
+status=published
+og_image=product/jira-governance/ledgerseal/banner.png
+~~~~~~
+
+<header class="page-header">
+    <span class="section-kicker">User Guide</span>
+    <h1>Jira Governance Suite User Guide</h1>
+    <p style="max-width: 65ch">Everything you need to evaluate, configure, operate, and audit the Asymm Systems Jira Governance Suite. 
+        Organized by application and role: jump directly to the chapter you need.</p>
+</header>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">5-Minute Quickstart Evaluation</h2>
+    <p>Follow these five steps to verify zero-trust governance in your Jira Cloud instance in under five minutes:</p>
+
+    <div class="product-features" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); margin-top: 1.5rem;">
+        <div class="product-feature-card">
+            <h3>Step 1: Install App</h3>
+            <p>Install any suite app from the Atlassian Marketplace into your Jira Cloud instance. Teams with 1-10 users enjoy full features free of charge forever.</p>
+        </div>
+        <div class="product-feature-card">
+            <h3>Step 2: Check Permissions</h3>
+            <p>Navigate to <strong>Apps &gt; Asymm Governance Admin</strong>. Ensure your role is granted Administer or Approver permission per the Uniform Permission Standard.</p>
+        </div>
+        <div class="product-feature-card">
+            <h3>Step 3: Seal or Review</h3>
+            <p>Open a test Jira issue. Seal it with LedgerSeal, complete a DefinitionGuard checklist, or review reality alignment in FourRealities.</p>
+        </div>
+        <div class="product-feature-card">
+            <h3>Step 4: Test Workflow Gate</h3>
+            <p>Configure a workflow validator on your project transition (e.g. into <em>Done</em> or <em>In Review</em>). Attempt to transition an unsealed or ungated issue.</p>
+        </div>
+        <div class="product-feature-card">
+            <h3>Step 5: Export Evidence</h3>
+            <p>Download the standalone evidence JSON certificate and verify it offline with the zero-dependency Node.js CLI verifier tool.</p>
+        </div>
+    </div>
+</section>
+
+<section style="margin-bottom: 5rem">
+    <h2 class="section-title">Application Documentation</h2>
+    <p>Detailed guides covering issue panel interactions, administration settings, workflow validator gates, and compliance reports:</p>
+
+    <div class="product-features" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); margin-top: 2rem;">
+        <div class="product-feature-card">
+            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+                <img src="/images/product/jira-governance/ledgerseal/icon.png" alt="LedgerSeal" style="width: 28px; height: 28px;" />
+                <h3 style="margin: 0;">LedgerSeal</h3>
+            </div>
+            <p>Cryptographic issue snapshot hashing, Ed25519 digital signatures, tamper detection diffs, resealing workflows, and workflow transition validator setup.</p>
+            <div style="margin-top: 1.5rem;">
+                <a href="/product/jira-governance/user-guide/ledgerseal.html" class="org-link org-link--inline org-link--internal">Read LedgerSeal Guide</a>
+            </div>
+        </div>
+
+        <div class="product-feature-card">
+            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+                <img src="/images/product/jira-governance/definitionguard/icon.png" alt="DefinitionGuard" style="width: 28px; height: 28px;" />
+                <h3 style="margin: 0;">DefinitionGuard</h3>
+            </div>
+            <p>Issue-type Definition of Done checklists, mandatory evidence URL enforcement, non-assignee peer review validation, audited waivers, and Done-gate transition blocking.</p>
+            <div style="margin-top: 1.5rem;">
+                <a href="/product/jira-governance/user-guide/definitionguard.html" class="org-link org-link--inline org-link--internal">Read DefinitionGuard Guide</a>
+            </div>
+        </div>
+
+        <div class="product-feature-card">
+            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+                <img src="/images/product/jira-governance/fourrealities/icon.png" alt="FourRealities" style="width: 28px; height: 28px;" />
+                <h3 style="margin: 0;">FourRealities</h3>
+            </div>
+            <p>Delivery alignment dashboard, Reality Alignment Index (RAI) scoring, rework loop bounce tracking, Confluence and Git PR drift analysis, and resolution workflows.</p>
+            <div style="margin-top: 1.5rem;">
+                <a href="/product/jira-governance/user-guide/fourrealities.html" class="org-link org-link--inline org-link--internal">Read FourRealities Guide</a>
+            </div>
+        </div>
+
+        <div class="product-feature-card">
+            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+                <img src="/images/product/jira-governance/cascadeplan/icon.png" alt="CascadePlan" style="width: 28px; height: 28px;" />
+                <h3 style="margin: 0;">CascadePlan</h3>
+            </div>
+            <p>Visual Work Breakdown Structure (WBS) planner, sprint baseline snapshot freezing, commitment variance tracking (+%), scope creep alerts, and shift approval governance.</p>
+            <div style="margin-top: 1.5rem;">
+                <a href="/product/jira-governance/user-guide/cascadeplan.html" class="org-link org-link--inline org-link--internal">Read CascadePlan Guide</a>
+            </div>
+        </div>
+
+        <div class="product-feature-card">
+            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+                <span style="font-family: 'Fira Code', monospace; font-size: 1.2rem; font-weight: bold; color: var(--color-primary, #BA6E8F);">&gt;_</span>
+                <h3 style="margin: 0; margin-left: 0.5rem;">Open Offline Verifier</h3>
+            </div>
+            <p>Standalone, zero-dependency Node.js CLI verifier (<code>verify-evidence.mjs</code>). Validates signatures, SHA-256 snapshot hashes, and hash chains offline against published public keys.</p>
+            <div style="margin-top: 1.5rem;">
+                <a href="/product/jira-governance/user-guide/open-verifier.html" class="org-link org-link--inline org-link--internal">Read Verifier Guide</a>
+            </div>
+        </div>
+
+        <div class="product-feature-card">
+            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+                <span style="font-family: 'Fira Code', monospace; font-size: 1.2rem; font-weight: bold; color: var(--color-primary, #BA6E8F);">§</span>
+                <h3 style="margin: 0; margin-left: 0.5rem;">Compliance &amp; Security</h3>
+            </div>
+            <p>Formal control mappings for SOC 2 Type II (CC8.1), ISO/IEC 27001:2022 (A.8.32), and FDA 21 CFR Part 11, accompanied by a completed InfoSec vendor assessment.</p>
+            <div style="margin-top: 1.5rem;">
+                <a href="/product/jira-governance/compliance.html" class="org-link org-link--inline org-link--internal">Read Compliance Mapping</a>
+            </div>
+        </div>
+    </div>
+</section>
+
+<section style="margin-bottom: 5rem">
+    <h2 class="section-title">Support &amp; Operational Assistance</h2>
+    <p>Need assistance configuring your workflow validators or preparing for an enterprise audit? Our engineering team provides direct operational guidance:</p>
+    <ul>
+        <li><strong>Email Support:</strong> <a href="mailto:support@asymm.systems" class="org-link org-link--inline org-link--external">support@asymm.systems</a> (Response within 24 business hours).</li>
+        <li><strong>Security Disclosures:</strong> <a href="mailto:security@asymm.systems" class="org-link org-link--inline org-link--external">security@asymm.systems</a>.</li>
+        <li><strong>Source Code Repository:</strong> <a href="https://github.com/asymmsystems/jira-governance-code-system" class="org-link org-link--inline org-link--external">asymmsystems/jira-governance-code-system</a> on GitHub.</li>
+    </ul>
+</section>
