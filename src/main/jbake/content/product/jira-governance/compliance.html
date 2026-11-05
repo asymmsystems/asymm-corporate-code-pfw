@@ -37,27 +37,22 @@ og_image=product/jira-governance/ledgerseal/banner.png
             <tr>
                 <td><strong>Formal Change Authorization</strong></td>
                 <td>LedgerSeal</td>
-                <td>Captures Ed25519 digital signatures and SHA-256 snapshots upon approval. Rejects unapproved release transitions via Jira workflow validators.</td>
+                <td>Records the approver, the time, the meaning of the approval and a SHA-256 snapshot of the issue at approval. The attestation is signed with Ed25519 when the vendor signing key is configured. A Jira workflow validator blocks the release transition for issues that are not sealed.</td>
             </tr>
             <tr>
                 <td><strong>Post-Approval Integrity</strong></td>
                 <td>LedgerSeal</td>
-                <td>Detects modifications to ticket descriptions, criteria, or attachments post-approval. Alerts approvers and blocks release until resealed.</td>
+                <td>Detects changes to covered fields, comments and attachments after approval and shows them in the issue panel. The workflow validator blocks the release transition until an approver approves the changes.</td>
             </tr>
             <tr>
                 <td><strong>Separation of Duties</strong></td>
                 <td>DefinitionGuard &amp; LedgerSeal</td>
-                <td>Enforces non-assignee peer reviews on DoD criteria. Prevents the author of post-approval changes from resealing their own ticket.</td>
+                <td>DefinitionGuard lets admins mark DoD items that the assignee may not tick. LedgerSeal refuses an approval from anyone who changed the issue since the last seal.</td>
             </tr>
             <tr>
                 <td><strong>Verification &amp; Testing Evidence</strong></td>
                 <td>DefinitionGuard</td>
-                <td>Requires mandatory URL links to CI test reports, security scans, and code reviews before an issue can transition into Done.</td>
-            </tr>
-            <tr>
-                <td><strong>Scope Creep &amp; Baseline Control</strong></td>
-                <td>CascadePlan</td>
-                <td>Freezes sprint baselines and flags scope variance (+%), ensuring unplanned work receives formal managerial authorization.</td>
+                <td>Lets admins require evidence (a link or a note) on DoD items, such as a CI test report or a security scan, before an issue can transition into Done. DefinitionGuard checks the link format, not the content behind the link.</td>
             </tr>
         </tbody>
     </table>
@@ -77,11 +72,11 @@ og_image=product/jira-governance/ledgerseal/banner.png
         <tbody>
             <tr>
                 <td><strong>Identification &amp; Record of Changes</strong></td>
-                <td>All ticket modifications, seal creations, reseals, DoD item completions, and baseline freezes record ISO-8601 timestamps and user account IDs.</td>
+                <td>Seals, detected changes, approvals of changes, revokes, DoD ticks and waivers are recorded with timestamps and Atlassian account IDs. Jira itself records the ticket edits.</td>
             </tr>
             <tr>
                 <td><strong>Evaluation of Potential Impact</strong></td>
-                <td>FourRealities evaluates cross-reality drift (RAI) to prevent unreviewed architectural impact between Confluence specifications and Git code.</td>
+                <td>FourRealities shows, for each issue, whether there is evidence for intent (a linked Confluence page or decision issue), process, code (pull requests in the Jira Development field) and audit, so reviewers can see the gaps. It does not read pull request approvals.</td>
             </tr>
             <tr>
                 <td><strong>Formal Approval Requirements</strong></td>
@@ -89,7 +84,7 @@ og_image=product/jira-governance/ledgerseal/banner.png
             </tr>
             <tr>
                 <td><strong>Audit Trail Continuity</strong></td>
-                <td>LedgerSeal implements cryptographic hash chaining, where each reseal block references the SHA-256 digest of the preceding block.</td>
+                <td>LedgerSeal keeps a hash-chained history per issue: each entry contains the SHA-256 hash of the entry before it. This makes changes to stored entries detectable.</td>
             </tr>
         </tbody>
     </table>
@@ -111,17 +106,17 @@ og_image=product/jira-governance/ledgerseal/banner.png
             <tr>
                 <td><strong>&sect; 11.10(e) Audit Trails</strong></td>
                 <td>Secure, computer-generated, time-stamped audit trails to independently record operator actions.</td>
-                <td>LedgerSeal captures immutable, hash-chained records of seals, detected modifications, justifications, and reseals. Exportable to standalone JSON.</td>
+                <td>LedgerSeal keeps tamper-evident, hash-chained records of seals, detected changes, reasons, approvals of changes and revokes. The record can be copied as standalone JSON and checked with the offline verifier. The chain does not stop someone who can rewrite the app storage (including the vendor) from writing a new consistent chain.</td>
             </tr>
             <tr>
                 <td><strong>&sect; 11.50 Signature Manifestations</strong></td>
                 <td>Signatures must manifest: printed name of signer, date/time, and meaning (review, approval, responsibility).</td>
-                <td>Every seal explicitly records and displays the approver Atlassian account ID, ISO-8601 timestamp, and selectable declaration meaning.</td>
+                <td>Every seal records and displays the approver, the time, and the meaning chosen by the approver (Approved, Reviewed or Verified).</td>
             </tr>
             <tr>
                 <td><strong>&sect; 11.70 Signature Linking</strong></td>
                 <td>Electronic signatures must be linked to their respective records to ensure signatures cannot be excised or transferred.</td>
-                <td>Ed25519 digital signatures are computed directly over the canonical SHA-256 snapshot hash of ticket fields, rendering signatures non-transferable.</td>
+                <td>Each seal is linked to the issue's snapshot hash and certificate ID in the hash-chained history. When the vendor signing key is configured, the attestation (which contains the snapshot hash and certificate ID) is signed with Ed25519. This is a signature by the app, not a cryptographic signature by the approver. Your auditor decides whether this meets 11.70.</td>
             </tr>
         </tbody>
     </table>
@@ -143,27 +138,27 @@ og_image=product/jira-governance/ledgerseal/banner.png
             <tr>
                 <td><strong>Architecture &amp; Hosting</strong></td>
                 <td>Where does application compute and storage reside?</td>
-                <td>100% within Atlassian Cloud. Compute runs on Atlassian Forge Lambda runtimes. Data is persisted in customer tenant Atlassian Forge KVS. Asymm operates no external servers.</td>
+                <td>100% within Atlassian Cloud. Compute runs on Atlassian Forge. Data is stored in Atlassian Forge storage for the customer's installation. Asymm Systems operates no external servers.</td>
             </tr>
             <tr>
                 <td><strong>Data Egress &amp; Exfiltration</strong></td>
                 <td>Does the application transmit data to external APIs?</td>
-                <td>No. The Forge manifest declares zero egress endpoints. All hashing and verification logic executes locally within Atlassian infrastructure.</td>
+                <td>No. No Forge manifest declares an external egress endpoint. The apps call only Atlassian APIs of the customer's own site (FourRealities also searches Confluence pages on that site). All hashing and verification run on Atlassian Forge.</td>
             </tr>
             <tr>
                 <td><strong>Data Encryption</strong></td>
                 <td>How is data encrypted at rest and in transit?</td>
-                <td>Encrypted at rest with AES-256 and in transit with TLS 1.3, enforced directly by Atlassian Cloud underlying storage infrastructure.</td>
+                <td>Encryption at rest and in transit is provided by the Atlassian Cloud platform under Atlassian's own security controls. The apps add no separate storage.</td>
             </tr>
             <tr>
                 <td><strong>Authentication &amp; Access</strong></td>
                 <td>How are user permissions authenticated?</td>
-                <td>Delegated entirely to Atlassian ID OAuth 2.0. App permissions respect the Uniform Permission Standard mapped to Jira roles and groups.</td>
+                <td>Users sign in through Atlassian; the apps have no separate login. App permissions follow the Uniform Permission Standard: Jira permissions plus approver groups chosen by a Jira administrator.</td>
             </tr>
             <tr>
                 <td><strong>AI / LLM Ingestion</strong></td>
                 <td>Are customer tickets sent to external LLMs?</td>
-                <td>No. Zero third-party AI APIs are used. All scoring, hashing, and drift detection algorithms are deterministic, local code.</td>
+                <td>No. Zero third-party AI APIs are used. All scoring and hashing is deterministic code running on Atlassian Forge.</td>
             </tr>
             <tr>
                 <td><strong>Vulnerability Management</strong></td>

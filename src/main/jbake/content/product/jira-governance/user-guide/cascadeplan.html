@@ -1,5 +1,5 @@
 title=CascadePlan User & Admin Guide
-description=Visual sprint baseline control, commitment delta tracking (+%), scope creep detection, resource allocation heatmap, and shift approvals for Jira Cloud.
+description=Canvas timeline for Jira Cloud with percent-trigger dependencies, why-explanations, Jira write preview and undo, block moves, parent changes, baselines, table view, keyboard control and multiple plans.
 type=page
 toc=true
 status=published
@@ -9,83 +9,123 @@ og_image=product/jira-governance/cascadeplan/banner.png
 <header class="page-header">
     <span class="section-kicker">CascadePlan Guide</span>
     <h1>CascadePlan User &amp; Administrator Guide</h1>
-    <p style="max-width: 65ch">How to structure project delivery with interactive Work Breakdown Structure (WBS) trees, 
-        freeze sprint baselines, detect and quantify mid-sprint scope creep, balance team workloads with resource heatmaps, 
-        and govern commitment changes through formal shift approvals.</p>
+    <p style="max-width: 65ch">How to plan Jira work on a canvas timeline with percent-trigger dependencies, see why each task starts when it does,
+        review and undo every Jira write, add contributors as Jira sub-tasks, and work with the table view, the keyboard and multiple plans.</p>
 </header>
 
 <section style="margin-bottom: 4rem">
-    <h2 class="section-title">1. The Silent Scope Creep Problem</h2>
-    <p>In high-velocity software engineering, sprint commitments erode quietly. During sprint planning, a team commits to a discrete set of deliverables. 
-        Over the next two weeks, additional tasks are inserted, issue estimates expand, and unplanned bugs are attached without leadership visibility. 
-        At the end of the sprint, the team misses their target, yet standard Jira reports cannot distinguish between failed execution and unapproved scope expansion.</p>
-    <p><strong>CascadePlan introduces formal sprint baseline governance.</strong> At sprint planning cutoff, the project manager freezes a cryptographic baseline snapshot. 
-        CascadePlan continuously computes commitment deltas (+%), highlights mid-flight scope creep, and requires authorized shift approvals before baselines can be modified.</p>
-</section>
-
-<section style="margin-bottom: 4rem">
-    <h2 class="section-title">2. Visual Work Breakdown Structure (WBS) Planner</h2>
-    <p>CascadePlan replaces flat Jira backlogs with an interactive, hierarchical Work Breakdown Structure:</p>
+    <h2 class="section-title">1. The Planner</h2>
+    <p>Open <strong>CascadePlan Planner</strong> from the project navigation. The planner shows the project's tasks in a list on the left and a canvas timeline on the right:</p>
     <ul>
-        <li><strong>Multi-Level Hierarchy:</strong> Organize Epics, Stories, Sub-tasks, and Spikes in a clean, expandable tree structure.</li>
-        <li><strong>Inline Editing:</strong> Update estimates, assignees, and priorities directly inside the planner without opening individual Jira issue pages.</li>
-        <li><strong>Dependency Mapping:</strong> Visualize blockers and task sequencing directly on the board.</li>
+        <li><strong>Zoom:</strong> switch between <strong>Day</strong>, <strong>Week</strong>, <strong>Month</strong>, <strong>Quarter</strong> and <strong>Year</strong>. <strong>Today</strong> jumps to the current date.</li>
+        <li><strong>Hierarchy:</strong> show all issues, epics only, or stories and tasks.</li>
+        <li><strong>Create:</strong> <strong>+ Epic</strong> and <strong>+ Task</strong> create Jira issues from the planner.</li>
+        <li><strong>Backlog:</strong> the <strong>Backlog</strong> tray lists issues without dates so you can schedule them.</li>
+        <li><strong>Columns:</strong> show, hide and resize the task list columns.</li>
     </ul>
 
     <div style="margin: 2rem 0; text-align: center;">
-        <img src="/images/product/jira-governance/cascadeplan/01-wbs-tree.png" alt="CascadePlan Visual WBS Tree" style="max-width: 100%; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
-        <p style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 1: Interactive visual Work Breakdown Structure (WBS) tree view for project planning.</p>
+        <img src="/images/product/jira-governance/cascadeplan/01-wbs-tree.png" alt="CascadePlan Planner" style="max-width: 100%; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <p style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 1: The CascadePlan Planner with the task list, the week-zoom timeline and the toolbar.</p>
     </div>
 </section>
 
 <section style="margin-bottom: 4rem">
-    <h2 class="section-title">3. Resource Allocation Utilization Heatmap</h2>
-    <p>Prevent team burnout and bottlenecking with real-time capacity visualization:</p>
+    <h2 class="section-title">2. Percent-Trigger Dependencies &amp; Why-Explanations</h2>
+    <p>A task can start when its predecessor reaches a set percent, not only when it is 100% done. For example, start the API integration when the database design reaches 30%.</p>
     <ul>
-        <li><strong>Assignee x Time Grid:</strong> View committed hours and story points allocated to each engineer across upcoming weeks and sprints.</li>
-        <li><strong>Visual Utilization Heatmap:</strong> Color-coded thresholds highlight balanced workload (green), near-capacity (amber), and over-allocated engineers (red).</li>
-        <li><strong>Rebalancing:</strong> Drag tasks between assignees in the grid to balance velocity before the sprint begins.</li>
+        <li><strong>Add a dependency:</strong> click a task bar and choose <strong>Add dependency</strong>, or drag the arrow from one bar to another. Set <strong>Starts when that issue reaches (percent)</strong>.</li>
+        <li><strong>Why this date?</strong> Select a task and press <code>?</code>, or choose <strong>Why this date?</strong> from the task menu. The popup names the driving task, the trigger percent and the driving dates.</li>
+        <li><strong>Conflicts:</strong> if you drop a task before its predecessor reaches the trigger, a dialog names the predecessor and offers fixes, such as <strong>Adjust Trigger to Fit</strong>.</li>
+        <li><strong>Enforce deps:</strong> when this box is checked, moving a task snaps it to respect its predecessors.</li>
+        <li><strong>Change a link:</strong> click an arrow, or its percent label, to change its percent or remove it. Every link of a task has its own arrow and label.</li>
     </ul>
-
-    <div style="margin: 2rem 0; text-align: center;">
-        <img src="/images/product/jira-governance/cascadeplan/02-resource-heatmap.png" alt="CascadePlan Resource Heatmap" style="max-width: 100%; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
-        <p style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 2: Resource allocation utilization heatmap identifying capacity bottlenecks.</p>
-    </div>
+    <p>Each dependency is a Jira "Blocks" link, so it is the same in every plan, and its trigger percent is stored on the successor issue (the issue property <code>cascadeplan.links</code>).
+        <strong>Remove Link</strong> deletes exactly that Jira link, whoever created it. A parent's dependencies also hold back its sub-tasks.</p>
 </section>
 
 <section style="margin-bottom: 4rem">
-    <h2 class="section-title">4. Freezing Sprint Baselines &amp; Scope Creep Alerts</h2>
-    <p>To lock in a sprint commitment:</p>
+    <h2 class="section-title">3. Transparent Jira Writes, Preview &amp; Undo</h2>
+    <p>CascadePlan writes to Jira only the values you change, as you:</p>
+    <ul>
+        <li><strong>Preview:</strong> while you drag a bar, a preview shows the planned Jira updates for the task and the tasks that move with it.</li>
+        <li><strong>Undo:</strong> after each write a flag with <strong>Undo</strong> appears for 10 seconds. Ctrl+Z undoes and Ctrl+Shift+Z redoes, up to 20 steps.</li>
+        <li><strong>Changes panel:</strong> click <strong>Changes</strong> in the toolbar to see "Jira writes in this session", with the old value, the new value and the result of each write.</li>
+    </ul>
+    <p>Jira writes include issue fields you edit (dates, assignee, summary, estimates), status transitions, new issues, epics and sub-tasks, and the issue links that mirror dependencies.</p>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">4. Contributors as Jira Sub-Tasks</h2>
+    <p>A Jira issue has one assignee. To add more people to a task, open the task and use <strong>Multi-Resource Allocation (Jira Subtasks)</strong>:</p>
     <ol>
-        <li>At the conclusion of sprint planning, click <strong>Freeze Baseline</strong>.</li>
-        <li>CascadePlan captures an immutable snapshot of all committed issues, estimates, and assignees.</li>
-        <li>As the sprint progresses, any newly inserted ticket or modified estimate triggers an automated commitment delta calculation.</li>
-        <li>When scope expansion exceeds your configured threshold (e.g. +10%), CascadePlan raises a prominent <strong>Scope Creep Alert</strong> badge.</li>
+        <li>Choose a team member, enter the hours and click <strong>+ Allocate Resource</strong>. CascadePlan creates a Jira sub-task assigned to that person, so the work shows in their own queue.</li>
+        <li>To remove a contributor, choose <strong>Delete sub-task</strong> or <strong>Unassign sub-task</strong>, or <strong>Cancel</strong>.</li>
     </ol>
+    <p><strong>Create sub-task in Jira</strong> in the same dialog creates a plain Jira sub-task, with an estimate only if you type one.</p>
+</section>
 
-    <div style="margin: 2rem 0; text-align: center;">
-        <img src="/images/product/jira-governance/cascadeplan/03-scope-creep-alert.png" alt="CascadePlan Scope Creep Alert" style="max-width: 100%; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
-        <p style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 3: Scope creep alert lozenge displaying positive variance against frozen baseline.</p>
-    </div>
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">5. Table View, Keyboard &amp; Search</h2>
+    <ul>
+        <li><strong>Table view:</strong> choose <strong>Table</strong> in the view selector to see all tasks and dates in a table instead of the canvas.</li>
+        <li><strong>Keyboard:</strong> arrow keys move between tasks. Space enters move mode on a task; arrow keys and <code>[</code> <code>]</code> then shift its dates.</li>
+        <li><strong>Search:</strong> Ctrl+F opens in-app search to find a task by key or summary.</li>
+    </ul>
+</section>
 
-    <div style="margin: 2rem 0; text-align: center;">
-        <img src="/images/product/jira-governance/cascadeplan/04-baseline-settings.png" alt="CascadePlan Baseline Settings" style="max-width: 100%; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
-        <p style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 4: Baseline configuration settings defining freeze triggers and variance thresholds.</p>
-    </div>
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">6. Estimation Units</h2>
+    <p>Each task can use its own <strong>Estimation Unit</strong>: <strong>Hours</strong>, <strong>Story Points</strong> (1 point = 8 hours) or <strong>T-Shirt Size</strong> (XS, S, M, L, XL).
+        CascadePlan keeps the unit you chose and converts the value to hours for scheduling. It does not change Jira fields you did not change.</p>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">7. Multiple Plans</h2>
+    <p>Click the plan selector (for example <strong>Main Plan</strong>) to open <strong>Manage Project Plans</strong>. Plan approvers can create a new plan, optionally cloning the current plan, and rename or delete plans; anyone can switch plans.
+        The main plan cannot be deleted. Dates, dependencies and the hierarchy belong to Jira, so they are the same in every plan; each plan keeps its own row order, columns and milestones.</p>
+    <p><strong>Work items in this plan (JQL filter).</strong> A plan reads at most the newest 1,000 work items of the project. For a larger project, a plan approver can narrow the open plan with a JQL filter in the plan list, for example <code>fixVersion = "2.0"</code>, and choose <strong>Save filter</strong>.
+        Jira checks the filter first, and CascadePlan says how many work items match. Work outside the filter is not shown, and a move does not move it. Clear the field and save to read the whole project again.</p>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">7a. Moving a Task with Its Sub-Tasks</h2>
+    <p>Drag the bar of a task or story that has sub-tasks, or move it with the keyboard or the toolbar: the whole block moves. Sub-tasks not started move by the same days; a sub-task in progress keeps its start and moves its end (never before today); a finished sub-task stays.
+        The parent's Jira due date follows its new end, and one Undo restores the block.</p>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">7b. Changing a Parent or a Work Type</h2>
+    <p>Drag a row onto the middle of another row (the target is outlined and a label says what will happen), or use <strong>Parent in Jira</strong> in the task dialog.
+        CascadePlan asks first, then makes the change in Jira: a task under another epic, a sub-task under another task, or a task turned into a sub-task and back (through a Jira bulk move, whose progress is shown).
+        Jira's rules apply; for example a task with sub-tasks cannot become a sub-task. Undo makes the reverse change.</p>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">7c. Baselines and Scope Changes</h2>
+    <ol>
+        <li>A plan approver chooses <strong>Baseline</strong> in the toolbar, enters a name and chooses <strong>Freeze the plan as a baseline</strong>. The baseline records each work item's Jira estimate, start and end.</li>
+        <li>The <strong>Baseline</strong> button then shows the change since the freeze, for example <code>+12 h (+25%), 1 added, 2 later</code>, and the panel lists every work item added, removed or changed.</li>
+        <li>Anyone in the project can write a reason and choose <strong>Request approval of this scope</strong>. A plan approver other than the requester accepts it (which freezes a new baseline version) or rejects it.</li>
+        <li>Under <strong>Baseline versions</strong>: compare a version with the plan or with the active version, export it as CSV with its SHA-256 digest, or make it active.</li>
+    </ol>
+    <p>Each read of a baseline checks its digest and says so if the stored baseline no longer matches what was frozen.</p>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">8. Utilization View</h2>
+    <p>Choose <strong>Utilization</strong> in the view selector to see a table of estimated hours per assignee for each of the next 8 weeks.
+        Hours come from tasks that have an assignee, an estimate and dates; each task's hours are spread evenly over its days.
+        No capacity is assumed, so the table does not mark anyone as over-allocated.</p>
 </section>
 
 <section style="margin-bottom: 5rem">
-    <h2 class="section-title">5. Formal Shift Approval Governance</h2>
-    <p>When additional scope is mandatory and approved by management:</p>
-    <ol>
-        <li>A project lead clicks <strong>Request Shift Approval</strong> on the baseline view.</li>
-        <li>The modal summarizes the variance (e.g. <em>+8 Story Points, 2 New Issues Added</em>).</li>
-        <li>An authorized approver enters a formal change rationale (e.g. <code>Executive priority: Expedited client compliance deliverable per Q4 steering committee</code>).</li>
-        <li>Upon confirmation, a new baseline revision is stamped, resetting the scope delta to 0% while preserving historical baseline revisions for audit review.</li>
-    </ol>
+    <h2 class="section-title">9. Administration: CascadePlan Approvers</h2>
+    <p>Jira administrators can open <strong>Jira admin settings</strong>, <strong>Apps</strong>, <strong>CascadePlan approvers</strong>. On this page you can search for Jira groups, add them to the list and click <strong>Save changes</strong>.</p>
+    <p>Members of these groups, project administrators and Jira administrators are plan approvers: they create, rename and delete plans, freeze baselines, and accept or reject scope changes. CascadePlan checks this on the server for every such action.</p>
 
     <div style="margin: 2rem 0; text-align: center;">
-        <img src="/images/product/jira-governance/cascadeplan/05-shift-approval.png" alt="CascadePlan Shift Approval Modal" style="max-width: 100%; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
-        <p style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 5: Scope shift approval workflow modal capturing mandatory justification for baseline expansion.</p>
+        <img src="/images/product/jira-governance/cascadeplan/04-baseline-settings.png" alt="CascadePlan Approvers Admin Page" style="max-width: 100%; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <p style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 2: The CascadePlan approvers page in Jira admin settings.</p>
     </div>
 </section>

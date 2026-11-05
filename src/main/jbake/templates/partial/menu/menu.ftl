@@ -29,7 +29,7 @@
     </div>
     <div class="status-right desktop-only">
         <@renderStatusItems items=currentItems />
-        <#-- Sitewide meta items — present on every page regardless of context.
+        <#-- Sitewide meta items - present on every page regardless of context.
              Mobile mirrors live in the drawer footer below. Each is a single
              source of truth shared between desktop bar and mobile drawer. -->
         <a href="/privacy.html" class="status-item status-item--meta" aria-label="Privacy policy">Privacy</a>
@@ -151,7 +151,7 @@
     });
 
     function copyToClipboard(text, ev) {
-        // Capture the button synchronously — by the time the clipboard
+        // Capture the button synchronously - by the time the clipboard
         // promise resolves, the original click event is gone.
         const e = ev || window.event;
         const btn = (e && e.currentTarget) ||

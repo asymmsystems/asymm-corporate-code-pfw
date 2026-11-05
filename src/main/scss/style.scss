@@ -2908,6 +2908,18 @@ h2.news-entry-title {
         font-size: 0.78rem;
     }
 
+    /* A long last crumb may wrap, so the trail never widens the page */
+    .crumb-nav .crumb-leaf {
+        white-space: normal;
+        overflow-wrap: anywhere;
+    }
+
+    /* Wide tables scroll inside their own box instead of widening the page */
+    .clinical-table {
+        display: block;
+        overflow-x: auto;
+    }
+
     .eliya-terminal-panel {
         padding: 1.5rem 1rem;
     }
