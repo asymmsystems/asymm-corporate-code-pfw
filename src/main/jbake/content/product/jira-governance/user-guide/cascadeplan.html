@@ -38,6 +38,7 @@ og_image=product/jira-governance/cascadeplan/banner.png
         <li><strong>Why this date?</strong> Select a task and press <code>?</code>, or choose <strong>Why this date?</strong> from the task menu. The popup names the driving task, the trigger percent and the driving dates.</li>
         <li><strong>Conflicts:</strong> if you drop a task before its predecessor reaches the trigger, a dialog names the predecessor and offers fixes, such as <strong>Adjust Trigger to Fit</strong>.</li>
         <li><strong>Enforce deps:</strong> when this box is checked, moving a task snaps it to respect its predecessors.</li>
+        <li><strong>Change a link:</strong> click an arrow, or its percent label, to change its percent or remove it. Every link of a task has its own arrow and label.</li>
     </ul>
     <p>Each dependency is a Jira "Blocks" link, so it is the same in every plan, and its trigger percent is stored on the successor issue (the issue property <code>cascadeplan.links</code>).
         <strong>Remove Link</strong> deletes exactly that Jira link, whoever created it. A parent's dependencies also hold back its sub-tasks.</p>
@@ -83,6 +84,8 @@ og_image=product/jira-governance/cascadeplan/banner.png
     <h2 class="section-title">7. Multiple Plans</h2>
     <p>Click the plan selector (for example <strong>Main Plan</strong>) to open <strong>Manage Project Plans</strong>. Plan approvers can create a new plan, optionally cloning the current plan, and rename or delete plans; anyone can switch plans.
         The main plan cannot be deleted. Dates, dependencies and the hierarchy belong to Jira, so they are the same in every plan; each plan keeps its own row order, columns and milestones.</p>
+    <p><strong>Work items in this plan (JQL filter).</strong> A plan reads at most the newest 1,000 work items of the project. For a larger project, a plan approver can narrow the open plan with a JQL filter in the plan list, for example <code>fixVersion = "2.0"</code>, and choose <strong>Save filter</strong>.
+        Jira checks the filter first, and CascadePlan says how many work items match. Work outside the filter is not shown, and a move does not move it. Clear the field and save to read the whole project again.</p>
 </section>
 
 <section style="margin-bottom: 4rem">
