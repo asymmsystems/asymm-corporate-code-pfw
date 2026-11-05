@@ -1,5 +1,5 @@
 title=CascadePlan User & Admin Guide
-description=Canvas timeline for Jira Cloud with percent-trigger dependencies, why-explanations, Jira write preview and undo, sub-task contributors, table view, keyboard control and multiple plans.
+description=Canvas timeline for Jira Cloud with percent-trigger dependencies, why-explanations, Jira write preview and undo, block moves, parent changes, baselines, table view, keyboard control and multiple plans.
 type=page
 toc=true
 status=published
@@ -39,7 +39,8 @@ og_image=product/jira-governance/cascadeplan/banner.png
         <li><strong>Conflicts:</strong> if you drop a task before its predecessor reaches the trigger, a dialog names the predecessor and offers fixes, such as <strong>Adjust Trigger to Fit</strong>.</li>
         <li><strong>Enforce deps:</strong> when this box is checked, moving a task snaps it to respect its predecessors.</li>
     </ul>
-    <p>Dependencies are also mirrored to Jira as issue links.</p>
+    <p>Each dependency is a Jira "Blocks" link, so it is the same in every plan, and its trigger percent is stored on the successor issue (the issue property <code>cascadeplan.links</code>).
+        <strong>Remove Link</strong> deletes exactly that Jira link, whoever created it. A parent's dependencies also hold back its sub-tasks.</p>
 </section>
 
 <section style="margin-bottom: 4rem">
@@ -60,6 +61,7 @@ og_image=product/jira-governance/cascadeplan/banner.png
         <li>Choose a team member, enter the hours and click <strong>+ Allocate Resource</strong>. CascadePlan creates a Jira sub-task assigned to that person, so the work shows in their own queue.</li>
         <li>To remove a contributor, choose <strong>Delete sub-task</strong> or <strong>Unassign sub-task</strong>, or <strong>Cancel</strong>.</li>
     </ol>
+    <p><strong>Create sub-task in Jira</strong> in the same dialog creates a plain Jira sub-task, with an estimate only if you type one.</p>
 </section>
 
 <section style="margin-bottom: 4rem">
@@ -79,8 +81,32 @@ og_image=product/jira-governance/cascadeplan/banner.png
 
 <section style="margin-bottom: 4rem">
     <h2 class="section-title">7. Multiple Plans</h2>
-    <p>Click the plan selector (for example <strong>Main Plan</strong>) to open <strong>Manage Project Plans</strong>. You can create a new plan, optionally cloning the current plan's tasks and settings, and rename, delete or switch plans.
-        The main plan cannot be deleted. Each task keeps one set of dates across every plan.</p>
+    <p>Click the plan selector (for example <strong>Main Plan</strong>) to open <strong>Manage Project Plans</strong>. Plan approvers can create a new plan, optionally cloning the current plan, and rename or delete plans; anyone can switch plans.
+        The main plan cannot be deleted. Dates, dependencies and the hierarchy belong to Jira, so they are the same in every plan; each plan keeps its own row order, columns and milestones.</p>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">7a. Moving a Task with Its Sub-Tasks</h2>
+    <p>Drag the bar of a task or story that has sub-tasks, or move it with the keyboard or the toolbar: the whole block moves. Sub-tasks not started move by the same days; a sub-task in progress keeps its start and moves its end (never before today); a finished sub-task stays.
+        The parent's Jira due date follows its new end, and one Undo restores the block.</p>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">7b. Changing a Parent or a Work Type</h2>
+    <p>Drag a row onto the middle of another row (the target is outlined and a label says what will happen), or use <strong>Parent in Jira</strong> in the task dialog.
+        CascadePlan asks first, then makes the change in Jira: a task under another epic, a sub-task under another task, or a task turned into a sub-task and back (through a Jira bulk move, whose progress is shown).
+        Jira's rules apply; for example a task with sub-tasks cannot become a sub-task. Undo makes the reverse change.</p>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">7c. Baselines and Scope Changes</h2>
+    <ol>
+        <li>A plan approver chooses <strong>Baseline</strong> in the toolbar, enters a name and chooses <strong>Freeze the plan as a baseline</strong>. The baseline records each work item's Jira estimate, start and end.</li>
+        <li>The <strong>Baseline</strong> button then shows the change since the freeze, for example <code>+12 h (+25%), 1 added, 2 later</code>, and the panel lists every work item added, removed or changed.</li>
+        <li>Anyone in the project can write a reason and choose <strong>Request approval of this scope</strong>. A plan approver other than the requester accepts it (which freezes a new baseline version) or rejects it.</li>
+        <li>Under <strong>Baseline versions</strong>: compare a version with the plan or with the active version, export it as CSV with its SHA-256 digest, or make it active.</li>
+    </ol>
+    <p>Each read of a baseline checks its digest and says so if the stored baseline no longer matches what was frozen.</p>
 </section>
 
 <section style="margin-bottom: 4rem">
@@ -93,7 +119,7 @@ og_image=product/jira-governance/cascadeplan/banner.png
 <section style="margin-bottom: 5rem">
     <h2 class="section-title">9. Administration: CascadePlan Approvers</h2>
     <p>Jira administrators can open <strong>Jira admin settings</strong>, <strong>Apps</strong>, <strong>CascadePlan approvers</strong>. On this page you can search for Jira groups, add them to the list and click <strong>Save changes</strong>.</p>
-    <p>In this version the saved list is stored but not yet enforced: no planner action checks it.</p>
+    <p>Members of these groups, project administrators and Jira administrators are plan approvers: they create, rename and delete plans, freeze baselines, and accept or reject scope changes. CascadePlan checks this on the server for every such action.</p>
 
     <div style="margin: 2rem 0; text-align: center;">
         <img src="/images/product/jira-governance/cascadeplan/04-baseline-settings.png" alt="CascadePlan Approvers Admin Page" style="max-width: 100%; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
