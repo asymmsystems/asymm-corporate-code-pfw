@@ -26,9 +26,9 @@ og_image=product/jira-governance/ledgerseal/banner.png
     <h2 class="section-title">2. Zero-Dependency Architecture</h2>
     <p>The verifier is engineered for extreme audit portability:</p>
     <ul>
-        <li><strong>Zero npm Dependencies:</strong> Requires only standard Node.js (v18 or higher) utilizing native <code>node:crypto</code> and <code>node:fs</code>.</li>
+        <li><strong>Zero npm Dependencies:</strong> Requires only standard Node.js (v18 or higher). It imports only the standard modules <code>node:crypto</code>, <code>node:fs</code>, <code>node:path</code> and <code>node:url</code>.</li>
         <li><strong>Air-Gapped Execution:</strong> Runs completely offline on isolated, air-gapped auditor workstations.</li>
-        <li><strong>Open-Source Transparency:</strong> 100% open source under the Apache-2.0 license. The script is under 300 lines of readable JavaScript.</li>
+        <li><strong>Open-Source Transparency:</strong> 100% open source under the Apache-2.0 license. The script is about 120 lines of readable JavaScript.</li>
     </ul>
 </section>
 
@@ -43,22 +43,22 @@ node verify-evidence.mjs evidence.json public-key.pem<br/><br/>
 node verify-evidence.mjs --evidence evidence.json --public-key public-key.pem</code>
     </div>
 
+    <p>If you leave out the public key, the verifier reads <code>keys/&lt;keyId&gt;.pub.pem</code> next to the script, using the key ID recorded in the evidence.
+        Run <code>node verify-evidence.mjs --self-test</code> to check the canonical JSON code against the published test vectors.</p>
+
     <h3>Expected Success Output</h3>
     <div class="inline-terminal inline-terminal--static" style="margin: 1.5rem 0;">
-        <code>[LEDGERSEAL VERIFIER] Loading evidence: evidence.json<br/>
-[LEDGERSEAL VERIFIER] Loading public key: public-key.pem<br/>
-[OK] Canonical JSON serialization verified.<br/>
-[OK] SHA-256 snapshot hash matched: a8f4b2c1...d9e3<br/>
-[OK] Ed25519 digital signature valid for approver: qm:128938a4-0982<br/>
-[OK] Hash-chain continuity verified across 3 sealed blocks.<br/>
-======================================================<br/>
-RESULT: EVIDENCE VERIFIED AUTHENTIC &amp; UNTAMPERED</code>
+        <code>PASS snapshot hash<br/>
+PASS history chain (3 entries)<br/>
+PASS attestation names the newest seal<br/>
+PASS signature (ls-dev-2026-11)</code>
     </div>
+    <p>Any check that fails prints <code>FAIL</code> instead of <code>PASS</code> on its line. The verifier always runs all four checks, so one run shows every problem.</p>
 </section>
 
 <section style="margin-bottom: 4rem">
     <h2 class="section-title">4. Cryptographic Verification Mechanics</h2>
-    <p>When executed, <code>verify-evidence.mjs</code> performs four discrete cryptographic checks:</p>
+    <p>When executed, <code>verify-evidence.mjs</code> performs four checks:</p>
 
     <table class="clinical-table" style="margin-top: 1.5rem">
         <thead>
@@ -70,24 +70,24 @@ RESULT: EVIDENCE VERIFIED AUTHENTIC &amp; UNTAMPERED</code>
         </thead>
         <tbody>
             <tr>
-                <td><strong>1. Canonical Normalization</strong></td>
-                <td>RFC 8785 (JSON Canonicalization)</td>
-                <td>Normalizes key sorting, whitespace, and Unicode formatting to guarantee deterministic byte serialization.</td>
+                <td><strong>1. Snapshot Hash</strong></td>
+                <td>SHA-256 (FIPS 180-4) over canonical JSON</td>
+                <td>Serializes the exported snapshot of covered fields, comments and attachments as canonical JSON (keys sorted at every level, no whitespace), hashes it, and checks the result equals the snapshot hash in the attestation.</td>
             </tr>
             <tr>
-                <td><strong>2. Snapshot Hash Check</strong></td>
-                <td>SHA-256 (FIPS 180-4)</td>
-                <td>Recomputes the cryptographic digest of covered fields and attachments, verifying it matches the recorded snapshot hash.</td>
+                <td><strong>2. History Chain</strong></td>
+                <td>SHA-256 hash chain</td>
+                <td>Sorts the history entries by sequence number. Checks that the numbers run 1, 2, 3 without gaps, that each <code>prevEntryHash</code> equals the previous entry's <code>entryHash</code> (the first one equals the all-zero genesis value), and that each <code>entryHash</code> is the SHA-256 of that entry.</td>
             </tr>
             <tr>
-                <td><strong>3. Signature Verification</strong></td>
+                <td><strong>3. Newest Seal</strong></td>
+                <td>Record linking</td>
+                <td>Checks that the attestation names the certificate of the newest seal entry in the history.</td>
+            </tr>
+            <tr>
+                <td><strong>4. Signature</strong></td>
                 <td>Ed25519 (RFC 8032)</td>
-                <td>Verifies the asymmetric Ed25519 digital signature over the snapshot digest using the published Asymm public key.</td>
-            </tr>
-            <tr>
-                <td><strong>4. Chain Continuity Check</strong></td>
-                <td>Hash Chain Linking</td>
-                <td>Inspects every block in the reseal history, validating that <code>prev_hash</code> references the exact SHA-256 digest of the preceding block.</td>
+                <td>Verifies the Ed25519 signature over the canonical attestation (which contains the snapshot hash and certificate ID) with the published Asymm Systems public key.</td>
             </tr>
         </tbody>
     </table>
@@ -97,11 +97,9 @@ RESULT: EVIDENCE VERIFIED AUTHENTIC &amp; UNTAMPERED</code>
     <h2 class="section-title">5. Exit Codes for CI/CD &amp; Automated Audits</h2>
     <p>Security teams can embed the verifier into automated release pipelines or compliance cron monitors:</p>
     <ul>
-        <li><code>0</code> - <strong>SUCCESS:</strong> Evidence is completely valid, authentic, and untampered.</li>
-        <li><code>1</code> - <strong>TAMPERED SNAPSHOT:</strong> Computed SHA-256 digest does not match recorded snapshot hash.</li>
-        <li><code>2</code> - <strong>INVALID SIGNATURE:</strong> Ed25519 signature verification failed against supplied public key.</li>
-        <li><code>3</code> - <strong>BROKEN HASH CHAIN:</strong> Hash chain continuity failure between reseal blocks.</li>
-        <li><code>4</code> - <strong>INVALID INPUT:</strong> File not found, invalid JSON syntax, or unreadable public key.</li>
+        <li><code>0</code> - <strong>PASS:</strong> All four checks passed.</li>
+        <li><code>1</code> - <strong>FAIL:</strong> One or more checks failed. The <code>FAIL</code> lines in the output name which ones.</li>
+        <li><code>2</code> - <strong>USAGE ERROR:</strong> The evidence file was not given, or the evidence or public key file does not exist.</li>
     </ul>
 </section>
 

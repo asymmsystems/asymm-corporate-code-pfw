@@ -10,7 +10,7 @@ og_image=product/jira-governance/ledgerseal/banner.png
     <span class="section-kicker">FAQ &amp; Licensing</span>
     <h1>Frequently Asked Questions &amp; Licensing</h1>
     <p style="max-width: 65ch">Answers to common questions regarding Atlassian Marketplace licensing, billing mechanics, 
-        data residency, Cloud Fortified status, and technical support SLAs.</p>
+        data residency, Cloud Fortified status, and technical support.</p>
 </header>
 
 <section style="margin-bottom: 4rem">
@@ -18,7 +18,7 @@ og_image=product/jira-governance/ledgerseal/banner.png
 
     <h3>How does the 1 - 10 user free tier work?</h3>
     <p>Every application in the Asymm Systems Jira Governance Suite is completely free for Jira instances with up to 10 users. 
-        The free tier is not a crippled trial: it includes 100% of features, unlimited seals, all workflow validators, and full audit exports forever. 
+        The free tier is not a crippled trial: it includes 100% of features, unlimited seals, all workflow validators, and the full audit history, with no time limit. 
         Small teams, startups, and evaluation pods can run the suite in production indefinitely without entering a credit card.</p>
 
     <h3>How is billing calculated for larger instances?</h3>
@@ -44,17 +44,15 @@ og_image=product/jira-governance/ledgerseal/banner.png
     <h2 class="section-title">2. Architecture &amp; Data Residency</h2>
 
     <h3>Where is customer data stored?</h3>
-    <p>All application data (cryptographic hashes, seal metadata, DoD checklist items, and baseline snapshots) is persisted exclusively in 
-        <strong>Atlassian Forge Key-Value Storage (KVS)</strong> inside your own Atlassian tenant. Data residency aligns with your Jira Cloud instance region.</p>
+    <p>All application data (cryptographic hashes, seal records, DoD checklist items, and plans) is stored only in 
+        <strong>Atlassian Forge storage</strong> for your installation, and some of it as Jira issue properties, remote links and comments on your own site. Data residency follows Atlassian's rules for Forge apps.</p>
 
     <h3>Does any data leave our Atlassian perimeter?</h3>
     <p>No. Every app in the suite declares zero outbound egress endpoints in its Atlassian Forge manifest. 
-        We operate no external SaaS backends, databases, or API proxies. All hashing, signing, and verification logic runs inside Atlassian micro-runtimes.</p>
+        We operate no external SaaS backends, databases, or API proxies. All hashing, signing, and verification logic runs on Atlassian Forge. The apps call only the Jira and Confluence APIs of your own Atlassian site.</p>
 
     <h3>Are Asymm Systems apps Cloud Fortified?</h3>
-    <p>Not yet. The Atlassian Cloud Fortified program requires 12 months of active marketplace tenure and specific minimum installation volume. 
-        Our apps are built to exceed Cloud Fortified technical standards from day one (100% Forge native, zero egress, tenant data residency). 
-        Formal Cloud Fortified application will occur once marketplace tenure criteria are satisfied.</p>
+    <p>No. The apps are not Cloud Fortified. They are built on Atlassian Forge with no external egress, and their data stays in Atlassian Forge storage.</p>
 </section>
 
 <section style="margin-bottom: 5rem">
