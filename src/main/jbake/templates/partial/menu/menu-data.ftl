@@ -1,8 +1,8 @@
 <#--
-    menu-data.ftl — declarative menu and breadcrumb definitions.
+    menu-data.ftl - declarative menu and breadcrumb definitions.
 
     ============================================================
-    menuContexts — status-bar / drawer menu items
+    menuContexts - status-bar / drawer menu items
     ============================================================
     Schema:
         menuContexts : sequence of contexts. The first one whose `match` is a prefix
@@ -21,7 +21,7 @@
     = one entry inside children. No new templates, no dispatch code.
 
     ============================================================
-    breadcrumbContexts — top-of-page breadcrumb trails
+    breadcrumbContexts - top-of-page breadcrumb trails
     ============================================================
     Schema:
         breadcrumbContexts : sequence of contexts. First match (URI substring)

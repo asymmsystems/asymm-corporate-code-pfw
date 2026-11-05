@@ -83,7 +83,7 @@
         links.push({ id: h.id, link: a, el: h });
     });
 
-    // Scroll-spy — active heading is the last one above the top-third of the viewport
+    // Scroll-spy - active heading is the last one above the top-third of the viewport
     let ticking = false;
     const update = () => {
         const threshold = window.innerHeight / 3;
