@@ -1,0 +1,80 @@
+title=Signing Keys
+description=The Ed25519 public keys that LedgerSeal and DefinitionGuard use to sign their records, with key ids, fingerprints and how to check LedgerSeal evidence with the open verifier.
+type=page
+toc=true
+status=published
+og_image=product/jira-governance/ledgerseal/banner.png
+~~~~~~
+
+<header class="page-header">
+    <span class="section-kicker">Signing Keys</span>
+    <h1>Signing Keys</h1>
+    <p style="max-width: 65ch">LedgerSeal and DefinitionGuard sign some of their records with Ed25519.
+        This page lists the public keys, so that anyone can check a signature.</p>
+</header>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">1. Which records are signed</h2>
+    <ul>
+        <li><strong>LedgerSeal:</strong> the attestation of each seal. It is the issue property <code>ledgerseal-cert</code>, and it is also in the evidence record that you copy from the Approval Seal panel. It holds the snapshot hash, the certificate id and the seal status.</li>
+        <li><strong>DefinitionGuard:</strong> the issue property <code>definitionguard-dod</code>, the summary of the issue's Definition of Done checklist.</li>
+    </ul>
+    <p>The algorithm is Ed25519 (RFC 8032). Each signed record names its key id in the field <code>keyId</code>. The public keys below are in SPKI PEM format.</p>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">2. What a signature shows</h2>
+    <p>A valid signature shows that the record came from the app that holds the key, and that the record was not changed after it was signed.
+        Asymm Systems holds the private keys. So a signature does not protect against Asymm Systems: someone who holds the private key can sign a new record.</p>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">3. Production keys</h2>
+    <p>The production keys <code>ls-prod-2026-11</code> (LedgerSeal) and <code>dg-prod-2026-11</code> (DefinitionGuard) will be published here, with their fingerprints, before the apps are listed on the Atlassian Marketplace.</p>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">4. Development keys (development builds only)</h2>
+    <p>These keys sign records made by development builds of the apps. They are not used by a Marketplace installation. Do not accept a record signed with one of these keys as production evidence.</p>
+
+    <h3>ls-dev-2026-11 (LedgerSeal, development builds only)</h3>
+    <ul>
+        <li><strong>Key id:</strong> <code>ls-dev-2026-11</code></li>
+        <li><strong>SHA-256 fingerprint</strong> (of the DER public key): <code>cecef4ee9d75298c9107ede72389edd5be59562027363aca90092b70b8c7d283</code></li>
+        <li><strong>File:</strong> <a href="https://github.com/asymmsystems/ledgerseal-verifier/blob/main/keys/ls-dev-2026-11.pub.pem" class="org-link org-link--inline org-link--external">keys/ls-dev-2026-11.pub.pem</a> in the open verifier repository.</li>
+    </ul>
+    <div class="inline-terminal inline-terminal--static" style="margin: 1.5rem 0;">
+        <code>-----BEGIN PUBLIC KEY-----<br/>
+MCowBQYDK2VwAyEA3tGVQVDUPkk1+tAc9mYyPIAeTY+/qruaXJyTXrFKQpw=<br/>
+-----END PUBLIC KEY-----</code>
+    </div>
+
+    <h3>dg-dev-2026-11 (DefinitionGuard, development builds only)</h3>
+    <ul>
+        <li><strong>Key id:</strong> <code>dg-dev-2026-11</code></li>
+        <li><strong>SHA-256 fingerprint</strong> (of the DER public key): <code>7e6d8e01ba08f8ee2f81062efd1a76764c577c41bb8694e9010d7ea34e4373d5</code></li>
+    </ul>
+    <div class="inline-terminal inline-terminal--static" style="margin: 1.5rem 0;">
+        <code>-----BEGIN PUBLIC KEY-----<br/>
+MCowBQYDK2VwAyEAoJeSg/k7W6M/7B/arkkxCl2XWk0bQzL6xTntCIRyids=<br/>
+-----END PUBLIC KEY-----</code>
+    </div>
+    <p>To check a fingerprint, save the PEM text as a file and run:</p>
+    <div class="inline-terminal inline-terminal--static" style="margin: 1.5rem 0;">
+        <code>openssl pkey -pubin -in key.pem -outform DER | sha256sum</code>
+    </div>
+</section>
+
+<section style="margin-bottom: 5rem">
+    <h2 class="section-title">5. Checking LedgerSeal evidence</h2>
+    <p>The open verifier checks a LedgerSeal evidence record offline, with no access to Jira or to LedgerSeal. It is in the public repository
+        <a href="https://github.com/asymmsystems/ledgerseal-verifier" class="org-link org-link--inline org-link--external">asymmsystems/ledgerseal-verifier</a> (Apache-2.0),
+        <a href="https://github.com/asymmsystems/ledgerseal-verifier/releases/tag/v1.2.0" class="org-link org-link--inline org-link--external">release v1.2.0</a>, and needs Node.js 18 or later.</p>
+    <ol>
+        <li>In the Approval Seal panel, open the seal details and click <strong>Show evidence (JSON)</strong>. Copy the text into a file, for example <code>evidence.json</code>.</li>
+        <li>Download the verifier release and open a terminal in its folder.</li>
+        <li>Run <code>node verify-evidence.mjs evidence.json</code>. The verifier reads the key named by the evidence from its <code>keys/</code> folder. To use a key from this page, save it as a file and give it as the second argument: <code>node verify-evidence.mjs evidence.json key.pem</code>.</li>
+        <li>Each of the five check lines must start with <code>PASS</code>, and the exit code must be <code>0</code>. A <code>NOTE</code> line names a redaction entry; it is not a failure.</li>
+    </ol>
+    <p>The <a href="/product/jira-governance/user-guide/open-verifier.html" class="org-link org-link--inline org-link--internal">Open Verifier guide</a> lists the five checks and what a pass shows.</p>
+</section>
