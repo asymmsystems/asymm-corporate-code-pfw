@@ -99,7 +99,9 @@ og_image=product/jira-governance/cascadeplan/banner.png
         <li><strong>Jira is the record.</strong> Every relationship you see exists in Jira: dependencies are Jira "Blocks" links, parents are Jira parents, and extra people on a task are Jira sub-tasks.</li>
         <li><strong>Dates.</strong> A bar's end is the work item's Jira <strong>Due date</strong>. Its start is stored on the work item as the issue property <code>cascadeplan.dates</code>, because not every Jira project has a start date field. Both are shared: every plan and every user sees the same dates.</li>
         <li><strong>Links with a trigger percent.</strong> A link says "B starts when A reaches N%". The percent is stored on B as the issue property <code>cascadeplan.links</code>. A work item can have several predecessors; its earliest start is set by the one that allows the latest start.</li>
-        <li><strong>Progress and target.</strong> Progress is 100% for done work; otherwise it is the time logged in Jira against the estimate. You can set progress by hand for a plan. Target is how far the work should be by today, from its start and end dates. A bar is red when it starts too early for its links or falls behind.</li>
+        <li><strong>Progress and status.</strong> Whether a work item has started or is finished comes only from its Jira status: To Do, In Progress or Done. Progress says how far an item in progress has got.
+            A Done item always shows 100%. Otherwise progress is the time logged in Jira against the estimate, or a value you set by hand for a plan.</li>
+        <li><strong>Target.</strong> Target is how far the work should be by today, from its start and end dates. A bar is red when it starts too early for its links or falls behind.</li>
         <li><strong>The cascade.</strong> When a move makes a successor start too early, CascadePlan moves the successor, and its successors, and lists every one of them before the drop.</li>
         <li><strong>Parents follow their children.</strong> A task or story with sub-tasks spans its sub-tasks, and its Jira due date follows their end. An epic spans its work.</li>
         <li><strong>Your permissions.</strong> Every change is a Jira write made as you, checked against your Jira permissions first. If you may not make a change, CascadePlan refuses it and names the missing permission (section 14).</li>
@@ -195,12 +197,30 @@ og_image=product/jira-governance/cascadeplan/banner.png
         <li><strong>People:</strong> click the Resource cell to pick people; it shows the task's assignee and the people on its sub-tasks.</li>
         <li><strong>Estimates:</strong> each task can use <strong>Hours</strong>, <strong>Story Points</strong> (1 point = 8 hours) or a <strong>T-Shirt Size</strong> (XS 4 h, S 8 h, M 16 h, L 32 h, XL 64 h). CascadePlan converts it to hours for scheduling.
             <strong>Also scale the Jira estimate when I resize this bar</strong> is off unless you turn it on.</li>
-        <li><strong>Progress:</strong> right-click a bar, click the Progress cell, or use the task dialog. <strong>Use Rollup</strong> sets a parent's progress from its children.</li>
+        <li><strong>Progress:</strong> right-click a bar, click the Progress cell, or use the task dialog. <strong>Use Rollup</strong> sets a parent's progress from its children.
+            The progress of a Done item is 100% and cannot be changed; to change it, first choose another status.</li>
         <li><strong>Target:</strong> click the Target cell. <strong>⚡ Auto</strong> sets it from the dates and today.</li>
         <li><strong>Status:</strong> click the Status cell and pick To Do, In Progress or Completed; CascadePlan runs the matching Jira transition.</li>
         <li><strong>Epic:</strong> click the Epic cell of a story or task to link it to an epic.</li>
     </ul>
-    <p>CascadePlan never writes a default: no default estimate, no default due date, and a progress change never changes the Jira status.</p>
+    <p>CascadePlan never writes a default: no default estimate, no default due date, and a progress change never changes the Jira status by itself.</p>
+    <h3>When progress and the Jira status disagree</h3>
+    <p>When you set a progress that does not match the work item's Jira status, CascadePlan asks in the same step, before it saves:</p>
+    <table class="clinical-table">
+        <thead><tr><th>You set</th><th>Jira status now</th><th>CascadePlan asks</th></tr></thead>
+        <tbody>
+            <tr><td>1% to 99%</td><td>To Do</td><td>"PAY-12 is To Do in Jira. Also move it to In Progress?"</td></tr>
+            <tr><td>100%</td><td>To Do or In Progress</td><td>"Also move it to Done?"</td></tr>
+            <tr><td>0%</td><td>any</td><td>Nothing: the status stays as it is.</td></tr>
+        </tbody>
+    </table>
+    <ul>
+        <li><strong>Move</strong> saves the progress and runs the Jira workflow transition. Your workflow decides whether the move is allowed; if Jira refuses it, the progress is still saved and the Changes panel says why.</li>
+        <li><strong>Keep</strong> saves only the progress. An item at 100% that is not Done then reads "100%, not Done in Jira".</li>
+        <li><strong>Escape</strong> saves nothing.</li>
+        <li>Stand-up mode and the selection bar ask once for all the rows they change, and list them.</li>
+        <li>One Undo reverses the progress and the status together.</li>
+    </ul>
 </section>
 
 <section style="margin-bottom: 4rem">
@@ -295,8 +315,8 @@ og_image=product/jira-governance/cascadeplan/banner.png
     <table class="clinical-table">
         <thead><tr><th>Keys</th><th>Action</th></tr></thead>
         <tbody>
-            <tr><td>0 to 9</td><td>Set the progress of the focused row to 0% to 90%. Move to other rows and repeat: the changes wait.</td></tr>
-            <tr><td>Enter</td><td>Save every waiting progress change in one step (one Undo reverses them all).</td></tr>
+            <tr><td>0 to 9</td><td>Set the progress of the focused row to 0% to 90%. Move to other rows and repeat: the changes wait. On a Done row the digits do nothing, and CascadePlan says why.</td></tr>
+            <tr><td>Enter</td><td>Save every waiting progress change in one step (one Undo reverses them all). If a progress does not match a row's Jira status, CascadePlan first asks once for all of them.</td></tr>
             <tr><td>Escape</td><td>Drop the waiting progress changes.</td></tr>
         </tbody>
     </table>
