@@ -14,29 +14,49 @@ og_image=product/jira-governance/ledgerseal/banner.png
 </header>
 
 <section style="margin-bottom: 4rem">
-    <h2 class="section-title">5-Minute Quickstart Evaluation</h2>
-    <p>Follow these five steps to verify zero-trust governance in your Jira Cloud instance in under five minutes:</p>
+    <h2 class="section-title">Quick start for each app</h2>
+    <p>Each app works on its own. Install it from the Atlassian Marketplace, then follow its steps below. The steps marked "Jira administrator" need that role; the others need only the usual Jira permissions of the issue.</p>
 
-    <div class="product-features" style="grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); margin-top: 1.5rem;">
+    <div class="product-features" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); margin-top: 1.5rem;">
         <div class="product-feature-card">
-            <h3>Step 1: Install App</h3>
-            <p>Install any suite app from the Atlassian Marketplace into your Jira Cloud instance. Teams with 1-10 users enjoy full features free of charge forever.</p>
+            <h3>CascadePlan (about 5 minutes)</h3>
+            <ol>
+                <li>Open a Jira project and choose <strong>CascadePlan Planner</strong> in the project's navigation.</li>
+                <li>Drag a work item from the <strong>Backlog</strong> tray onto the timeline to give it dates.</li>
+                <li>Drag the arrow at the end of one bar onto another bar, and choose when the second may start (for example 30%).</li>
+                <li>Move the first bar: read the Jira changes listed before you let go, then let go. Ctrl+Z undoes it.</li>
+            </ol>
+            <p>No setup is needed. <a href="/product/jira-governance/user-guide/cascadeplan" class="org-link org-link--inline org-link--internal">CascadePlan guide</a></p>
         </div>
         <div class="product-feature-card">
-            <h3>Step 2: Check Permissions</h3>
-            <p>As a Jira administrator, open the app's admin page in Jira administration (for example <strong>LedgerSeal approvers</strong>) and choose the approver groups, following the Uniform Permission Standard.</p>
+            <h3>LedgerSeal (5 minutes, plus the gate)</h3>
+            <ol>
+                <li>Open an issue, open the <strong>Approval Seal</strong> panel from the issue's app button, choose <strong>Seal this issue</strong>, then <strong>Sign and seal</strong>.</li>
+                <li>Edit the issue description: the panel shows what changed since the seal.</li>
+                <li>Another approver chooses <strong>Approve these changes</strong> and gives a reason.</li>
+                <li>Jira administrator: add the <strong>Require Valid LedgerSeal</strong> validator to the release transition of the workflow. Without it, LedgerSeal reports changes but does not block.</li>
+            </ol>
+            <p><a href="/product/jira-governance/user-guide/ledgerseal" class="org-link org-link--inline org-link--internal">LedgerSeal guide</a></p>
         </div>
         <div class="product-feature-card">
-            <h3>Step 3: Seal or Review</h3>
-            <p>Open a test Jira issue. Seal it with LedgerSeal, complete a DefinitionGuard checklist, or review reality alignment in FourRealities.</p>
+            <h3>DefinitionGuard (minutes, plus the gate)</h3>
+            <ol>
+                <li>Open an issue and add the <strong>Definition of Done</strong> panel from the issue's app button. A built-in checklist for the issue type is already there.</li>
+                <li>Tick items, add evidence where an item asks for it, or waive an item with a reason.</li>
+                <li>Jira administrator: add <strong>DefinitionGuard DoD Enforcement</strong> to every transition into a Done status, then publish the workflow.</li>
+                <li>Project administrator: open <strong>Project settings</strong>, <strong>DefinitionGuard</strong> and check that every completion transition is gated.</li>
+            </ol>
+            <p><a href="/product/jira-governance/user-guide/definitionguard" class="org-link org-link--inline org-link--internal">DefinitionGuard guide</a></p>
         </div>
         <div class="product-feature-card">
-            <h3>Step 4: Test Workflow Gate</h3>
-            <p>Configure a workflow validator on your project transition (e.g. into <em>Done</em> or <em>In Review</em>). Attempt to transition an unsealed or ungated issue.</p>
-        </div>
-        <div class="product-feature-card">
-            <h3>Step 5: Verify Evidence</h3>
-            <p>In the LedgerSeal panel, click <strong>Show evidence (JSON)</strong>, copy the record into a file, and verify it offline with the zero-dependency Node.js CLI verifier tool.</p>
+            <h3>FourRealities (about 10 minutes)</h3>
+            <ol>
+                <li>Open <strong>Four Realities</strong> in the project's navigation. The first open builds the project's view; after that it is refreshed each day.</li>
+                <li>Link each issue to its decision record: a Confluence page on your site, or a decision issue.</li>
+                <li>Connect GitHub, Bitbucket or GitLab to Jira if you have not, so the Code check sees pull requests.</li>
+                <li>Read the issue's four checks. The Process check looks for a Definition of Done record and the Audit check for an approval seal; on a site without DefinitionGuard and LedgerSeal, those two show as missing.</li>
+            </ol>
+            <p><a href="/product/jira-governance/user-guide/fourrealities" class="org-link org-link--inline org-link--internal">FourRealities guide</a></p>
         </div>
     </div>
 </section>
