@@ -54,7 +54,7 @@ node verify-evidence.mjs --evidence evidence.json --public-key public-key.pem</c
 PASS history chain (3 entries)<br/>
 PASS attestation names the newest seal<br/>
 PASS attestation status matches the history (SEAL_VALID)<br/>
-PASS signature (ls-dev-2026-11)</code>
+PASS signature (ls-prod-2026-11)</code>
     </div>
     <p>Any check that fails prints <code>FAIL</code> instead of <code>PASS</code> on its line. The verifier always runs all five checks, so one run shows every problem.</p>
 </section>
@@ -116,9 +116,10 @@ PASS signature (ls-dev-2026-11)</code>
     <h2 class="section-title">6. Public Verification Keys &amp; Source Code</h2>
     <p>The verifier and its public keys are published in an open-source repository:</p>
     <ul>
-        <li><strong>Repository:</strong> <a href="https://github.com/asymmsystems/ledgerseal-verifier" class="org-link org-link--inline org-link--external">asymmsystems/ledgerseal-verifier on GitHub (Apache-2.0)</a>, <a href="https://github.com/asymmsystems/ledgerseal-verifier/releases/tag/v1.2.0" class="org-link org-link--inline org-link--external">release v1.2.0</a></li>
+        <li><strong>Repository:</strong> <a href="https://github.com/asymmsystems/ledgerseal-verifier" class="org-link org-link--inline org-link--external">asymmsystems/ledgerseal-verifier on GitHub (Apache-2.0)</a>, <a href="https://github.com/asymmsystems/ledgerseal-verifier/releases/tag/v1.3.0" class="org-link org-link--inline org-link--external">release v1.3.0</a></li>
+        <li><strong>Production Public Key:</strong> <code>keys/ls-prod-2026-11.pub.pem</code>, key id <code>ls-prod-2026-11</code> (production: the Marketplace app), SHA-256 fingerprint of the DER public key <code style="word-break: break-all;">09f2b807adc803a7f687e0561e90b8dcadadd6c1d752c66b55980a27b89cc5d3</code>.</li>
         <li><strong>Development Public Key:</strong> <code>keys/ls-dev-2026-11.pub.pem</code> (development builds only).</li>
-        <li><strong>All keys:</strong> the <a href="/product/jira-governance/signing-keys.html" class="org-link org-link--inline org-link--internal">Signing keys</a> page lists every key id with its public key. The production key will be published there before the apps are listed.</li>
+        <li><strong>All keys:</strong> the <a href="/product/jira-governance/signing-keys.html" class="org-link org-link--inline org-link--internal">Signing keys</a> page lists every key id with its public key and fingerprint.</li>
         <li><strong>Key Algorithm:</strong> Ed25519 public key (SPKI PEM format).</li>
     </ul>
 </section>
