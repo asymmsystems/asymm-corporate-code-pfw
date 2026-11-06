@@ -33,6 +33,7 @@
              Mobile mirrors live in the drawer footer below. Each is a single
              source of truth shared between desktop bar and mobile drawer. -->
         <a href="/privacy.html" class="status-item status-item--meta" aria-label="Privacy policy">Privacy</a>
+        <a href="/security.html" class="status-item status-item--meta" aria-label="Security policy">Security</a>
         <span class="status-item status-item--meta" aria-hidden="true">&copy; 2026 Asymm</span>
     </div>
 
@@ -75,6 +76,7 @@
         </div>
         <div class="drawer-footer">
             <a href="/privacy.html" class="drawer-link" style="font-size: 0.8rem; margin-bottom: 0.5rem; opacity: 0.7;">Privacy Policy</a>
+            <a href="/security.html" class="drawer-link" style="font-size: 0.8rem; margin-bottom: 0.5rem; opacity: 0.7;">Security Policy</a>
             <span style="opacity: 0.5;">© 2026 Asymm Systems</span>
         </div>
     </div>
