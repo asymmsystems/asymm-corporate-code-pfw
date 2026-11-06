@@ -1,0 +1,98 @@
+title=Security policy
+description=How Asymm Systems protects its accounts, code and signing keys, how to report a vulnerability, and how we respond to a security incident. Covers Eliya, Dial, Asymm Forensics and the Jira Governance Suite.
+type=page
+status=published
+~~~~~~
+
+<header class="page-header">
+    <span class="section-kicker">Asymm Systems</span>
+    <h1>Security policy</h1>
+    <p style="max-width: 60ch">How we protect our accounts, our code and our signing keys,
+        how to report a vulnerability, and what we do when something goes wrong.</p>
+</header>
+
+<section id="scope" style="margin-bottom: 5rem">
+    <h2 class="section-title">1. Scope and ownership</h2>
+    <p>This policy applies to Asymm Systems (Pvt) Ltd, a company in Sri Lanka with about 5 people, and to all of its products:</p>
+    <ul style="line-height: 1.9; margin-top: 1rem">
+        <li><strong>Eliya</strong>, our OpenJDK distribution. Product detail: <a href="/product/eliya/security.html" class="org-link org-link--inline org-link--internal">Eliya security</a>.</li>
+        <li><strong>Dial</strong>. Product detail: <a href="/product/dial.html" class="org-link org-link--inline org-link--internal">Dial</a>.</li>
+        <li><strong>Asymm Forensics</strong>. Product detail: <a href="/product/forensics.html" class="org-link org-link--inline org-link--internal">Asymm Forensics</a>.</li>
+        <li><strong>The Jira Governance Suite</strong> (CascadePlan, LedgerSeal, DefinitionGuard and FourRealities). Product detail: <a href="/product/jira-governance/compliance.html" class="org-link org-link--inline org-link--internal">compliance and security mapping</a>.</li>
+    </ul>
+    <p style="margin-top: 1rem">The product pages hold the product detail. This page states the rules that apply to the company and to every product.</p>
+    <p style="margin-top: 1rem">The security contact is
+        <a href="mailto:security@asymm.systems" class="org-link org-link--inline org-link--external">security@asymm.systems</a>.</p>
+</section>
+
+<section id="information-security" style="margin-bottom: 5rem">
+    <h2 class="section-title">2. Information security</h2>
+    <ul style="line-height: 1.9">
+        <li><strong>Multi-factor authentication</strong> is on for every company account: the GitHub organisation, email, Atlassian and Cloudflare.</li>
+        <li><strong>Passwords</strong> are kept in a password manager. Each password is strong and used for one account only.</li>
+        <li><strong>Endpoint protection:</strong> our Linux workstations run ClamAV.</li>
+        <li><strong>Patching:</strong> we keep operating systems and software up to date with security updates.</li>
+        <li><strong>Least privilege:</strong> each person gets only the access their work needs. We review access each quarter and remove what is no longer needed.</li>
+    </ul>
+</section>
+
+<section id="secure-development" style="margin-bottom: 5rem">
+    <h2 class="section-title">3. Secure development</h2>
+    <ul style="line-height: 1.9">
+        <li><strong>Review:</strong> every change is made on a branch, and an independent review of the change is done before it is merged.</li>
+        <li><strong>Continuous integration:</strong> automated tests and a dependency audit run in CI. For the Jira apps (Atlassian Forge) the audit is <code>npm audit</code>; a high or critical finding fails the build.</li>
+        <li><strong>OWASP Top 10:</strong> changes are reviewed against the OWASP Top 10 risks.</li>
+        <li><strong>Secrets:</strong> secrets are never stored in code. The Jira apps keep their secrets as encrypted Forge environment variables.</li>
+    </ul>
+</section>
+
+<section id="keys" style="margin-bottom: 5rem">
+    <h2 class="section-title">4. Signing keys</h2>
+    <p>LedgerSeal and DefinitionGuard sign some of their records with Ed25519. Each signing key has a key id, and each signed record names its key id.</p>
+    <ul style="line-height: 1.9; margin-top: 1rem">
+        <li><strong>Rotation:</strong> we rotate each signing key every 12 months, and at once if we suspect that a private key is exposed. The first scheduled rotation is in December 2026.</li>
+        <li><strong>Publication:</strong> the public keys, with their key ids and fingerprints, are on the <a href="/product/jira-governance/signing-keys.html" class="org-link org-link--inline org-link--internal">signing keys page</a>.</li>
+        <li><strong>Retired keys:</strong> a retired public key stays published, so that evidence signed with it can still be checked.</li>
+    </ul>
+    <p style="margin-top: 1rem">Eliya releases are signed with a GPG key. Its fingerprint and the channels that publish it are on the <a href="/product/eliya/security.html" class="org-link org-link--inline org-link--internal">Eliya security page</a>.</p>
+</section>
+
+<section id="disclosure" style="margin-bottom: 5rem">
+    <h2 class="section-title">5. Reporting a vulnerability</h2>
+    <p>Email <a href="mailto:security@asymm.systems" class="org-link org-link--inline org-link--external">security@asymm.systems</a>.
+        Do not report a vulnerability in a public issue. Tell us the product and version, the steps that show the problem, and any fix you suggest.</p>
+    <ul style="line-height: 1.9; margin-top: 1rem">
+        <li><strong>Acknowledgement:</strong> within 72 hours.</li>
+        <li><strong>Fix:</strong> we target a fix for a critical vulnerability within 30 days.</li>
+        <li><strong>Jira apps:</strong> we follow Atlassian's
+            <a href="https://developer.atlassian.com/platform/marketplace/security-bugfix-policy/" class="org-link org-link--inline org-link--external">Security Bug Fix Policy for Marketplace apps</a>.
+            Its time frames are shorter than 30 days for critical and high vulnerabilities, and where they are shorter they apply.</li>
+    </ul>
+    <p style="margin-top: 1rem">Vulnerabilities in upstream OpenJDK go to the OpenJDK Vulnerability Group, as the <a href="/product/eliya/security.html" class="org-link org-link--inline org-link--internal">Eliya security page</a> explains.</p>
+</section>
+
+<section id="incident-response" style="margin-bottom: 5rem">
+    <h2 class="section-title">6. Incident response</h2>
+    <p>When we find or are told of a security incident, we follow these steps:</p>
+    <ol style="line-height: 1.9; margin-top: 1rem">
+        <li><strong>Detect:</strong> record the report or the alert and when it arrived.</li>
+        <li><strong>Contain:</strong> stop the harm, for example by revoking access or rotating a key.</li>
+        <li><strong>Assess:</strong> find the cause, what data and which customers are affected, and since when.</li>
+        <li><strong>Notify:</strong> tell the affected customers. For the Jira apps, also tell Atlassian, as its
+            <a href="https://developer.atlassian.com/platform/marketplace/app-security-incident-management-guidelines/" class="org-link org-link--inline org-link--external">app security incident management guidelines for Marketplace Partners</a> require.</li>
+        <li><strong>Fix:</strong> remove the cause and release the fix.</li>
+        <li><strong>Review:</strong> after the incident, review what happened and change what let it happen.</li>
+    </ol>
+    <p style="margin-top: 1rem">We tell affected customers without undue delay, and within 72 hours of confirming a breach of their personal data.</p>
+</section>
+
+<section id="data-handling" style="margin-bottom: 5rem">
+    <h2 class="section-title">7. Data handling</h2>
+    <p>The Jira apps run on Atlassian Forge. Asymm Systems operates no external servers for them, and the apps call only Atlassian's own APIs: your site's Jira and Confluence, and Atlassian's personal data reporting service.
+        The <a href="/privacy" class="org-link org-link--inline org-link--internal">privacy policy</a> states what each app stores and how it is deleted.</p>
+</section>
+
+<section style="margin-bottom: 5rem">
+    <h2 class="section-title">Updates to this policy</h2>
+    <p>Changes to this policy are recorded in the git history of this website.</p>
+</section>
