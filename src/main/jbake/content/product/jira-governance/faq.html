@@ -38,7 +38,8 @@ og_image=product/jira-governance/ledgerseal/banner.png
     <h3>Can I purchase apps individually, or do I need the whole suite?</h3>
     <p>Each app (LedgerSeal, DefinitionGuard, FourRealities, CascadePlan) is published as an independent Atlassian Marketplace app. 
         You can install only the specific capabilities your compliance framework demands (e.g. LedgerSeal for change control seals), 
-        or deploy all four to establish an end-to-end zero-trust governance layer.</p>
+        or deploy all four to establish an end-to-end zero-trust governance layer.
+        FourRealities alone uses the checks it can make on your site (Intent, and Code when your Git integration fills the Development field); Process and Audit show Not used on this site and are not scored until DefinitionGuard or LedgerSeal is in use.</p>
 </section>
 
 <section style="margin-bottom: 4rem">
@@ -59,7 +60,7 @@ og_image=product/jira-governance/ledgerseal/banner.png
     <p>CascadePlan stores Atlassian account ids only: of who froze a baseline, of who requested or reviewed a scope change, and of each person who works on a task through a Jira sub-task.
         It reports them each week to Atlassian's personal data reporting service and removes the id of a closed account.</p>
     <p>The other three apps store Atlassian account ids to record who did each action: LedgerSeal of who sealed, signed or revoked a seal (as pseudonymous tokens, with no display name),
-        DefinitionGuard of who ticked, waived or configured a Definition of Done item (as pseudonyms, reported each week to Atlassian, with the link to a closed account deleted), and FourRealities of who requested or approved a gate exception.
+        DefinitionGuard of who ticked, waived or configured a Definition of Done item (as pseudonyms, reported each week to Atlassian, with the link to a closed account deleted), and FourRealities of who requested or decided a Code exception, who gave a rework reason, and the assignee for the "My issues" filter.
         The <a href="/privacy" class="org-link org-link--inline">privacy policy</a> lists what each app stores.</p>
 </section>
 

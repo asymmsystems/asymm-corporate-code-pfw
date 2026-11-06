@@ -116,7 +116,7 @@ status=published
     <h3 style="margin-top: 1.5rem">FourRealities</h3>
     <ul style="line-height: 1.9; margin-top: 0.5rem">
         <li><strong>What it accesses and stores:</strong> it reads the issue, its Development field and the issue properties of LedgerSeal and DefinitionGuard, and searches the Confluence pages of your own site. It stores snapshots, exception events, rework reasons and site settings in Forge storage.</li>
-        <li><strong>Personal data:</strong> the Atlassian account id of the person who recorded an exception.</li>
+        <li><strong>Personal data:</strong> Atlassian account ids only where a rule needs them: who requested or decided a Code exception, who gave a rework reason, and the assignee, for the "My issues" filter. No names are stored; the dashboard reads names from Jira each time it shows them. FourRealities reports these ids to Atlassian every week and erases the ids of closed accounts; the panel then shows "a former user".</li>
     </ul>
 </section>
 

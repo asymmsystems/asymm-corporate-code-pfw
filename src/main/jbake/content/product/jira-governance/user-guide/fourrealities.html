@@ -19,19 +19,19 @@ og_image=product/jira-governance/fourrealities/banner.png
     <p>Delivery evidence for one piece of work is spread over several places. FourRealities checks four kinds of evidence for each issue and shows each one as a gate:</p>
     <ol>
         <li><strong>Intent:</strong> a link to a Confluence page on your site, or a link to an issue of a decision or specification type.</li>
-        <li><strong>Process:</strong> a Definition of Done record written by DefinitionGuard. A HeroCoders Checklists for Jira <code>checklist</code> issue property is read as a hint when no DefinitionGuard record exists.</li>
+        <li><strong>Process:</strong> the Definition of Done record of DefinitionGuard, or the checklist property of Checklists for Jira (HeroCoders), whichever a Jira administrator chooses. A DefinitionGuard record counts only when FourRealities verifies its signature.</li>
         <li><strong>Code:</strong> pull request count and state from the Jira Development field, which your GitHub, GitLab or Bitbucket integration for Jira populates.</li>
         <li><strong>Audit:</strong> an approval seal record written by LedgerSeal.</li>
     </ol>
-    <p>Each gate shows a state, for example <em>Evidence found</em>, <em>Evidence missing</em> or <em>Not applicable</em>, and names its source.
-        Records written by other apps are marked as not verified by FourRealities. Pull request state is marked as heuristic, because apps cannot read pull request approvals.
+    <p>Each check shows a state, for example <em>Evidence found</em>, <em>Evidence missing</em>, <em>Reported, not verified</em>, <em>Not used on this site</em> or <em>Not applicable</em>, and names its source.
+        A DefinitionGuard or LedgerSeal record is scored only when its signature is verified; a record FourRealities cannot verify is shown as <em>Reported, not verified</em> and is not scored. A check your site does not use is not scored. Pull request state is marked as heuristic, because apps cannot read pull request approvals.
         A merged pull request is not shown as reviewed.</p>
 </section>
 
 <section style="margin-bottom: 4rem">
     <h2 class="section-title">2. The Reality Alignment Index (RAI)</h2>
     <p>The <strong>Reality Alignment Index (RAI)</strong> is the share of rated gates with evidence found, from 0 to 100.
-        Only gates with evidence found or evidence missing are rated. Excepted, not applicable and needs-recheck gates are not counted.
+        Only checks with evidence found or evidence missing are scored. Reported, excepted, not applicable, not used and needs-recheck checks are not counted.
         The RAI is always shown after the gates and with its parts: click <strong>Why N%?</strong> in the issue panel to see them.</p>
     <p>Each rated issue gets a risk level from its RAI:</p>
     <ul>
@@ -44,12 +44,12 @@ og_image=product/jira-governance/fourrealities/banner.png
 
     <div style="margin: 2rem 0; text-align: center;">
         <img src="/images/product/jira-governance/fourrealities/01-dashboard.png" alt="FourRealities Project Dashboard" style="max-width: 100%; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
-        <p style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 1: Project dashboard with audit readiness, the four gate cards, Priority actions and Coverage at a glance.</p>
+        <p style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 1: Project dashboard with audit readiness, the four check cards (Code "Not used" on a site with no pull request data), the checks in use and Priority actions.</p>
     </div>
 
     <div style="margin: 2rem 0; text-align: center;">
-        <img src="/images/product/jira-governance/fourrealities/02-rai-glance.png" alt="FourRealities Issue Panel" style="max-width: 100%; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
-        <p style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 2: The Four Realities issue panel with the four gate statuses and the next step.</p>
+        <img src="/images/product/jira-governance/fourrealities/02-issue-panel.png" alt="FourRealities Issue Panel" style="max-width: 100%; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <p style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 2: The issue panel with the checks as a chain, the next step naming the Definition of Done panel, and the findings with their sources.</p>
     </div>
 </section>
 
@@ -87,7 +87,7 @@ og_image=product/jira-governance/fourrealities/banner.png
         <li><strong>Confluence:</strong> when you search in the <strong>Link decision record</strong> dialog, FourRealities calls the Confluence REST API of your own Atlassian site, as you, through Forge. It also reads Jira remote links that point to Confluence pages.</li>
         <li><strong>Storage:</strong> snapshots, Code exception events, rework reasons and site settings are kept in Atlassian Forge storage.</li>
     </ul>
-    <p>FourRealities has no settings page. With an inactive licence the app shows "Licence not active" and reads nothing.</p>
+    <p>Jira administrators set the evidence source of each check, the decision issue types and the approver groups in <strong>Jira settings &gt; Apps &gt; FourRealities gate authority</strong>. FourRealities stores account ids only where a rule needs them, reports them to Atlassian every week and erases the ids of closed accounts. With an inactive licence the app shows "Licence not active" and reads nothing.</p>
 </section>
 
 <section style="margin-bottom: 5rem">
@@ -95,9 +95,9 @@ og_image=product/jira-governance/fourrealities/banner.png
     <p>When an issue shows missing evidence, the issue panel names the next step. You can:</p>
     <ol>
         <li>Click <strong>Link decision record</strong>, search Confluence pages by title (or enter a page address and title), and click <strong>Add link</strong>. FourRealities adds a Jira remote link and the Intent gate updates.</li>
-        <li>Click <strong>Request Code exception</strong> for work that needs no pull request, and give a reason. A project or Jira administrator who is not you or the assignee must approve it. Until then the Code gate stays "Evidence missing". Administrators can also reject or revoke an exception, and the requester can withdraw it.</li>
+        <li>Click <strong>Request Code exception</strong> for work that needs no pull request, and give a reason. A project or Jira administrator, or a member of an approver group, who is not you or the assignee must approve it. Until then the Code gate stays "Evidence missing". Administrators can also reject or revoke an exception, and the requester can withdraw it.</li>
         <li>For a merged pull request, click <strong>Request retrospective review</strong> to post a comment on the issue asking for a review.</li>
-        <li>Use the links to open the LedgerSeal or DefinitionGuard panels. FourRealities never writes their records.</li>
+        <li>When Process or Audit is in use, the next step names the Definition of Done panel (DefinitionGuard) or the Approval Seal panel (LedgerSeal) on the issue. FourRealities never writes their records.</li>
         <li>Click <strong>Refresh</strong> to read the issue again.</li>
     </ol>
 </section>
