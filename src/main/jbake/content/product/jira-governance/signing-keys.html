@@ -36,7 +36,7 @@ og_image=product/jira-governance/ledgerseal/banner.png
     <ul>
         <li><strong>Key id:</strong> <code>ls-prod-2026-11</code></li>
         <li><strong>SHA-256 fingerprint</strong> (of the DER public key): <code style="word-break: break-all;">09f2b807adc803a7f687e0561e90b8dcadadd6c1d752c66b55980a27b89cc5d3</code></li>
-        <li><strong>File:</strong> <a href="https://github.com/asymmsystems/ledgerseal-verifier/blob/main/keys/ls-prod-2026-11.pub.pem" class="org-link org-link--inline org-link--external">keys/ls-prod-2026-11.pub.pem</a> in the open verifier repository (from release v1.3.0).</li>
+        <li><strong>File:</strong> <a href="https://github.com/asymmsystems/jira-governance-code-cli/blob/main/keys/ls-prod-2026-11.pub.pem" class="org-link org-link--inline org-link--external">keys/ls-prod-2026-11.pub.pem</a> in the open verifier repository (from release v1.3.0).</li>
     </ul>
     <div class="inline-terminal inline-terminal--static" style="margin: 1.5rem 0;">
         <code style="word-break: break-all;">-----BEGIN PUBLIC KEY-----<br/>
@@ -64,7 +64,7 @@ MCowBQYDK2VwAyEAiZby7ZujEzTGnRBc0StyzcxBjzs9+WCcd6zXfIfnEg8=<br/>
     <ul>
         <li><strong>Key id:</strong> <code>ls-dev-2026-11</code></li>
         <li><strong>SHA-256 fingerprint</strong> (of the DER public key): <code style="word-break: break-all;">cecef4ee9d75298c9107ede72389edd5be59562027363aca90092b70b8c7d283</code></li>
-        <li><strong>File:</strong> <a href="https://github.com/asymmsystems/ledgerseal-verifier/blob/main/keys/ls-dev-2026-11.pub.pem" class="org-link org-link--inline org-link--external">keys/ls-dev-2026-11.pub.pem</a> in the open verifier repository.</li>
+        <li><strong>File:</strong> <a href="https://github.com/asymmsystems/jira-governance-code-cli/blob/main/keys/ls-dev-2026-11.pub.pem" class="org-link org-link--inline org-link--external">keys/ls-dev-2026-11.pub.pem</a> in the open verifier repository.</li>
     </ul>
     <div class="inline-terminal inline-terminal--static" style="margin: 1.5rem 0;">
         <code style="word-break: break-all;">-----BEGIN PUBLIC KEY-----<br/>
@@ -91,8 +91,8 @@ MCowBQYDK2VwAyEAoJeSg/k7W6M/7B/arkkxCl2XWk0bQzL6xTntCIRyids=<br/>
 <section style="margin-bottom: 5rem">
     <h2 class="section-title">5. Checking LedgerSeal evidence</h2>
     <p>The open verifier checks a LedgerSeal evidence record offline, with no access to Jira or to LedgerSeal. It is in the public repository
-        <a href="https://github.com/asymmsystems/ledgerseal-verifier" class="org-link org-link--inline org-link--external">asymmsystems/ledgerseal-verifier</a> (Apache-2.0),
-        <a href="https://github.com/asymmsystems/ledgerseal-verifier/releases/tag/v1.3.0" class="org-link org-link--inline org-link--external">release v1.3.0</a>, and needs Node.js 18 or later.</p>
+        <a href="https://github.com/asymmsystems/jira-governance-code-cli" class="org-link org-link--inline org-link--external">asymmsystems/jira-governance-code-cli</a> (Apache-2.0),
+        <a href="https://github.com/asymmsystems/jira-governance-code-cli/releases/tag/v1.3.0" class="org-link org-link--inline org-link--external">release v1.3.0</a>, and needs Node.js 18 or later.</p>
     <ol>
         <li>In the Approval Seal panel, open the seal details and click <strong>Show evidence (JSON)</strong>. Copy the text into a file, for example <code>evidence.json</code>.</li>
         <li>Download the verifier release and open a terminal in its folder.</li>
