@@ -259,24 +259,76 @@ og_image=product/jira-governance/cascadeplan/banner.png
 
 <section style="margin-bottom: 4rem">
     <h2 class="section-title">13. Keyboard reference</h2>
-    <p>The grid is one tab stop. Single-letter shortcuts work while focus is in the planner and outside text fields, and only while <strong>Keys</strong> is on.</p>
+    <p>Yes, CascadePlan can be used without a mouse. The grid of work items is one tab stop: press Tab until a cell is focused, then use the keys below.
+        Every shortcut works only while focus is in the planner and not in a text field, so it never takes keys from Jira or from what you type.
+        The single-letter shortcuts <code>d</code>, <code>e</code> and <code>t</code> also need <strong>Keys</strong> on in the toolbar; turn it off if they get in the way of a screen reader or another tool.
+        On macOS, use Cmd where the table says Ctrl.</p>
+
+    <h3>Moving around the grid</h3>
     <table class="clinical-table">
         <thead><tr><th>Keys</th><th>Action</th></tr></thead>
         <tbody>
-            <tr><td>Arrow keys, Home, End, Page Up, Page Down</td><td>Move between rows and cells. Ctrl+Home and Ctrl+End go to the first and last row.</td></tr>
-            <tr><td>Space on the Start or Due cell</td><td>Move mode for that bar: left and right arrows move it by a day (with Shift, a week), <code>[</code> and <code>]</code> change its end, Enter saves, Escape cancels.</td></tr>
-            <tr><td>Space on another cell</td><td>Select or clear the row.</td></tr>
-            <tr><td>0 to 9, then Enter</td><td>Set progress 0% to 90% on rows, then save them all (Escape drops them).</td></tr>
-            <tr><td><code>?</code></td><td>Why this date? for the focused, selected or hovered row.</td></tr>
-            <tr><td><code>d</code></td><td>Add a dependency to that row.</td></tr>
-            <tr><td><code>e</code></td><td>Open the task dialog.</td></tr>
-            <tr><td><code>t</code></td><td>Jump to today.</td></tr>
-            <tr><td>Ctrl+Z, Ctrl+Shift+Z</td><td>Undo, redo (Cmd on macOS).</td></tr>
-            <tr><td>Ctrl+F</td><td>Search work items.</td></tr>
-            <tr><td>Ctrl and plus, Ctrl and minus</td><td>Zoom the timeline in and out.</td></tr>
-            <tr><td>Escape</td><td>Close the open popup.</td></tr>
+            <tr><td>Arrow keys</td><td>Move one row up or down, or one cell left or right.</td></tr>
+            <tr><td>Home, End</td><td>Go to the first or last cell of the row.</td></tr>
+            <tr><td>Ctrl+Home, Ctrl+End</td><td>Go to the first or last row.</td></tr>
+            <tr><td>Page Up, Page Down</td><td>Move one screen of rows up or down.</td></tr>
+            <tr><td>Enter</td><td>Open the task dialog of the focused row.</td></tr>
+            <tr><td>Space on any cell except Start and Due</td><td>Select or clear the row. The selection bar then acts on every selected row.</td></tr>
         </tbody>
     </table>
+
+    <h3>Moving and resizing a bar</h3>
+    <table class="clinical-table">
+        <thead><tr><th>Keys</th><th>Action</th></tr></thead>
+        <tbody>
+            <tr><td>Space on the Start or Due cell</td><td>Start move mode for the bar of that row. The preview shows the new dates and the successors that would move.</td></tr>
+            <tr><td>Left, Right (in move mode)</td><td>Move the whole bar one day earlier or later.</td></tr>
+            <tr><td>Shift+Left, Shift+Right (in move mode)</td><td>Move the whole bar one week.</td></tr>
+            <tr><td><code>[</code> and <code>]</code> (in move mode)</td><td>Make the bar one day shorter or longer (the end moves, the start stays).</td></tr>
+            <tr><td>Enter (in move mode)</td><td>Save the move. Successors move as their links say, and Jira is updated.</td></tr>
+            <tr><td>Escape (in move mode)</td><td>Cancel: the bar keeps its dates.</td></tr>
+        </tbody>
+    </table>
+    <p>Move mode is for a work item with dates. A story or task with sub-tasks moves as a block. An item whose dates come only from its children says so and asks you to move a child instead; an epic is not moved from the keyboard.</p>
+
+    <h3>Progress</h3>
+    <table class="clinical-table">
+        <thead><tr><th>Keys</th><th>Action</th></tr></thead>
+        <tbody>
+            <tr><td>0 to 9</td><td>Set the progress of the focused row to 0% to 90%. Move to other rows and repeat: the changes wait.</td></tr>
+            <tr><td>Enter</td><td>Save every waiting progress change in one step (one Undo reverses them all).</td></tr>
+            <tr><td>Escape</td><td>Drop the waiting progress changes.</td></tr>
+        </tbody>
+    </table>
+
+    <h3>Shortcuts</h3>
+    <table class="clinical-table">
+        <thead><tr><th>Keys</th><th>Action</th></tr></thead>
+        <tbody>
+            <tr><td><code>?</code></td><td>Why this date? for the focused row, or for the bar you point at. Works also when <strong>Keys</strong> is off.</td></tr>
+            <tr><td><code>d</code></td><td>Add a dependency to the focused row, or to the bar you point at.</td></tr>
+            <tr><td><code>e</code></td><td>Open the task dialog of the focused row, or of the bar you point at.</td></tr>
+            <tr><td><code>t</code></td><td>Scroll the timeline to today.</td></tr>
+            <tr><td>Ctrl+Z</td><td>Undo the last change.</td></tr>
+            <tr><td>Ctrl+Shift+Z</td><td>Redo.</td></tr>
+            <tr><td>Ctrl+F</td><td>Search work items in the plan.</td></tr>
+            <tr><td>Ctrl and plus, Ctrl and minus</td><td>Zoom the timeline in and out.</td></tr>
+        </tbody>
+    </table>
+    <p>Undo and redo with Ctrl+Z work in the planner only; in a text field, Ctrl+Z still undoes your typing.</p>
+
+    <h3>In the search box</h3>
+    <table class="clinical-table">
+        <thead><tr><th>Keys</th><th>Action</th></tr></thead>
+        <tbody>
+            <tr><td>Enter, or Down</td><td>Go to the next match.</td></tr>
+            <tr><td>Shift+Enter, or Up</td><td>Go to the previous match.</td></tr>
+            <tr><td>Escape</td><td>Clear the search.</td></tr>
+        </tbody>
+    </table>
+
+    <h3>Closing things</h3>
+    <p>Escape closes one thing at a time, in this order: the Why this date? popup, the bar toolbar, the help popup, the Changes panel, the baseline panel, then an open dialog (a dialog with unsaved changes asks first), then any open menu.</p>
 </section>
 
 <section style="margin-bottom: 4rem">
