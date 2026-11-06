@@ -46,9 +46,9 @@ og_image=product/jira-governance/definitionguard/banner.png
     <p>Many teams want a person other than the assignee to sign off review items.
         DefinitionGuard supports this with a per-item rule:</p>
     <ul>
-        <li>When <strong>Not the assignee</strong> is set on an item (e.g. <em>Peer code review approved</em>), the current assignee cannot tick it. The panel shows: <em>The assignee cannot complete this item. Ask a reviewer.</em></li>
-        <li>The workflow validator checks the rule again against the assignee at the moment of the move into Done.</li>
-        <li>Every completed item records the user account ID and timestamp in the hash-chained checklist history.</li>
+        <li>When <strong>Not the assignee</strong> is set on an item (e.g. <em>Peer code review approved</em>), neither the current assignee nor anyone who was the assignee of the issue after the item was opened can tick it or waive it. DefinitionGuard reads this from the issue's change history. The panel shows: <em>The assignee cannot complete this item. Ask a reviewer.</em></li>
+        <li>The workflow validator checks the rule again at the moment of the move into Done, for ticked and for waived items.</li>
+        <li>Every completed item records who completed it (as a pseudonym, see the <a href="/privacy" class="org-link org-link--inline">privacy policy</a>) and the time in the hash-chained checklist history.</li>
     </ul>
 </section>
 
@@ -74,11 +74,16 @@ og_image=product/jira-governance/definitionguard/banner.png
     </ol>
     <p>The validator blocks a move into a Done-category status while any mandatory item is open and not waived. Statuses that a project administrator marked as exempt (for example <em>Canceled</em>) are let through.
         If DefinitionGuard cannot read the data it needs, it blocks the move. Jira shows the validator message, which lists the open mandatory items:</p>
-    <p><code>Definition of Done is not complete. Open mandatory items: ... Open the DefinitionGuard panel on this issue to finish them.</code></p>
+    <p><code>Definition of Done is not complete. Open mandatory items: ... Open the Definition of Done panel on this issue (from the View app actions button if it is not shown) to finish them.</code></p>
 </section>
 
 <section style="margin-bottom: 4rem">
-    <h2 class="section-title">6. Project Settings &amp; Checklist Configuration</h2>
+    <h2 class="section-title">6. Licence</h2>
+    <p>If the DefinitionGuard licence on your site is not active, the gate is off: the validator lets every move through, the panel and the settings page show "Licence not active", and checklist changes are not saved. Reading checklists and their history still works.</p>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">7. Project Settings &amp; Checklist Configuration</h2>
     <p>Project administrators can customize DoD requirements without touching Jira workflow schemes:</p>
     <ol>
         <li>Navigate to <strong>Project Settings &gt; DefinitionGuard</strong>.</li>
@@ -88,7 +93,7 @@ og_image=product/jira-governance/definitionguard/banner.png
             <ul>
                 <li><strong>Mandatory:</strong> the gate blocks the move into Done while this item is open and not waived.</li>
                 <li><strong>Evidence required:</strong> the item can only be ticked with a link, a note, or both.</li>
-                <li><strong>Not the assignee:</strong> the current assignee cannot tick this item.</li>
+                <li><strong>Not the assignee:</strong> the current assignee, and anyone who was the assignee after the item was opened, cannot tick or waive this item.</li>
                 <li><strong>Extra permission:</strong> No extra permission, Resolve issues, Transition issues, or Administer projects.</li>
                 <li><strong>Category:</strong> Testing, Code quality, Security, Compliance, or Documentation.</li>
             </ul>
@@ -100,11 +105,12 @@ og_image=product/jira-governance/definitionguard/banner.png
 </section>
 
 <section style="margin-bottom: 5rem">
-    <h2 class="section-title">7. Audit History &amp; Export</h2>
+    <h2 class="section-title">8. Audit History &amp; Export</h2>
     <p>For internal audits and external compliance reviews, DefinitionGuard keeps a hash-chained history of each issue's checklist:</p>
     <ul>
         <li>In the panel, open <strong>Checklist audit history</strong> and click <strong>Load audit history</strong>. The history lists each event with the user and time, plus reasons and evidence. A <em>Chain intact</em> or <em>Chain broken</em> lozenge shows the result of the history check.</li>
         <li>The history check shows edits, removals, and reordering of the stored history. It does not stop someone who can rewrite all of the app's stored data, and that includes the app vendor.</li>
+        <li>The history section also says whether the <code>definitionguard-dod</code> issue property is signed on your site, and with which key (see <a href="/product/jira-governance/signing-keys.html" class="org-link org-link--inline org-link--internal">Signing keys</a>).</li>
         <li>Project administrators can click <strong>Export history</strong>. The panel shows the JSON text with a file name such as <code>DEMO-35-definitionguard-history.json</code>. Copy the text and save it as that file; the panel has no download button.</li>
         <li>The export holds every event (who ticked, waived, or reopened each item, the evidence, the reasons, and the timestamps) and the result of the history check.</li>
         <li>All data is stored in the app's Forge storage for your site.</li>

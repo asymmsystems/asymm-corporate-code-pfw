@@ -119,6 +119,7 @@
                 "children": [
                     { "label": "User Guide Hub",   "href": "/product/jira-governance/user-guide/" },
                     { "label": "Open Verifier",    "href": "/product/jira-governance/user-guide/open-verifier.html" },
+                    { "label": "Signing Keys",     "href": "/product/jira-governance/signing-keys.html" },
                     { "label": "Compliance &amp; Security", "href": "/product/jira-governance/compliance.html" },
                     { "label": "Pricing &amp; FAQ", "href": "/product/jira-governance/faq.html" }
                 ]
@@ -126,8 +127,7 @@
             {
                 "label": "Suite",
                 "children": [
-                    { "label": "Overview",         "href": "/product/jira-governance.html" },
-                    { "label": "GitHub Monorepo",  "href": "https://github.com/asymmsystems/jira-governance-code-system" }
+                    { "label": "Overview",         "href": "/product/jira-governance.html" }
                 ]
             }
         ]

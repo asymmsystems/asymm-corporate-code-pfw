@@ -83,15 +83,40 @@ status=published
 </section>
 
 <section style="margin-bottom: 5rem">
-    <h2 class="section-title">CascadePlan for Jira Cloud</h2>
-    <p>CascadePlan is an Atlassian Forge app. This section states how it handles End User Data (Atlassian Marketplace Partner Agreement, section 8.4(e)).</p>
-    <ul style="line-height: 1.9; margin-top: 1rem">
-        <li><strong>What it accesses and processes:</strong> it reads the project's Jira issues (keys, ids, summaries, types, status, assignee, estimates, due dates, parents, links) as the signed-in user, to show the plan. It stores planning data: the row order, columns and milestones of each plan, the plan list, baselines (issue id and key, Jira estimate, start, end, done) and scope-change requests. It sets two issue properties on your issues: <code>cascadeplan.dates</code> (start and end) and <code>cascadeplan.links</code> (dependency trigger percents).</li>
-        <li><strong>Personal data:</strong> the Atlassian account id of the person who froze a baseline, of who requested or reviewed a scope change, and of each person who works on a task through a Jira sub-task. These account ids are reported each week to Atlassian's personal data reporting service, and the records of a closed account are changed to name no one. A contributor name that matches no account (for example a placeholder role) is kept as typed. No email addresses or other Jira text are stored.</li>
-        <li><strong>Sharing:</strong> none. CascadePlan makes no calls outside your Atlassian site, and no data is sent to Asymm Systems or any third party.</li>
-        <li><strong>Where it is stored:</strong> in Atlassian's Forge hosted storage for your site, which Atlassian hosts in your site's data residency location (for example the EU, the US or Australia), and in your Jira issues.</li>
-        <li><strong>Responsibility:</strong> Asymm Systems, not Atlassian, is responsible for CascadePlan's processing of this data.</li>
-        <li><strong>Deletion:</strong> deleting a plan deletes its data. After you uninstall the app, Atlassian keeps Forge hosted storage for 28 days and then deletes it. CascadePlan does not remove its issue properties when it is uninstalled; they stay with the issues until the issues are deleted. For other requests, write to the privacy contact below.</li>
+    <h2 class="section-title">Jira Governance Suite apps for Jira Cloud</h2>
+    <p>CascadePlan, LedgerSeal, DefinitionGuard and FourRealities are Atlassian Forge apps. This section states how they handle End User Data (Atlassian Marketplace Partner Agreement, section 8.4(e)).</p>
+    <h3 style="margin-top: 1.5rem">What is the same for every app</h3>
+    <ul style="line-height: 1.9; margin-top: 0.5rem">
+        <li><strong>Sharing:</strong> none. The apps make no calls outside your Atlassian site, and no data is sent to Asymm Systems or any third party.</li>
+        <li><strong>Where it is stored:</strong> in Atlassian's Forge hosted storage for your site, which Atlassian hosts in your site's data residency location (for example the EU, the US or Australia), and, where stated below, in issue properties of your Jira issues.</li>
+        <li><strong>Responsibility:</strong> Asymm Systems, not Atlassian, is responsible for the apps' processing of this data.</li>
+        <li><strong>Deletion:</strong> after you uninstall an app, Atlassian keeps its Forge hosted storage for 28 days and then deletes it. Issue properties stay with the issues until the issues are deleted. For other requests, write to the privacy contact below.</li>
+        <li><strong>No email addresses</strong> are stored by any of the apps.</li>
+    </ul>
+
+    <h3 style="margin-top: 1.5rem">CascadePlan</h3>
+    <ul style="line-height: 1.9; margin-top: 0.5rem">
+        <li><strong>What it accesses and stores:</strong> it reads the project's Jira issues (keys, ids, summaries, types, status, assignee, estimates, time spent, due dates, parents, links) as the signed-in user, to show the plan. It stores planning data: the row order and columns of each plan, plan filters, hand-set progress and targets, the plan list, baselines (issue id and key, Jira estimate, start, end, done) and scope-change requests. It sets issue properties on your issues: <code>cascadeplan.dates</code> (start and end), <code>cascadeplan.links</code> (dependency trigger percents) and, on issues it created, <code>cascadeplan.create</code> (a create id).</li>
+        <li><strong>Personal data:</strong> the Atlassian account id of the person who froze a baseline, of who requested or reviewed a scope change, of each person who works on a task through a Jira sub-task, and of the Jira administrator who last saved the approver groups. Each of these account ids is reported to Atlassian's personal data reporting service once every 7 days, and the records of a closed account are changed to name no one. A user sees the baseline items only of the issues that user can browse in Jira. A contributor name that matches no account (for example a placeholder role) is kept as typed.</li>
+        <li><strong>Deletion:</strong> deleting a plan deletes its data and its baselines.</li>
+    </ul>
+
+    <h3 style="margin-top: 1.5rem">LedgerSeal</h3>
+    <ul style="line-height: 1.9; margin-top: 0.5rem">
+        <li><strong>What it accesses and stores:</strong> it reads the issue it seals. It stores, in Atlassian Forge storage on your site: seal records, which name every person they mention (signers, people who changed the issue, and people named in the sealed content such as the assignee, comment authors and mentions) by a pseudonymous token: a keyed hash of the Atlassian account id under a key only the app can read. A pseudonymous token is still personal data: the app can link it to the account id that Jira shows on the issue. It also stores one record per person who sealed, revoked or changed a sealed issue, linking the token to the Atlassian account id; the account id of the Jira admin who last saved the approver groups; and the issue content that was sealed (field values, comments, attachment names), as Jira holds it. It sets the issue property <code>ledgerseal-cert</code> (the seal status, certificate id, snapshot hash and seal date), which holds no personal data.</li>
+        <li><strong>Personal data:</strong> no email address and no display name is stored. Every week LedgerSeal reports these account ids to Atlassian's personal data reporting API; when Atlassian reports an account as closed, LedgerSeal deletes the link from the token to the account and the admin id, so the app no longer holds the account id, and the panel shows a deleted user. A deleted issue's records are deleted. Forge storage is deleted 28 days after the app is uninstalled; the <code>ledgerseal-cert</code> issue property stays on the issues. LedgerSeal sends no data outside your Atlassian site.</li>
+    </ul>
+
+    <h3 style="margin-top: 1.5rem">DefinitionGuard</h3>
+    <ul style="line-height: 1.9; margin-top: 0.5rem">
+        <li><strong>What it accesses and stores:</strong> it reads the issue and its workflow. It stores the Definition of Done checklist state of each issue and its history in Forge storage, and sets the issue property <code>definitionguard-dod</code> (a summary of the checklist).</li>
+        <li><strong>Personal data:</strong> who completed, waived, reopened or reset each checklist item, and who saved a template, the exempt statuses or the approver groups. DefinitionGuard stores each person as a random pseudonym; the Atlassian account id is kept only in one link per person. The app reports these account ids to Atlassian every week and deletes the link of every account Atlassian reports as closed; the history then shows "A deleted user". Evidence links, evidence notes and waiver reasons are free text that you write and may name people. The issue property <code>definitionguard-dod</code> holds no personal data.</li>
+    </ul>
+
+    <h3 style="margin-top: 1.5rem">FourRealities</h3>
+    <ul style="line-height: 1.9; margin-top: 0.5rem">
+        <li><strong>What it accesses and stores:</strong> it reads the issue, its Development field and the issue properties of LedgerSeal and DefinitionGuard, and searches the Confluence pages of your own site. It stores snapshots, exception events, rework reasons and site settings in Forge storage.</li>
+        <li><strong>Personal data:</strong> Atlassian account ids only where a rule needs them: who requested or decided a Code exception, who gave a rework reason, and the assignee, for the "My issues" filter. No names are stored; the dashboard reads names from Jira each time it shows them. FourRealities reports these ids to Atlassian every week and erases the ids of closed accounts; the panel then shows "a former user".</li>
     </ul>
 </section>
 

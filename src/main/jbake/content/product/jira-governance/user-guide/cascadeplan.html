@@ -1,5 +1,5 @@
 title=CascadePlan User & Admin Guide
-description=Canvas timeline for Jira Cloud with percent-trigger dependencies, why-explanations, Jira write preview and undo, block moves, parent changes, baselines, table view, keyboard control and multiple plans.
+description=Why CascadePlan, and how to use it: a Jira Cloud timeline where work starts at a percent of its predecessor, dependent work moves for you, every Jira write is shown first and can be undone, and baselines make scope changes visible.
 type=page
 toc=true
 status=published
@@ -8,129 +8,417 @@ og_image=product/jira-governance/cascadeplan/banner.png
 
 <header class="page-header">
     <span class="section-kicker">CascadePlan Guide</span>
-    <h1>CascadePlan User &amp; Administrator Guide</h1>
-    <p style="max-width: 65ch">How to plan Jira work on a canvas timeline with percent-trigger dependencies, see why each task starts when it does,
-        review and undo every Jira write, add contributors as Jira sub-tasks, and work with the table view, the keyboard and multiple plans.</p>
+    <h1>CascadePlan User Guide</h1>
+    <p style="max-width: 70ch"><strong>Plan Jira work the way it really overlaps.</strong> CascadePlan is a timeline inside Jira Cloud. Work can start when its predecessor is 30% done, not only when it is finished.
+        When a date slips, the work that depends on it moves with it, and you see every Jira change before it happens.
+        Baselines show what the team committed to, and what changed since. Everything it shows is Jira data, so the plan and Jira never disagree.</p>
 </header>
 
 <section style="margin-bottom: 4rem">
-    <h2 class="section-title">1. The Planner</h2>
-    <p>Open <strong>CascadePlan Planner</strong> from the project navigation. The planner shows the project's tasks in a list on the left and a canvas timeline on the right:</p>
-    <ul>
-        <li><strong>Zoom:</strong> switch between <strong>Day</strong>, <strong>Week</strong>, <strong>Month</strong>, <strong>Quarter</strong> and <strong>Year</strong>. <strong>Today</strong> jumps to the current date.</li>
-        <li><strong>Hierarchy:</strong> show all issues, epics only, or stories and tasks.</li>
-        <li><strong>Create:</strong> <strong>+ Epic</strong> and <strong>+ Task</strong> create Jira issues from the planner.</li>
-        <li><strong>Backlog:</strong> the <strong>Backlog</strong> tray lists issues without dates so you can schedule them.</li>
-        <li><strong>Columns:</strong> show, hide and resize the task list columns.</li>
-    </ul>
+    <h2 class="section-title">1. Why CascadePlan</h2>
+    <p>Planning in Jira usually breaks in four places. CascadePlan is built around each of them.</p>
+
+    <h3>Real work overlaps, but most plans do not</h3>
+    <p>In most planning tools a dependency means "finish to start": the API integration waits until the database design is 100% done.
+        Real teams do not work that way. The integration starts when the schema is about 30% done, and the test plan starts when the first screens exist.
+        A plan that cannot say this is either padded with weeks of waiting, or ignored.</p>
+    <p><strong>In CascadePlan</strong> every link has a trigger percent: "B starts when A reaches 30%". The plan shows the overlap the team really works with,
+        and "Why this date?" explains, in one sentence, what holds each item back.</p>
+
+    <h3>When one date slips, the rest of the plan is wrong</h3>
+    <p>A two-week slip on one task quietly breaks every date after it. Someone has to find the dependent work and move it by hand, and usually nobody does.</p>
+    <p><strong>In CascadePlan</strong> moving a work item moves the work that depends on it (the cascade). Moving a story moves its sub-tasks with it,
+        and work already in progress or done is treated as such: it is not moved as if nothing had started.</p>
+
+    <h3>Tools that change Jira behind your back lose trust</h3>
+    <p>Planning tools often write dates, estimates or links into Jira that nobody chose, or keep their own copy of links and parents, so the plan and Jira drift apart.</p>
+    <p><strong>In CascadePlan</strong> Jira is the record. Links are Jira "Blocks" links, parents are Jira parents, and extra people on a task are Jira sub-tasks.
+        Before you drop a bar, a line lists every Jira change the drop will make. CascadePlan writes only what you chose, as you, with your Jira permissions;
+        every write can be undone and is listed with its old and new value.</p>
+
+    <h3>Scope grows quietly</h3>
+    <p>Work gets added and estimates rise after the team committed, and at the review nobody can show what the commitment was.</p>
+    <p><strong>In CascadePlan</strong> a plan approver freezes the plan as a baseline. From then on the toolbar shows the change since the freeze:
+        hours added, items added or removed, items ending later. A change of scope is requested with a reason and accepted by a plan approver other than the requester.</p>
 
     <div style="margin: 2rem 0; text-align: center;">
         <img src="/images/product/jira-governance/cascadeplan/01-timeline.png" alt="The CascadePlan planner in Compact view: epics, stories, tasks and sub-tasks on a week timeline, with percent links" style="max-width: 100%; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
-        <p style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 1: The planner in Compact view: epics with their stories, tasks and sub-tasks on the week timeline, with links that start at 30% or 50% of their predecessor.</p>
+        <p style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 1: A plan in CascadePlan. Epics with their stories, tasks and sub-tasks, progress on every bar, and links that start at 30% or 50% of their predecessor.</p>
+    </div>
+
+    <h3>Who it is for</h3>
+    <ul>
+        <li><strong>Delivery leads and project managers</strong> who plan in Jira and need dates that follow the work, not a separate spreadsheet.</li>
+        <li><strong>Teams with overlapping work</strong>: design, build and test that run partly in parallel.</li>
+        <li><strong>Teams that commit to scope</strong> (a sprint, a release, a contract milestone) and must show what changed and who accepted it.</li>
+        <li><strong>Jira administrators</strong> who want a planning tool that keeps Jira as the record and respects Jira permissions.</li>
+    </ul>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">2. Quick start</h2>
+    <ol>
+        <li>Open a Jira project and choose <strong>CascadePlan Planner</strong> in the project's navigation.</li>
+        <li>Work items with dates are on the timeline. Work items without dates are in the <strong>Backlog</strong> tray: open it and drag one onto the timeline to give it dates.</li>
+        <li>Hover a bar: arrows appear at both ends. Drag the right arrow onto another bar to make a link, and choose when the second item may start (for example 30%).</li>
+        <li>Drag the first bar a week later. Before you let go, read the line that lists the Jira changes. Let go: the linked item moved too.</li>
+        <li>A message with <strong>Undo</strong> appears. Press <strong>Ctrl+Z</strong> (Cmd+Z on macOS) to undo, or open <strong>Changes</strong> to see every Jira write.</li>
+    </ol>
+    <p>Choose <strong>How CascadePlan works</strong> in the planner at any time for a short help panel.</p>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">3. The planner at a glance</h2>
+    <p>The planner has a grid of work items on the left and the timeline on the right. The toolbar holds:</p>
+    <table class="clinical-table">
+        <thead><tr><th>Control</th><th>What it does</th></tr></thead>
+        <tbody>
+            <tr><td><strong>Plan selector</strong> (for example "Main Plan")</td><td>Switches plans, and opens plan management and the plan's JQL filter (section 11).</td></tr>
+            <tr><td><strong>Search tasks</strong> (Ctrl+F)</td><td>Finds work items by key or summary.</td></tr>
+            <tr><td><strong>Backlog</strong></td><td>The tray of work items without dates.</td></tr>
+            <tr><td><strong>Baseline</strong></td><td>Shows the change since the active baseline, and opens the baseline panel (section 12).</td></tr>
+            <tr><td><strong>Changes</strong></td><td>Every Jira write of your session, with old value, new value and result (section 9).</td></tr>
+            <tr><td><strong>Refresh</strong> (🔄)</td><td>Reads the plan from Jira again.</td></tr>
+            <tr><td><strong>Columns</strong></td><td>Shows or hides grid columns: Epic, Story, Resource, Hrs, Progress, Target, Status. Task is always shown.</td></tr>
+            <tr><td><strong>All Issues</strong></td><td>Shows all work items, epics only, or stories and tasks.</td></tr>
+            <tr><td><strong>Timeline, Table, Utilization</strong></td><td>The three views (section 10).</td></tr>
+            <tr><td><strong>+ Epic</strong>, <strong>+ Task</strong></td><td>Create an epic, or a task with its schedule, in Jira.</td></tr>
+            <tr><td><strong>Keys</strong></td><td>Turns the single-letter shortcuts on or off.</td></tr>
+            <tr><td><strong>Today</strong>, ◀ ▶, <strong>Day</strong> to <strong>Year</strong></td><td>Jump to today, scroll, and zoom the timeline.</td></tr>
+            <tr><td><strong>Compact</strong></td><td>Shows only Key and Summary, so the timeline gets most of the width.</td></tr>
+            <tr><td><strong>Enforce deps</strong></td><td>When on, a bar cannot be dropped before its links allow (section 6).</td></tr>
+            <tr><td><strong>Legend</strong></td><td>Green is done or on track, red is behind or in conflict, blue is planned.</td></tr>
+        </tbody>
+    </table>
+    <p>Each bar shows the work item's key and progress. A row's ⋯ menu, its ✏️ button and a double-click on a bar open the full task dialog.</p>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">4. How CascadePlan thinks</h2>
+    <ul>
+        <li><strong>Jira is the record.</strong> Every relationship you see exists in Jira: dependencies are Jira "Blocks" links, parents are Jira parents, and extra people on a task are Jira sub-tasks.</li>
+        <li><strong>Dates.</strong> A bar's end is the work item's Jira <strong>Due date</strong>. Its start is stored on the work item as the issue property <code>cascadeplan.dates</code>, because not every Jira project has a start date field. Both are shared: every plan and every user sees the same dates.</li>
+        <li><strong>Links with a trigger percent.</strong> A link says "B starts when A reaches N%". The percent is stored on B as the issue property <code>cascadeplan.links</code>. A work item can have several predecessors; its earliest start is set by the one that allows the latest start.</li>
+        <li><strong>Progress and status.</strong> Whether a work item has started or is finished comes only from its Jira status: To Do, In Progress or Done. Progress says how far an item in progress has got.
+            A Done item always shows 100%. Otherwise progress is the time logged in Jira against the estimate, or a value you set by hand for a plan.</li>
+        <li><strong>Target.</strong> Target is how far the work should be by today, from its start and end dates. A bar is red when it starts too early for its links or falls behind.</li>
+        <li><strong>The cascade.</strong> When a move makes a successor start too early, CascadePlan moves the successor, and its successors, and lists every one of them before the drop.</li>
+        <li><strong>Parents follow their children.</strong> A task or story with sub-tasks spans its sub-tasks, and its Jira due date follows their end. An epic spans its work.</li>
+        <li><strong>Your permissions.</strong> Every change is a Jira write made as you, checked against your Jira permissions first. If you may not make a change, CascadePlan refuses it and names the missing permission (section 14).</li>
+    </ul>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">5. Scheduling work</h2>
+    <h3>Put work on the timeline</h3>
+    <ul>
+        <li><strong>From the backlog:</strong> open <strong>Backlog</strong> and drag a card onto the timeline, or choose <strong>+ Schedule</strong> on the card.</li>
+        <li><strong>A new task:</strong> choose <strong>+ Task</strong> and fill in Summary, Parent Epic, Assignee, Effort Hours and Start Week; CascadePlan creates the Jira task and schedules it. To insert a task under a row, use the row's ➕.</li>
+        <li><strong>A new epic:</strong> choose <strong>+ Epic</strong>.</li>
+        <li><strong>Off the timeline:</strong> in the task dialog, <strong>Move to Backlog</strong> takes a work item off the timeline in every plan. Its Jira due date is left as it is.</li>
+    </ul>
+    <h3>Move and resize bars</h3>
+    <ul>
+        <li>Drag a bar to move it; drag an edge to change its start or end. Bars snap to days or weeks, depending on the zoom. Hold <strong>Alt</strong> while dragging to snap to days.</li>
+        <li>While you drag, a line just above the row you move lists every Jira change the drop will make: each due date in Jira and each start date (shared by every plan), for the bar you move, the work that depends on it, the sub-tasks of any parent the move reaches, and each parent whose Jira due date follows its sub-tasks. The planner and the server work out these changes with the same code.</li>
+        <li>Click a bar for its toolbar: <strong>Move 1 week earlier</strong>, <strong>Move 1 week later</strong>, <strong>Edit dates</strong>, <strong>Add dependency</strong> and <strong>Set progress</strong>.</li>
+        <li><strong>Edit dates</strong> opens a small editor with start and end, and buttons to move both by a week.</li>
+    </ul>
+    <div style="margin: 2rem 0; text-align: center;">
+        <img src="/images/product/jira-governance/cascadeplan/03-move-preview.png" alt="A story dragged one week later; the line above lists the Jira due dates and start dates the drop will change" style="max-width: 100%; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <p style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 2: Dragging a story one week later. Before the drop, CascadePlan lists every due date and start date that will change, including its sub-tasks and the parent epic.</p>
     </div>
 </section>
 
 <section style="margin-bottom: 4rem">
-    <h2 class="section-title">2. Percent-Trigger Dependencies &amp; Why-Explanations</h2>
-    <p>A task can start when its predecessor reaches a set percent, not only when it is 100% done. For example, start the API integration when the database design reaches 30%.</p>
+    <h2 class="section-title">6. Dependencies</h2>
+    <h3>Add a link</h3>
     <ul>
-        <li><strong>Add a dependency:</strong> click a task bar and choose <strong>Add dependency</strong>, or drag the arrow from one bar to another. Set <strong>Starts when that issue reaches (percent)</strong>.</li>
-        <li><strong>Why this date?</strong> Select a task and press <code>?</code>, or choose <strong>Why this date?</strong> from the task menu. The popup names the driving task, the trigger percent and the driving dates.</li>
-        <li><strong>Conflicts:</strong> if you drop a task before its predecessor reaches the trigger, a dialog names the predecessor and offers fixes, such as <strong>Adjust Trigger to Fit</strong>.</li>
-        <li><strong>Enforce deps:</strong> when this box is checked, moving a task snaps it to respect its predecessors.</li>
-        <li><strong>Change a link:</strong> click an arrow, or its percent label, to change its percent or remove it. Every link of a task has its own arrow and label.</li>
+        <li>Hover a bar and drag the arrow at its right end onto the bar that waits for it, or the arrow at its left end onto the bar it waits for.</li>
+        <li>Or select the bar, choose <strong>Add dependency</strong>, pick the work item it waits for, and set <strong>Starts when that issue reaches (percent)</strong>.</li>
+        <li>Choose 0%, 30%, 50%, 100% or any percent. 100% is the classic finish-to-start link.</li>
     </ul>
-    <p>Each dependency is a Jira "Blocks" link, so it is the same in every plan, and its trigger percent is stored on the successor issue (the issue property <code>cascadeplan.links</code>).
-        <strong>Remove Link</strong> deletes exactly that Jira link, whoever created it. A parent's dependencies also hold back its sub-tasks.</p>
+    <h3>Read and change a link</h3>
+    <ul>
+        <li>Every link has an arrow and a label with its percent, and the date it is met when known. Click the arrow or the label to open the link editor:
+            change the percent, <strong>Swap direction</strong>, or <strong>Remove Link</strong>, which deletes exactly that Jira link.</li>
+        <li>While a bar is selected, the labels of other links are dimmed, so the selected bar's links stand out.</li>
+    </ul>
+    <div style="margin: 2rem 0; text-align: center;">
+        <img src="/images/product/jira-governance/cascadeplan/05-link-editor.png" alt="The link editor of a 30% link: percent presets, swap direction, remove link, and whether the trigger is met" style="max-width: 100%; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <p style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 3: The link editor. PAY-12 starts when PAY-11 reaches 30%; PAY-11 is at 54%, so the trigger is met.</p>
+    </div>
+    <h3>Why this date?</h3>
+    <p>Choose ❓ on a row, or select a row and press <code>?</code>. CascadePlan names the link that sets the work item's earliest start, the trigger percent and the date it is met,
+        or says that nothing holds the work back.</p>
+    <div style="margin: 2rem 0; text-align: center;">
+        <img src="/images/product/jira-governance/cascadeplan/02-why-this-date.png" alt="Why this date for PAY-12: no wait, PAY-11 is at 54%, past the 30% trigger" style="max-width: 100%; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <p style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 4: Why this date? in one sentence.</p>
+    </div>
+    <h3>Conflicts</h3>
+    <p>If you drop a bar before its links allow, and <strong>Enforce deps</strong> is off, a dialog names the predecessor and offers:
+        <strong>Snap to Earliest Start</strong>, <strong>Adjust Trigger to Fit</strong> (lower the percent so the new date is allowed), <strong>Keep with Violation</strong> (the bar turns red and its label says "starts too early"), or <strong>Cancel Move</strong>.
+        With <strong>Enforce deps</strong> on, the bar snaps to the earliest allowed day.</p>
+    <h3>Rules</h3>
+    <ul>
+        <li>A parent's links also hold back its sub-tasks. With <strong>Enforce deps</strong> on, CascadePlan checks this again before it writes, so a sub-task never starts before its parent's predecessor allows. When a move pushes a parent later, its sub-tasks move as a block.</li>
+        <li>A link between a work item and its own parent or sub-task is refused, because the parent's dates come from its sub-tasks. A link that would make a loop is refused too.</li>
+    </ul>
 </section>
 
 <section style="margin-bottom: 4rem">
-    <h2 class="section-title">3. Transparent Jira Writes, Preview &amp; Undo</h2>
-    <p>CascadePlan writes to Jira only the values you change, as you:</p>
+    <h2 class="section-title">7. Moving blocks and changing the hierarchy</h2>
+    <h3>Move a task or story with its sub-tasks</h3>
+    <p>Drag the bar of a task or story that has sub-tasks, or move it with the keyboard or the bar toolbar: the whole block moves.</p>
     <ul>
-        <li><strong>Preview:</strong> while you drag a bar, a preview shows the planned Jira updates for the task and the tasks that move with it.</li>
-        <li><strong>Undo:</strong> after each write a flag with <strong>Undo</strong> appears for 10 seconds. Ctrl+Z undoes and Ctrl+Shift+Z redoes, up to 20 steps.</li>
-        <li><strong>Changes panel:</strong> click <strong>Changes</strong> in the toolbar to see "Jira writes in this session", with the old value, the new value and the result of each write.</li>
+        <li>Sub-tasks not started move by the same number of days.</li>
+        <li>A sub-task in progress keeps its start and moves its end, never to before today.</li>
+        <li>A finished sub-task stays where it is.</li>
+        <li>The parent's Jira due date follows its new end, and the work that depends on the block moves too.</li>
+        <li>One Undo restores the whole block. A block with more than 25 changing sub-tasks is saved in steps, with progress shown.</li>
     </ul>
-    <p>Jira writes include issue fields you edit (dates, assignee, summary, estimates), status transitions, new issues, epics and sub-tasks, and the issue links that mirror dependencies.</p>
+    <h3>Move work under another parent, or change its type</h3>
+    <ul>
+        <li>Drag a row by its handle (⠿) onto the <strong>middle</strong> of another row: the target is outlined and a label says what will happen. Dropping on the top or bottom edge of a row reorders instead.</li>
+        <li>Or open the task dialog and use <strong>Parent in Jira</strong>.</li>
+        <li>CascadePlan asks first, then makes the change in Jira: a task under another epic, a sub-task under another task, or a task turned into a sub-task and back. A type change is a Jira bulk move job; the planner shows its progress.</li>
+        <li>Jira's rules apply: a task with sub-tasks cannot become a sub-task, and a sub-task cannot have children. Undo makes the reverse change.</li>
+    </ul>
+    <h3>Reorder rows</h3>
+    <p>Drag a row's handle onto the top or bottom edge of another row. Row order belongs to the plan: each plan can order the same work differently.</p>
 </section>
 
 <section style="margin-bottom: 4rem">
-    <h2 class="section-title">4. Contributors as Jira Sub-Tasks</h2>
-    <p>A Jira issue has one assignee. To add more people to a task, open the task and use <strong>Multi-Resource Allocation (Jira Subtasks)</strong>:</p>
+    <h2 class="section-title">8. Work items: sub-tasks, people, estimates, progress and status</h2>
+    <ul>
+        <li><strong>Sub-tasks:</strong> in the task dialog, <strong>Create sub-task in Jira</strong> creates a Jira sub-task, with an estimate only if you type one.</li>
+        <li><strong>More than one person:</strong> a Jira issue has one assignee. Under <strong>Multi-Resource Allocation (Jira Subtasks)</strong>, choose a person and hours and choose <strong>+ Allocate Resource</strong>:
+            CascadePlan creates a Jira sub-task assigned to that person, so the work shows in their own queue. Removing them asks whether to <strong>Delete sub-task</strong> or <strong>Unassign sub-task</strong>.</li>
+        <li><strong>People:</strong> click the Resource cell to pick people; it shows the task's assignee and the people on its sub-tasks.</li>
+        <li><strong>Estimates:</strong> each task can use <strong>Hours</strong>, <strong>Story Points</strong> (1 point = 8 hours) or a <strong>T-Shirt Size</strong> (XS 4 h, S 8 h, M 16 h, L 32 h, XL 64 h). CascadePlan converts it to hours for scheduling.
+            <strong>Also scale the Jira estimate when I resize this bar</strong> is off unless you turn it on.</li>
+        <li><strong>Progress:</strong> right-click a bar, click the Progress cell, or use the task dialog. <strong>Use Rollup</strong> sets a parent's progress from its children.
+            The progress of a Done item is 100% and cannot be changed; to change it, first choose another status.</li>
+        <li><strong>Target:</strong> click the Target cell. <strong>⚡ Auto</strong> sets it from the dates and today.</li>
+        <li><strong>Status:</strong> click the Status cell and pick To Do, In Progress or Completed; CascadePlan runs the matching Jira transition.</li>
+        <li><strong>Epic:</strong> click the Epic cell of a story or task to link it to an epic.</li>
+    </ul>
+    <p>CascadePlan never writes a default: no default estimate, no default due date, and a progress change never changes the Jira status by itself.</p>
+    <h3>When progress and the Jira status disagree</h3>
+    <p>When you set a progress that does not match the work item's Jira status, CascadePlan asks in the same step, before it saves:</p>
+    <table class="clinical-table">
+        <thead><tr><th>You set</th><th>Jira status now</th><th>CascadePlan asks</th></tr></thead>
+        <tbody>
+            <tr><td>1% to 99%</td><td>To Do</td><td>"PAY-12 is To Do in Jira. Also move it to In Progress?"</td></tr>
+            <tr><td>100%</td><td>To Do or In Progress</td><td>"Also move it to Done?"</td></tr>
+            <tr><td>0%</td><td>any</td><td>Nothing: the status stays as it is.</td></tr>
+        </tbody>
+    </table>
+    <ul>
+        <li><strong>Move</strong> saves the progress and runs the Jira workflow transition. Your workflow decides whether the move is allowed; if Jira refuses it, the progress is still saved and the Changes panel says why.</li>
+        <li><strong>Keep</strong> saves only the progress. An item at 100% that is not Done then reads "100%, not Done in Jira".</li>
+        <li><strong>Escape</strong> saves nothing.</li>
+        <li>Stand-up mode and the selection bar ask once for all the rows they change, and list them.</li>
+        <li>One Undo reverses the progress and the status together.</li>
+    </ul>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">9. See and undo every change</h2>
+    <ul>
+        <li><strong>Before:</strong> while you drag, the planner lists every Jira change the drop will make.</li>
+        <li><strong>After:</strong> each write shows a message in Jira with <strong>Undo</strong>, which stays until you close it. A failed write stays until you close it, and says why.</li>
+        <li><strong>Undo and Redo:</strong> <strong>Ctrl+Z</strong> and <strong>Ctrl+Shift+Z</strong> (Cmd on macOS) cover your last 20 changes, links included. Undo puts back the exact earlier dates.</li>
+        <li><strong>Changes:</strong> the panel "Jira writes in this session" lists every write with the work item, the field, the old value, the new value and whether Jira accepted it.</li>
+        <li><strong>Safe to repeat:</strong> if a create gets no answer (for example a timeout), CascadePlan says the result is unknown. Making the same request again returns the item it already created, never a second one.</li>
+        <li><strong>Someone else changed it:</strong> if another user changed a work item while you edited it, CascadePlan refuses your change instead of overwriting theirs, and asks you to reload.</li>
+    </ul>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">10. Views and working with many items</h2>
+    <ul>
+        <li><strong>Timeline:</strong> zoom by Day, Week, Month, Quarter or Year (or Ctrl and plus or minus). <strong>Today</strong> jumps to the current date.</li>
+        <li><strong>Table:</strong> every work item and its dates in a plain table, for reading and for screen readers.</li>
+        <li><strong>Utilization:</strong> estimated hours per person per week for the next 8 weeks, from the estimates and dates on the plan, spread evenly over each task's days. No capacity is assumed, so nobody is marked over-allocated.</li>
+        <li><strong>Columns and Compact:</strong> column choices and widths are saved for the plan, so everyone who opens the plan sees them.</li>
+        <li><strong>Select several:</strong> Ctrl-click (Cmd-click) rows to add them, Shift-click to select a range. The selection bar then sets <strong>Progress %</strong>, moves them by a number of <strong>Days</strong>, or sets an <strong>Assignee</strong> for all of them, with one Undo.</li>
+        <li><strong>Stand-up mode:</strong> in the grid, type a digit on a row to set its progress (3 is 30%), go on to the next row, and press Enter to save them all, or Escape to drop them.</li>
+    </ul>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">11. Plans and plan filters</h2>
+    <p>Each project has a <strong>Main Plan</strong> and can have scenario plans, for example "Plan B: launch without wallets".</p>
+    <ul>
+        <li>Open the plan selector to switch plans and search them. Plan approvers create a plan (empty or as a copy of the open plan), copy, rename and delete plans. The Main Plan cannot be deleted.</li>
+        <li><strong>What a plan owns:</strong> its row order, columns, hand-set progress and targets, and baselines.</li>
+        <li><strong>What every plan shares:</strong> dates, links, the hierarchy and every Jira field, because they are Jira data. A move in a scenario plan is a real Jira change.</li>
+        <li><strong>Plan filter:</strong> a plan reads at most the newest 1,000 work items of the project. For larger projects, a plan approver can narrow the open plan with a JQL filter, for example <code>fixVersion = "2.0"</code> or <code>component = "Payments"</code>, and choose <strong>Save filter</strong>.
+            Jira checks the filter first, and CascadePlan says how many work items match. Work outside the filter is not shown, and a move does not move it. Clear the field and save to read the whole project again.</li>
+    </ul>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">12. Baselines and scope reviews</h2>
     <ol>
-        <li>Choose a team member, enter the hours and click <strong>+ Allocate Resource</strong>. CascadePlan creates a Jira sub-task assigned to that person, so the work shows in their own queue.</li>
-        <li>To remove a contributor, choose <strong>Delete sub-task</strong> or <strong>Unassign sub-task</strong>, or <strong>Cancel</strong>.</li>
+        <li>A plan approver chooses <strong>Baseline</strong> in the toolbar, enters a name such as "Sprint 23 commitment", and chooses <strong>Freeze the plan as a baseline</strong>.
+            The baseline records each work item's Jira estimate, start and end, with a SHA-256 digest.</li>
+        <li>The <strong>Baseline</strong> button then shows the change since the freeze, for example <code>+24 h (+8.1%), 1 added</code>, and is marked when the scope grew.</li>
+        <li>The panel lists every work item added, removed or changed (estimate, start, end), with the totals before and after.</li>
+        <li>Anyone in the project can write a reason and choose <strong>Request approval of this scope</strong>.</li>
+        <li>A plan approver other than the requester chooses <strong>Accept</strong> or <strong>Reject</strong>. Accepting freezes a new baseline version, which becomes the active one.</li>
+        <li>Under <strong>Baseline versions</strong>: <strong>Compare with now</strong>, <strong>Compare with active</strong>, <strong>Export CSV</strong> (with the digest) and, for plan approvers, <strong>Make active</strong>.</li>
     </ol>
-    <p><strong>Create sub-task in Jira</strong> in the same dialog creates a plain Jira sub-task, with an estimate only if you type one.</p>
-</section>
-
-<section style="margin-bottom: 4rem">
-    <h2 class="section-title">5. Table View, Keyboard &amp; Search</h2>
-    <ul>
-        <li><strong>Table view:</strong> choose <strong>Table</strong> in the view selector to see all tasks and dates in a table instead of the canvas.</li>
-        <li><strong>Keyboard:</strong> arrow keys move between tasks. Space enters move mode on a task; arrow keys and <code>[</code> <code>]</code> then shift its dates.</li>
-        <li><strong>Search:</strong> Ctrl+F opens in-app search to find a task by key or summary.</li>
-    </ul>
-</section>
-
-<section style="margin-bottom: 4rem">
-    <h2 class="section-title">6. Estimation Units</h2>
-    <p>Each task can use its own <strong>Estimation Unit</strong>: <strong>Hours</strong>, <strong>Story Points</strong> (1 point = 8 hours) or <strong>T-Shirt Size</strong> (XS, S, M, L, XL).
-        CascadePlan keeps the unit you chose and converts the value to hours for scheduling. It does not change Jira fields you did not change.</p>
-</section>
-
-<section style="margin-bottom: 4rem">
-    <h2 class="section-title">7. Multiple Plans</h2>
-    <p>Click the plan selector (for example <strong>Main Plan</strong>) to open <strong>Manage Project Plans</strong>. Plan approvers can create a new plan, optionally cloning the current plan, and rename or delete plans; anyone can switch plans.
-        The main plan cannot be deleted. Dates, dependencies and the hierarchy belong to Jira, so they are the same in every plan; each plan keeps its own row order, columns and milestones.</p>
-    <p><strong>Work items in this plan (JQL filter).</strong> A plan reads at most the newest 1,000 work items of the project. For a larger project, a plan approver can narrow the open plan with a JQL filter in the plan list, for example <code>fixVersion = "2.0"</code>, and choose <strong>Save filter</strong>.
-        Jira checks the filter first, and CascadePlan says how many work items match. Work outside the filter is not shown, and a move does not move it. Clear the field and save to read the whole project again.</p>
-</section>
-
-<section style="margin-bottom: 4rem">
-    <h2 class="section-title">7a. Moving a Task with Its Sub-Tasks</h2>
-    <p>Drag the bar of a task or story that has sub-tasks, or move it with the keyboard or the toolbar: the whole block moves. Sub-tasks not started move by the same days; a sub-task in progress keeps its start and moves its end (never before today); a finished sub-task stays.
-        The parent's Jira due date follows its new end, and one Undo restores the block.</p>
-</section>
-
-<section style="margin-bottom: 4rem">
-    <h2 class="section-title">7b. Changing a Parent or a Work Type</h2>
-    <p>Drag a row onto the middle of another row (the target is outlined and a label says what will happen), or use <strong>Parent in Jira</strong> in the task dialog.
-        CascadePlan asks first, then makes the change in Jira: a task under another epic, a sub-task under another task, or a task turned into a sub-task and back (through a Jira bulk move, whose progress is shown).
-        Jira's rules apply; for example a task with sub-tasks cannot become a sub-task. Undo makes the reverse change.</p>
-</section>
-
-<section style="margin-bottom: 4rem">
-    <h2 class="section-title">7c. Baselines and Scope Changes</h2>
-    <ol>
-        <li>A plan approver chooses <strong>Baseline</strong> in the toolbar, enters a name and chooses <strong>Freeze the plan as a baseline</strong>. The baseline records each work item's Jira estimate, start and end.</li>
-        <li>The <strong>Baseline</strong> button then shows the change since the freeze, for example <code>+12 h (+25%), 1 added, 2 later</code>, and the panel lists every work item added, removed or changed.</li>
-        <li>Anyone in the project can write a reason and choose <strong>Request approval of this scope</strong>. A plan approver other than the requester accepts it (which freezes a new baseline version) or rejects it.</li>
-        <li>Under <strong>Baseline versions</strong>: compare a version with the plan or with the active version, export it as CSV with its SHA-256 digest, or make it active.</li>
-    </ol>
-    <p>Each read of a baseline checks its digest and says so if the stored baseline no longer matches what was frozen.</p>
-
+    <p>Each read of a baseline checks its digest; if a stored baseline no longer matches what was frozen, the panel says so.</p>
     <div style="margin: 2rem 0; text-align: center;">
         <img src="/images/product/jira-governance/cascadeplan/04-baseline.png" alt="The Baseline panel: the change since the frozen baseline, with an added task and a changed estimate" style="max-width: 100%; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
-        <p style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 2: The Baseline panel shows the change since "Sprint 23 commitment": one task added and one estimate raised, 24 hours in all.</p>
+        <p style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 5: The Baseline panel shows the change since "Sprint 23 commitment": one task added and one estimate raised, 24 hours in all.</p>
     </div>
 </section>
 
 <section style="margin-bottom: 4rem">
-    <h2 class="section-title">8. Utilization View</h2>
-    <p>Choose <strong>Utilization</strong> in the view selector to see a table of estimated hours per assignee for each of the next 8 weeks.
-        Hours come from tasks that have an assignee, an estimate and dates; each task's hours are spread evenly over its days.
-        No capacity is assumed, so the table does not mark anyone as over-allocated.</p>
+    <h2 class="section-title">13. Keyboard reference</h2>
+    <p>Yes, CascadePlan can be used without a mouse. The grid of work items is one tab stop: press Tab until a cell is focused, then use the keys below.
+        Every shortcut works only while focus is in the planner and not in a text field, so it never takes keys from Jira or from what you type.
+        The single-letter shortcuts <code>d</code>, <code>e</code> and <code>t</code> also need <strong>Keys</strong> on in the toolbar; turn it off if they get in the way of a screen reader or another tool.
+        On macOS, use Cmd where the table says Ctrl.</p>
+
+    <h3>Moving around the grid</h3>
+    <table class="clinical-table">
+        <thead><tr><th>Keys</th><th>Action</th></tr></thead>
+        <tbody>
+            <tr><td>Arrow keys</td><td>Move one row up or down, or one cell left or right.</td></tr>
+            <tr><td>Home, End</td><td>Go to the first or last cell of the row.</td></tr>
+            <tr><td>Ctrl+Home, Ctrl+End</td><td>Go to the first or last row.</td></tr>
+            <tr><td>Page Up, Page Down</td><td>Move one screen of rows up or down.</td></tr>
+            <tr><td>Enter</td><td>Open the task dialog of the focused row.</td></tr>
+            <tr><td>Space on any cell except Start and Due</td><td>Select or clear the row. The selection bar then acts on every selected row.</td></tr>
+        </tbody>
+    </table>
+
+    <h3>Moving and resizing a bar</h3>
+    <table class="clinical-table">
+        <thead><tr><th>Keys</th><th>Action</th></tr></thead>
+        <tbody>
+            <tr><td>Space on the Start or Due cell</td><td>Start move mode for the bar of that row. The preview shows the new dates and the successors that would move.</td></tr>
+            <tr><td>Left, Right (in move mode)</td><td>Move the whole bar one day earlier or later.</td></tr>
+            <tr><td>Shift+Left, Shift+Right (in move mode)</td><td>Move the whole bar one week.</td></tr>
+            <tr><td><code>[</code> and <code>]</code> (in move mode)</td><td>Make the bar one day shorter or longer (the end moves, the start stays).</td></tr>
+            <tr><td>Enter (in move mode)</td><td>Save the move. Successors move as their links say, and Jira is updated.</td></tr>
+            <tr><td>Escape (in move mode)</td><td>Cancel: the bar keeps its dates.</td></tr>
+        </tbody>
+    </table>
+    <p>Move mode is for a work item with dates. A story or task with sub-tasks moves as a block. An item whose dates come only from its children says so and asks you to move a child instead; an epic is not moved from the keyboard.</p>
+
+    <h3>Progress</h3>
+    <table class="clinical-table">
+        <thead><tr><th>Keys</th><th>Action</th></tr></thead>
+        <tbody>
+            <tr><td>0 to 9</td><td>Set the progress of the focused row to 0% to 90%. Move to other rows and repeat: the changes wait. On a Done row the digits do nothing, and CascadePlan says why.</td></tr>
+            <tr><td>Enter</td><td>Save every waiting progress change in one step (one Undo reverses them all). If a progress does not match a row's Jira status, CascadePlan first asks once for all of them.</td></tr>
+            <tr><td>Escape</td><td>Drop the waiting progress changes.</td></tr>
+        </tbody>
+    </table>
+
+    <h3>Shortcuts</h3>
+    <table class="clinical-table">
+        <thead><tr><th>Keys</th><th>Action</th></tr></thead>
+        <tbody>
+            <tr><td><code>?</code></td><td>Why this date? for the focused row, or for the bar you point at. Works also when <strong>Keys</strong> is off.</td></tr>
+            <tr><td><code>d</code></td><td>Add a dependency to the focused row, or to the bar you point at.</td></tr>
+            <tr><td><code>e</code></td><td>Open the task dialog of the focused row, or of the bar you point at.</td></tr>
+            <tr><td><code>t</code></td><td>Scroll the timeline to today.</td></tr>
+            <tr><td>Ctrl+Z</td><td>Undo the last change.</td></tr>
+            <tr><td>Ctrl+Shift+Z</td><td>Redo.</td></tr>
+            <tr><td>Ctrl+F</td><td>Search work items in the plan.</td></tr>
+            <tr><td>Ctrl and plus, Ctrl and minus</td><td>Zoom the timeline in and out.</td></tr>
+        </tbody>
+    </table>
+    <p>Undo and redo with Ctrl+Z work in the planner only; in a text field, Ctrl+Z still undoes your typing.</p>
+
+    <h3>In the search box</h3>
+    <table class="clinical-table">
+        <thead><tr><th>Keys</th><th>Action</th></tr></thead>
+        <tbody>
+            <tr><td>Enter, or Down</td><td>Go to the next match.</td></tr>
+            <tr><td>Shift+Enter, or Up</td><td>Go to the previous match.</td></tr>
+            <tr><td>Escape</td><td>Clear the search.</td></tr>
+        </tbody>
+    </table>
+
+    <h3>Closing things</h3>
+    <p>Escape closes one thing at a time, in this order: the Why this date? popup, the bar toolbar, the help popup, the Changes panel, the baseline panel, then an open dialog (a dialog with unsaved changes asks first), then any open menu.</p>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">14. Administration and permissions</h2>
+    <h3>Plan approvers</h3>
+    <p>Jira administrators open <strong>Jira admin settings</strong>, <strong>Apps</strong>, <strong>CascadePlan approvers</strong>, search for Jira groups, add them and choose <strong>Save changes</strong>.
+        Members of these groups, project administrators and Jira administrators are plan approvers: they create, copy, rename and delete plans, set plan filters, freeze baselines, make a version active, and accept or reject scope changes.
+        CascadePlan checks this on the server for every such action.</p>
+    <div style="margin: 2rem 0; text-align: center;">
+        <img src="/images/product/jira-governance/cascadeplan/04-approvers-admin.png" alt="The CascadePlan approvers page in Jira admin settings" style="max-width: 100%; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <p style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 6: The CascadePlan approvers page in Jira admin settings.</p>
+    </div>
+    <h3>Jira permissions each action needs</h3>
+    <table class="clinical-table">
+        <thead><tr><th>Action</th><th>Jira permission of the user</th></tr></thead>
+        <tbody>
+            <tr><td>Open the planner</td><td>Browse projects</td></tr>
+            <tr><td>Change dates, move or resize bars</td><td>Edit issues and Schedule issues on every work item that changes</td></tr>
+            <tr><td>Add, change or remove a link</td><td>Link issues</td></tr>
+            <tr><td>Change a parent</td><td>Edit issues</td></tr>
+            <tr><td>Turn a task into a sub-task, or back</td><td>Move issues and Create issues, and the global permission "Make bulk changes"</td></tr>
+            <tr><td>Create a task, epic or sub-task</td><td>Create issues (and Edit issues on the parent of a sub-task)</td></tr>
+            <tr><td>Reorder rows</td><td>Edit issues on the moved work item</td></tr>
+            <tr><td>Manage plans, filters and baselines; accept or reject scope</td><td>Plan approver</td></tr>
+            <tr><td>Request a scope review</td><td>Any user of the project</td></tr>
+        </tbody>
+    </table>
+    <p>When a permission is missing, CascadePlan refuses the change before writing anything, and names the permission and the work items.</p>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">15. Data, privacy and security</h2>
+    <ul>
+        <li><strong>Runs on Atlassian Forge.</strong> No external servers; no data leaves your Atlassian site.</li>
+        <li><strong>Stored in Forge storage of your site:</strong> plans, row order, columns, plan filters, hand-set progress and targets, baselines, scope-change requests and the approver groups.</li>
+        <li><strong>Stored on your Jira issues:</strong> the start date (<code>cascadeplan.dates</code>), the trigger percents (<code>cascadeplan.links</code>) and, for issues CascadePlan created, a create id (<code>cascadeplan.create</code>).</li>
+        <li><strong>Jira writes</strong> are made as you, only for values you chose: due dates, estimates, assignees, summaries, status transitions, links, issue properties, new issues and sub-tasks, sub-task delete or unassign, parent changes and type conversions.</li>
+        <li><strong>Personal data:</strong> Atlassian account ids of who froze a baseline, of who requested or reviewed a scope change, of each person who works on a task through a Jira sub-task, and of the Jira administrator who last saved the approver groups. Each id is reported to Atlassian's personal data reporting service once every 7 days, and removed from every record when the account is closed. See the <a href="/privacy">privacy policy</a>.</li>
+        <li><strong>No inline scripts or styles</strong> are allowed in the planner's frame.</li>
+    </ul>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">16. Limits</h2>
+    <ul>
+        <li>A plan reads at most 1,000 work items, the newest first; a plan filter narrows the plan for larger projects.</li>
+        <li>Undo and Redo cover the last 20 changes of your session.</li>
+        <li>A block move saves at most 25 sub-tasks per step, and blocks of more than 500 changing sub-tasks are refused.</li>
+        <li>A cascade is saved in steps of 25 successors; the planner continues until it is done.</li>
+        <li>A plan filter is one line of at most 1,000 characters, and cannot change the project or the order.</li>
+    </ul>
 </section>
 
 <section style="margin-bottom: 5rem">
-    <h2 class="section-title">9. Administration: CascadePlan Approvers</h2>
-    <p>Jira administrators can open <strong>Jira admin settings</strong>, <strong>Apps</strong>, <strong>CascadePlan approvers</strong>. On this page you can search for Jira groups, add them to the list and click <strong>Save changes</strong>.</p>
-    <p>Members of these groups, project administrators and Jira administrators are plan approvers: they create, rename and delete plans, freeze baselines, and accept or reject scope changes. CascadePlan checks this on the server for every such action.</p>
-
-    <div style="margin: 2rem 0; text-align: center;">
-        <img src="/images/product/jira-governance/cascadeplan/04-approvers-admin.png" alt="The CascadePlan approvers page in Jira admin settings" style="max-width: 100%; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
-        <p style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 3: The CascadePlan approvers page in Jira admin settings.</p>
-    </div>
+    <h2 class="section-title">17. Troubleshooting</h2>
+    <dl>
+        <dt><strong>"Showing the newest 1,000 of about N issues"</strong></dt>
+        <dd>The project is larger than one plan reads. Ask a plan approver to set a plan filter (section 11).</dd>
+        <dt><strong>A change was refused and names a permission</strong></dt>
+        <dd>Your Jira role lacks that permission on the named work items (section 14). Nothing was written.</dd>
+        <dt><strong>Someone else changed the work item</strong></dt>
+        <dd>Another user changed it while you edited it. Reload, check their change, and make yours again.</dd>
+        <dt><strong>"The result is unknown"</strong></dt>
+        <dd>The call ended without an answer. Check the plan, or make the same request again: CascadePlan will not create the item twice.</dd>
+        <dt><strong>A bar is red</strong></dt>
+        <dd>It starts before its links allow, or it is behind. "Why this date?" says which link holds it back.</dd>
+        <dt><strong>Dates changed in my scenario plan</strong></dt>
+        <dd>Dates are Jira data and shared by every plan. Use row order, columns and baselines to compare plans.</dd>
+        <dt><strong>"Licence required"</strong></dt>
+        <dd>The site's CascadePlan licence is not active. A Jira administrator can check it under Manage apps.</dd>
+    </dl>
+    <p>Still stuck? See <a href="/support">support</a>.</p>
 </section>

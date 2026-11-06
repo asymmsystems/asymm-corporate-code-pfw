@@ -16,10 +16,10 @@ og_image=product/jira-governance/ledgerseal/banner.png
 
 <section style="margin-bottom: 4rem">
     <div style="display: flex; gap: 0.75rem; flex-wrap: wrap; margin-bottom: 2rem;">
-        <span style="display: inline-block; padding: 0.35rem 0.75rem; border: 1px solid var(--border-subtle, #333); border-radius: 4px; font-family: 'Fira Code', monospace; font-size: 0.85rem; background: var(--surface-subtle, #1a1a1a);">100% Atlassian Forge Native</span>
-        <span style="display: inline-block; padding: 0.35rem 0.75rem; border: 1px solid var(--border-subtle, #333); border-radius: 4px; font-family: 'Fira Code', monospace; font-size: 0.85rem; background: var(--surface-subtle, #1a1a1a);">Zero External Egress</span>
-        <span style="display: inline-block; padding: 0.35rem 0.75rem; border: 1px solid var(--border-subtle, #333); border-radius: 4px; font-family: 'Fira Code', monospace; font-size: 0.85rem; background: var(--surface-subtle, #1a1a1a);">Customer Tenant Data Residency</span>
-        <span style="display: inline-block; padding: 0.35rem 0.75rem; border: 1px solid var(--border-subtle, #333); border-radius: 4px; font-family: 'Fira Code', monospace; font-size: 0.85rem; background: var(--surface-subtle, #1a1a1a);">Free Tier: 1-10 Users</span>
+        <span style="display: inline-block; padding: 0.35rem 0.75rem; border: 1px solid var(--border-subtle, #333); border-radius: 4px; font-family: 'Fira Code', monospace; font-size: 0.85rem; background: var(--color-warm-paper); color: var(--text-primary);">100% Atlassian Forge Native</span>
+        <span style="display: inline-block; padding: 0.35rem 0.75rem; border: 1px solid var(--border-subtle, #333); border-radius: 4px; font-family: 'Fira Code', monospace; font-size: 0.85rem; background: var(--color-warm-paper); color: var(--text-primary);">Zero External Egress</span>
+        <span style="display: inline-block; padding: 0.35rem 0.75rem; border: 1px solid var(--border-subtle, #333); border-radius: 4px; font-family: 'Fira Code', monospace; font-size: 0.85rem; background: var(--color-warm-paper); color: var(--text-primary);">Customer Tenant Data Residency</span>
+        <span style="display: inline-block; padding: 0.35rem 0.75rem; border: 1px solid var(--border-subtle, #333); border-radius: 4px; font-family: 'Fira Code', monospace; font-size: 0.85rem; background: var(--color-warm-paper); color: var(--text-primary);">Free for 1-10 Users</span>
     </div>
 
     <h2 class="section-title">The Unaddressed Native Problem</h2>
@@ -79,7 +79,7 @@ og_image=product/jira-governance/ledgerseal/banner.png
                 <img src="/images/product/jira-governance/fourrealities/icon.png" alt="FourRealities" style="width: 32px; height: 32px;" />
                 <h3 style="margin: 0;">FourRealities</h3>
             </div>
-            <p><strong>Delivery Integrity Across Four Realities.</strong> Checks each issue for evidence in four realities: Intent (a linked Confluence page or decision issue), Process (DefinitionGuard Definition of Done), Code (pull requests in the Jira Development field) and Audit (a LedgerSeal seal). Shows a Reality Alignment Index (RAI) per issue and project, and counts rework loops.</p>
+            <p><strong>Delivery Integrity Across Four Realities.</strong> Checks each issue for evidence in four realities: Intent (a linked Confluence page or decision issue), Process (a DefinitionGuard Definition of Done, signature verified, or a Checklists for Jira checklist), Code (pull requests in the Jira Development field) and Audit (a LedgerSeal seal). Shows a Reality Alignment Index (RAI) per issue and project, and counts rework loops. Checks your site does not use are not scored.</p>
             <div style="margin-top: 1.5rem;">
                 <a href="/product/jira-governance/user-guide/fourrealities.html" class="org-link org-link--inline org-link--internal">Explore FourRealities</a>
             </div>
@@ -134,7 +134,7 @@ og_image=product/jira-governance/ledgerseal/banner.png
             <tr>
                 <td><strong>Offline Verification</strong></td>
                 <td>Open-source standalone Node.js verifier using only standard library <code>node:crypto</code>.</td>
-                <td>Auditors can independently verify compliance evidence without trusting Jira or Asymm Systems.</td>
+                <td>Auditors can check the evidence offline, with no access to Jira or to the app. A pass shows the evidence was not changed after export and was signed with the published key.</td>
             </tr>
         </tbody>
     </table>
@@ -142,51 +142,50 @@ og_image=product/jira-governance/ledgerseal/banner.png
 
 <section style="margin-bottom: 5rem">
     <h2 class="section-title">Pricing &amp; Packaging</h2>
-    <p>All applications in the suite are licensed on a per-user, per-month basis via Atlassian Marketplace billing. 
-        Small teams can evaluate and use the full suite free of charge forever.</p>
+    <p>Each app is sold on its own through Atlassian Marketplace billing, per user per month. Each app has its own price.</p>
+    <ul>
+        <li><strong>1 to 10 users:</strong> free, with every feature of the app.</li>
+        <li><strong>Above 1,000 users:</strong> a custom price. Write to <a href="mailto:support@asymm.systems" class="org-link org-link--inline org-link--external">support@asymm.systems</a>.</li>
+        <li><strong>Annual billing:</strong> 10 times the monthly price. You pay for 10 months and get 12.</li>
+    </ul>
 
     <table class="clinical-table" style="margin-top: 1.5rem">
         <thead>
             <tr>
-                <th>User Tier</th>
-                <th>Monthly Price (Per User)</th>
-                <th>Annual Pricing</th>
-                <th>Features Included</th>
+                <th>Price per user per month</th>
+                <th>11 - 100 users</th>
+                <th>101 - 250 users</th>
+                <th>251 - 1,000 users</th>
             </tr>
         </thead>
         <tbody>
             <tr>
-                <td><strong>1 - 10 Users</strong></td>
-                <td><strong>Free</strong></td>
-                <td>Free forever</td>
-                <td>100% full feature set, all workflow validators, unlimited seals</td>
-            </tr>
-            <tr>
-                <td><strong>11 - 100 Users</strong></td>
+                <td><strong>CascadePlan</strong></td>
                 <td>$1.50</td>
-                <td>Pay for 10 months, get 2 months free</td>
-                <td>Full enterprise capabilities, priority email support</td>
-            </tr>
-            <tr>
-                <td><strong>101 - 250 Users</strong></td>
                 <td>$1.20</td>
-                <td>Pay for 10 months, get 2 months free</td>
-                <td>Tiered volume discount, compliance review assistance</td>
-            </tr>
-            <tr>
-                <td><strong>251 - 1,000 Users</strong></td>
                 <td>$0.90</td>
-                <td>Pay for 10 months, get 2 months free</td>
-                <td>Enterprise volume discount, designated technical concierge</td>
             </tr>
             <tr>
-                <td><strong>1,000+ Users</strong></td>
-                <td>Contact Sales</td>
-                <td>Custom annual agreement</td>
-                <td>Custom terms, vendor security review assistance</td>
+                <td><strong>FourRealities</strong></td>
+                <td>$1.40</td>
+                <td>$1.10</td>
+                <td>$0.80</td>
+            </tr>
+            <tr>
+                <td><strong>DefinitionGuard</strong></td>
+                <td>$0.95</td>
+                <td>$0.75</td>
+                <td>$0.24</td>
+            </tr>
+            <tr>
+                <td><strong>LedgerSeal</strong></td>
+                <td>$0.95</td>
+                <td>$0.75</td>
+                <td>$0.24</td>
             </tr>
         </tbody>
     </table>
+    <p>Every tier, including the free tier, gets the same support. The <a href="/support" class="org-link org-link--inline">support page</a> gives the response times.</p>
 </section>
 
 <section style="margin-bottom: 5rem">
