@@ -21,7 +21,7 @@ og_image=product/jira-governance/ledgerseal/banner.png
         and deployed matches what was approved.</p>
     <p><strong>LedgerSeal solves this by introducing cryptographic snapshot seals.</strong> When an authorized lead approves a ticket, 
         LedgerSeal captures a canonical SHA-256 hash snapshot of covered fields, comments, and attachments, writes a certificate (an attestation) that
-        names the snapshot hash, and adds the seal to a hash-chained history. When the vendor signing key is configured for the installation, the attestation is signed with Ed25519.</p>
+        names the snapshot hash, and adds the seal to a hash-chained history. The attestation is signed with Ed25519 by the Asymm Systems key <code>ls-prod-2026-11</code>; its public key is listed on the <a href="/product/jira-governance/signing-keys.html" class="org-link org-link--inline org-link--internal">Signing keys</a> page and in the open verifier repository.</p>
     <p>The hash chain makes changes to stored records detectable. It does not stop someone who can rewrite the app's stored data, including the vendor, from writing a new consistent chain.
         Treat it as tamper-evident, not immutable.</p>
 </section>
@@ -59,13 +59,13 @@ og_image=product/jira-governance/ledgerseal/banner.png
     <h2 class="section-title">4. Resealing with Audited Justification</h2>
     <p>When changes after approval are intentional and legitimate (e.g. minor typo fix, updated deployment parameter per CAB):</p>
     <ol>
-        <li>An approver who did <strong>not</strong> make any of the changes reviews the Was and Now values. LedgerSeal refuses the approval if the approver changed the issue since the last seal (separation of duties).</li>
+        <li>An approver who did <strong>not</strong> make any of the changes reviews the Was and Now values. LedgerSeal refuses the approval if the approver changed the issue since the last seal: a covered field, a comment or work log they added or edited, or an attachment they added (separation of duties). Status, Rank and Sprint changes do not count.</li>
         <li>Click <strong>Approve these changes</strong>.</li>
         <li>Enter the required reason (e.g. <code>Approved revised timeout threshold per CAB-892</code>), choose the meaning and tick the declaration.</li>
         <li>Click <strong>Sign and seal</strong>.</li>
     </ol>
     <p>LedgerSeal adds entries to the issue's hash-chained history: the change it detected, then the new seal. The previous seal stays in the history.
-        An approver can also <strong>Revoke seal</strong> with a reason; sealing again after a revoke follows the same separation-of-duties rule.</p>
+        An approver who did not change the issue since the seal can also <strong>Revoke seal</strong> with a reason; sealing again after a revoke follows the same separation-of-duties rule.</p>
 </section>
 
 <section style="margin-bottom: 4rem">
@@ -80,6 +80,7 @@ og_image=product/jira-governance/ledgerseal/banner.png
     </ol>
     <p>If someone tries the transition on an issue that is not sealed, or that changed after approval, Jira blocks the transition and shows the LedgerSeal error message.
         If LedgerSeal cannot check the issue, the validator blocks the transition (it fails closed).</p>
+    <p>If the gated transition has a screen with a comment box, a comment typed there is new content on a sealed issue, so the validator blocks the transition with "Comment added". Add the comment after the transition, or ask another approver to approve it first.</p>
 
 </section>
 
@@ -89,7 +90,7 @@ og_image=product/jira-governance/ledgerseal/banner.png
     <ul>
         <li><strong>Administer:</strong> Jira administrators choose the approver groups on the LedgerSeal admin page. The covered field set is fixed by the app version and is not configurable.</li>
         <li><strong>Approve:</strong> Jira administrators, project administrators, and members of the approver groups can seal, approve changes and revoke seals.</li>
-        <li><strong>View:</strong> Anyone who can view the issue can see the seal status, the changed fields, the history and the evidence record.</li>
+        <li><strong>View:</strong> Anyone who can view the issue can see the seal status, the changed fields, the history and the evidence record. The evidence record names people by a pseudonymous token and lists their account ids in an unsigned map.</li>
     </ul>
 
     <div style="margin: 2rem 0; text-align: center;">
@@ -105,8 +106,8 @@ og_image=product/jira-governance/ledgerseal/banner.png
     <p>The record contains the snapshot, the hash-chained history and the attestation with its signature. Anyone can check it with our zero-dependency CLI tool:</p>
 
     <div style="margin: 2rem 0; text-align: center;">
-        <img src="/images/product/jira-governance/ledgerseal/05-certificate.png" alt="LedgerSeal Certificate View" style="max-width: 100%; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
-        <p style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 2: The Approval Seal panel on a sealed issue, with the seal details collapsed.</p>
+        <img src="/images/product/jira-governance/ledgerseal/05-seal-history.png" alt="LedgerSeal seal history" style="max-width: 100%; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <p style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 2: The seal details with the hash-chained history, naming who sealed.</p>
     </div>
 
     <div style="margin-top: 1.5rem;">

@@ -1,5 +1,5 @@
 title=Open Offline Cryptographic Verifier
-description=Standalone, zero-dependency Node.js CLI tool for independently verifying LedgerSeal Ed25519 signatures, SHA-256 snapshot hashes, and hash chains offline.
+description=Standalone, zero-dependency Node.js CLI tool for checking LedgerSeal Ed25519 signatures, SHA-256 snapshot hashes, and hash chains offline.
 type=page
 toc=true
 status=published
@@ -9,15 +9,17 @@ og_image=product/jira-governance/ledgerseal/banner.png
 <header class="page-header">
     <span class="section-kicker">Open Verifier Guide</span>
     <h1>Open-Source Offline Cryptographic Verifier</h1>
-    <p style="max-width: 65ch">A zero-dependency Node.js CLI verification tool allowing compliance auditors and security teams 
-        to independently verify LedgerSeal signatures, snapshot hashes, and audit chains completely offline without trusting Jira or Asymm Systems.</p>
+    <p style="max-width: 65ch">A zero-dependency Node.js CLI verification tool allowing compliance auditors and security teams
+        to check LedgerSeal evidence offline: the snapshot hash, the hash-chained history, the newest seal and the Ed25519 signature.
+        A pass shows the evidence was not changed after export and was signed with the published key.
+        It does not stop someone who can rewrite the app's stored data, including the vendor, from writing a new consistent record.</p>
 </header>
 
 <section style="margin-bottom: 4rem">
     <h2 class="section-title">1. Why Offline Verification Matters</h2>
     <p>In enterprise audits (SOC 2, ISO 27001, FDA 21 CFR Part 11), a critical principle of evidence integrity is <em>independent reproducibility</em>. 
         If compliance evidence can only be validated by querying the proprietary software that generated it, the evidence is subject to circular trust and vendor compromise.</p>
-    <p><strong>LedgerSeal provides complete cryptographic independence.</strong> Every approved ticket can export a standalone evidence JSON document. 
+    <p>Every approved ticket can export a standalone evidence JSON document, and the check needs no access to Jira or to LedgerSeal. 
         Our open-source verifier (<code>verify-evidence.mjs</code>) executes entirely on an auditor laptop with zero external network connectivity, 
         using only the Node.js standard library.</p>
 </section>
@@ -28,7 +30,7 @@ og_image=product/jira-governance/ledgerseal/banner.png
     <ul>
         <li><strong>Zero npm Dependencies:</strong> Requires only standard Node.js (v18 or higher). It imports only the standard modules <code>node:crypto</code>, <code>node:fs</code>, <code>node:path</code> and <code>node:url</code>.</li>
         <li><strong>Air-Gapped Execution:</strong> Runs completely offline on isolated, air-gapped auditor workstations.</li>
-        <li><strong>Open-Source Transparency:</strong> 100% open source under the Apache-2.0 license. The script is about 120 lines of readable JavaScript.</li>
+        <li><strong>Open-Source Transparency:</strong> 100% open source under the Apache-2.0 license. The script is about 135 lines of readable JavaScript.</li>
     </ul>
 </section>
 
@@ -51,14 +53,15 @@ node verify-evidence.mjs --evidence evidence.json --public-key public-key.pem</c
         <code>PASS snapshot hash<br/>
 PASS history chain (3 entries)<br/>
 PASS attestation names the newest seal<br/>
+PASS attestation status matches the history (SEAL_VALID)<br/>
 PASS signature (ls-dev-2026-11)</code>
     </div>
-    <p>Any check that fails prints <code>FAIL</code> instead of <code>PASS</code> on its line. The verifier always runs all four checks, so one run shows every problem.</p>
+    <p>Any check that fails prints <code>FAIL</code> instead of <code>PASS</code> on its line. The verifier always runs all five checks, so one run shows every problem.</p>
 </section>
 
 <section style="margin-bottom: 4rem">
     <h2 class="section-title">4. Cryptographic Verification Mechanics</h2>
-    <p>When executed, <code>verify-evidence.mjs</code> performs four checks:</p>
+    <p>When executed, <code>verify-evidence.mjs</code> performs five checks:</p>
 
     <table class="clinical-table" style="margin-top: 1.5rem">
         <thead>
@@ -85,19 +88,25 @@ PASS signature (ls-dev-2026-11)</code>
                 <td>Checks that the attestation names the certificate of the newest seal entry in the history.</td>
             </tr>
             <tr>
-                <td><strong>4. Signature</strong></td>
+                <td><strong>4. Status</strong></td>
+                <td>Record linking</td>
+                <td>Checks that the status in the attestation is the state of the newest history entry that is not a redaction: <code>SEAL_VALID</code> for a seal, <code>SEAL_BROKEN</code> for a detected change, <code>SEAL_REVOKED</code> for a revoke.</td>
+            </tr>
+            <tr>
+                <td><strong>5. Signature</strong></td>
                 <td>Ed25519 (RFC 8032)</td>
                 <td>Verifies the Ed25519 signature over the canonical attestation (which contains the snapshot hash and certificate ID) with the published Asymm Systems public key.</td>
             </tr>
         </tbody>
     </table>
+    <p>Evidence may contain a redaction entry (<code>LS_REDACTED</code>): records made before LedgerSeal used party tokens were converted once; the verifier names the entry in a <code>NOTE</code> line. The <code>parties</code> map is not signed.</p>
 </section>
 
 <section style="margin-bottom: 4rem">
     <h2 class="section-title">5. Exit Codes for CI/CD &amp; Automated Audits</h2>
     <p>Security teams can embed the verifier into automated release pipelines or compliance cron monitors:</p>
     <ul>
-        <li><code>0</code> - <strong>PASS:</strong> All four checks passed.</li>
+        <li><code>0</code> - <strong>PASS:</strong> All five checks passed.</li>
         <li><code>1</code> - <strong>FAIL:</strong> One or more checks failed. The <code>FAIL</code> lines in the output name which ones.</li>
         <li><code>2</code> - <strong>USAGE ERROR:</strong> The evidence file was not given, or the evidence or public key file does not exist.</li>
     </ul>
@@ -105,10 +114,11 @@ PASS signature (ls-dev-2026-11)</code>
 
 <section style="margin-bottom: 5rem">
     <h2 class="section-title">6. Public Verification Keys &amp; Source Code</h2>
-    <p>Public keys are published and maintained in the open-source repository:</p>
+    <p>The verifier and its public keys are published in an open-source repository:</p>
     <ul>
-        <li><strong>Repository:</strong> <a href="https://github.com/asymmsystems/jira-governance-code-system/tree/master/tools/verifier" class="org-link org-link--inline org-link--external">tools/verifier/ in GitHub Monorepo</a></li>
-        <li><strong>Dev Public Key:</strong> <code>keys/ls-dev-2026-11.pub.pem</code></li>
+        <li><strong>Repository:</strong> <a href="https://github.com/asymmsystems/ledgerseal-verifier" class="org-link org-link--inline org-link--external">asymmsystems/ledgerseal-verifier on GitHub (Apache-2.0)</a>, <a href="https://github.com/asymmsystems/ledgerseal-verifier/releases/tag/v1.2.0" class="org-link org-link--inline org-link--external">release v1.2.0</a></li>
+        <li><strong>Development Public Key:</strong> <code>keys/ls-dev-2026-11.pub.pem</code> (development builds only).</li>
+        <li><strong>All keys:</strong> the <a href="/product/jira-governance/signing-keys.html" class="org-link org-link--inline org-link--internal">Signing keys</a> page lists every key id with its public key. The production key will be published there before the apps are listed.</li>
         <li><strong>Key Algorithm:</strong> Ed25519 public key (SPKI PEM format).</li>
     </ul>
 </section>
