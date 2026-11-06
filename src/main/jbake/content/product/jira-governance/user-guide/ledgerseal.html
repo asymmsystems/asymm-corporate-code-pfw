@@ -37,9 +37,14 @@ og_image=product/jira-governance/ledgerseal/banner.png
         <li>Read the declaration and tick <strong>I agree to the declaration above.</strong></li>
         <li>Click <strong>Sign and seal</strong>.</li>
     </ol>
+    <p>Every issue shows an <strong>Approval seal</strong> entry in its details column with the seal state; expand it, or open the Approval Seal panel from the issue's app button to seal, approve or see details.</p>
     <p>The lozenge turns green <code>SEALED</code>. The panel shows the approver, the time and the certificate ID.
         The seal details list the fields that are covered and the fields that are not covered, with the reason for each.</p>
     <p>The seal covers every issue field except a fixed list that Jira changes without a user edit (for example status and resolution), plus all comments and attachments.</p>
+    <p><strong>Restricted comments and work logs.</strong> Comments and work logs restricted to a project role or group are covered only when Jira lets the LedgerSeal app read them, that is when the app's user is in that role or group; otherwise a change to such a comment or work log is not detected.
+        A covered comment that is restricted, at the seal or now, is shown in the panel only to a user who can see it in Jira; others see that a comment changed, without its text, author or time. The panel shows only the number of work logs, never their text.
+        The evidence is exported only to a user who can see every such comment and work log.
+        If LedgerSeal can no longer read a covered comment or work log (it was deleted, or restricted since to a role or group the app's user is not in), the panel shows that comment's sealed text to no one, and for that seal: its evidence is not exported to anyone; approving the changes makes a new seal whose evidence can be exported.</p>
 
 </section>
 

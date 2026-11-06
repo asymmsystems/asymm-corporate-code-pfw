@@ -107,7 +107,7 @@ PASS signature (ls-prod-2026-11)</code>
     <p>Security teams can embed the verifier into automated release pipelines or compliance cron monitors:</p>
     <ul>
         <li><code>0</code> - <strong>PASS:</strong> All five checks passed.</li>
-        <li><code>1</code> - <strong>FAIL:</strong> One or more checks failed. The <code>FAIL</code> lines in the output name which ones.</li>
+        <li><code>1</code> - <strong>FAIL:</strong> At least one check failed, and the <code>FAIL</code> lines name which. The evidence may have been changed after it was exported, or the public key file you gave is not the key that signed it, or a part of the evidence is missing.</li>
         <li><code>2</code> - <strong>USAGE ERROR:</strong> The evidence file was not given, or the evidence or public key file does not exist.</li>
     </ul>
 </section>
