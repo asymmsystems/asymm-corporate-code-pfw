@@ -53,6 +53,13 @@ og_image=product/jira-governance/ledgerseal/banner.png
 
     <h3>Are Asymm Systems apps Cloud Fortified?</h3>
     <p>No. The apps are not Cloud Fortified. They are built on Atlassian Forge with no external egress, and their data stays in Atlassian Forge storage.</p>
+
+    <h3>What personal data do the apps store?</h3>
+    <p>CascadePlan stores Atlassian account ids only: of who froze a baseline, of who requested or reviewed a scope change, and of each person who works on a task through a Jira sub-task.
+        It reports them each week to Atlassian's personal data reporting service and removes the id of a closed account.</p>
+    <p>The other three apps store Atlassian account ids to record who did each action: LedgerSeal of who sealed, signed or revoked a seal (with the signer's display name),
+        DefinitionGuard of who ticked, waived or configured a Definition of Done item, and FourRealities of who requested or approved a gate exception.
+        The <a href="/privacy" class="org-link org-link--inline">privacy policy</a> lists what each app stores.</p>
 </section>
 
 <section style="margin-bottom: 5rem">

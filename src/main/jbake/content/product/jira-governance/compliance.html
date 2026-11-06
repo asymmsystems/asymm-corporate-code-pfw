@@ -156,6 +156,11 @@ og_image=product/jira-governance/ledgerseal/banner.png
                 <td>Users sign in through Atlassian; the apps have no separate login. App permissions follow the Uniform Permission Standard: Jira permissions plus approver groups chosen by a Jira administrator.</td>
             </tr>
             <tr>
+                <td><strong>Personal Data</strong></td>
+                <td>What personal data does the application store?</td>
+                <td>CascadePlan stores Atlassian account ids only: of who froze a baseline, of who requested or reviewed a scope change, and of each person who works on a task through a Jira sub-task. It reports them each week to Atlassian's personal data reporting service and removes the id of a closed account. LedgerSeal, DefinitionGuard and FourRealities store Atlassian account ids to record who did each action (LedgerSeal also stores the signer's display name). The <a href="/privacy" class="org-link org-link--inline">privacy policy</a> lists what each app stores.</td>
+            </tr>
+            <tr>
                 <td><strong>AI / LLM Ingestion</strong></td>
                 <td>Are customer tickets sent to external LLMs?</td>
                 <td>No. Zero third-party AI APIs are used. All scoring and hashing is deterministic code running on Atlassian Forge.</td>
