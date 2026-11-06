@@ -120,7 +120,7 @@ og_image=product/jira-governance/cascadeplan/banner.png
     <h3>Move and resize bars</h3>
     <ul>
         <li>Drag a bar to move it; drag an edge to change its start or end. Bars snap to days or weeks, depending on the zoom. Hold <strong>Alt</strong> while dragging to snap to days.</li>
-        <li>While you drag, a line above the bar lists every Jira change the drop will make: due dates in Jira, start dates (shared by every plan), and the parent's dates.</li>
+        <li>While you drag, a line just above the row you move lists every Jira change the drop will make: each due date in Jira and each start date (shared by every plan), for the bar you move, the work that depends on it, the sub-tasks of any parent the move reaches, and each parent whose Jira due date follows its sub-tasks. The planner and the server work out these changes with the same code.</li>
         <li>Click a bar for its toolbar: <strong>Move 1 week earlier</strong>, <strong>Move 1 week later</strong>, <strong>Edit dates</strong>, <strong>Add dependency</strong> and <strong>Set progress</strong>.</li>
         <li><strong>Edit dates</strong> opens a small editor with start and end, and buttons to move both by a week.</li>
     </ul>
@@ -161,7 +161,7 @@ og_image=product/jira-governance/cascadeplan/banner.png
         With <strong>Enforce deps</strong> on, the bar snaps to the earliest allowed day.</p>
     <h3>Rules</h3>
     <ul>
-        <li>A parent's links also hold back its sub-tasks.</li>
+        <li>A parent's links also hold back its sub-tasks. With <strong>Enforce deps</strong> on, CascadePlan checks this again before it writes, so a sub-task never starts before its parent's predecessor allows. When a move pushes a parent later, its sub-tasks move as a block.</li>
         <li>A link between a work item and its own parent or sub-task is refused, because the parent's dates come from its sub-tasks. A link that would make a loop is refused too.</li>
     </ul>
 </section>
@@ -227,7 +227,7 @@ og_image=product/jira-governance/cascadeplan/banner.png
     <h2 class="section-title">9. See and undo every change</h2>
     <ul>
         <li><strong>Before:</strong> while you drag, the planner lists every Jira change the drop will make.</li>
-        <li><strong>After:</strong> each write shows a message in Jira with <strong>Undo</strong> for 10 seconds. A failed write stays until you close it, and says why.</li>
+        <li><strong>After:</strong> each write shows a message in Jira with <strong>Undo</strong>, which stays until you close it. A failed write stays until you close it, and says why.</li>
         <li><strong>Undo and Redo:</strong> <strong>Ctrl+Z</strong> and <strong>Ctrl+Shift+Z</strong> (Cmd on macOS) cover your last 20 changes, links included. Undo puts back the exact earlier dates.</li>
         <li><strong>Changes:</strong> the panel "Jira writes in this session" lists every write with the work item, the field, the old value, the new value and whether Jira accepted it.</li>
         <li><strong>Safe to repeat:</strong> if a create gets no answer (for example a timeout), CascadePlan says the result is unknown. Making the same request again returns the item it already created, never a second one.</li>
@@ -386,7 +386,7 @@ og_image=product/jira-governance/cascadeplan/banner.png
         <li><strong>Stored in Forge storage of your site:</strong> plans, row order, columns, plan filters, hand-set progress and targets, baselines, scope-change requests and the approver groups.</li>
         <li><strong>Stored on your Jira issues:</strong> the start date (<code>cascadeplan.dates</code>), the trigger percents (<code>cascadeplan.links</code>) and, for issues CascadePlan created, a create id (<code>cascadeplan.create</code>).</li>
         <li><strong>Jira writes</strong> are made as you, only for values you chose: due dates, estimates, assignees, summaries, status transitions, links, issue properties, new issues and sub-tasks, sub-task delete or unassign, parent changes and type conversions.</li>
-        <li><strong>Personal data:</strong> Atlassian account ids of who froze a baseline, of who requested or reviewed a scope change, and of each person who works on a task through a Jira sub-task. They are reported to Atlassian's personal data reporting service every week, and removed when an account is closed. See the <a href="/privacy">privacy policy</a>.</li>
+        <li><strong>Personal data:</strong> Atlassian account ids of who froze a baseline, of who requested or reviewed a scope change, of each person who works on a task through a Jira sub-task, and of the Jira administrator who last saved the approver groups. Each id is reported to Atlassian's personal data reporting service once every 7 days, and removed from every record when the account is closed. See the <a href="/privacy">privacy policy</a>.</li>
         <li><strong>No inline scripts or styles</strong> are allowed in the planner's frame.</li>
     </ul>
 </section>
