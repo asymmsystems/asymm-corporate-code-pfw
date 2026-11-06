@@ -23,15 +23,15 @@ og_image=product/jira-governance/fourrealities/banner.png
         <li><strong>Code:</strong> pull request count and state from the Jira Development field, which your GitHub, GitLab or Bitbucket integration for Jira populates.</li>
         <li><strong>Audit:</strong> an approval seal record written by LedgerSeal.</li>
     </ol>
-    <p>Each check shows a state, for example <em>Evidence found</em>, <em>Evidence missing</em>, <em>Reported, not verified</em>, <em>Not used on this site</em> or <em>Not applicable</em>, and names its source.
-        A DefinitionGuard or LedgerSeal record is scored only when its signature is verified; a record FourRealities cannot verify is shown as <em>Reported, not verified</em> and is not scored. A check your site does not use is not scored. Pull request state is marked as heuristic, because apps cannot read pull request approvals.
+    <p>Each check shows a state, for example <em>Evidence found</em>, <em>Evidence missing</em>, <em>Not used on this site</em> or <em>Not applicable</em>, and names its source.
+        A DefinitionGuard or LedgerSeal record is scored only when its signature is verified. A record FourRealities cannot verify (unsigned, or signed with a key it does not trust) counts exactly like no record: <em>Evidence missing</em> on a Done issue, <em>Not applicable</em> before Done. A record changed after signing, copied from another issue, or older than a record already seen counts as <em>Evidence missing</em>, also before Done. The panel still says what the record reports and why it did not count. A Checklists for Jira checklist cannot be signed, so it never counts as evidence. A check your site does not use is not scored. Pull request state is marked as heuristic, because apps cannot read pull request approvals.
         A merged pull request is not shown as reviewed.</p>
 </section>
 
 <section style="margin-bottom: 4rem">
     <h2 class="section-title">2. The Reality Alignment Index (RAI)</h2>
     <p>The <strong>Reality Alignment Index (RAI)</strong> is the share of rated gates with evidence found, from 0 to 100.
-        Only checks with evidence found or evidence missing are scored. Reported, excepted, not applicable, not used and needs-recheck checks are not counted.
+        Only checks with evidence found or evidence missing are scored. Excepted, not applicable, not used and needs-recheck checks are not counted.
         The RAI is always shown after the gates and with its parts: click <strong>Why N%?</strong> in the issue panel to see them.</p>
     <p>Each rated issue gets a risk level from its RAI:</p>
     <ul>
