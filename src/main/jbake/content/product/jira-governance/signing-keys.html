@@ -29,8 +29,31 @@ og_image=product/jira-governance/ledgerseal/banner.png
 </section>
 
 <section style="margin-bottom: 4rem">
-    <h2 class="section-title">3. Production keys</h2>
-    <p>The production keys <code>ls-prod-2026-11</code> (LedgerSeal) and <code>dg-prod-2026-11</code> (DefinitionGuard) will be published here, with their fingerprints, before the apps are listed on the Atlassian Marketplace.</p>
+    <h2 class="section-title">3. Production keys (production: the Marketplace apps)</h2>
+    <p>These keys sign records made by the Marketplace apps (the Forge production environment). Accept a record as production evidence only when it is signed with one of these keys.</p>
+
+    <h3>ls-prod-2026-11 (LedgerSeal, production: the Marketplace app)</h3>
+    <ul>
+        <li><strong>Key id:</strong> <code>ls-prod-2026-11</code></li>
+        <li><strong>SHA-256 fingerprint</strong> (of the DER public key): <code style="word-break: break-all;">09f2b807adc803a7f687e0561e90b8dcadadd6c1d752c66b55980a27b89cc5d3</code></li>
+        <li><strong>File:</strong> <a href="https://github.com/asymmsystems/ledgerseal-verifier/blob/main/keys/ls-prod-2026-11.pub.pem" class="org-link org-link--inline org-link--external">keys/ls-prod-2026-11.pub.pem</a> in the open verifier repository (from release v1.3.0).</li>
+    </ul>
+    <div class="inline-terminal inline-terminal--static" style="margin: 1.5rem 0;">
+        <code style="word-break: break-all;">-----BEGIN PUBLIC KEY-----<br/>
+MCowBQYDK2VwAyEATeL77D87DnKc6DSKrt1kAfh0SIW0ok4NoALB371b/VE=<br/>
+-----END PUBLIC KEY-----</code>
+    </div>
+
+    <h3>dg-prod-2026-11 (DefinitionGuard, production: the Marketplace app)</h3>
+    <ul>
+        <li><strong>Key id:</strong> <code>dg-prod-2026-11</code></li>
+        <li><strong>SHA-256 fingerprint</strong> (of the DER public key): <code style="word-break: break-all;">956589daeeb464de4dd4a3c04659c494d2e2b31e4fc9a06784704539ce91f9fb</code></li>
+    </ul>
+    <div class="inline-terminal inline-terminal--static" style="margin: 1.5rem 0;">
+        <code style="word-break: break-all;">-----BEGIN PUBLIC KEY-----<br/>
+MCowBQYDK2VwAyEAiZby7ZujEzTGnRBc0StyzcxBjzs9+WCcd6zXfIfnEg8=<br/>
+-----END PUBLIC KEY-----</code>
+    </div>
 </section>
 
 <section style="margin-bottom: 4rem">
@@ -69,7 +92,7 @@ MCowBQYDK2VwAyEAoJeSg/k7W6M/7B/arkkxCl2XWk0bQzL6xTntCIRyids=<br/>
     <h2 class="section-title">5. Checking LedgerSeal evidence</h2>
     <p>The open verifier checks a LedgerSeal evidence record offline, with no access to Jira or to LedgerSeal. It is in the public repository
         <a href="https://github.com/asymmsystems/ledgerseal-verifier" class="org-link org-link--inline org-link--external">asymmsystems/ledgerseal-verifier</a> (Apache-2.0),
-        <a href="https://github.com/asymmsystems/ledgerseal-verifier/releases/tag/v1.2.0" class="org-link org-link--inline org-link--external">release v1.2.0</a>, and needs Node.js 18 or later.</p>
+        <a href="https://github.com/asymmsystems/ledgerseal-verifier/releases/tag/v1.3.0" class="org-link org-link--inline org-link--external">release v1.3.0</a>, and needs Node.js 18 or later.</p>
     <ol>
         <li>In the Approval Seal panel, open the seal details and click <strong>Show evidence (JSON)</strong>. Copy the text into a file, for example <code>evidence.json</code>.</li>
         <li>Download the verifier release and open a terminal in its folder.</li>
