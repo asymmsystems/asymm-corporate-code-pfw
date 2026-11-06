@@ -110,7 +110,7 @@ status=published
     <h3 style="margin-top: 1.5rem">DefinitionGuard</h3>
     <ul style="line-height: 1.9; margin-top: 0.5rem">
         <li><strong>What it accesses and stores:</strong> it reads the issue and its workflow. It stores the Definition of Done checklist state of each issue and its history in Forge storage, and sets the issue property <code>definitionguard-dod</code> (a summary of the checklist).</li>
-        <li><strong>Personal data:</strong> the Atlassian account id of the person who completed each checklist item, and of the person behind each recorded event.</li>
+        <li><strong>Personal data:</strong> who completed, waived, reopened or reset each checklist item, and who saved a template, the exempt statuses or the approver groups. DefinitionGuard stores each person as a random pseudonym; the Atlassian account id is kept only in one link per person. The app reports these account ids to Atlassian every week and deletes the link of every account Atlassian reports as closed; the history then shows "A deleted user". Evidence links, evidence notes and waiver reasons are free text that you write and may name people. The issue property <code>definitionguard-dod</code> holds no personal data.</li>
     </ul>
 
     <h3 style="margin-top: 1.5rem">FourRealities</h3>

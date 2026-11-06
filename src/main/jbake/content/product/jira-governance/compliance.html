@@ -47,7 +47,7 @@ og_image=product/jira-governance/ledgerseal/banner.png
             <tr>
                 <td><strong>Separation of Duties</strong></td>
                 <td>DefinitionGuard &amp; LedgerSeal</td>
-                <td>DefinitionGuard lets admins mark DoD items that the assignee may not tick. LedgerSeal refuses an approval from anyone who changed the issue since the last seal.</td>
+                <td>DefinitionGuard lets admins mark DoD items that the assignee may not tick or waive; anyone who was the assignee after the item was opened counts as the assignee. LedgerSeal refuses an approval from anyone who changed the issue since the last seal.</td>
             </tr>
             <tr>
                 <td><strong>Verification &amp; Testing Evidence</strong></td>
@@ -158,7 +158,7 @@ og_image=product/jira-governance/ledgerseal/banner.png
             <tr>
                 <td><strong>Personal Data</strong></td>
                 <td>What personal data does the application store?</td>
-                <td>CascadePlan stores Atlassian account ids only: of who froze a baseline, of who requested or reviewed a scope change, and of each person who works on a task through a Jira sub-task. It reports them each week to Atlassian's personal data reporting service and removes the id of a closed account. LedgerSeal, DefinitionGuard and FourRealities store Atlassian account ids to record who did each action (LedgerSeal also stores the signer's display name). The <a href="/privacy" class="org-link org-link--inline">privacy policy</a> lists what each app stores.</td>
+                <td>CascadePlan stores Atlassian account ids only: of who froze a baseline, of who requested or reviewed a scope change, and of each person who works on a task through a Jira sub-task. It reports them each week to Atlassian's personal data reporting service and removes the id of a closed account. LedgerSeal, DefinitionGuard and FourRealities store Atlassian account ids to record who did each action; DefinitionGuard stores them as pseudonyms, reports them each week and deletes the link of a closed account (LedgerSeal also stores the signer's display name). The <a href="/privacy" class="org-link org-link--inline">privacy policy</a> lists what each app stores.</td>
             </tr>
             <tr>
                 <td><strong>AI / LLM Ingestion</strong></td>
