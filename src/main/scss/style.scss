@@ -812,10 +812,13 @@ select.form-control {
 }
 
 /* TOC variant — reserve right-side space inside the article so
-   prose doesn't underlap the fixed sidebar. */
+   prose doesn't underlap the fixed sidebar. 268px = the 220px ToC plus a
+   3rem (48px) gap, written as one length: the CSS minifier strips the
+   spaces in calc(220px + 3rem), and calc(220px+3rem) is invalid, so the
+   browser dropped the rule and long headings ran under the ToC. */
 @media (min-width: 1281px) {
     .page-body--toc {
-        padding-right: calc(220px + 3rem);
+        padding-right: 268px;
     }
 }
 
