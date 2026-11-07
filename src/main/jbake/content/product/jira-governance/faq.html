@@ -59,7 +59,8 @@ og_image=product/jira-governance/ledgerseal/banner.png
     <h3>What personal data do the apps store?</h3>
     <p>CascadePlan stores Atlassian account ids only: of who froze a baseline, of who requested or reviewed a scope change, of each person who works on a task through a Jira sub-task, and of the Jira administrator who last saved the approver groups.
         It reports them each week to Atlassian's personal data reporting service and removes the id of a closed account.</p>
-    <p>The other three apps store Atlassian account ids to record who did each action: LedgerSeal of who sealed, signed or revoked a seal (as pseudonymous tokens, with no display name),
+    <p>LedgerSeal names every person in its seal records by a pseudonymous token, not by account id. It keeps the Atlassian account id only in one link record per person who sealed, revoked or changed a sealed issue, and the account id of the Jira administrator who last saved the approver groups; it reports these each week to Atlassian and, when an account is closed, deletes the link and the admin id. No display name is stored.
+    The other two apps store Atlassian account ids to record who did each action:
         DefinitionGuard of who ticked, waived or configured a Definition of Done item (as pseudonyms, reported each week to Atlassian, with the link to a closed account deleted), and FourRealities of who requested or decided a Code exception, who gave a rework reason, and the assignee for the "My issues" filter.
         The <a href="/privacy" class="org-link org-link--inline">privacy policy</a> lists what each app stores.</p>
 </section>
