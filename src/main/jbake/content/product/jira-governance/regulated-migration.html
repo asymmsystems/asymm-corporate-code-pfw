@@ -1,0 +1,223 @@
+title=Moving regulated Jira to cloud: keep your change control
+description=Atlassian ends Jira Data Center on 28 March 2029. How regulated teams keep approval, Definition of Done and audit evidence controls in Jira Cloud, what the Jira Governance Suite covers for SOC 2 CC8.1, ISO/IEC 27001 A.8.32 and 21 CFR Part 11, and what it does not.
+type=page
+toc=true
+status=published
+og_image=product/jira-governance/ledgerseal/banner.png
+~~~~~~
+
+<header class="page-header">
+    <span class="section-kicker">Jira Governance Suite</span>
+    <h1>Moving regulated Jira to cloud: keep your change control</h1>
+    <p style="max-width: 65ch">Atlassian ends Jira Data Center in March 2029. Regulated teams must move to Jira Cloud and keep the
+        controls their auditors test: an approval that stays bound to what was approved, a Definition of Done that blocks
+        the move to Done, and evidence for each change. This page states the dates, what you must replace, what our apps
+        cover, and what they do not.</p>
+    <p style="max-width: 65ch">Status on 8 November 2026: the four apps are waiting for Atlassian Marketplace approval.</p>
+</header>
+
+<section id="timeline" style="margin-bottom: 5rem">
+    <h2 class="section-title">1. The Data Center timeline</h2>
+    <table class="clinical-table" style="margin-top: 1.5rem">
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>What happens</th>
+                <th>Source</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>16 December 2025</strong></td>
+                <td>New Data Center apps can no longer be submitted to the Atlassian Marketplace.</td>
+                <td><a href="https://www.atlassian.com/blog/developer/from-data-center-to-cloud-the-next-chapter-for-marketplace-apps" class="org-link org-link--inline org-link--external">Atlassian developer blog, 8 September 2025</a></td>
+            </tr>
+            <tr>
+                <td><strong>30 March 2026</strong></td>
+                <td>New customers can no longer buy Data Center subscriptions or new Marketplace Data Center apps.</td>
+                <td><a href="https://www.atlassian.com/licensing/data-center-end-of-life" class="org-link org-link--inline org-link--external">Atlassian, Data Center end of life</a></td>
+            </tr>
+            <tr>
+                <td><strong>30 March 2028</strong></td>
+                <td>Existing customers can no longer buy new subscriptions, expansions or Marketplace Data Center apps.</td>
+                <td><a href="https://www.atlassian.com/licensing/data-center-end-of-life" class="org-link org-link--inline org-link--external">Atlassian, Data Center end of life</a></td>
+            </tr>
+            <tr>
+                <td><strong>28 March 2029</strong></td>
+                <td>End of life. Data Center products and apps become read-only. Atlassian offers extended maintenance only by exception.</td>
+                <td><a href="https://www.atlassian.com/licensing/data-center-end-of-life" class="org-link org-link--inline org-link--external">Atlassian, Data Center end of life</a></td>
+            </tr>
+        </tbody>
+    </table>
+    <p style="margin-top: 1rem">The cloud targets for regulated teams are Jira Cloud with data residency, Atlassian Isolated Cloud
+        (single tenant) and Atlassian Government Cloud (FedRAMP Moderate, for US government). See
+        <a href="https://www.atlassian.com/enterprise/cloud-deployments" class="org-link org-link--inline org-link--external">Atlassian cloud deployment options</a>.
+        Dates checked on 8 November 2026.</p>
+</section>
+
+<section id="replace" style="margin-bottom: 5rem">
+    <h2 class="section-title">2. What regulated teams must replace</h2>
+    <ul style="line-height: 1.9">
+        <li><strong>Data Center apps do not run in cloud.</strong> A Data Center app is a Java plugin that runs on infrastructure you manage. Jira Cloud apps are a different build. When an app has no cloud version, the Jira Cloud Migration Assistant shows "This app is not available in cloud" and lets you choose an alternative.</li>
+        <li><strong>Alternatives are not recommendations.</strong> Atlassian says the alternatives it shows "are not recommended by Atlassian, and are selected based on similarity in functionality"
+            (<a href="https://support.atlassian.com/migration/docs/audit-apps-for-your-migration-to-cloud/" class="org-link org-link--inline org-link--external">Atlassian, Audit apps for your migration to cloud</a>). Check each one against the control you need.</li>
+        <li><strong>Cloud versions can differ.</strong> Some apps that have a cloud version list features as Data Center only. Read each vendor's own comparison page before you plan.</li>
+        <li><strong>In-house plugins and scripts have no cloud version.</strong> A validator or condition that your team wrote must be rebuilt.</li>
+        <li><strong>Old app data may not move.</strong> A migration path of "No path" means the app's data does not migrate. Plan how to keep old approval records available after Data Center becomes read-only.</li>
+    </ul>
+</section>
+
+<section id="coverage" style="margin-bottom: 5rem">
+    <h2 class="section-title">3. What the suite covers</h2>
+    <p>Our apps support compliance; they do not make a team compliant. Your auditor decides. The full mapping is on the
+        <a href="/product/jira-governance/compliance.html" class="org-link org-link--inline org-link--internal">compliance and security mapping</a> page.</p>
+
+    <table class="clinical-table" style="margin-top: 1.5rem">
+        <thead>
+            <tr>
+                <th>Control</th>
+                <th>App</th>
+                <th>What it does in Jira Cloud</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>SOC 2 CC8.1: change authorization</strong></td>
+                <td>LedgerSeal</td>
+                <td>Records the approver, the time, the meaning of the approval and a SHA-256 snapshot of the issue at approval. A Jira workflow validator blocks the release transition for issues that are not sealed.</td>
+            </tr>
+            <tr>
+                <td><strong>SOC 2 CC8.1: post-approval integrity</strong></td>
+                <td>LedgerSeal</td>
+                <td>Detects changes to covered fields, comments and attachments after approval. The validator blocks the release transition until an approver approves the changes.</td>
+            </tr>
+            <tr>
+                <td><strong>SOC 2 CC8.1: separation of duties</strong></td>
+                <td>LedgerSeal &amp; DefinitionGuard</td>
+                <td>LedgerSeal refuses an approval or a revoke from anyone who changed a covered field, a comment, a work log or an attachment since the last seal. DefinitionGuard lets admins mark items that the assignee may not tick or waive.</td>
+            </tr>
+            <tr>
+                <td><strong>SOC 2 CC8.1: testing evidence</strong></td>
+                <td>DefinitionGuard</td>
+                <td>On Definition of Done items an admin marks "Evidence required", an item is ticked only with evidence (a link or a note). Once a Jira admin adds the DefinitionGuard validator to the transitions into Done, an issue with an open mandatory item cannot move into Done. It checks the link format, not the content behind the link.</td>
+            </tr>
+            <tr>
+                <td><strong>ISO/IEC 27001:2022 A.8.32: formal approval</strong></td>
+                <td>LedgerSeal &amp; DefinitionGuard</td>
+                <td>Workflow validators enforce approval seals and completed Definition of Done items before release transitions. A Jira admin adds each validator to each transition.</td>
+            </tr>
+            <tr>
+                <td><strong>ISO/IEC 27001:2022 A.8.32: record of changes</strong></td>
+                <td>All four</td>
+                <td>Seals, detected changes, approvals of changes, revokes, Definition of Done ticks and waivers are recorded with timestamps. FourRealities shows, per issue, which evidence exists. CascadePlan writes to Jira only as the signed-in user, so Jira's own history records each change.</td>
+            </tr>
+            <tr>
+                <td><strong>21 CFR 11.10(e): audit trails</strong></td>
+                <td>LedgerSeal</td>
+                <td>Supported. Tamper-evident, hash-chained records of seals, detected changes, reasons, approvals of changes and revokes, which can be checked with the offline verifier. The chain does not stop someone who can rewrite the app storage (including the vendor) from writing a new consistent chain.</td>
+            </tr>
+            <tr>
+                <td><strong>21 CFR 11.50: signature manifestations</strong></td>
+                <td>LedgerSeal</td>
+                <td>Partly met. Each seal records the date, time and meaning of the signature. The signer's name is shown from their Atlassian account while it exists; after the account is closed, it is shown as a deleted user, so a printed name is not kept in the record.</td>
+            </tr>
+            <tr>
+                <td><strong>21 CFR 11.70: signature linking</strong></td>
+                <td>LedgerSeal</td>
+                <td>The attestation, with the snapshot hash and certificate ID, is signed with Ed25519 by the app, not by the approver. Your auditor decides whether this meets 11.70.</td>
+            </tr>
+            <tr>
+                <td><strong>21 CFR 11.200 / 11.300: signature components and controls</strong></td>
+                <td>LedgerSeal</td>
+                <td>Not met. LedgerSeal does not re-authenticate the signer and does not perform two-component signing. Use your own controls if your predicate rules need Part 11 signatures.</td>
+            </tr>
+        </tbody>
+    </table>
+
+    <h3 style="margin-top: 2rem">What the suite does not do</h3>
+    <ul style="line-height: 1.9">
+        <li>It does not certify your team or make it compliant.</li>
+        <li>It does not provide 21 CFR Part 11 electronic signatures by itself.</li>
+        <li>It has no approval routing with several steps or parallel approvers.</li>
+        <li>It does not approve or control Confluence pages or documents.</li>
+        <li>It is not a general Jira audit log of admin and configuration events.</li>
+        <li>It does not import approval records from Data Center apps.</li>
+        <li>Asymm Systems holds the signing keys, so the signatures do not protect against the vendor.</li>
+    </ul>
+</section>
+
+<section id="data" style="margin-bottom: 5rem">
+    <h2 class="section-title">4. Data residency and Runs on Atlassian</h2>
+    <ul style="line-height: 1.9">
+        <li><strong>Forge only.</strong> All four apps run on Atlassian Forge compute. Asymm Systems operates no servers for them.</li>
+        <li><strong>No egress.</strong> No app manifest declares an external egress endpoint. The apps call only Atlassian APIs of your own site.</li>
+        <li><strong>Data stays in Atlassian.</strong> App data is kept in Atlassian Forge storage for your installation and as Jira issue properties on your own issues, under Atlassian's data residency rules for Forge apps.
+            Jira Cloud data residency regions include the US, the EU, Germany, Switzerland, the UK, Canada, Australia, Japan, Singapore, India and South Korea
+            (<a href="https://www.atlassian.com/software/data-residency" class="org-link org-link--inline org-link--external">Atlassian, Data residency</a>).</li>
+        <li><strong>Runs on Atlassian.</strong> All four apps are eligible for Runs on Atlassian (Forge eligibility check, 8 November 2026): Atlassian-hosted compute and storage only, and no egress.
+            Atlassian shows the badge itself on each listing once the app is listed
+            (<a href="https://developer.atlassian.com/platform/forge/runs-on-atlassian/" class="org-link org-link--inline org-link--external">Forge docs, Runs on Atlassian</a>).</li>
+        <li><strong>Personal data.</strong> The <a href="/privacy" class="org-link org-link--inline org-link--internal">privacy policy</a> states what each app stores and how it is deleted.</li>
+    </ul>
+</section>
+
+<section id="availability" style="margin-bottom: 5rem">
+    <h2 class="section-title">5. Isolated Cloud and Government Cloud</h2>
+    <table class="clinical-table" style="margin-top: 1.5rem">
+        <thead>
+            <tr>
+                <th>Atlassian cloud</th>
+                <th>Status of our apps on 8 November 2026</th>
+                <th>What it needs</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr>
+                <td><strong>Jira Cloud (Standard, Premium, Enterprise, with data residency)</strong></td>
+                <td>Waiting for Atlassian Marketplace approval.</td>
+                <td>Atlassian's review of each app.</td>
+            </tr>
+            <tr>
+                <td><strong>Atlassian Isolated Cloud</strong></td>
+                <td>Planned. Not available yet.</td>
+                <td>Isolated Cloud supports Forge apps only, and blocks egress by default. Our apps are Forge only with no egress. Atlassian also needs a live cloud listing first, then a separate app id and a separate Isolated Cloud listing
+                    (<a href="https://developer.atlassian.com/platform/marketplace/publish-and-list-ic-apps/" class="org-link org-link--inline org-link--external">Atlassian, Publish and list Isolated Cloud apps</a>).</td>
+            </tr>
+            <tr>
+                <td><strong>Atlassian Government Cloud</strong></td>
+                <td>Planned. Onboarding has not started.</td>
+                <td>A developer licence from Atlassian, a separate app id and listing, and Atlassian's 16 security requirements for Government Cloud apps
+                    (<a href="https://developer.atlassian.com/platform/framework/agc/agc-security-requirements/" class="org-link org-link--inline org-link--external">Atlassian, AGC security requirements</a>).
+                    In Government Cloud, Atlassian support installs apps, and each customer runs its own security assessment of each app.</td>
+            </tr>
+        </tbody>
+    </table>
+</section>
+
+<section id="checklist" style="margin-bottom: 5rem">
+    <h2 class="section-title">6. Migration checklist for change control</h2>
+    <ol style="line-height: 1.9">
+        <li>List every workflow transition that a control depends on: approval, release, move to Done.</li>
+        <li>For each, name the app, plugin or script that enforces it, and the rule it supports (SOC 2 CC8.1, ISO 27001 A.8.32, 21 CFR Part 11).</li>
+        <li>Run the app assessment in the Jira Cloud Migration Assistant. Note every app that is not available in cloud.</li>
+        <li>For apps with a cloud version, read the vendor's own feature comparison. Look for the row your control depends on.</li>
+        <li>Choose the cloud target: data residency region, Isolated Cloud or Government Cloud. Check that each app is available there.</li>
+        <li>Rebuild each control in cloud. Check who adds each validator to each transition.</li>
+        <li>If your predicate rules need Part 11 electronic signatures, choose the control that re-authenticates the signer.</li>
+        <li>Decide how Data Center records stay available after 28 March 2029.</li>
+        <li>Run the security review of each app: scopes, egress, data storage, privacy policy, security policy.</li>
+        <li>For GxP work, validate the cloud system and its apps for their intended use, and keep the test evidence.</li>
+        <li>Update the procedures and train approvers and admins. The auditor tests the procedure, not only the tool.</li>
+    </ol>
+</section>
+
+<section id="more" style="margin-bottom: 5rem">
+    <h2 class="section-title">7. More information</h2>
+    <ul style="line-height: 1.9">
+        <li><a href="/product/jira-governance.html" class="org-link org-link--inline org-link--internal">Jira Governance Suite</a></li>
+        <li><a href="/product/jira-governance/compliance.html" class="org-link org-link--inline org-link--internal">Compliance and security mapping</a></li>
+        <li><a href="/product/jira-governance/user-guide/" class="org-link org-link--inline org-link--internal">User guides</a></li>
+        <li><a href="/security" class="org-link org-link--inline org-link--internal">Security policy</a></li>
+        <li>Questions: <a href="mailto:support@asymm.systems" class="org-link org-link--inline org-link--external">support@asymm.systems</a></li>
+    </ul>
+</section>
