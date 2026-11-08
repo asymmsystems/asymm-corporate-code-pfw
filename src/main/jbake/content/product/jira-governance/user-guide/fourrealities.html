@@ -1,5 +1,5 @@
 title=FourRealities User & Admin Guide
-description=Per-issue delivery evidence gates (Intent, Process, Code, Audit), the Reality Alignment Index (RAI), Code exceptions and rework reasons for Jira Cloud.
+description=How to install, set up and use FourRealities for Jira Cloud: the four evidence gates, the Reality Alignment Index, the project dashboard, the issue panel, Code exceptions, evidence reports for change-management audits, permissions, data, limits and troubleshooting.
 type=page
 toc=true
 status=published
@@ -9,95 +9,305 @@ og_image=product/jira-governance/fourrealities/banner.png
 <header class="page-header">
     <span class="section-kicker">FourRealities Guide</span>
     <h1>FourRealities User &amp; Administrator Guide</h1>
-    <p style="max-width: 65ch">How FourRealities shows, for each Jira issue, which delivery evidence exists: a decision record, a Definition of Done,
-        a pull request and an audit seal. How to read the Reality Alignment Index (RAI), use the project dashboard, link decision records,
-        and record Code exceptions and rework reasons.</p>
+    <p style="max-width: 65ch">FourRealities shows, for each Jira issue, which delivery evidence exists: a decision record, a complete Definition of Done, a merged pull request and an approval seal.
+        The project dashboard shows where evidence is missing and what to do next. Evidence reports give an auditor one signed file set for a project and a period.</p>
 </header>
 
 <section style="margin-bottom: 4rem">
-    <h2 class="section-title">1. The Four Gates</h2>
-    <p>Delivery evidence for one piece of work is spread over several places. FourRealities checks four kinds of evidence for each issue and shows each one as a gate:</p>
+    <h2 class="section-title">1. Who this guide is for</h2>
+    <ul>
+        <li><strong>Delivery leads and team members</strong> who close evidence gaps. Read sections 3 to 5.</li>
+        <li><strong>Project and Jira administrators</strong> who decide Code exceptions and make evidence reports. Read sections 5 and 7.</li>
+        <li><strong>Auditors</strong> who sample changes. Read section 7 and the <a href="/product/jira-governance/user-guide/open-verifier.html" class="org-link org-link--inline org-link--internal">open verifier guide</a>.</li>
+        <li><strong>Jira administrators</strong> who install the app and set the evidence sources. Read sections 2, 6 and 11.</li>
+    </ul>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">2. Install and first setup</h2>
     <ol>
-        <li><strong>Intent:</strong> a link to a Confluence page on your site, or a link to an issue of a decision or specification type.</li>
-        <li><strong>Process:</strong> the Definition of Done record of DefinitionGuard, or the checklist property of Checklists for Jira (HeroCoders), whichever a Jira administrator chooses. A DefinitionGuard record counts only when FourRealities verifies its signature.</li>
-        <li><strong>Code:</strong> pull request count and state from the Jira Development field, which your GitHub, GitLab or Bitbucket integration for Jira populates.</li>
-        <li><strong>Audit:</strong> an approval seal record written by LedgerSeal.</li>
+        <li><strong>Install (Jira administrator).</strong> In Jira, open <strong>Apps &gt; Explore more apps</strong>, search for <strong>FourRealities</strong> and choose <strong>Get app</strong>. The app asks to read and write Jira work, to read users, to search your site's Confluence pages, to store its own data, and to report personal data to Atlassian. It calls no server outside your Atlassian site.</li>
+        <li><strong>Check the evidence sources (Jira administrator).</strong> Open <strong>Jira settings &gt; Apps &gt; FourRealities gate authority</strong>. The defaults detect DefinitionGuard, LedgerSeal and pull request data on their own (section 6).</li>
+        <li><strong>Connect code tools (optional).</strong> The Code gate reads the Jira Development field. Connect GitHub, Bitbucket or GitLab to Jira if you have not.</li>
+        <li><strong>Open the dashboard.</strong> In a project, open <strong>Four Realities</strong> in the project navigation. The first view builds the project's snapshot; after that it is rebuilt each day.</li>
     </ol>
-    <p>Each check shows a state, for example <em>Evidence found</em>, <em>Evidence missing</em>, <em>Not used on this site</em> or <em>Not applicable</em>, and names its source.
-        A DefinitionGuard or LedgerSeal record is scored only when its signature is verified. A record FourRealities cannot verify (unsigned, or signed with a key it does not trust) counts exactly like no record: <em>Evidence missing</em> on a Done issue, <em>Not applicable</em> before Done. A record changed after signing, copied from another issue, or older than a record already seen counts as <em>Evidence missing</em>, also before Done. The panel still says what the record reports and why it did not count. A Checklists for Jira checklist cannot be signed, so it never counts as evidence. A check your site does not use is not scored. Pull request state is marked as heuristic, because apps cannot read pull request approvals.
-        A merged pull request is not shown as reviewed.</p>
+    <p><strong>Updating to 3.0.0.</strong> FourRealities 3.0.0 adds evidence reports. It is a major version because it adds file storage, so a site administrator accepts the update in <strong>Manage apps</strong> before reports appear.</p>
+    <p><strong>Licence.</strong> With an inactive licence the app shows "Licence not active" and makes no new evidence reports; existing evidence reports can still be viewed and downloaded.</p>
 </section>
 
 <section style="margin-bottom: 4rem">
-    <h2 class="section-title">2. The Reality Alignment Index (RAI)</h2>
-    <p>The <strong>Reality Alignment Index (RAI)</strong> is the share of rated gates with evidence found, from 0 to 100.
-        Only checks with evidence found or evidence missing are scored. Excepted, not applicable, not used and needs-recheck checks are not counted.
-        The RAI is always shown after the gates and with its parts: click <strong>Why N%?</strong> in the issue panel to see them.</p>
-    <p>Each rated issue gets a risk level from its RAI:</p>
-    <ul>
-        <li><strong>Low:</strong> 85 or more.</li>
-        <li><strong>Medium:</strong> 70 to 84.</li>
-        <li><strong>High:</strong> 50 to 69.</li>
-        <li><strong>Critical:</strong> below 50.</li>
-    </ul>
-    <p>FourRealities never ranks people by the RAI.</p>
-
-    <div style="margin: 2rem 0; text-align: center;">
-        <img src="/images/product/jira-governance/fourrealities/01-dashboard.png" alt="FourRealities Project Dashboard" style="max-width: 100%; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
-        <p style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 1: Project dashboard with audit readiness, the four check cards (Code "Not used" on a site with no pull request data), the checks in use and Priority actions.</p>
+    <h2 class="section-title">3. The four gates and the RAI</h2>
+    <div style="overflow-x: auto;">
+    <table class="clinical-table">
+        <thead><tr><th>Gate</th><th>Question</th><th>Evidence that counts</th></tr></thead>
+        <tbody>
+            <tr><td>Intent</td><td>Is the work traced to a decision record?</td><td>A remote link to a Confluence page on your site, or an issue link to an issue whose type is a decision type (default: adr, architecture decision, decision, decision record, spec, specification, requirement). Titles and keywords never count.</td></tr>
+            <tr><td>Process</td><td>Is the Definition of Done complete?</td><td>A DefinitionGuard record with a valid signature that says the checklist is complete. A Checklists for Jira (HeroCoders) checklist can be shown, but it cannot be verified, so at Done it counts as missing.</td></tr>
+            <tr><td>Code</td><td>Was the work merged through a pull request?</td><td>A merged pull request in the Jira Development field. This is a heuristic: apps cannot read pull request approvals.</td></tr>
+            <tr><td>Audit</td><td>Is the finished work sealed?</td><td>A LedgerSeal record with a valid signature and the status SEAL_VALID.</td></tr>
+        </tbody>
+    </table>
     </div>
+    <h3>Gate states</h3>
+    <ul>
+        <li><strong>Evidence found</strong> and <strong>Evidence missing</strong> are scored. A found state can add "(not verified)", "(heuristic)" or "(link only)" when FourRealities could not check the source fully.</li>
+        <li><strong>Excepted</strong>: an approved Code exception. It is shown as evidenced in the readiness banner, but not scored in the RAI.</li>
+        <li><strong>Needs re-check</strong>: the source was not read in this snapshot. Use Refresh.</li>
+        <li><strong>Not applicable</strong>: the gate does not apply yet, for example Process and Audit before the issue is done, or Intent before work starts.</li>
+        <li><strong>Not used on this site</strong>: an administrator turned the check off. It is not scored.</li>
+    </ul>
+    <p>A DefinitionGuard or LedgerSeal record counts only when its signature is valid. An unsigned record, or one signed with an unknown key, counts as missing at Done. A record changed after signing, copied from another issue, or older than a record already seen counts as missing, also before Done.</p>
+    <h3>Reality Alignment Index (RAI) and risk</h3>
+    <p>RAI = found gates divided by (found + missing gates), times 100. With no scored gate, the issue is <strong>UNRATED</strong>. The risk level comes from the RAI: Low 85 or more, Medium 70 to 84, High 50 to 69, Critical below 50.
+        A rework loop is a move from a Done status back to a status that is not done, or from In Progress back to To Do. Rework never changes a gate.</p>
+</section>
 
-    <div style="margin: 2rem 0; text-align: center;">
-        <img src="/images/product/jira-governance/fourrealities/02-issue-panel.png" alt="FourRealities Issue Panel" style="max-width: 100%; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
-        <p style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 2: The issue panel with the checks as a chain, the next step naming the Definition of Done panel, and the findings with their sources.</p>
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">4. The project dashboard</h2>
+    <p>Open <strong>Four Realities</strong> in the project navigation. The page has two tabs: <strong>Dashboard</strong> and <strong>Evidence reports</strong>.</p>
+    <figure style="margin: 2rem 0;">
+        <img src="/images/product/jira-governance/user-guide/fourrealities/01-dashboard.png" alt="The FourRealities dashboard for PAY: the Dashboard and Evidence reports tabs, the Audit readiness banner Incomplete with the next step, four gate cards Intent, Process, Code (Not used) and Audit with their rates and Show missing buttons, the checks in use, Priority actions and Coverage at a glance with alignment, rated scope, weekly change, weakest gate and risk buttons." width="1497" height="740" loading="lazy" style="max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <figcaption style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 1: The dashboard. Code is Not used because the site has no pull request data.</figcaption>
+    </figure>
+    <div style="overflow-x: auto;">
+    <table class="clinical-table">
+        <thead><tr><th>Part</th><th>What it shows or does</th></tr></thead>
+        <tbody>
+            <tr><td>Read ... UTC, Refresh</td><td>When the snapshot was read. Refresh reads Jira again now.</td></tr>
+            <tr><td>Audit readiness</td><td>Complete or Incomplete, the evidence count across rated issues, and the next step for the project.</td></tr>
+            <tr><td>Gate cards</td><td>The rate per gate, "X of Y rated issues have evidence", and <strong>Show N missing &lt;Gate&gt;</strong>, which filters the triage table.</td></tr>
+            <tr><td>Checks in use</td><td>Which sources this site uses, and which are not used.</td></tr>
+            <tr><td>Priority actions</td><td>Up to 5 issues with the highest-impact gaps, each with its next action and <strong>Inspect</strong>.</td></tr>
+            <tr><td>Coverage at a glance</td><td>Rated average alignment, rated scope, weekly change, the weakest gate, and the risk buttons Critical, High, Medium and Low.</td></tr>
+            <tr><td>Issue triage</td><td>All issues with their gates, alignment, top finding and assignee (section below).</td></tr>
+            <tr><td>Trend</td><td>RAI and gate rates for the last 4 weeks. It starts after two weekly snapshots. It is hidden from a viewer who cannot see every issue it counts.</td></tr>
+        </tbody>
+    </table>
+    </div>
+    <h3>Issue triage</h3>
+    <p>Search by key or summary, and filter by <strong>Assignee</strong>, <strong>Sprint</strong> and <strong>Gate</strong>. The views <strong>My issues</strong>, <strong>Critical and high</strong>, <strong>Audit prep</strong> and <strong>Needs a decision link</strong> set filters in one click. Filters combine; <strong>Clear all filters</strong> keeps the search text. The table shows 25 rows per page.</p>
+    <figure style="margin: 2rem 0;">
+        <img src="/images/product/jira-governance/user-guide/fourrealities/02-issue-triage.png" alt="The Issue triage table: search, Assignee and Gate filters, the four views, and rows with gate chips such as Intent missing and Code not used, alignment 0 percent Critical, the top finding and an Inspect button." width="1462" height="476" loading="lazy" style="max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <figcaption style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 2: Issue triage, ordered by the number of missing gates.</figcaption>
+    </figure>
+    <p><strong>Inspect</strong> opens the issue's gates with their sources. Use <strong>Previous issue</strong> and <strong>Next issue</strong> to step through the filtered rows, or <strong>Open issue</strong>.</p>
+    <figure style="margin: 2rem 0;">
+        <img src="/images/product/jira-governance/user-guide/fourrealities/03-inspect.png" alt="The Inspect window for PAY-4 Card payment form: the gate chips, 0 percent Critical with 3 gaps, and each gate with its state, a sentence and its source." width="798" height="642" loading="lazy" style="max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <figcaption style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 3: The Inspect window.</figcaption>
+    </figure>
+    <p>The dashboard shows only the issues you can see in Jira. It reads at most 2,000 issues per project, newest first, and says so when it stops.</p>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">5. The issue panel: close the gaps</h2>
+    <p>Open an issue. The <strong>Four Realities</strong> entry in the details column shows the chips, the alignment, the risk and <strong>See all findings</strong>. The full panel opens from the issue's app button.</p>
+    <figure style="margin: 2rem 0;">
+        <img src="/images/product/jira-governance/user-guide/fourrealities/04-issue-panel.png" alt="The Four Realities issue panel on PAY-4: Incomplete, the gate chips, No decision record is linked, Next: link the decision record, a note that Intent evidence raises the RAI by 33 points, the Link decision record button, and Gate findings with each gate and its source." width="1113" height="656" loading="lazy" style="max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <figcaption style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 4: The issue panel names the next step and the points it adds.</figcaption>
+    </figure>
+    <p>Under the gate findings, <strong>Why N%?</strong> shows the parts of the score.</p>
+    <figure style="margin: 2rem 0;">
+        <img src="/images/product/jira-governance/user-guide/fourrealities/05-rai-score-parts.png" alt="The RAI line: 0 percent Critical, 0 of 3 rated gates have evidence found, and the score parts: Intent 0, Process 0, Code not rated, Audit 0, Fix Intent to reach 33 percent." width="1080" height="161" loading="lazy" style="max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <figcaption style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 5: The parts of the RAI.</figcaption>
+    </figure>
+    <h3>Link a decision record</h3>
+    <ol>
+        <li>Choose <strong>Link decision record</strong>.</li>
+        <li>Choose <strong>Search Confluence...</strong>, type at least 2 characters of the page title and choose <strong>Search</strong>. Choose <strong>Select</strong> on a result. Or type the <strong>Page address</strong> and a <strong>Page title</strong> (3 to 255 characters).</li>
+        <li>Choose <strong>Add link</strong>.</li>
+    </ol>
+    <figure style="margin: 2rem 0;">
+        <img src="/images/product/jira-governance/user-guide/fourrealities/06-link-decision-record.png" alt="The Link a decision record to PAY-4 dialog: Search Confluence, Page address, Page title, Cancel and Add link." width="598" height="446" loading="lazy" style="max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <figcaption style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 6: Linking a decision record.</figcaption>
+    </figure>
+    <p><strong>Result:</strong> "Link added. Intent: Evidence found." FourRealities adds a Jira remote link as you; you need Edit issues. If FourRealities could not check the page, Intent reads "Evidence found (link only)". A link to a page outside your site is added, but Intent stays missing.</p>
+    <h3>Request a Code exception</h3>
+    <p>For done work that needs no pull request:</p>
+    <ol>
+        <li>Choose <strong>Request Code exception</strong>.</li>
+        <li>Write the <strong>Reason</strong> (15 to 500 characters) and, if you want, <strong>Notes</strong>, such as a change ticket. Choose <strong>Save exception</strong>.</li>
+        <li>A project administrator, a Jira administrator or a member of an approver group, who is neither the requester nor the assignee, opens <strong>Show details</strong> and chooses <strong>Approve exception</strong> or <strong>Reject exception</strong>.</li>
+    </ol>
+    <p><strong>Result:</strong> after approval, Code shows <strong>Excepted</strong>. Until then it stays Evidence missing. An approver can later <strong>Revoke exception</strong> with a reason; the requester can <strong>Withdraw request</strong> while it waits. A request is refused when a pull request is linked.</p>
+    <h3>Other actions</h3>
+    <ul>
+        <li><strong>Add rework reason</strong> appears in the Process findings when the issue has a rework loop. The reason never changes a gate.</li>
+        <li><strong>Request retrospective review</strong> appears when Code is found with a merged pull request. It posts a comment (15 to 1,000 characters) on the issue as you.</li>
+        <li>When Process or Audit is missing, the next step names the Definition of Done panel (DefinitionGuard) or the Approval Seal panel (LedgerSeal). FourRealities never writes their records.</li>
+    </ul>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">6. Site settings (Jira administrator)</h2>
+    <p>Open <strong>Jira settings &gt; Apps &gt; FourRealities gate authority</strong>.</p>
+    <figure style="margin: 2rem 0;">
+        <img src="/images/product/jira-governance/user-guide/fourrealities/07-admin-evidence-sources.png" alt="The Evidence sources card: Intent In use, Process Detect DefinitionGuard, Code Detect, Audit Detect LedgerSeal, each with what is in use now and what was seen on the site, the Decision issue types field and Save evidence sources." width="1568" height="645" loading="lazy" style="max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <figcaption style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 7: Evidence sources.</figcaption>
+    </figure>
+    <div style="overflow-x: auto;">
+    <table class="clinical-table">
+        <thead><tr><th>Setting</th><th>Choices (default first)</th></tr></thead>
+        <tbody>
+            <tr><td>Intent (decision records)</td><td>In use; Not in use</td></tr>
+            <tr><td>Process (Definition of Done)</td><td>Detect (DefinitionGuard, when a signed record is found); DefinitionGuard; Checklists for Jira (HeroCoders); Not in use</td></tr>
+            <tr><td>Code (pull requests from the Jira Development field)</td><td>Detect (when pull request data is found); In use; Not in use. On a site with no Development field, Code is Not applicable whatever you choose.</td></tr>
+            <tr><td>Audit (approval seal)</td><td>Detect (LedgerSeal, when a signed record is found); LedgerSeal; Not in use</td></tr>
+            <tr><td>Decision issue types</td><td>Issue type names, separated by commas. At most 20, each at most 60 characters.</td></tr>
+        </tbody>
+    </table>
+    </div>
+    <p>Choose <strong>Save evidence sources</strong>. Result: "Saved. Dashboards build their snapshot again on the next view."</p>
+    <p>The <strong>Approver groups</strong> card names the groups whose members can approve, reject and revoke Code exceptions, besides project and Jira administrators. Search, <strong>Add</strong>, then <strong>Save changes</strong>. The <strong>Evidence reports</strong> card is described in section 7.</p>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">7. Evidence Reports for Change-Management Audits</h2>
+    <p>For an auditor's sample, FourRealities makes an evidence report: for one project and one period, the issues in scope with their four checks, the DefinitionGuard and LedgerSeal records FourRealities verified, Code exceptions and rework reasons, and who changed which field and when, from Jira's history. An issue is in scope when it was created in the period or changed in it.</p>
+    <p>FourRealities is not an administrative audit log: Jira's audit log and Atlassian Guard keep it. A report holds what Jira's history held when it was made; an issue deleted before then is not in it.</p>
+    <figure style="margin: 2rem 0;">
+        <img src="/images/product/jira-governance/user-guide/fourrealities/10-evidence-reports-list.png" alt="The Evidence reports tab: the New evidence report button, the retention and key note, and the Reports table with two Ready reports, each with period, filters, requester, size, the start of the SHA-256 hash, and Download and Delete buttons." width="1132" height="345" loading="lazy" style="max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <figcaption style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 8: The Evidence reports tab. This test site signs with a development key; a Marketplace installation signs with <code>fr-prod-2026-11</code>.</figcaption>
+    </figure>
+    <h3>Make a report</h3>
+    <ol>
+        <li>Open the project, then <strong>Apps &gt; Four Realities &gt; Evidence reports</strong>, and choose <strong>New evidence report</strong>.</li>
+        <li>Choose <strong>From</strong> and <strong>To</strong> (UTC). Both days are included. A report covers at most 366 days.</li>
+        <li>If you want, choose at most 10 <strong>Fields</strong> and 10 <strong>People</strong>. Empty means all fields and everyone. People filters by who made the change.</li>
+        <li>Choose <strong>Make report</strong>.</li>
+    </ol>
+    <figure style="margin: 2rem 0;">
+        <img src="/images/product/jira-governance/user-guide/fourrealities/11-new-evidence-report.png" alt="The New evidence report dialog: From and To dates in UTC, Fields and People filters with at most 10 each, a note on what the report holds and how long it is kept, and Cancel and Make report." width="598" height="638" loading="lazy" style="max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <figcaption style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 9: The New evidence report dialog.</figcaption>
+    </figure>
+    <p>Project administrators, Jira administrators and members of an evidence report group can make reports. The report holds every change in the range that you can see.
+        <strong>Result:</strong> "The report is queued. It appears here when it is ready." The row goes from <strong>Queued</strong> to <strong>Running</strong> to <strong>Ready</strong>, and the list refreshes on its own. A row can also read <strong>Failed</strong> with the reason, <strong>Expired</strong> or <strong>Deleted</strong>. A badge "N issues not in report" means some issues of the scope could not be read.</p>
+    <h3>Schedules</h3>
+    <p>Project and Jira administrators can add a weekly (Monday to Sunday, UTC) or monthly (calendar month, UTC) schedule. The report for a period is made the day after the period ends and stored in the app. It covers all the project's issues in scope, found by the app, because no user is present; a download still needs every issue in it to be visible to you. It is not sent anywhere.</p>
+    <p>In the <strong>Schedules</strong> card, choose the <strong>Cadence</strong>, and if you want <strong>Fields</strong> and <strong>People</strong>, then choose <strong>Add schedule</strong>. <strong>Remove</strong> deletes a schedule. A project has at most 5 schedules.</p>
+    <figure style="margin: 2rem 0;">
+        <img src="/images/product/jira-governance/user-guide/fourrealities/13-schedules-and-check.png" alt="The Schedules card with Cadence Monthly, Fields and People filters and Add schedule, and the How to check a report card with the verifier command and a link to the signing keys." width="1104" height="597" loading="lazy" style="max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <figcaption style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 10: Schedules, and how to check a report.</figcaption>
+    </figure>
+    <h3>Download</h3>
+    <p>Choose <strong>Download</strong> and save the four files: the report as JSON and as CSV, the signed manifest, and the people file. You can download a report only when you can see every issue in it. The people file is not signed: it names the people of the report as you can see them today.</p>
+    <figure style="margin: 2rem 0;">
+        <img src="/images/product/jira-governance/user-guide/fourrealities/12-download-window.png" alt="The download window for 9 Oct 2026 to 7 Nov 2026 with four files: the report JSON, the report CSV, the manifest JSON and the people CSV, and a note that the people file is not signed and is removed 24 to 25 hours after the download." width="598" height="582" loading="lazy" style="max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <figcaption style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 11: The download window. File names hold the project key, the first and last day, and the start of the report id.</figcaption>
+    </figure>
+    <p>When some issues of the scope are not in the report (deleted, no longer readable, or moved to another project while the report was made), the download window names each one with its key and the reason, 50 per page, with <strong>Previous</strong> and <strong>Next</strong>.</p>
+    <h3>What a report shows</h3>
+    <p>People appear as tokens in the signed files. Free-text fields (Summary, Description, Environment and text custom fields) show that they changed and the lengths, not the text. The checks are observed when the report is made, not at the time of each change.
+        The report files hold, in plain text: each issue's key, type, status and current summary (up to 120 characters); who changed which field and when, with the old and new values of fields that are not free text; the reasons of Code exceptions; rework reasons and their notes; the address (URL) and title of a linked Confluence page, which users type and which can hold any text; the key and type of a linked decision issue, never its title or content; and evidence references: LedgerSeal certificate ids and hashes (such as the Definition of Done hash).</p>
+    <h3>Check a report</h3>
+    <p>FourRealities signs the manifest with Ed25519. Run the open verifier:</p>
+    <div class="inline-terminal inline-terminal--static" style="margin: 1.5rem 0;">
+        <code style="word-break: break-all;">node verify-fourrealities-report.mjs &lt;manifest.json&gt; &lt;report.json&gt; &lt;report.csv&gt; [--previous &lt;previous-manifest.json&gt;]</code>
+    </div>
+    <p>A changed file fails the check. Each manifest names the previous report of the project, so a removed report shows as a break. See the <a href="/product/jira-governance/user-guide/open-verifier.html" class="org-link org-link--inline org-link--internal">open verifier guide</a>.</p>
+    <h3>Keeping and deleting</h3>
+    <p>Reports are kept for 400 days unless a Jira administrator chooses 90 days to 7 years in <strong>Jira settings &gt; Apps &gt; FourRealities gate authority &gt; Evidence reports</strong>. A shorter retention applies to existing reports from the next daily run.
+        A Jira administrator can delete a report early with a reason (15 to 500 characters); a record of the deletion stays in its place. Reports are removed when their retention ends.
+        Some small records outlive it: a deletion record (tombstone, with the administrator's reason) stays while the app is installed; the list entries of failed, expired and deleted reports stay until the newest 200 entries of the project push them out; and the link from each party token to an Atlassian account id stays while the account is open (it is reported to Atlassian every week, and removed when the account closes).</p>
+    <figure style="margin: 2rem 0;">
+        <img src="/images/product/jira-governance/user-guide/fourrealities/14-admin-evidence-reports.png" alt="The Evidence reports card on the admin page: Keep reports for 400 days, Save retention, and the evidence report groups with the group search." width="1568" height="490" loading="lazy" style="max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <figcaption style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 12: Retention and evidence report groups on the admin page.</figcaption>
+    </figure>
+    <h3>Limits</h3>
+    <p>At most 10,000 issues, 366 days, 50 MB per file and 200 reports per project. A report that is too large is not stored, and the list says why. A project can have at most 3 reports waiting.</p>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">8. Permissions</h2>
+    <div style="overflow-x: auto;">
+    <table class="clinical-table">
+        <thead><tr><th>Action</th><th>Who can do it</th></tr></thead>
+        <tbody>
+            <tr><td>See the dashboard and the reports list</td><td>Users with Browse projects. The dashboard shows only the issues you can see.</td></tr>
+            <tr><td>See the issue panel</td><td>Users who can see the issue.</td></tr>
+            <tr><td>Link a decision record, request a Code exception, add a rework reason</td><td>Users with Edit issues on the issue.</td></tr>
+            <tr><td>Approve, reject or revoke a Code exception</td><td>Project administrators, Jira administrators and members of the approver groups; never the requester or the assignee.</td></tr>
+            <tr><td>Withdraw a request</td><td>The requester.</td></tr>
+            <tr><td>Request a retrospective review</td><td>Users who can comment on the issue.</td></tr>
+            <tr><td>Make an evidence report</td><td>Project administrators, Jira administrators and members of the evidence report groups.</td></tr>
+            <tr><td>Add or remove report schedules</td><td>Project administrators and Jira administrators.</td></tr>
+            <tr><td>Download a report</td><td>Users who can see every issue in it. If it holds issues deleted since, only project or Jira administrators.</td></tr>
+            <tr><td>Delete a report early, set retention, all site settings</td><td>Jira administrators.</td></tr>
+        </tbody>
+    </table>
     </div>
 </section>
 
 <section style="margin-bottom: 4rem">
-    <h2 class="section-title">3. Project Dashboard</h2>
-    <p>Open <strong>Four Realities</strong> from the project navigation. The dashboard shows:</p>
+    <h2 class="section-title">9. Data stored and where</h2>
     <ul>
-        <li><strong>Audit readiness</strong> and the next step for the project.</li>
-        <li>One card per gate with its rate and counts (for example "1 of 1 rated issues have evidence"), and a <strong>Show N missing</strong> button that filters the triage table.</li>
-        <li><strong>Priority actions:</strong> the issues with the highest-impact gaps. Click <strong>Inspect</strong> to see an issue's gates.</li>
-        <li><strong>Coverage at a glance:</strong> rated average alignment, rated scope, weekly change and risk distribution.</li>
-        <li><strong>Issue triage:</strong> all issues, with search by key or summary and filters for assignee, sprint and gate.</li>
-        <li><strong>Trend:</strong> RAI and gate evidence rates for the last four weeks. The trend starts after two weekly snapshots.</li>
+        <li><strong>Reads:</strong> Jira issue fields, the changelog, remote links, issue links, the Development field, and the issue properties of LedgerSeal, DefinitionGuard and Checklists for Jira. It searches the Confluence pages of your own site as you.</li>
+        <li><strong>Storage:</strong> snapshots, Code exception events, rework reasons, site settings and evidence report records are kept in Atlassian Forge storage; evidence report files are kept in Atlassian Forge Object Store. Nothing is sent outside your Atlassian site.</li>
+        <li><strong>On the issue:</strong> the issue property <code>fourrealities-exception</code> (the Code exception state and the latest rework note), and the remote links and comments users add.</li>
+        <li><strong>Personal data:</strong> Atlassian account ids only where a rule needs them: who requested or decided a Code exception, who gave a rework reason, and the assignee, for the "My issues" filter. No names are stored. Evidence report files name people by a pseudonymous token. The ids are reported to Atlassian every week; closed accounts are erased and show as "a former user". The people file of a download is removed 24 to 25 hours after the download.</li>
+        <li><strong>Retention:</strong> exception events and notes have no expiry. Reports follow the retention in section 7.</li>
     </ul>
-    <p>Project snapshots refresh daily and when you click <strong>Refresh</strong>. FourRealities reads at most 2,000 issues per project, newest first, and says so when it stops.</p>
+    <p>See the <a href="/privacy.html" class="org-link org-link--inline org-link--internal">privacy policy</a>.</p>
 </section>
 
 <section style="margin-bottom: 4rem">
-    <h2 class="section-title">4. Rework Loops &amp; Rework Reasons</h2>
-    <p>FourRealities counts rework loops from the issue changelog, using status categories:</p>
+    <h2 class="section-title">10. Limits</h2>
     <ul>
-        <li>A rework loop is a move from a Done-category status back to a status that is not Done, or a move from In Progress back to To Do.</li>
-        <li>A move between two statuses in the same category (for example "In Review" back to "In Progress") is not counted.</li>
-        <li>When an issue has rework loops, the Process gate in <strong>Gate findings</strong> shows "Rework loops: N." and an <strong>Add rework reason</strong> button.</li>
-        <li>Rework reasons are kept as a list with who and when. They never change a gate.</li>
+        <li>The dashboard reads at most 2,000 issues per project, newest first. A first view has about 20 seconds; the daily snapshot reads the rest.</li>
+        <li>The trend keeps 52 weekly points and shows 4 weeks. The weekly change needs at least 10 rated issues in both weeks.</li>
+        <li>Up to 500 projects take part in the daily run.</li>
+        <li>Reasons: 15 to 500 characters. Notes: up to 1,000. Review comment: 15 to 1,000. Link title: 3 to 255.</li>
+        <li>Confluence search: at least 2 characters, at most 10 results.</li>
+        <li>Evidence reports: see section 7.</li>
     </ul>
 </section>
 
 <section style="margin-bottom: 4rem">
-    <h2 class="section-title">5. Data Sources, Egress &amp; Access</h2>
-    <p>FourRealities runs on Atlassian Forge and declares <strong>no external egress</strong>. It calls no external (non-Atlassian) APIs. It reads:</p>
-    <ul>
-        <li><strong>Jira:</strong> issue fields, changelog, remote links, issue links and the issue properties written by LedgerSeal, DefinitionGuard and HeroCoders Checklists, as the signed-in user or as the app.</li>
-        <li><strong>Pull requests:</strong> the Jira Development field, populated by your existing GitHub, GitLab or Bitbucket integration for Jira. FourRealities cannot read pull request approvals.</li>
-        <li><strong>Confluence:</strong> when you search in the <strong>Link decision record</strong> dialog, FourRealities calls the Confluence REST API of your own Atlassian site, as you, through Forge. It also reads Jira remote links that point to Confluence pages.</li>
-        <li><strong>Storage:</strong> snapshots, Code exception events, rework reasons and site settings are kept in Atlassian Forge storage.</li>
-    </ul>
-    <p>Jira administrators set the evidence source of each check, the decision issue types and the approver groups in <strong>Jira settings &gt; Apps &gt; FourRealities gate authority</strong>. FourRealities stores account ids only where a rule needs them, reports them to Atlassian every week and erases the ids of closed accounts. With an inactive licence the app shows "Licence not active" and reads nothing.</p>
+    <h2 class="section-title">11. Troubleshooting and messages</h2>
+    <div style="overflow-x: auto;">
+    <table class="clinical-table">
+        <thead><tr><th>Message</th><th>What it means and what to do</th></tr></thead>
+        <tbody>
+            <tr><td>"FourRealities: you need the Browse projects Jira permission on this project to see its dashboard."</td><td>Ask a project administrator for Browse projects.</td></tr>
+            <tr><td>"Showing N of about M issues. FourRealities reads at most 2,000 issues per project, newest first."</td><td>The project is larger than one read.</td></tr>
+            <tr><td>"Snapshot read on DATE is more than 7 days old. Refresh to read Jira again."</td><td>Choose Refresh.</td></tr>
+            <tr><td>"Live Jira sync failed (...)."</td><td>Jira did not answer. Refresh in a moment.</td></tr>
+            <tr><td>"You need the Edit issues permission on KEY to add a link."</td><td>Ask for Edit issues.</td></tr>
+            <tr><td>"Confluence refused the search (HTTP n)..."</td><td>You or the app cannot search Confluence. Enter the page address and title by hand.</td></tr>
+            <tr><td>"A pull request is linked to KEY. A Code exception applies only to work with no pull request."</td><td>Code is evaluated from the pull request.</td></tr>
+            <tr><td>"The person who requested the exception cannot approve, reject or revoke it."</td><td>Ask another approver.</td></tr>
+            <tr><td>"The issue's assignee cannot approve, reject or revoke its exception."</td><td>Ask another approver.</td></tr>
+            <tr><td>"Give a reason of 15 to 500 characters."</td><td>Fix the reason's length.</td></tr>
+            <tr><td>"No reports can be made on this site"</td><td>FourRealities has no valid signing key for the site. Contact security@asymm.systems.</td></tr>
+            <tr><td>"Only a project administrator, a Jira administrator or a member of an evidence report group can make a report."</td><td>Ask an administrator, or ask to join a report group.</td></tr>
+            <tr><td>"More than 10,000 issues may be in this range, so no report was made. Choose a shorter range."</td><td>Shorten the period.</td></tr>
+            <tr><td>"This project has N reports waiting. Try again when one is ready."</td><td>Wait for a report to finish.</td></tr>
+            <tr><td>"This project keeps 200 reports. A Jira administrator can delete one before a new one is made."</td><td>Delete an old report.</td></tr>
+            <tr><td>"You cannot see N of the M issues in this report, so you cannot download it..."</td><td>Ask a project administrator, or make a new report: it holds only the issues you can see.</td></tr>
+            <tr><td>"Failed: The report would hold more than 250,000 changes or a file larger than 50 MB..."</td><td>Make a report for a shorter range or with a field filter.</td></tr>
+            <tr><td>"The FourRealities licence for this site is not active..."</td><td>Renew the licence in Manage apps.</td></tr>
+        </tbody>
+    </table>
+    </div>
+    <p>Still stuck? Write to <a href="mailto:support@asymm.systems" class="org-link org-link--inline org-link--external">support@asymm.systems</a>.</p>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">12. Uninstall and data removal</h2>
+    <ol>
+        <li>Download any evidence reports you must keep.</li>
+        <li>A Jira administrator opens <strong>Jira settings &gt; Apps &gt; Manage apps</strong> and uninstalls FourRealities.</li>
+        <li>Atlassian keeps the app's Forge storage for 28 days and then deletes it: snapshots, exception events, rework reasons, settings and report records.</li>
+        <li>The issue property <code>fourrealities-exception</code>, and the links and comments users added, stay in Jira.</li>
+    </ol>
+    <p>For other requests, write to <a href="mailto:privacy@asymm.systems" class="org-link org-link--inline org-link--external">privacy@asymm.systems</a>.</p>
 </section>
 
 <section style="margin-bottom: 5rem">
-    <h2 class="section-title">6. Closing Gaps from the Issue Panel</h2>
-    <p>When an issue shows missing evidence, the issue panel names the next step. You can:</p>
-    <ol>
-        <li>Click <strong>Link decision record</strong>, search Confluence pages by title (or enter a page address and title), and click <strong>Add link</strong>. FourRealities adds a Jira remote link and the Intent gate updates.</li>
-        <li>Click <strong>Request Code exception</strong> for work that needs no pull request, and give a reason. A project or Jira administrator, or a member of an approver group, who is not you or the assignee must approve it. Until then the Code gate stays "Evidence missing". Administrators can also reject or revoke an exception, and the requester can withdraw it.</li>
-        <li>For a merged pull request, click <strong>Request retrospective review</strong> to post a comment on the issue asking for a review.</li>
-        <li>When Process or Audit is in use, the next step names the Definition of Done panel (DefinitionGuard) or the Approval Seal panel (LedgerSeal) on the issue. FourRealities never writes their records.</li>
-        <li>Click <strong>Refresh</strong> to read the issue again.</li>
-    </ol>
+    <h2 class="section-title">13. Related pages</h2>
+    <ul>
+        <li><a href="/product/jira-governance/user-guide/open-verifier.html" class="org-link org-link--inline org-link--internal">Open verifier guide</a> and <a href="/product/jira-governance/signing-keys.html" class="org-link org-link--inline org-link--internal">Signing keys</a>.</li>
+        <li><a href="/product/jira-governance/user-guide/definitionguard.html" class="org-link org-link--inline org-link--internal">DefinitionGuard guide</a> and <a href="/product/jira-governance/user-guide/ledgerseal.html" class="org-link org-link--inline org-link--internal">LedgerSeal guide</a>.</li>
+        <li><a href="/product/jira-governance/compliance.html" class="org-link org-link--inline org-link--internal">Compliance mapping</a>, <a href="/product/jira-governance/faq.html" class="org-link org-link--inline org-link--internal">FAQ</a>, <a href="/privacy.html" class="org-link org-link--inline org-link--internal">Privacy policy</a>.</li>
+        <li><a href="/product/jira-governance/user-guide/" class="org-link org-link--inline org-link--internal">Jira Governance Suite user guide</a>.</li>
+    </ul>
 </section>

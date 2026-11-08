@@ -1,5 +1,5 @@
 title=LedgerSeal User & Admin Guide
-description=Cryptographic approval seals, post-approval change detection, resealing workflows, and workflow transition validator setup for Jira Cloud.
+description=How to install, set up and use LedgerSeal for Jira Cloud: seal an approved issue, see what changed after approval, approve changes, revoke, gate a transition, copy the evidence record, permissions, data, limits and troubleshooting.
 type=page
 toc=true
 status=published
@@ -9,113 +9,246 @@ og_image=product/jira-governance/ledgerseal/banner.png
 <header class="page-header">
     <span class="section-kicker">LedgerSeal Guide</span>
     <h1>LedgerSeal User &amp; Administrator Guide</h1>
-    <p style="max-width: 65ch">How to seal approved Jira issues, detect and attribute unauthorized post-approval modifications, 
-        approve changes with an audited reason, configure the workflow transition gate, and copy the evidence record for offline verification.</p>
+    <p style="max-width: 65ch">LedgerSeal records the approval of a Jira issue as it is at that moment. If the issue changes after approval, LedgerSeal shows what changed, who changed it and when.
+        A workflow validator can block a transition until the issue is sealed and unchanged. Auditors can check the evidence offline with the open verifier.</p>
 </header>
 
 <section style="margin-bottom: 4rem">
-    <h2 class="section-title">1. The Approved Ticket Problem</h2>
-    <p>In standard Jira, a developer submits an issue, a product lead or release manager reviews and approves it, and the ticket moves toward release. 
-        However, between approval and production deployment, ticket parameters often change: descriptions are altered, acceptance criteria are edited, 
-        or architectural attachments are replaced. Jira records that an edit occurred in ticket history, but native Jira cannot prove whether what was built 
-        and deployed matches what was approved.</p>
-    <p><strong>LedgerSeal solves this by introducing cryptographic snapshot seals.</strong> When an authorized lead approves a ticket, 
-        LedgerSeal captures a canonical SHA-256 hash snapshot of covered fields, comments, and attachments, writes a certificate (an attestation) that
-        names the snapshot hash, and adds the seal to a hash-chained history. The attestation is signed with Ed25519 by the Asymm Systems key <code>ls-prod-2026-11</code>; its public key is listed on the <a href="/product/jira-governance/signing-keys.html" class="org-link org-link--inline org-link--internal">Signing keys</a> page and in the open verifier repository.</p>
-    <p>The hash chain makes changes to stored records detectable. It does not stop someone who can rewrite the app's stored data, including the vendor, from writing a new consistent chain.
-        Treat it as tamper-evident, not immutable.</p>
-</section>
-
-<section style="margin-bottom: 4rem">
-    <h2 class="section-title">2. Sealing a Jira Issue</h2>
-    <p>To seal an issue:</p>
-    <ol>
-        <li>Open the target Jira issue in your project.</li>
-        <li>In the issue view, open the <strong>Approval Seal</strong> panel.</li>
-        <li>Click <strong>Seal this issue</strong>. Only approvers see this button (see section 6).</li>
-        <li>Select the meaning of your signature: <code>Approved</code>, <code>Reviewed</code> or <code>Verified</code>.</li>
-        <li>Read the declaration and tick <strong>I agree to the declaration above.</strong></li>
-        <li>Click <strong>Sign and seal</strong>.</li>
-    </ol>
-    <p>Every issue shows an <strong>Approval seal</strong> entry in its details column with the seal state; expand it, or open the Approval Seal panel from the issue's app button to seal, approve or see details.</p>
-    <p>The lozenge turns green <code>SEALED</code>. The panel shows the approver, the time and the certificate ID.
-        The seal details list the fields that are covered and the fields that are not covered, with the reason for each.</p>
-    <p>The seal covers every issue field except a fixed list that Jira changes without a user edit (for example status and resolution), plus all comments and attachments.</p>
-    <p><strong>Restricted comments and work logs.</strong> Comments and work logs restricted to a project role or group are covered only when Jira lets the LedgerSeal app read them, that is when the app's user is in that role or group; otherwise a change to such a comment or work log is not detected.
-        A covered comment that is restricted, at the seal or now, is shown in the panel only to a user who can see it in Jira; others see that a comment changed, without its text, author or time. The panel shows only the number of work logs, never their text.
-        The evidence is exported only to a user who can see every such comment and work log.
-        If LedgerSeal can no longer read a covered comment or work log (it was deleted, or restricted since to a role or group the app's user is not in), the panel shows that comment's sealed text to no one, and for that seal: its evidence is not exported to anyone; approving the changes makes a new seal whose evidence can be exported.</p>
-
-</section>
-
-<section style="margin-bottom: 4rem">
-    <h2 class="section-title">3. Tamper Detection &amp; Diff Attribution</h2>
-    <p>If any user modifies a covered field, edits an acceptance criterion, adds or deletes an attachment, or modifies covered comments after the seal is applied:</p>
+    <h2 class="section-title">1. Who this guide is for</h2>
     <ul>
-        <li>The LedgerSeal panel turns red <code>CHANGED</code> ("Changed after approval").</li>
-        <li>The panel lists each changed field with a <strong>Was</strong> and a <strong>Now</strong> value.</li>
-        <li>The author of the change and the time are recorded in the issue's seal history.</li>
-        <li>If someone changes a field and then changes it back, the panel still shows <code>CHANGED</code> ("Changed after approval, then changed back").</li>
+        <li><strong>Approvers</strong> (release managers, product leads, change boards) who seal issues and approve changes. Read sections 3 to 5.</li>
+        <li><strong>Team members</strong> who need to know why an issue shows CHANGED or why a transition is blocked. Read sections 3, 6 and 11.</li>
+        <li><strong>Auditors</strong> who check the evidence. Read section 7 and the <a href="/product/jira-governance/user-guide/open-verifier.html" class="org-link org-link--inline org-link--internal">open verifier guide</a>.</li>
+        <li><strong>Jira administrators</strong> who install the app, choose approver groups and add the validator. Read sections 2, 6 and 8.</li>
     </ul>
-
 </section>
 
 <section style="margin-bottom: 4rem">
-    <h2 class="section-title">4. Resealing with Audited Justification</h2>
-    <p>When changes after approval are intentional and legitimate (e.g. minor typo fix, updated deployment parameter per CAB):</p>
+    <h2 class="section-title">2. Install and first setup</h2>
     <ol>
-        <li>An approver who did <strong>not</strong> make any of the changes reviews the Was and Now values. LedgerSeal refuses the approval if the approver changed the issue since the last seal: a covered field, a comment or work log they added or edited, or an attachment they added (separation of duties). Status, Rank and Sprint changes do not count.</li>
-        <li>Click <strong>Approve these changes</strong>.</li>
-        <li>Enter the required reason (e.g. <code>Approved revised timeout threshold per CAB-892</code>), choose the meaning and tick the declaration.</li>
-        <li>Click <strong>Sign and seal</strong>.</li>
+        <li><strong>Install (Jira administrator).</strong> In Jira, open <strong>Apps &gt; Explore more apps</strong>, search for <strong>LedgerSeal</strong> and choose <strong>Get app</strong>. The app asks to read Jira work and users, to write issue properties, to store its own data, and to report personal data to Atlassian. It calls no server outside your Atlassian site.</li>
+        <li><strong>Choose approvers (optional).</strong> Project administrators and Jira administrators can always seal. To add more people, add Jira groups in <strong>Jira settings &gt; Apps &gt; LedgerSeal approvers</strong> (section 8).</li>
+        <li><strong>Add the gate (optional).</strong> Add the validator <strong>Require Valid LedgerSeal</strong> to the transitions that must wait for approval, for example into "Ready for release" (section 6). Without it, LedgerSeal reports changes but blocks nothing.</li>
     </ol>
-    <p>LedgerSeal adds entries to the issue's hash-chained history: the change it detected, then the new seal. The previous seal stays in the history.
-        An approver who did not change the issue since the seal can also <strong>Revoke seal</strong> with a reason; sealing again after a revoke follows the same separation-of-duties rule.</p>
+    <p>Every issue then shows an <strong>Approval seal</strong> entry in its details column. The full panel opens from the issue's app button: choose <strong>Approval Seal</strong>.</p>
+    <figure style="margin: 2rem 0;">
+        <img src="/images/product/jira-governance/user-guide/common/issue-app-actions-menu.png" alt="The issue's app actions menu with Approval Seal, Definition of Done, Four Realities and Add apps." width="252" height="220" loading="lazy" style="max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <figcaption style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 1: The issue's app button opens the Approval Seal panel.</figcaption>
+    </figure>
+    <p><strong>Licence.</strong> When the licence is not active, the panel shows "Approval seal: LedgerSeal licence is inactive." No seal, approval, revoke or export works. The validator still decides; its block message then asks to renew the licence or to remove the validator.</p>
 </section>
 
 <section style="margin-bottom: 4rem">
-    <h2 class="section-title">5. Workflow Transition Gate (The Validator)</h2>
-    <p>To prevent unsealed or tampered issues from accidentally reaching production, LedgerSeal provides a Jira Cloud Workflow Validator:</p>
-    <ol>
-        <li>Navigate to <strong>Project Settings &gt; Workflows</strong> and edit your active workflow.</li>
-        <li>Select the transition into your release state (e.g. <em>In Review</em> or <em>Done</em>).</li>
-        <li>Click <strong>Validators &gt; Add validator</strong>.</li>
-        <li>Select <strong>Require Valid LedgerSeal</strong> from the list. It has no options: it passes only when the issue is sealed and unchanged since approval.</li>
-        <li>Publish the workflow draft.</li>
-    </ol>
-    <p>If someone tries the transition on an issue that is not sealed, or that changed after approval, Jira blocks the transition and shows the LedgerSeal error message.
-        If LedgerSeal cannot check the issue, the validator blocks the transition (it fails closed).</p>
-    <p>If the gated transition has a screen with a comment box, a comment typed there is new content on a sealed issue, so the validator blocks the transition with "Comment added". Add the comment after the transition, or ask another approver to approve it first.</p>
-
-</section>
-
-<section style="margin-bottom: 4rem">
-    <h2 class="section-title">6. Administrator &amp; Policy Settings</h2>
-    <p>LedgerSeal follows the Asymm Uniform Permission Management Standard:</p>
-    <ul>
-        <li><strong>Administer:</strong> Jira administrators choose the approver groups on the LedgerSeal admin page. The covered field set is fixed by the app version and is not configurable.</li>
-        <li><strong>Approve:</strong> Jira administrators, project administrators, and members of the approver groups can seal, approve changes and revoke seals.</li>
-        <li><strong>View:</strong> Anyone who can view the issue can see the seal status, the changed fields, the history and the evidence record, except as section 2 states for restricted comments and work logs. The evidence record names people by a pseudonymous token and lists their account ids in an unsigned map.</li>
-    </ul>
-
-    <div style="margin: 2rem 0; text-align: center;">
-        <img src="/images/product/jira-governance/ledgerseal/04-admin-approvers.png" alt="LedgerSeal Admin Policy Configuration" style="max-width: 100%; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
-        <p style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 1: The LedgerSeal admin page, where Jira administrators choose the approver groups.</p>
+    <h2 class="section-title">3. The Approval Seal panel and the details entry</h2>
+    <p>The panel has a header with the state lozenge and <strong>Refresh</strong>, a summary with the state and the next step, the action buttons, and the collapsed section <strong>Certificate &amp; attestation details</strong>.</p>
+    <div style="overflow-x: auto;">
+    <table class="clinical-table">
+        <thead><tr><th>Lozenge</th><th>Meaning</th><th>Next step shown</th></tr></thead>
+        <tbody>
+            <tr><td>NOT SEALED</td><td>Not sealed yet. Work can change without detection.</td><td>Seal the issue, or ask an approver.</td></tr>
+            <tr><td>SEALED</td><td>No change detected since approval.</td><td>None.</td></tr>
+            <tr><td>CHANGED</td><td>Changed after approval. The panel lists each change. "Changed after approval, then changed back" also shows CHANGED: a seal does not heal.</td><td>Another approver reviews and approves the changes.</td></tr>
+            <tr><td>REVOKED</td><td>An approver revoked the seal, with a reason.</td><td>Seal again if approval is re-established.</td></tr>
+            <tr><td>CHECK FAILED</td><td>The stored seal record failed its integrity check.</td><td>Contact your Jira administrator.</td></tr>
+            <tr><td>OLD FORMAT</td><td>Sealed with an older record format.</td><td>Reseal to upgrade.</td></tr>
+        </tbody>
+    </table>
     </div>
+    <p>The <strong>Approval seal</strong> entry in the details column shows the same lozenge and sentence, with no buttons.</p>
+    <figure style="margin: 2rem 0;">
+        <img src="/images/product/jira-governance/user-guide/ledgerseal/06-context-changed.png" alt="The Approval seal entry in the issue details: CHANGED lozenge, Approval seal: Changed after approval. 2 items modified, and a hint to open the Approval Seal panel." width="633" height="80" loading="lazy" style="max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <figcaption style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 2: The Approval seal entry in the issue's details column.</figcaption>
+    </figure>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">4. Seal an issue</h2>
+    <figure style="margin: 2rem 0;">
+        <img src="/images/product/jira-governance/user-guide/ledgerseal/01-panel-not-sealed.png" alt="The LedgerSeal panel on a new issue: NOT SEALED lozenge, Approval seal: Not sealed yet. Work can change without detection, the next step, and the Seal this issue button." width="1113" height="179" loading="lazy" style="max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <figcaption style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 3: An issue that is not sealed.</figcaption>
+    </figure>
+    <ol>
+        <li>Open the issue and the <strong>Approval Seal</strong> panel. Review the issue.</li>
+        <li>Choose <strong>Seal this issue</strong>. Only approvers see this button.</li>
+        <li>Choose the role of your sign-off: <strong>Approved</strong> (the default), <strong>Reviewed</strong> or <strong>Verified</strong>.</li>
+        <li>Read the declaration and tick <strong>I agree to the declaration above.</strong></li>
+        <li>Choose <strong>Sign and seal</strong>.</li>
+    </ol>
+    <figure style="margin: 2rem 0;">
+        <img src="/images/product/jira-governance/user-guide/ledgerseal/02-seal-form.png" alt="The Seal this issue form: the sign-off role choices Approved, Reviewed and Verified, the declaration text, the ticked I agree to the declaration above checkbox, and the Sign and seal and Cancel buttons." width="1113" height="278" loading="lazy" style="max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <figcaption style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 4: The seal form. Sign and seal is active once the declaration is ticked.</figcaption>
+    </figure>
+    <p><strong>Result:</strong> the lozenge turns green <strong>SEALED</strong>: "Approval seal: Sealed. No change detected since approval." The history has one entry, "Sealed", with your name and the time.
+        If the issue changed after you opened the panel, LedgerSeal refuses: "The issue changed since you opened it. Nothing was saved. Refresh, review the issue, and seal again."</p>
+    <figure style="margin: 2rem 0;">
+        <img src="/images/product/jira-governance/user-guide/ledgerseal/03-panel-sealed.png" alt="The sealed panel: SEALED lozenge, no change detected, a Revoke seal button, and the open Certificate and attestation details with signer, sign-off role Approved, the short SHA-256 hash, covered fields, history and evidence record rows." width="1113" height="581" loading="lazy" style="max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <figcaption style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 5: A sealed issue with its certificate details.</figcaption>
+    </figure>
+    <h3>What a seal covers</h3>
+    <p>The seal covers the issue's fields, its comments, its attachments (names and details, not file content) and its work logs. Fields that Jira changes without a user edit are not covered: for example status, Rank, Sprint, created and updated times, votes, watchers and fields derived from work logs.
+        Open <strong>Show fields</strong> in the details to see the covered fields and the reason each other field is not covered.</p>
+    <p><strong>Restricted comments and work logs.</strong> A comment or work log restricted to a role or group is covered only when LedgerSeal can read it. Users who cannot see a restricted comment see "A restricted comment that you cannot see in Jira", with no text. The evidence record is exported only to a user who can see every such comment and work log.</p>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">5. When an issue changes after approval</h2>
+    <p>LedgerSeal checks the issue when it is edited, commented, given an attachment or a work log, and each time the panel or the validator reads it. Jira events can arrive up to a few minutes late.</p>
+    <figure style="margin: 2rem 0;">
+        <img src="/images/product/jira-governance/user-guide/ledgerseal/04-panel-changed.png" alt="The CHANGED panel: 2 items modified, a note that you changed this issue so another approver must approve it, and Changed items: Description, paragraph 1 changed, with Was 30 days and Now 45 days, and Priority from Medium to High, each with who changed it and when." width="1113" height="581" loading="lazy" style="max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <figcaption style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 6: The description and the priority changed after approval. The person who made the changes cannot approve them.</figcaption>
+    </figure>
+    <p>Each changed item shows <strong>Was (at approval)</strong>, <strong>Now (current edit)</strong>, <strong>Changed by</strong> and the time. A rich-text field names the changed part, for example "(Paragraph 1 changed.)". Long values have <strong>Show full value</strong>.
+        A change that touches only attachments is counted, but the panel does not list attachment rows; the validator message names "Attachments".</p>
+    <h3>Approve the changes</h3>
+    <ol>
+        <li>An approver who did <strong>not</strong> make any of the changes opens the panel and reviews them.</li>
+        <li>Choose <strong>Approve these changes</strong>.</li>
+        <li>Choose the sign-off role, write a reason (1 to 500 characters), and tick the declaration.</li>
+        <li>Choose <strong>Sign and seal</strong>.</li>
+    </ol>
+    <p><strong>Result:</strong> the history gains "Sealed again", and the panel shows "Sealed. Resealed after 1 change incident." The earlier seal stays in the history.</p>
+    <p><strong>Separation of duties.</strong> A user who, after the seal, changed a covered field, added or edited a comment or work log, or added an attachment cannot approve, revoke or reseal. The panel tells them: "You changed this issue, so another approver must approve it." Changes to fields that are not covered do not count.</p>
+    <h3>Revoke a seal</h3>
+    <p>Choose <strong>Revoke seal</strong>, write a reason in <strong>Reason for revoking (required)</strong>, and choose <strong>Revoke</strong>. The panel shows REVOKED with the reason and who revoked it. To seal again after a revoke, the form asks for a reason.</p>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">6. Gate a transition (Jira administrator)</h2>
+    <ol>
+        <li>Open the workflow in the Jira workflow editor.</li>
+        <li>Select the transition that must wait for approval.</li>
+        <li>Add the validator <strong>Require Valid LedgerSeal</strong>. It has no options.</li>
+        <li>Publish the workflow.</li>
+    </ol>
+    <p>The validator reads the live issue on every transition, including what is typed on the transition screen. The transition goes through only when the issue is sealed and unchanged. Otherwise Jira blocks it and shows one of these messages:</p>
+    <ul>
+        <li>"LedgerSeal: this issue is not sealed. To proceed: open the LedgerSeal panel on this issue, select your sign-off role, agree to the declaration, and click "Seal this issue"."</li>
+        <li>"LedgerSeal: N field(s) changed after approval (names). Ask a project admin who did not make the change to approve it in the LedgerSeal panel."</li>
+        <li>"LedgerSeal: this issue changed after approval and was changed back. Ask a project admin to approve it again in the LedgerSeal panel."</li>
+        <li>"LedgerSeal: the seal was revoked on DATE (reason: ...). Seal it again to continue."</li>
+        <li>"LedgerSeal could not read the issue from Jira, so this transition is blocked. Try again in a minute."</li>
+    </ul>
+    <p>The messages say "project admin", but Jira administrators and members of the approver groups can approve too.</p>
+    <p><strong>Comments on the transition screen.</strong> A comment typed on the gated transition's screen is new content on a sealed issue, so the validator blocks the move with "Comment added". Add the comment after the transition, or ask another approver to approve it first. A resolution set on the screen does not block.</p>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">7. Certificate details and the evidence record</h2>
+    <p>Choose <strong>Show details</strong> in <strong>Certificate &amp; attestation details</strong>:</p>
+    <ul>
+        <li><strong>Signed by</strong> and the time, the <strong>Sign-off role</strong> and the reason, if any.</li>
+        <li><strong>Tamper-evident seal</strong>: the SHA-256 hash of the covered content. <strong>Show full hash</strong> shows all of it.</li>
+        <li><strong>Covered fields</strong>: <strong>Show fields</strong> lists covered and not covered fields.</li>
+        <li><strong>History</strong>: <strong>Show history</strong> lists Sealed, Change found, Sealed again and Revoked entries, 50 per page, with <strong>Show more history</strong>.</li>
+        <li><strong>Evidence record</strong>: <strong>Show evidence (JSON)</strong>.</li>
+        <li>The footer names who can seal, the certificate id, the canonical form and the declaration version.</li>
+    </ul>
+    <figure style="margin: 2rem 0;">
+        <img src="/images/product/jira-governance/user-guide/ledgerseal/05-certificate-history.png" alt="Certificate and attestation details with the history open: 1. Sealed on Nov 8, 2026 by the approver, and 2. Change found by LedgerSeal, then the Evidence record row with Show evidence (JSON)." width="1113" height="463" loading="lazy" style="max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <figcaption style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 7: The seal history: the seal, then the change LedgerSeal found.</figcaption>
+    </figure>
+    <h3>Give the evidence to an auditor</h3>
+    <ol>
+        <li>Choose <strong>Show evidence (JSON)</strong>. The panel shows the evidence record.</li>
+        <li>Copy the text into a file, for example <code>PAY-29-evidence.json</code>. There is no download button.</li>
+        <li>The auditor runs <code>node verify-evidence.mjs PAY-29-evidence.json</code> with the <a href="/product/jira-governance/user-guide/open-verifier.html" class="org-link org-link--inline org-link--internal">open verifier</a>.</li>
+    </ol>
+    <p>The record holds the sealed snapshot, the hash-chained history, the attestation and its Ed25519 signature. A Marketplace installation signs with the key <code>ls-prod-2026-11</code>, listed on the <a href="/product/jira-governance/signing-keys.html" class="org-link org-link--inline org-link--internal">Signing keys</a> page.
+        The record names people by a pseudonymous token, and adds an unsigned map from token to account id.</p>
+    <p><strong>What the seal shows.</strong> The hash chain makes changes to stored records detectable. It does not stop someone who can rewrite the app's stored data, including the vendor, from writing a new consistent chain.</p>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">8. Approver groups and permissions</h2>
+    <ol>
+        <li>A Jira administrator opens <strong>Jira settings &gt; Apps &gt; LedgerSeal approvers</strong>.</li>
+        <li>Search in <strong>Find Jira groups to grant authority</strong>, then choose <strong>Add</strong>. <strong>Remove</strong> takes a group off.</li>
+        <li>Choose <strong>Save changes</strong>. The page shows "Saved."</li>
+    </ol>
+    <figure style="margin: 2rem 0;">
+        <img src="/images/product/jira-governance/user-guide/ledgerseal/07-approvers-admin.png" alt="The LedgerSeal Authority Policy section with one approver group, its Remove button, Save changes, and the group search field." width="1124" height="360" loading="lazy" style="max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <figcaption style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 8: The approver groups on the LedgerSeal approvers page.</figcaption>
+    </figure>
+    <div style="overflow-x: auto;">
+    <table class="clinical-table">
+        <thead><tr><th>Action</th><th>Who can do it</th></tr></thead>
+        <tbody>
+            <tr><td>See the state, the changes, the history and the evidence</td><td>Users with Browse projects on the issue (and, for the evidence, every restricted comment and work log).</td></tr>
+            <tr><td>Seal, approve changes, revoke</td><td>Project administrators, Jira administrators and members of the approver groups, who did not change the issue since the seal.</td></tr>
+            <tr><td>Choose approver groups</td><td>Jira administrators.</td></tr>
+            <tr><td>The validator</td><td>Runs for everyone who moves the issue.</td></tr>
+        </tbody>
+    </table>
+    </div>
+    <p>At most 20 groups. A group must exist in Jira. A search shows at most 20 groups and takes at most 100 characters.</p>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">9. Data stored and where</h2>
+    <ul>
+        <li><strong>Where:</strong> in the Forge storage of your site, and in one issue property per issue. LedgerSeal sends nothing outside your Atlassian site.</li>
+        <li><strong>In Forge storage:</strong> the seal state, one record per seal (signer token, role, reason, declaration), the hash-chained history, and the sealed snapshot: field values, comment bodies, attachment details (no file content) and work logs. A reseal deletes the previous snapshot.</li>
+        <li><strong>On the issue:</strong> the property <code>ledgerseal-cert</code> with the status, certificate id, snapshot hash and seal date. It holds no personal data. Its status can be searched with JQL.</li>
+        <li><strong>People:</strong> stored as a pseudonymous token, a keyed hash of the Atlassian account id. One record per person links the token to the account id. No email and no display name is stored. The account ids are reported to Atlassian every week; for a closed account the link is removed and the panel shows "a deleted user".</li>
+        <li><strong>Retention:</strong> records stay until the issue is deleted. Deleting an issue deletes its records.</li>
+    </ul>
+    <p>See the <a href="/privacy.html" class="org-link org-link--inline org-link--internal">privacy policy</a>.</p>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">10. Limits</h2>
+    <ul>
+        <li>Sealed content: at most about 2.6 MB per issue. A larger issue cannot be sealed.</li>
+        <li>Jira reads: at most 5,000 comments, work logs or changelog entries per issue.</li>
+        <li>Reason: 1 to 500 characters. Approver groups: 20.</li>
+        <li>History: 50 entries per page. Up to 50 changed items are stored per change incident.</li>
+        <li>A validator message names at most 5 changed items.</li>
+    </ul>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">11. Troubleshooting and messages</h2>
+    <div style="overflow-x: auto;">
+    <table class="clinical-table">
+        <thead><tr><th>Message</th><th>What it means and what to do</th></tr></thead>
+        <tbody>
+            <tr><td>"Approval seal: Could not verify seal state."</td><td>LedgerSeal could not read the issue, or you cannot browse it. Choose Try again.</td></tr>
+            <tr><td>"You cannot seal this issue. Ask a project admin."</td><td>You are not an approver.</td></tr>
+            <tr><td>"You changed this issue, so another approver must approve it."</td><td>Separation of duties. Ask another approver.</td></tr>
+            <tr><td>"The issue changed since you opened it. Nothing was saved. Refresh, review the issue, and seal again."</td><td>Choose Refresh and review the new content.</td></tr>
+            <tr><td>"Someone else sealed this issue a moment ago. Reload to see the new seal."</td><td>Reload the page.</td></tr>
+            <tr><td>"Give a reason for approving these changes (1 to 500 characters)."</td><td>Write a reason.</td></tr>
+            <tr><td>"This issue is too large to seal (over about 2.6 MB of content). Nothing was saved."</td><td>Reduce the content, for example very long comments.</td></tr>
+            <tr><td>"This seal covers comments or work logs that are restricted to a role or group you are not in..."</td><td>The evidence is not exported to you. If a covered comment was deleted, approving the changes makes a new seal whose evidence can be exported.</td></tr>
+            <tr><td>"The declaration changed since this form opened. Reload the page and try again."</td><td>Reload.</td></tr>
+            <tr><td>"The LedgerSeal licence is not active. Ask your Jira admin to renew it."</td><td>Renew under Manage apps.</td></tr>
+            <tr><td>"Only a Jira admin can change who can seal."</td><td>The approvers page needs a Jira administrator.</td></tr>
+            <tr><td>"A chosen group was not found in Jira. Nothing was saved."</td><td>Search again and add the group from the results.</td></tr>
+            <tr><td>"LedgerSeal: the seal record failed its integrity check. Contact your Jira admin."</td><td>The stored record does not match. Seal the issue again after review.</td></tr>
+            <tr><td>The transition is blocked with "Comment added"</td><td>A comment was typed on the transition screen. See section 6.</td></tr>
+        </tbody>
+    </table>
+    </div>
+    <p>Still stuck? Write to <a href="mailto:support@asymm.systems" class="org-link org-link--inline org-link--external">support@asymm.systems</a>.</p>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">12. Uninstall and data removal</h2>
+    <ol>
+        <li>Remove the validator <strong>Require Valid LedgerSeal</strong> from your workflows first.</li>
+        <li>A Jira administrator opens <strong>Jira settings &gt; Apps &gt; Manage apps</strong> and uninstalls LedgerSeal.</li>
+        <li>Atlassian keeps the app's Forge storage for 28 days and then deletes it: seals, history, snapshots and settings.</li>
+        <li>The issue property <code>ledgerseal-cert</code> stays on each issue until the issue is deleted.</li>
+    </ol>
+    <p>Keep a copy of any evidence record you need before you uninstall. For other requests, write to <a href="mailto:privacy@asymm.systems" class="org-link org-link--inline org-link--external">privacy@asymm.systems</a>.</p>
 </section>
 
 <section style="margin-bottom: 5rem">
-    <h2 class="section-title">7. Copying the Evidence Record</h2>
-    <p>Auditors do not need to log into Jira to check approval evidence. In the seal details of the Approval Seal panel, click <strong>Show evidence (JSON)</strong>.
-        The panel shows the evidence record. Copy it into a file such as <code>evidence.json</code> and give it to the auditor.</p>
-    <p>The record contains the snapshot, the hash-chained history and the attestation with its signature. Anyone can check it with our zero-dependency CLI tool:</p>
-
-    <div style="margin: 2rem 0; text-align: center;">
-        <img src="/images/product/jira-governance/ledgerseal/05-seal-history.png" alt="LedgerSeal seal history" style="max-width: 100%; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
-        <p style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 2: The seal details with the hash-chained history, naming who sealed.</p>
-    </div>
-
-    <div style="margin-top: 1.5rem;">
-        <a href="/product/jira-governance/user-guide/open-verifier.html" class="org-link org-link--inline org-link--internal">Read Open Verifier CLI Documentation</a>
-    </div>
+    <h2 class="section-title">13. Related pages</h2>
+    <ul>
+        <li><a href="/product/jira-governance/user-guide/open-verifier.html" class="org-link org-link--inline org-link--internal">Open verifier guide</a> and <a href="/product/jira-governance/signing-keys.html" class="org-link org-link--inline org-link--internal">Signing keys</a>.</li>
+        <li><a href="/product/jira-governance/user-guide/fourrealities.html" class="org-link org-link--inline org-link--internal">FourRealities guide</a>: the Audit gate checks the signed LedgerSeal record.</li>
+        <li><a href="/product/jira-governance/compliance.html" class="org-link org-link--inline org-link--internal">Compliance mapping</a>, <a href="/product/jira-governance/faq.html" class="org-link org-link--inline org-link--internal">FAQ</a>, <a href="/privacy.html" class="org-link org-link--inline org-link--internal">Privacy policy</a>.</li>
+        <li><a href="/product/jira-governance/user-guide/" class="org-link org-link--inline org-link--internal">Jira Governance Suite user guide</a>.</li>
+    </ul>
 </section>
