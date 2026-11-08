@@ -44,7 +44,7 @@ og_image=product/jira-governance/fourrealities/banner.png
             <tr><td>Intent</td><td>Is the work traced to a decision record?</td><td>A remote link to a Confluence page on your site, or an issue link to an issue whose type is a decision type (default: adr, architecture decision, decision, decision record, spec, specification, requirement). Titles and keywords never count.</td></tr>
             <tr><td>Process</td><td>Is the Definition of Done complete?</td><td>A DefinitionGuard record with a valid signature that says the checklist is complete. A Checklists for Jira (HeroCoders) checklist can be shown, but it cannot be verified, so at Done it counts as missing.</td></tr>
             <tr><td>Code</td><td>Was the work merged through a pull request?</td><td>A merged pull request in the Jira Development field. This is a heuristic: apps cannot read pull request approvals.</td></tr>
-            <tr><td>Audit</td><td>Is the finished work sealed?</td><td>A LedgerSeal record with a valid signature and the status SEAL_VALID.</td></tr>
+            <tr><td>Audit</td><td>Is the finished work sealed?</td><td>A LedgerSeal record with a valid signature and the status SEAL_VALID. An issue that is still in a LedgerSeal approval route and not sealed yet counts as not sealed.</td></tr>
         </tbody>
     </table>
     </div>
@@ -154,7 +154,7 @@ og_image=product/jira-governance/fourrealities/banner.png
         <tbody>
             <tr><td>Intent (decision records)</td><td>In use; Not in use</td></tr>
             <tr><td>Process (Definition of Done)</td><td>Detect (DefinitionGuard, when a signed record is found); DefinitionGuard; Checklists for Jira (HeroCoders); Not in use</td></tr>
-            <tr><td>Code (pull requests from the Jira Development field)</td><td>Detect (when pull request data is found); In use; Not in use. On a site with no Development field, Code is Not applicable whatever you choose.</td></tr>
+            <tr><td>Code (pull requests from the Jira Development field)</td><td>Detect (when pull request data is found); In use; Not in use. Code needs Jira's Development field, which Jira shows when a development tool such as Bitbucket, GitHub or GitLab is connected to the site. On a site with no Development field, Code is Not applicable on every issue whatever you choose: the page says so under the Code control, the choice reads "In use (no effect: this site has no Development field)", and the "Now:" line reads "Not applicable on this site (no Development field)".</td></tr>
             <tr><td>Audit (approval seal)</td><td>Detect (LedgerSeal, when a signed record is found); LedgerSeal; Not in use</td></tr>
             <tr><td>Decision issue types</td><td>Issue type names, separated by commas. At most 20, each at most 60 characters.</td></tr>
         </tbody>

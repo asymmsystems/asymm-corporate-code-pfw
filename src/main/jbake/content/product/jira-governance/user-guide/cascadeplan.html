@@ -10,7 +10,7 @@ og_image=product/jira-governance/cascadeplan/banner.png
     <span class="section-kicker">CascadePlan Guide</span>
     <h1>CascadePlan User &amp; Administrator Guide</h1>
     <p style="max-width: 65ch">CascadePlan is a timeline inside a Jira Cloud project. Work can start when its predecessor is part done, for example at 30%.
-        When a date moves, the work that depends on it moves too. You see every Jira change before it happens, and you can undo it.
+        When a date moves, the work that depends on it moves too. You see every Jira change before it happens, and you can undo date, link and parent changes.
         This guide shows how to set it up, how to use each screen, and what to do when something goes wrong.</p>
 </header>
 
@@ -231,17 +231,21 @@ og_image=product/jira-governance/cascadeplan/banner.png
             <tr><td>Estimation Unit</td><td>Hours (Direct Effort), Story Points (1 pt = 8 hrs) or T-Shirt Size. The sizes are XS 4, S 8, M 16, L 32 and XL 64 hours. The total in hours becomes the Jira original estimate. These story points are a CascadePlan unit, not Jira's Story Points field.</td></tr>
             <tr><td>Effort Value</td><td>The amount in the chosen unit, 0 to 10,000 hours.</td></tr>
             <tr><td>Also scale the Jira estimate when I resize this bar</td><td>Off by default. When on, resizing the bar changes the Jira estimate too.</td></tr>
-            <tr><td>Multi-Resource Allocation (Jira Subtasks)</td><td>Choose a person and hours, then <strong>+ Allocate Resource</strong>. CascadePlan creates a Jira sub-task assigned to that person. The hours field starts at 20: clear it or change it if you do not want a 20-hour estimate.</td></tr>
+            <tr><td>Multi-Resource Allocation (Jira Subtasks)</td><td>Choose a person and hours, then <strong>+ Allocate Resource</strong>. CascadePlan creates a Jira sub-task assigned to that person. The hours field starts empty. If you leave it empty, CascadePlan writes no estimate, and the status line reads "Created Jira subtask for NAME, with no estimate". Undo does not delete the sub-task.</td></tr>
             <tr><td>Parent in Jira (changes every plan)</td><td>Choose a new parent and choose <strong>Apply</strong>.</td></tr>
-            <tr><td>Jira sub-tasks and risk buffer</td><td>Lists the Jira sub-tasks. Type a summary and hours, then choose <strong>+ Create sub-task in Jira</strong>. <strong>Buffer Type</strong> and <strong>Buffer Value</strong> are shown but not saved in this version.</td></tr>
+            <tr><td>Jira sub-tasks</td><td>Lists the Jira sub-tasks. Type a summary and, if you want, hours, then choose <strong>+ Create sub-task in Jira</strong>.</td></tr>
             <tr><td>Fractional Completion Dependency</td><td>Choose a <strong>Predecessor Task</strong> and a <strong>Trigger Completion %</strong> (default 30). This is the same as a link with a percent.</td></tr>
             <tr><td>Move to Backlog, Cancel, Save Changes</td><td>Take the item off the timeline, close without saving, or save. Escape on an edited dialog asks "Discard unsaved changes?".</td></tr>
         </tbody>
     </table>
     </div>
     <figure style="margin: 2rem 0;">
-        <img src="/images/product/jira-governance/user-guide/cascadeplan/08-task-details-bottom.png" alt="The bottom of the Edit Task dialog: Multi-Resource Allocation with + Allocate Resource, Parent in Jira now under PAY-2 with Apply, Jira sub-tasks with + Create sub-task in Jira, Buffer Type and Buffer Value, Fractional Completion Dependency on PAY-11 at 30 percent, and Move to Backlog, Cancel and Save Changes." width="519" height="590" loading="lazy" style="max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
-        <figcaption style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 9: The bottom of the task dialog.</figcaption>
+        <img src="/images/product/jira-governance/user-guide/cascadeplan/08-task-details-allocation.png" alt="Multi-Resource Allocation (Jira Subtasks) in the task dialog: a person select set to Unassigned, an empty Hrs field and the + Allocate Resource button." width="475" height="137" loading="lazy" style="max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <figcaption style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 9: Multi-Resource Allocation. The hours field starts empty.</figcaption>
+    </figure>
+    <figure style="margin: 2rem 0;">
+        <img src="/images/product/jira-governance/user-guide/cascadeplan/08b-task-details-subtasks.png" alt="Jira sub-tasks with no sub-tasks yet, a summary field, an hours field and + Create sub-task in Jira, then Fractional Completion Dependency with predecessor PAY-11 at 30 percent." width="475" height="255" loading="lazy" style="max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <figcaption style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 10: Jira sub-tasks and the percent dependency in the task dialog.</figcaption>
     </figure>
     <h3>When progress and the Jira status disagree</h3>
     <p>When a new progress does not match the Jira status, CascadePlan asks before it saves. For example "PAY-12 is To Do in Jira. Also move it to In Progress?" with <strong>Move to In Progress</strong> and <strong>Keep To Do</strong>.
@@ -255,7 +259,7 @@ og_image=product/jira-governance/cascadeplan/banner.png
     <p>Each project has a <strong>Main Plan</strong>. Plan approvers can add scenario plans, for example "Plan B: launch without wallets".</p>
     <figure style="margin: 2rem 0;">
         <img src="/images/product/jira-governance/user-guide/cascadeplan/02-manage-plans.png" alt="The Manage Project Plans popover: Search plans, tabs All and Scenarios, the Main Plan row, a New plan name field with + Create, the Clone current plan tasks and settings checkbox, and a JQL filter field with Save filter." width="360" height="402" loading="lazy" style="max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
-        <figcaption style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 10: Manage Project Plans.</figcaption>
+        <figcaption style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 11: Manage Project Plans.</figcaption>
     </figure>
     <ul>
         <li><strong>Switch:</strong> choose a plan in the list. "Switched to plan NAME."</li>
@@ -272,7 +276,7 @@ og_image=product/jira-governance/cascadeplan/banner.png
     <p>Choose <strong>Baseline</strong> in the toolbar. The panel <strong>Baselines and scope changes</strong> opens.</p>
     <figure style="margin: 2rem 0;">
         <img src="/images/product/jira-governance/user-guide/cascadeplan/06-baselines.png" alt="The Baselines and scope changes panel: a baseline name field with Freeze the plan as a baseline, the scope since the active baseline with no change, a reason field with Request approval of this scope, and two baseline versions with Compare with now, Compare with active, Export CSV and Make active." width="720" height="336" loading="lazy" style="max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
-        <figcaption style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 11: The baseline panel with two baseline versions.</figcaption>
+        <figcaption style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 12: The baseline panel with two baseline versions.</figcaption>
     </figure>
     <ol>
         <li><strong>Freeze (plan approver).</strong> Type a name, for example "Sprint 7 commitment", and choose <strong>Freeze the plan as a baseline</strong>. Result: "Froze "NAME": N items, H h." The baseline records each item's Jira estimate, start, end and done state, with a SHA-256 digest.</li>
@@ -290,22 +294,23 @@ og_image=product/jira-governance/cascadeplan/banner.png
     <p><strong>Plain Table View</strong> lists every work item with Key, Summary, Type, Epic, Assignee, Start Date, Due Date, Progress, Status and Dependencies. It suits reading and screen readers.</p>
     <figure style="margin: 2rem 0;">
         <img src="/images/product/jira-governance/user-guide/cascadeplan/11-table-view.png" alt="The Plain Table View listing PAY work items with key, summary, type, epic, assignee, start and due dates, progress, status and dependencies such as PAY-11 (30%)." width="1568" height="591" loading="lazy" style="max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
-        <figcaption style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 12: The Table view.</figcaption>
+        <figcaption style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 13: The Table view.</figcaption>
     </figure>
     <h3>Utilization view</h3>
     <p><strong>Hours per person per week</strong> shows 8 weeks from the Monday of this week. Hours come from the Jira estimates on the plan, spread evenly over each task's days. No capacity is assumed. Epics, unassigned tasks and tasks with no estimate are left out.</p>
     <figure style="margin: 2rem 0;">
         <img src="/images/product/jira-governance/user-guide/cascadeplan/10-utilization.png" alt="The Utilization view: hours per person per week for eight weeks from 2026-11-02, for one person, with the explanation above the table." width="1568" height="127" loading="lazy" style="max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
-        <figcaption style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 13: The Utilization view.</figcaption>
+        <figcaption style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 14: The Utilization view.</figcaption>
     </figure>
     <h3>Changes</h3>
     <p><strong>Changes</strong> opens <strong>Jira writes in this session</strong>: Issue, Field, Old, New and Result. A result reads "Written" or "Not written" with the reason. The list covers your session only.</p>
     <h3>Undo and Redo</h3>
     <ul>
         <li>Ctrl+Z undoes and Ctrl+Shift+Z redoes (Cmd on macOS). The planner keeps your last 20 changes.</li>
-        <li>Undo covers date moves, scheduling and unscheduling, block moves and changes to several rows. Parent and type changes have their own Undo in the message.</li>
-        <li>Creates, plan management, baselines, filters and row order have no Undo.</li>
-        <li>The undo history is lost when you reload the page or switch plans.</li>
+        <li>Undo covers date moves, scheduling and unscheduling, block moves, changes to several rows, and changes to a task's fields or links, including <strong>Save</strong> and <strong>Remove Link</strong> in the link editor. The message with <strong>Undo</strong> stays until you close it. Parent and type changes have their own Undo in the message.</li>
+        <li>Adding a contributor creates a Jira sub-task, and Undo does not delete it.</li>
+        <li>Creates, plan management, baselines, plan filters and row order have no Undo.</li>
+        <li>The undo history is kept in memory, so a reload or a switch to another plan clears it.</li>
     </ul>
 </section>
 

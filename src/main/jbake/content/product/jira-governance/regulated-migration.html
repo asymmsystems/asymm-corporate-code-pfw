@@ -129,7 +129,7 @@ og_image=product/jira-governance/ledgerseal/banner.png
             <tr>
                 <td><strong>21 CFR 11.200 / 11.300: signature components and controls</strong></td>
                 <td>LedgerSeal</td>
-                <td>Not met. LedgerSeal does not re-authenticate the signer and does not perform two-component signing. Use your own controls if your predicate rules need Part 11 signatures.</td>
+                <td>Partly met with code signing on: each signature needs the signer's Atlassian account and a single-use code that LedgerSeal emails to that account's address. LedgerSeal does not ask for the Jira login again at each signature, so it partly meets 11.200(a)(1). 11.300(a) to (c) belong to your identity provider; 11.300(d) is partly met (alerts are shown on the admin page, not emailed). The <a href="/product/jira-governance/compliance.html" class="org-link org-link--inline org-link--internal">compliance mapping</a> has each row.</td>
             </tr>
         </tbody>
     </table>
@@ -137,8 +137,8 @@ og_image=product/jira-governance/ledgerseal/banner.png
     <h3 style="margin-top: 2rem">What the suite does not do</h3>
     <ul style="line-height: 1.9">
         <li>It does not certify your team or make it compliant.</li>
-        <li>It does not provide 21 CFR Part 11 electronic signatures by itself.</li>
-        <li>It has no approval routing with several steps or parallel approvers.</li>
+        <li>It does not ask for the Jira login again at each signature, so it only partly meets 21 CFR 11.200(a)(1). Your identity provider's controls, procedures and validation decide whether this meets your predicate rules.</li>
+        <li>It does not email security alerts. They are shown on the LedgerSeal settings page.</li>
         <li>It does not approve or control Confluence pages or documents.</li>
         <li>It is not a general Jira audit log of admin and configuration events.</li>
         <li>It does not import approval records from Data Center apps.</li>
@@ -203,7 +203,7 @@ og_image=product/jira-governance/ledgerseal/banner.png
         <li>For apps with a cloud version, read the vendor's own feature comparison. Look for the row your control depends on.</li>
         <li>Choose the cloud target: data residency region, Isolated Cloud or Government Cloud. Check that each app is available there.</li>
         <li>Rebuild each control in cloud. Check who adds each validator to each transition.</li>
-        <li>If your predicate rules need Part 11 electronic signatures, choose the control that re-authenticates the signer.</li>
+        <li>If your predicate rules need Part 11 electronic signatures, decide whether two components at each signature (the Jira session and an emailed single-use code) meet them, together with your identity provider's re-authentication policy.</li>
         <li>Decide how Data Center records stay available after 28 March 2029.</li>
         <li>Run the security review of each app: scopes, egress, data storage, privacy policy, security policy.</li>
         <li>For GxP work, validate the cloud system and its apps for their intended use, and keep the test evidence.</li>

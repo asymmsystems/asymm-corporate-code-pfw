@@ -126,6 +126,7 @@ og_image=product/jira-governance/definitionguard/banner.png
                 <li><strong>Category</strong>: Testing, Code quality, Security, Compliance or Documentation.</li>
             </ul>
         </li>
+        <li>Set <strong>Who else can waive</strong>: Administer projects (the default), Resolve issues or Transition issues. Approvers can always waive. Users with the chosen Jira permission on the issue can waive too, and reopen a waived item. The template saves this choice, and a later save keeps it.</li>
         <li>Use <strong>Move up</strong>, <strong>Move down</strong> and <strong>Remove</strong>. Type a title in <strong>New item title</strong> and choose <strong>Add item</strong>; a new item is Mandatory and in Testing.</li>
         <li>Choose <strong>Save template</strong>. Result: "Template "NAME" version n saved." Each save adds 1 to the version.</li>
         <li>Open issues keep their version. To move them, choose <strong>Re-sync open issues</strong>. Result: "Re-synced n open issues to version v. Ticks on unchanged items were kept." New items start open. A re-sync never reopens a ticked item.</li>
@@ -173,7 +174,7 @@ og_image=product/jira-governance/definitionguard/banner.png
     <ol>
         <li>Open <strong>Checklist audit history</strong> in the panel and choose <strong>Load audit history</strong>.</li>
         <li>Read the chain result: <strong>Chain intact</strong> or <strong>Chain broken</strong>, and the signature result: <strong>Property signed</strong> or <strong>Property not signed</strong>.</li>
-        <li>Read the events: who, when, the action (Checklist created, Completed, Reopened, Waived, Checklist reset), the item, the reason and the evidence. The panel lists the first 100 events; the chain check and the export cover all of them.</li>
+        <li>Read the events: who, when, the action (Checklist created, Completed, Reopened, Waived, Checklist reset), the item, the reason and the evidence. The panel lists the history 100 events at a time, oldest first. While more events follow, it shows "Showing n of m events, oldest first." and <strong>Show more</strong>, which adds the next 100. The chain check and the export cover every event.</li>
         <li>Project and Jira administrators choose <strong>Export history</strong>. Copy the JSON and save it as <code>KEY-definitionguard-history.json</code>. There is no download button.</li>
     </ol>
     <figure style="margin: 2rem 0;">
@@ -199,8 +200,8 @@ og_image=product/jira-governance/definitionguard/banner.png
         <tbody>
             <tr><td>See the panel, the history and the evidence</td><td>Users with Browse projects on the issue.</td></tr>
             <tr><td>Tick or untick an item</td><td>Users with Edit issues, plus the item's extra permission. Not the assignee, for items marked Not the assignee.</td></tr>
-            <tr><td>Waive an item</td><td>Approvers: project administrators, Jira administrators and members of the approver groups. Not the assignee, for items marked Not the assignee.</td></tr>
-            <tr><td>Reopen a waived item</td><td>Users with Edit issues who are also approvers.</td></tr>
+            <tr><td>Waive an item</td><td>Approvers: project administrators, Jira administrators and members of the approver groups. Also users with the template's waiver permission (<strong>Who else can waive</strong>, default Administer projects). Not the assignee, for items marked Not the assignee.</td></tr>
+            <tr><td>Reopen a waived item</td><td>Users with Edit issues who can also waive the item.</td></tr>
             <tr><td>Reset a checklist</td><td>Approvers.</td></tr>
             <tr><td>Export the history</td><td>Project administrators and Jira administrators.</td></tr>
             <tr><td>Edit templates, statuses, re-sync, see coverage</td><td>Project administrators and Jira administrators. Changes need an active licence.</td></tr>
