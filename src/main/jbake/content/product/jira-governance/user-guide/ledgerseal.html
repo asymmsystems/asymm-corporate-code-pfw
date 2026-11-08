@@ -1,5 +1,5 @@
 title=LedgerSeal User & Admin Guide
-description=How to install, set up and use LedgerSeal for Jira Cloud: seal an approved issue, see what changed after approval, approve changes, revoke, gate a transition, copy the evidence record, permissions, data, limits and troubleshooting.
+description=How to install, set up and use LedgerSeal for Jira Cloud: seal an approved issue, see what changed after approval, approve changes, revoke, gate a transition, sign with an emailed code, sign on the transition screen, approval routes, the evidence record, permissions, data, limits and troubleshooting.
 type=page
 toc=true
 status=published
@@ -10,25 +10,27 @@ og_image=product/jira-governance/ledgerseal/banner.png
     <span class="section-kicker">LedgerSeal Guide</span>
     <h1>LedgerSeal User &amp; Administrator Guide</h1>
     <p style="max-width: 65ch">LedgerSeal records the approval of a Jira issue as it is at that moment. If the issue changes after approval, LedgerSeal shows what changed, who changed it and when.
-        A workflow validator can block a transition until the issue is sealed and unchanged. Auditors can check the evidence offline with the open verifier.</p>
+        A workflow validator can block a transition until the issue is sealed and unchanged. Signers can also type a single-use code that LedgerSeal emails to them, sign on the transition screen, or sign the stages of an approval route.
+        Auditors can check the evidence offline with the open verifier.</p>
 </header>
 
 <section style="margin-bottom: 4rem">
     <h2 class="section-title">1. Who this guide is for</h2>
     <ul>
-        <li><strong>Approvers</strong> (release managers, product leads, change boards) who seal issues and approve changes. Read sections 3 to 5.</li>
-        <li><strong>Team members</strong> who need to know why an issue shows CHANGED or why a transition is blocked. Read sections 3, 6 and 11.</li>
-        <li><strong>Auditors</strong> who check the evidence. Read section 7 and the <a href="/product/jira-governance/user-guide/open-verifier.html" class="org-link org-link--inline org-link--internal">open verifier guide</a>.</li>
-        <li><strong>Jira administrators</strong> who install the app, choose approver groups and add the validator. Read sections 2, 6 and 8.</li>
+        <li><strong>Approvers</strong> (release managers, product leads, change boards) who seal issues and approve changes. Read sections 3 to 5 and 7 to 9.</li>
+        <li><strong>Team members</strong> who need to know why an issue shows CHANGED or why a transition is blocked. Read sections 3, 6 and 14.</li>
+        <li><strong>Auditors</strong> who check the evidence. Read section 10 and the <a href="/product/jira-governance/user-guide/open-verifier.html" class="org-link org-link--inline org-link--internal">open verifier guide</a>.</li>
+        <li><strong>Jira administrators</strong> who install the app, choose approver groups and add the validator. Read sections 2, 6 to 9 and 11.</li>
     </ul>
 </section>
 
 <section style="margin-bottom: 4rem">
     <h2 class="section-title">2. Install and first setup</h2>
     <ol>
-        <li><strong>Install (Jira administrator).</strong> In Jira, open <strong>Apps &gt; Explore more apps</strong>, search for <strong>LedgerSeal</strong> and choose <strong>Get app</strong>. The app asks to read Jira work and users, to write issue properties, to store its own data, and to report personal data to Atlassian. It calls no server outside your Atlassian site.</li>
-        <li><strong>Choose approvers (optional).</strong> Project administrators and Jira administrators can always seal. To add more people, add Jira groups in <strong>Jira settings &gt; Apps &gt; LedgerSeal approvers</strong> (section 8).</li>
+        <li><strong>Install (Jira administrator).</strong> In Jira, open <strong>Apps &gt; Explore more apps</strong>, search for <strong>LedgerSeal</strong> and choose <strong>Get app</strong>. The app asks to read Jira work and users, to write issue properties, to store its own data, to report personal data to Atlassian, and to send Jira notifications (<code>send:notification:jira</code>). It uses the last one only to email a signer their own signing code, in projects where code signing is on. It calls no server outside your Atlassian site.</li>
+        <li><strong>Choose approvers (optional).</strong> Project administrators and Jira administrators can always seal. To add more people, add Jira groups in <strong>Jira settings &gt; Apps &gt; LedgerSeal settings</strong>, tab <strong>Approver groups</strong> (section 11).</li>
         <li><strong>Add the gate (optional).</strong> Add the validator <strong>Require Valid LedgerSeal</strong> to the transitions that must wait for approval, for example into "Ready for release" (section 6). Without it, LedgerSeal reports changes but blocks nothing.</li>
+        <li><strong>Choose how people sign (optional).</strong> Turn on code signing for chosen projects (section 7), add the signature field to a transition screen (section 8), or define approval routes (section 9).</li>
     </ol>
     <p>Every issue then shows an <strong>Approval seal</strong> entry in its details column. The full panel opens from the issue's app button: choose <strong>Approval Seal</strong>.</p>
     <figure style="margin: 2rem 0;">
@@ -98,7 +100,7 @@ og_image=product/jira-governance/ledgerseal/banner.png
         <figcaption style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 6: The description and the priority changed after approval. The person who made the changes cannot approve them.</figcaption>
     </figure>
     <p>Each changed item shows <strong>Was (at approval)</strong>, <strong>Now (current edit)</strong>, <strong>Changed by</strong> and the time. A rich-text field names the changed part, for example "(Paragraph 1 changed.)". Long values have <strong>Show full value</strong>.
-        A change that touches only attachments is counted, but the panel does not list attachment rows; the validator message names "Attachments".</p>
+        An attachment added, removed or replaced after the seal is a change row too, for example "Attachment: build.log (Added after the seal)". The row shows the file name, the kind of change and, where Jira records it, who made the change and when. The validator message names "Attachments".</p>
     <h3>Approve the changes</h3>
     <ol>
         <li>An approver who did <strong>not</strong> make any of the changes opens the panel and reviews them.</li>
@@ -130,16 +132,125 @@ og_image=product/jira-governance/ledgerseal/banner.png
     </ul>
     <p>The messages say "project admin", but Jira administrators and members of the approver groups can approve too.</p>
     <p><strong>Comments on the transition screen.</strong> A comment typed on the gated transition's screen is new content on a sealed issue, so the validator blocks the move with "Comment added". Add the comment after the transition, or ask another approver to approve it first. A resolution set on the screen does not block.</p>
+    <p>To sign in the transition dialog itself, see section 8. For a route of approval stages, see section 9.</p>
 </section>
 
 <section style="margin-bottom: 4rem">
-    <h2 class="section-title">7. Certificate details and the evidence record</h2>
+    <h2 class="section-title">7. Code signing</h2>
+    <p>With code signing on, each signature also needs a single-use code that LedgerSeal emails to the signer's own Atlassian email address. The code is the second component, next to the signer's signed-in Atlassian account.</p>
+    <h3>Turn it on (Jira administrator)</h3>
+    <ol>
+        <li>Open <strong>Jira settings &gt; Apps &gt; LedgerSeal settings</strong> and the tab <strong>Signing codes</strong>.</li>
+        <li>Tick <strong>Code signing on in these projects</strong>.</li>
+        <li>Type the project keys, separated by commas (at most 100).</li>
+        <li>Set <strong>Lock a person out after this many failed attempts in a row</strong>. The default is 5; you can choose 3 to 10.</li>
+        <li>Choose <strong>Save</strong>. Each save makes a new version of the settings and adds an alert on the <strong>Security alerts</strong> tab.</li>
+    </ol>
+    <p>Jira outgoing email must be on. LedgerSeal sends the code through Jira, so when Jira cannot send email, nobody can sign in a code-signing project.</p>
+    <h3>Sign with a code</h3>
+    <p>In a code-signing project, every seal, approval of changes, revoke, stage signature, rejection and signature on the transition screen needs a code.</p>
+    <ol>
+        <li>Open the form as usual, for example <strong>Seal this issue</strong>, <strong>Approve these changes</strong> or <strong>Revoke seal</strong>.</li>
+        <li>Choose <strong>Send me a code</strong>. The form shows "We emailed a code to your Atlassian email address. It works once, until" and the time. The email subject is "LedgerSeal signing code for" and the issue key.</li>
+        <li>Type the 6 digits in <strong>Code from the email (6 digits)</strong>.</li>
+        <li>Read the declaration and tick <strong>I agree to the declaration above.</strong> An approval, a rejection and a revoke each show their own declaration, and the signature records it.</li>
+        <li>Choose <strong>Sign and seal</strong> (or <strong>Revoke</strong>, <strong>Sign</strong> or <strong>Reject</strong>).</li>
+    </ol>
+    <p>The code works once, for 5 minutes, only for you, that issue and that action. <strong>Send a new code</strong> asks for another one.</p>
+    <h3>Lockout and unlock</h3>
+    <p>After 5 failed codes in a row (or the number the administrator chose), LedgerSeal locks code signing for that person: "Code signing is locked for you after too many failed attempts. Ask a Jira admin to unlock it."
+        Another Jira administrator unlocks the person on the <strong>Security alerts</strong> tab: type a reason in <strong>Reason for unlocking (required)</strong> and choose <strong>Unlock</strong>. An administrator cannot unlock themself.</p>
+    <h3>Security alerts</h3>
+    <p>The <strong>Security alerts</strong> tab lists the people locked out and the open alerts, newest first: failed signing attempts, a used code tried again, lockouts, too many code requests, a code Jira could not send, and changes to the code-signing settings.
+        Choose <strong>Acknowledge</strong> to close an alert. No email is sent for these alerts, so check this page. Each alert and each acknowledgement is kept in a hash-chained record.</p>
+    <h3>What code signing does not do</h3>
+    <ul>
+        <li>LedgerSeal does not ask for the Jira login again at each signature. The first component is the existing Jira session.</li>
+        <li>A shared or delegated mailbox defeats the code. Each signer needs a personal mailbox.</li>
+        <li>Security alerts are shown on the admin page only. They are not emailed.</li>
+    </ul>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">8. Sign on the transition screen</h2>
+    <h3>Set it up (Jira administrator)</h3>
+    <ol>
+        <li>Add the field <strong>LedgerSeal signature</strong> to the transition screen of the gated transition. Use a screen with no other covered field: a field or a comment typed there changes the approved content, and the validator blocks the move.</li>
+        <li>Add the validator <strong>Require Valid LedgerSeal</strong> to that transition (section 6), and publish the workflow.</li>
+    </ol>
+    <h3>Sign and move the issue</h3>
+    <ol>
+        <li>Select the transition. Jira opens the transition dialog with the <strong>LedgerSeal signature</strong> field.</li>
+        <li>In the field, choose the sign-off role, read the declaration and tick <strong>I agree to the declaration above.</strong> If the issue changed after approval, write a reason. In a code-signing project, choose <strong>Send me a code</strong> and type the code.</li>
+        <li>Choose <strong>Sign</strong> in the field. The field shows "Signed. Select the transition button to finish. The signature can be used once, within 2 minutes."</li>
+        <li>Select the transition button. The validator writes the seal, then checks the issue as usual.</li>
+    </ol>
+    <ul>
+        <li>The board, the issue view and the list view open the same dialog.</li>
+        <li>On an issue that is sealed and unchanged, the field says that no signature is needed.</li>
+        <li>On an issue with an approval route, the field says: "This issue has an approval route: sign its stages in the LedgerSeal panel, then move the issue."</li>
+        <li>REST, automation and bulk changes have no screen. The validator blocks them unless the issue is already sealed. Jira Service Management approval steps skip validators.</li>
+        <li>A seal made before canonical form 2.3.0 shows a change the first time the field is set on that issue. Approve the change once.</li>
+        <li><strong>Sign with LedgerSeal</strong> in the issue's actions menu opens the signing panel. It works wherever the field cannot be used.</li>
+    </ul>
+    <p>New validator messages:</p>
+    <ul>
+        <li>"LedgerSeal: this signature expired or was already used. Sign again in the LedgerSeal field."</li>
+        <li>"LedgerSeal: the person moving the issue is not the person who signed. Sign again."</li>
+        <li>"LedgerSeal: fields on this screen changed the approved content. Use a screen with only the LedgerSeal signature field, or sign in the panel."</li>
+    </ul>
+    <h3>What Jira Cloud cannot do</h3>
+    <ul>
+        <li>An app cannot ask for the Atlassian password again at the transition. There is no API for it, and apps must not collect it.</li>
+        <li>An app cannot intercept the transition button, or open its own dialog before Jira's transition dialog.</li>
+        <li>An app cannot add a field to a transition screen. A Jira administrator must add the signature field.</li>
+        <li>UI modifications do not work on Forge custom fields, on the legacy transition dialog, or in team-managed projects.</li>
+        <li>An app cannot disable the dialog's submit button. Only the validator can refuse the transition.</li>
+        <li>Nobody can sign on a transition run by REST, automation or a Jira Service Management approval step, because there is no screen. The validator blocks the first two; approval steps skip validators.</li>
+        <li>A post function cannot roll back a transition.</li>
+    </ul>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">9. Approval routes</h2>
+    <p>An approval route is a set of stages that sign in order, for example QA, then Regulatory. Each stage has its own approver groups and quorum. Every stage signs the same content, and the last stage seals the issue.</p>
+    <h3>Define a route (Jira administrator)</h3>
+    <ol>
+        <li>Open <strong>Jira settings &gt; Apps &gt; LedgerSeal settings</strong> and the tab <strong>Approval routes</strong>.</li>
+        <li>Choose <strong>New route</strong>. The route is JSON; the page starts from an example. For each stage, give a <code>stageId</code>, a <code>name</code>, an <code>orderGroup</code> (stages of the same group sign in any order; group 2 starts after group 1), a sign-off role, the <code>approverGroupIds</code>, a <code>quorum</code> (<code>"ANY"</code>, or a number of distinct people) and the <code>gatesStatusIds</code>: the target statuses that this stage gates.</li>
+        <li>Optional: <code>reapprovalStageIds</code> names the stages that must sign again after a change to a routed seal. Without it, the full route signs again.</li>
+        <li>Choose <strong>Save</strong>. Each save makes a new version. An approval that is already running keeps the version it started with.</li>
+        <li>Choose <strong>Bind this route</strong>, type the <strong>Project key</strong> and an issue type id, or <code>*</code> for every issue type of the project, and save the binding.</li>
+    </ol>
+    <h3>Sign a stage</h3>
+    <ol>
+        <li>Open the <strong>Approval Seal</strong> panel. It shows the route, each stage, its quorum, who signed, and which stages are open, for example "In approval: 1 of 2 stages complete."</li>
+        <li>Choose <strong>Sign as</strong> and the stage name. You see this button only for open stages whose groups you are in.</li>
+        <li>Read the declaration, tick it, and choose <strong>Sign</strong>. In a code-signing project, send and type a code first.</li>
+    </ol>
+    <ul>
+        <li><strong>Reject</strong> asks for a reason (<strong>Reason for rejecting (required)</strong>). A rejection blocks the gated transitions until the approval starts again: "Rejected. The next signature starts the approval again."</li>
+        <li>One person signs one stage of an approval.</li>
+        <li>A change to the covered content during approval starts the approval again: "The issue changed during approval, so the approval starts again."</li>
+        <li>When the last stage reaches its quorum, the issue is sealed.</li>
+        <li>Revoking a routed seal needs a member of a group of the last order group.</li>
+        <li>Find issues still in approval with the JQL <code>ledgersealApproval = "OPEN"</code>.</li>
+    </ul>
+    <p>Validator messages for routes:</p>
+    <ul>
+        <li>"LedgerSeal: this move needs the STAGE approval (k of n signed). Sign in the LedgerSeal panel."</li>
+        <li>"LedgerSeal: STAGE rejected this issue on DATE (reason: ...). Start the approval again in the LedgerSeal panel."</li>
+    </ul>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">10. Certificate details and the evidence record</h2>
     <p>Choose <strong>Show details</strong> in <strong>Certificate &amp; attestation details</strong>:</p>
     <ul>
         <li><strong>Signed by</strong> and the time, the <strong>Sign-off role</strong> and the reason, if any.</li>
         <li><strong>Tamper-evident seal</strong>: the SHA-256 hash of the covered content. <strong>Show full hash</strong> shows all of it.</li>
         <li><strong>Covered fields</strong>: <strong>Show fields</strong> lists covered and not covered fields.</li>
-        <li><strong>History</strong>: <strong>Show history</strong> lists Sealed, Change found, Sealed again and Revoked entries, 50 per page, with <strong>Show more history</strong>.</li>
+        <li><strong>History</strong>: <strong>Show history</strong> lists Sealed, Change found, Sealed again and Revoked entries, and on a route the stage signatures and rejections, 50 per page, with <strong>Show more history</strong>.</li>
         <li><strong>Evidence record</strong>: <strong>Show evidence (JSON)</strong>.</li>
         <li>The footer names who can seal, the certificate id, the canonical form and the declaration version.</li>
     </ul>
@@ -155,19 +266,22 @@ og_image=product/jira-governance/ledgerseal/banner.png
     </ol>
     <p>The record holds the sealed snapshot, the hash-chained history, the attestation and its Ed25519 signature. A Marketplace installation signs with the key <code>ls-prod-2026-11</code>, listed on the <a href="/product/jira-governance/signing-keys.html" class="org-link org-link--inline org-link--internal">Signing keys</a> page.
         The record names people by a pseudonymous token, and adds an unsigned map from token to account id.</p>
+    <p>An issue signed with a code or through an approval route exports the format <code>ledgerseal-evidence/2</code>. It adds the code-signing settings in force, the route versions and the declaration texts. Check it with verifier 1.5.0 or later.</p>
     <p><strong>What the seal shows.</strong> The hash chain makes changes to stored records detectable. It does not stop someone who can rewrite the app's stored data, including the vendor, from writing a new consistent chain.</p>
 </section>
 
 <section style="margin-bottom: 4rem">
-    <h2 class="section-title">8. Approver groups and permissions</h2>
+    <h2 class="section-title">11. LedgerSeal settings and permissions</h2>
+    <p>The admin page <strong>Jira settings &gt; Apps &gt; LedgerSeal settings</strong> has four tabs: <strong>Approver groups</strong>, <strong>Signing codes</strong> (section 7), <strong>Security alerts</strong> (section 7) and <strong>Approval routes</strong> (section 9). Only Jira administrators can use it.</p>
+    <h3>Approver groups</h3>
     <ol>
-        <li>A Jira administrator opens <strong>Jira settings &gt; Apps &gt; LedgerSeal approvers</strong>.</li>
+        <li>A Jira administrator opens the tab <strong>Approver groups</strong>.</li>
         <li>Search in <strong>Find Jira groups to grant authority</strong>, then choose <strong>Add</strong>. <strong>Remove</strong> takes a group off.</li>
         <li>Choose <strong>Save changes</strong>. The page shows "Saved."</li>
     </ol>
     <figure style="margin: 2rem 0;">
         <img src="/images/product/jira-governance/user-guide/ledgerseal/07-approvers-admin.png" alt="The LedgerSeal Authority Policy section with one approver group, its Remove button, Save changes, and the group search field." width="1124" height="360" loading="lazy" style="max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
-        <figcaption style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 8: The approver groups on the LedgerSeal approvers page.</figcaption>
+        <figcaption style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 8: The approver groups.</figcaption>
     </figure>
     <div style="overflow-x: auto;">
     <table class="clinical-table">
@@ -175,7 +289,8 @@ og_image=product/jira-governance/ledgerseal/banner.png
         <tbody>
             <tr><td>See the state, the changes, the history and the evidence</td><td>Users with Browse projects on the issue (and, for the evidence, every restricted comment and work log).</td></tr>
             <tr><td>Seal, approve changes, revoke</td><td>Project administrators, Jira administrators and members of the approver groups, who did not change the issue since the seal.</td></tr>
-            <tr><td>Choose approver groups</td><td>Jira administrators.</td></tr>
+            <tr><td>Sign or reject a stage of an approval route</td><td>Members of the stage's approver groups, one stage per person.</td></tr>
+            <tr><td>Choose approver groups, code signing, routes; unlock a person</td><td>Jira administrators. An administrator cannot unlock themself.</td></tr>
             <tr><td>The validator</td><td>Runs for everyone who moves the issue.</td></tr>
         </tbody>
     </table>
@@ -184,11 +299,12 @@ og_image=product/jira-governance/ledgerseal/banner.png
 </section>
 
 <section style="margin-bottom: 4rem">
-    <h2 class="section-title">9. Data stored and where</h2>
+    <h2 class="section-title">12. Data stored and where</h2>
     <ul>
-        <li><strong>Where:</strong> in the Forge storage of your site, and in one issue property per issue. LedgerSeal sends nothing outside your Atlassian site.</li>
-        <li><strong>In Forge storage:</strong> the seal state, one record per seal (signer token, role, reason, declaration), the hash-chained history, and the sealed snapshot: field values, comment bodies, attachment details (no file content) and work logs. A reseal deletes the previous snapshot.</li>
-        <li><strong>On the issue:</strong> the property <code>ledgerseal-cert</code> with the status, certificate id, snapshot hash and seal date. It holds no personal data. Its status can be searched with JQL.</li>
+        <li><strong>Where:</strong> in the Forge storage of your site, and in one issue property per issue. LedgerSeal sends nothing outside your Atlassian site. With code signing on, it asks Jira to email a signer their own code; Jira sends the email.</li>
+        <li><strong>In Forge storage:</strong> the seal state, one record per seal (signer token, role, reason, declaration), the hash-chained history, and the sealed snapshot: field values, comment bodies, attachment details (no file content) and work logs. A reseal deletes the previous snapshot. Approval routes and their versions, and the snapshot that the stages of a running approval sign.</li>
+        <li><strong>Code signing:</strong> per person, the party token, the lockout state and a hash-chained history of code requests and attempts; the site's alert log. A code is stored only as a keyed hash, for at most a day. No email address is stored.</li>
+        <li><strong>On the issue:</strong> the property <code>ledgerseal-cert</code> with the status, certificate id, snapshot hash and seal date, and on a routed issue the approval state. It holds no personal data. Its status and the approval state can be searched with JQL.</li>
         <li><strong>People:</strong> stored as a pseudonymous token, a keyed hash of the Atlassian account id. One record per person links the token to the account id. No email and no display name is stored. The account ids are reported to Atlassian every week; for a closed account the link is removed and the panel shows "a deleted user".</li>
         <li><strong>Retention:</strong> records stay until the issue is deleted. Deleting an issue deletes its records.</li>
     </ul>
@@ -196,18 +312,21 @@ og_image=product/jira-governance/ledgerseal/banner.png
 </section>
 
 <section style="margin-bottom: 4rem">
-    <h2 class="section-title">10. Limits</h2>
+    <h2 class="section-title">13. Limits</h2>
     <ul>
         <li>Sealed content: at most about 2.6 MB per issue. A larger issue cannot be sealed.</li>
         <li>Jira reads: at most 5,000 comments, work logs or changelog entries per issue.</li>
         <li>Reason: 1 to 500 characters. Approver groups: 20.</li>
         <li>History: 50 entries per page. Up to 50 changed items are stored per change incident.</li>
         <li>A validator message names at most 5 changed items.</li>
+        <li>Code signing: at most 100 projects. A code works once, for 5 minutes. One code request per 30 seconds and 5 per 15 minutes per person. Lockout after 3 to 10 failures in a row (default 5).</li>
+        <li>A signature in the transition field works once, within 2 minutes.</li>
+        <li>Approval routes: 1 to 8 stages and order groups, 1 to 10 approver groups per stage, a quorum of 1 to 10, and at most 10 gated statuses per stage.</li>
     </ul>
 </section>
 
 <section style="margin-bottom: 4rem">
-    <h2 class="section-title">11. Troubleshooting and messages</h2>
+    <h2 class="section-title">14. Troubleshooting and messages</h2>
     <div style="overflow-x: auto;">
     <table class="clinical-table">
         <thead><tr><th>Message</th><th>What it means and what to do</th></tr></thead>
@@ -226,6 +345,12 @@ og_image=product/jira-governance/ledgerseal/banner.png
             <tr><td>"A chosen group was not found in Jira. Nothing was saved."</td><td>Search again and add the group from the results.</td></tr>
             <tr><td>"LedgerSeal: the seal record failed its integrity check. Contact your Jira admin."</td><td>The stored record does not match. Seal the issue again after review.</td></tr>
             <tr><td>The transition is blocked with "Comment added"</td><td>A comment was typed on the transition screen. See section 6.</td></tr>
+            <tr><td>"The code did not work. Check the newest LedgerSeal email, or ask for a new code."</td><td>Type the code from the newest email, or choose Send a new code. Each failure counts toward the lockout.</td></tr>
+            <tr><td>"The code expired after 5 minutes. Ask for a new code."</td><td>Choose Send a new code.</td></tr>
+            <tr><td>"This code was already used. Ask for a new code."</td><td>A code works once. Choose Send a new code.</td></tr>
+            <tr><td>"Too many code requests. Wait a minute, then ask again."</td><td>Wait, then ask again.</td></tr>
+            <tr><td>"Code signing is locked for you after too many failed attempts. Ask a Jira admin to unlock it."</td><td>Another Jira administrator unlocks you on the Security alerts tab (section 7).</td></tr>
+            <tr><td>"LedgerSeal could not email your code through Jira (Jira outgoing email may be off). Nothing was signed. Ask your Jira admin."</td><td>Turn on Jira outgoing email.</td></tr>
         </tbody>
     </table>
     </div>
@@ -233,7 +358,7 @@ og_image=product/jira-governance/ledgerseal/banner.png
 </section>
 
 <section style="margin-bottom: 4rem">
-    <h2 class="section-title">12. Uninstall and data removal</h2>
+    <h2 class="section-title">15. Uninstall and data removal</h2>
     <ol>
         <li>Remove the validator <strong>Require Valid LedgerSeal</strong> from your workflows first.</li>
         <li>A Jira administrator opens <strong>Jira settings &gt; Apps &gt; Manage apps</strong> and uninstalls LedgerSeal.</li>
@@ -244,7 +369,7 @@ og_image=product/jira-governance/ledgerseal/banner.png
 </section>
 
 <section style="margin-bottom: 5rem">
-    <h2 class="section-title">13. Related pages</h2>
+    <h2 class="section-title">16. Related pages</h2>
     <ul>
         <li><a href="/product/jira-governance/user-guide/open-verifier.html" class="org-link org-link--inline org-link--internal">Open verifier guide</a> and <a href="/product/jira-governance/signing-keys.html" class="org-link org-link--inline org-link--internal">Signing keys</a>.</li>
         <li><a href="/product/jira-governance/user-guide/fourrealities.html" class="org-link org-link--inline org-link--internal">FourRealities guide</a>: the Audit gate checks the signed LedgerSeal record.</li>
