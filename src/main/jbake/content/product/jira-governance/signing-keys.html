@@ -116,12 +116,12 @@ MCowBQYDK2VwAyEAhX7QRARkKnuAGHXDsHQ4ZaDKJPEF5EavHdzCNZg6l0M=<br/>
     <h2 class="section-title">5. Checking LedgerSeal evidence</h2>
     <p>The open verifier checks a LedgerSeal evidence record offline, with no access to Jira or to LedgerSeal. It is in the public repository
         <a href="https://github.com/asymmsystems/jira-governance-code-cli" class="org-link org-link--inline org-link--external">asymmsystems/jira-governance-code-cli</a> (Apache-2.0),
-        <a href="https://github.com/asymmsystems/jira-governance-code-cli/releases/tag/v1.3.0" class="org-link org-link--inline org-link--external">release v1.3.0</a>, and needs Node.js 18 or later.</p>
+        <a href="https://github.com/asymmsystems/jira-governance-code-cli/releases/tag/v1.5.0" class="org-link org-link--inline org-link--external">release v1.5.0</a>, and needs Node.js 18 or later. Use 1.5.0 or later for evidence format 2 (code signing and approval routes).</p>
     <ol>
         <li>In the Approval Seal panel, open the seal details and click <strong>Show evidence (JSON)</strong>. Copy the text into a file, for example <code>evidence.json</code>.</li>
-        <li>Download the verifier release and open a terminal in its folder.</li>
+        <li>Download the verifier release, check it with <code>sha256sum -c SHA256SUMS</code>, and open a terminal in its folder.</li>
         <li>Run <code>node verify-evidence.mjs evidence.json</code>. The verifier reads the key named by the evidence from its <code>keys/</code> folder. To use a key from this page, save it as a file and give it as the second argument: <code>node verify-evidence.mjs evidence.json key.pem</code>.</li>
-        <li>Each of the five check lines must start with <code>PASS</code>, and the exit code must be <code>0</code>. A <code>NOTE</code> line names a redaction entry; it is not a failure.</li>
+        <li>Each check line must start with <code>PASS</code> (five lines for format 1, more for format 2), and the exit code must be <code>0</code>. A <code>NOTE</code> line names a redaction entry; it is not a failure.</li>
     </ol>
     <p>The <a href="/product/jira-governance/user-guide/open-verifier.html" class="org-link org-link--inline org-link--internal">Open Verifier guide</a> lists the five checks and what a pass shows.</p>
 </section>

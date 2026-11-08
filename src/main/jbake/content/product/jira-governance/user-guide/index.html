@@ -19,9 +19,9 @@ og_image=product/jira-governance/ledgerseal/banner.png
     <table class="clinical-table">
         <thead><tr><th>App</th><th>What it does</th><th>Where you find it</th></tr></thead>
         <tbody>
-            <tr><td>CascadePlan</td><td>A timeline where work starts at a percent of its predecessor, dates cascade, and every Jira write is shown first and can be undone.</td><td>Project navigation: <strong>CascadePlan Planner</strong></td></tr>
+            <tr><td>CascadePlan</td><td>A timeline where work starts at a percent of its predecessor, dates cascade, and every Jira write is shown first. Date, link and parent changes can be undone.</td><td>Project navigation: <strong>CascadePlan Planner</strong></td></tr>
             <tr><td>DefinitionGuard</td><td>A Definition of Done checklist per issue type, with evidence, waivers and a gate into Done.</td><td>Issue: <strong>Definition of Done</strong> panel. Project settings: <strong>DefinitionGuard</strong></td></tr>
-            <tr><td>LedgerSeal</td><td>Seals an approved issue, shows what changed after approval, and can gate a transition.</td><td>Issue: <strong>Approval Seal</strong> panel and the <strong>Approval seal</strong> entry</td></tr>
+            <tr><td>LedgerSeal</td><td>Seals an approved issue, shows what changed after approval, and can gate a transition. Signers can use an emailed single-use code, sign on the transition screen, or sign the stages of an approval route.</td><td>Issue: <strong>Approval Seal</strong> panel and the <strong>Approval seal</strong> entry</td></tr>
             <tr><td>FourRealities</td><td>Shows the delivery evidence of each issue in four gates, and makes signed evidence reports for audits.</td><td>Project navigation: <strong>Four Realities</strong>. Issue: <strong>Four Realities</strong> panel</td></tr>
             <tr><td>Open verifier</td><td>Checks LedgerSeal evidence and FourRealities reports offline.</td><td>GitHub: <a href="https://github.com/asymmsystems/jira-governance-code-cli" class="org-link org-link--inline org-link--external">jira-governance-code-cli</a></td></tr>
         </tbody>
@@ -90,7 +90,7 @@ og_image=product/jira-governance/ledgerseal/banner.png
             <tr><td>Jira settings &gt; Apps &gt; CascadePlan approvers</td><td>Jira administrator</td><td>Groups that may manage plans, freeze baselines and decide scope changes.</td></tr>
             <tr><td>Jira settings &gt; Apps &gt; DefinitionGuard approvers</td><td>Jira administrator</td><td>Groups that may waive items and reset checklists.</td></tr>
             <tr><td>Project settings &gt; DefinitionGuard</td><td>Project administrator</td><td>Checklist templates, exempt statuses, gate coverage.</td></tr>
-            <tr><td>Jira settings &gt; Apps &gt; LedgerSeal approvers</td><td>Jira administrator</td><td>Groups that may seal, approve changes and revoke.</td></tr>
+            <tr><td>Jira settings &gt; Apps &gt; LedgerSeal settings</td><td>Jira administrator</td><td>Groups that may seal, approve changes and revoke; code signing and security alerts; approval routes.</td></tr>
             <tr><td>Jira settings &gt; Apps &gt; FourRealities gate authority</td><td>Jira administrator</td><td>Evidence sources, decision issue types, Code exception approvers, report retention and report groups.</td></tr>
             <tr><td>Workflow editor</td><td>Jira administrator</td><td>The validators <strong>DefinitionGuard DoD Enforcement</strong> and <strong>Require Valid LedgerSeal</strong>.</td></tr>
         </tbody>
@@ -134,7 +134,7 @@ og_image=product/jira-governance/ledgerseal/banner.png
                 <img src="/images/product/jira-governance/ledgerseal/icon.png" alt="LedgerSeal icon" style="width: 28px; height: 28px;" />
                 <h3 style="margin: 0;">LedgerSeal</h3>
             </div>
-            <p>Sealing, change detection, approving changes, revoking, the transition gate and the evidence record.</p>
+            <p>Sealing, change detection, approving changes, revoking, the transition gate, code signing, signing on the transition screen, approval routes and the evidence record.</p>
             <a href="/product/jira-governance/user-guide/ledgerseal.html" class="org-link org-link--inline org-link--internal">Read the LedgerSeal guide</a>
         </div>
         <div class="product-feature-card">

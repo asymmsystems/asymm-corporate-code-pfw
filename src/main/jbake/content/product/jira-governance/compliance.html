@@ -109,6 +109,16 @@ og_image=product/jira-governance/ledgerseal/banner.png
                 <td>LedgerSeal keeps tamper-evident, hash-chained records of seals, detected changes, reasons, approvals of changes and revokes. The record can be copied as standalone JSON and checked with the offline verifier. The chain does not stop someone who can rewrite the app storage (including the vendor) from writing a new consistent chain.</td>
             </tr>
             <tr>
+                <td><strong>&sect; 11.10(f) Operational System Checks</strong></td>
+                <td>Operational system checks to enforce permitted sequencing of steps and events, as appropriate.</td>
+                <td>Supports. An approval route makes its stages sign in order: a stage of a later order group signs only after every stage of the earlier groups has its quorum, and the last stage seals the issue. The workflow validator can hold a move until the stage that gates it has signed. You configure the routes and the workflows.</td>
+            </tr>
+            <tr>
+                <td><strong>&sect; 11.10(g) Authority Checks</strong></td>
+                <td>Authority checks to ensure that only authorized individuals can use the system, electronically sign a record, or perform the operation at hand.</td>
+                <td>Supports. Only approvers (project administrators, Jira administrators and members of the approver groups) and, on an approval route, members of a stage's groups can sign. With code signing on, each signature also needs a single-use code sent to the signer. The signature field on the transition screen runs the same checks. You choose the groups.</td>
+            </tr>
+            <tr>
                 <td><strong>&sect; 11.50 Signature Manifestations</strong></td>
                 <td>Signatures must manifest: printed name of signer, date/time, and meaning (review, approval, responsibility).</td>
                 <td>Partly met. Each seal records the date, time and meaning of the signature. The signer's name is shown from their Atlassian account while it exists; after the account is closed, it is shown as a deleted user, so a printed name is not kept in the record.</td>
@@ -119,9 +129,39 @@ og_image=product/jira-governance/ledgerseal/banner.png
                 <td>Each seal is linked to the issue's snapshot hash and certificate ID in the hash-chained history. The attestation (which contains the snapshot hash and certificate ID) is signed with Ed25519. This is a signature by the app, not a cryptographic signature by the approver. Your auditor decides whether this meets 11.70.</td>
             </tr>
             <tr>
-                <td><strong>&sect; 11.200 / 11.300 Electronic Signature Components and Controls</strong></td>
-                <td>At least two distinct identification components at signing; controls for identification codes and passwords.</td>
-                <td>Not met: LedgerSeal does not re-authenticate the signer and does not perform two-component signing. Use your own controls if your predicate rules need Part 11 signatures.</td>
+                <td><strong>&sect; 11.100(a) Uniqueness of Signatures</strong></td>
+                <td>Each electronic signature is unique to one individual and is not reused by, or reassigned to, anyone else.</td>
+                <td>Partly met. Each signature is bound to one Atlassian account through its pseudonymous token, and LedgerSeal never reassigns a token. Atlassian and you keep accounts unique and never reuse them.</td>
+            </tr>
+            <tr>
+                <td><strong>&sect; 11.200(a)(1) Two Identification Components</strong></td>
+                <td>Signatures not based on biometrics employ at least two distinct identification components.</td>
+                <td>Partly met, with code signing on. Each signing uses two distinct components: the signer's signed-in Atlassian account and a single-use code that LedgerSeal emails to that account's address. The first is the existing Jira session: LedgerSeal does not ask for the Jira login again at each signing, so it does not claim that every component is executed at every signing (11.200(a)(1)(ii)). Your identity provider's session and re-authentication policy, and your validation, decide whether this meets your predicate rules.</td>
+            </tr>
+            <tr>
+                <td><strong>&sect; 11.200(a)(2) Genuine Owners</strong></td>
+                <td>Signatures are used only by their genuine owners.</td>
+                <td>Partly met, with code signing on. The code goes only to the email address of the signer's own Atlassian account. A shared or delegated mailbox defeats this: use personal mailboxes.</td>
+            </tr>
+            <tr>
+                <td><strong>&sect; 11.200(a)(3) Collaboration Needed for Misuse</strong></td>
+                <td>Use by anyone other than the genuine owner requires the collaboration of two or more individuals.</td>
+                <td>Partly met, with code signing on. Misuse needs both the person's Jira session and their mailbox. Keep Jira and email administrators apart from the people who sign.</td>
+            </tr>
+            <tr>
+                <td><strong>&sect; 11.300(a) to (c) Identification Codes and Passwords</strong></td>
+                <td>Uniqueness of each combination of identification code and password; periodic checking and revision; loss management.</td>
+                <td>Your identity provider and Atlassian. Account uniqueness, password ageing and disabling a lost account belong to the identity provider; disabling an account stops signing at once. A signing code expires after 5 minutes. LedgerSeal adds a lockout after failed attempts and an unlock by a Jira administrator. You keep the loss-reporting procedure.</td>
+            </tr>
+            <tr>
+                <td><strong>&sect; 11.300(d) Transaction Safeguards</strong></td>
+                <td>Safeguards that prevent unauthorized use of passwords and identification codes, and detect and report attempts immediately and urgently to the security unit.</td>
+                <td>Partly met, with code signing on. A code works once, for 5 minutes. Code requests are rate limited, a person is locked out after 5 failures in a row (a Jira administrator can choose 3 to 10), every request and attempt is kept in a hash-chained record, and alerts are shown on the LedgerSeal settings page. No alert email is sent, so the report is not immediate and urgent. Your security unit decides how to respond.</td>
+            </tr>
+            <tr>
+                <td><strong>&sect; 11.300(e) Device Testing</strong></td>
+                <td>Initial and periodic testing of devices, such as tokens or cards, that bear or generate identification codes.</td>
+                <td>Not applicable. LedgerSeal issues no device.</td>
             </tr>
         </tbody>
     </table>
