@@ -1,5 +1,5 @@
 title=Signing Keys
-description=The Ed25519 public keys that LedgerSeal and DefinitionGuard use to sign their records, with key ids, fingerprints and how to check LedgerSeal evidence with the open verifier.
+description=The Ed25519 public keys that LedgerSeal, DefinitionGuard and FourRealities use to sign their records, with key ids, fingerprints and how to check LedgerSeal evidence and FourRealities evidence reports with the open verifier.
 type=page
 toc=true
 status=published
@@ -9,7 +9,7 @@ og_image=product/jira-governance/ledgerseal/banner.png
 <header class="page-header">
     <span class="section-kicker">Signing Keys</span>
     <h1>Signing Keys</h1>
-    <p style="max-width: 65ch">LedgerSeal and DefinitionGuard sign some of their records with Ed25519.
+    <p style="max-width: 65ch">LedgerSeal, DefinitionGuard and FourRealities sign some of their records with Ed25519.
         This page lists the public keys, so that anyone can check a signature.</p>
 </header>
 
@@ -18,6 +18,7 @@ og_image=product/jira-governance/ledgerseal/banner.png
     <ul>
         <li><strong>LedgerSeal:</strong> the attestation of each seal. It is the issue property <code>ledgerseal-cert</code>, and it is also in the evidence record that you copy from the Approval Seal panel. It holds the snapshot hash, the certificate id and the seal status.</li>
         <li><strong>DefinitionGuard:</strong> the issue property <code>definitionguard-dod</code>, the summary of the issue's Definition of Done checklist.</li>
+        <li><strong>FourRealities:</strong> the manifest of each evidence report. The manifest holds the SHA-256 hash and size of the report JSON and the report CSV, and the hash of the previous report's manifest.</li>
     </ul>
     <p>The algorithm is Ed25519 (RFC 8032). Each signed record names its key id in the field <code>keyId</code>. The public keys below are in SPKI PEM format.</p>
 </section>
@@ -54,6 +55,18 @@ MCowBQYDK2VwAyEATeL77D87DnKc6DSKrt1kAfh0SIW0ok4NoALB371b/VE=<br/>
 MCowBQYDK2VwAyEAiZby7ZujEzTGnRBc0StyzcxBjzs9+WCcd6zXfIfnEg8=<br/>
 -----END PUBLIC KEY-----</code>
     </div>
+
+    <h3>fr-prod-2026-11 (FourRealities evidence reports, production: the Marketplace app)</h3>
+    <ul>
+        <li><strong>Key id:</strong> <code>fr-prod-2026-11</code></li>
+        <li><strong>SHA-256 fingerprint</strong> (of the DER public key): <code style="word-break: break-all;">07b6b5e5749e282627a112d99dac364e199b4a355913e1b820145221cca30419</code></li>
+        <li><strong>File:</strong> <code>keys/fr-prod-2026-11.pub.pem</code> in the open verifier repository.</li>
+    </ul>
+    <div class="inline-terminal inline-terminal--static" style="margin: 1.5rem 0;">
+        <code style="word-break: break-all;">-----BEGIN PUBLIC KEY-----<br/>
+MCowBQYDK2VwAyEAeRTLhQgqB3xygQvZ2TPKPlWSqzQie4ihk1M8iqo5634=<br/>
+-----END PUBLIC KEY-----</code>
+    </div>
 </section>
 
 <section style="margin-bottom: 4rem">
@@ -82,13 +95,24 @@ MCowBQYDK2VwAyEA3tGVQVDUPkk1+tAc9mYyPIAeTY+/qruaXJyTXrFKQpw=<br/>
 MCowBQYDK2VwAyEAoJeSg/k7W6M/7B/arkkxCl2XWk0bQzL6xTntCIRyids=<br/>
 -----END PUBLIC KEY-----</code>
     </div>
+    <h3>fr-dev-2026-11 (FourRealities evidence reports, development builds only)</h3>
+    <ul>
+        <li><strong>Key id:</strong> <code>fr-dev-2026-11</code></li>
+        <li><strong>SHA-256 fingerprint</strong> (of the DER public key): <code style="word-break: break-all;">f2ad70911a15f39cf37570f86fb3b55e7cf62b48b65bbfd50c8f649de01b979f</code></li>
+        <li><strong>File:</strong> <code>keys/fr-dev-2026-11.pub.pem</code> in the open verifier repository.</li>
+    </ul>
+    <div class="inline-terminal inline-terminal--static" style="margin: 1.5rem 0;">
+        <code style="word-break: break-all;">-----BEGIN PUBLIC KEY-----<br/>
+MCowBQYDK2VwAyEAhX7QRARkKnuAGHXDsHQ4ZaDKJPEF5EavHdzCNZg6l0M=<br/>
+-----END PUBLIC KEY-----</code>
+    </div>
     <p>To check a fingerprint, save the PEM text as a file and run:</p>
     <div class="inline-terminal inline-terminal--static" style="margin: 1.5rem 0;">
         <code>openssl pkey -pubin -in key.pem -outform DER | sha256sum</code>
     </div>
 </section>
 
-<section style="margin-bottom: 5rem">
+<section style="margin-bottom: 4rem">
     <h2 class="section-title">5. Checking LedgerSeal evidence</h2>
     <p>The open verifier checks a LedgerSeal evidence record offline, with no access to Jira or to LedgerSeal. It is in the public repository
         <a href="https://github.com/asymmsystems/jira-governance-code-cli" class="org-link org-link--inline org-link--external">asymmsystems/jira-governance-code-cli</a> (Apache-2.0),
@@ -100,4 +124,15 @@ MCowBQYDK2VwAyEAoJeSg/k7W6M/7B/arkkxCl2XWk0bQzL6xTntCIRyids=<br/>
         <li>Each of the five check lines must start with <code>PASS</code>, and the exit code must be <code>0</code>. A <code>NOTE</code> line names a redaction entry; it is not a failure.</li>
     </ol>
     <p>The <a href="/product/jira-governance/user-guide/open-verifier.html" class="org-link org-link--inline org-link--internal">Open Verifier guide</a> lists the five checks and what a pass shows.</p>
+</section>
+
+<section style="margin-bottom: 5rem">
+    <h2 class="section-title">6. Checking a FourRealities evidence report</h2>
+    <p>The report checker <code>verify-fourrealities-report.mjs</code> comes with version 1.4.0 of the open verifier, in the same repository. It needs Node.js 18 or later.</p>
+    <ol>
+        <li>In the project's <strong>Four Realities &gt; Evidence reports</strong> tab, choose <strong>Download</strong> and save the report JSON, the report CSV and the signed manifest.</li>
+        <li>Run <code>node verify-fourrealities-report.mjs &lt;manifest.json&gt; &lt;report.json&gt; &lt;report.csv&gt; [--previous &lt;previous-manifest.json&gt;]</code>. The verifier reads the key named by the manifest from its <code>keys/</code> folder.</li>
+        <li>Every check line must start with <code>PASS</code>, and the exit code must be <code>0</code>. A <code>WARN</code> line names issues that are not in the report, or a development key; read it before you rely on the report.</li>
+    </ol>
+    <p>FourRealities is not an administrative audit log: Jira's audit log and Atlassian Guard keep it.</p>
 </section>

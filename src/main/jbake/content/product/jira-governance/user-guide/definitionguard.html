@@ -1,5 +1,5 @@
 title=DefinitionGuard User & Admin Guide
-description=Definition of Done checklists per issue type, evidence on items, a not-the-assignee rule, audited waivers, and a workflow validator that blocks moves into Done for Jira Cloud.
+description=How to install, set up and use DefinitionGuard for Jira Cloud: Definition of Done checklists per issue type, evidence, the not-the-assignee rule, waivers, the Done gate, the audit history, permissions, data, limits and troubleshooting.
 type=page
 toc=true
 status=published
@@ -9,115 +9,291 @@ og_image=product/jira-governance/definitionguard/banner.png
 <header class="page-header">
     <span class="section-kicker">DefinitionGuard Guide</span>
     <h1>DefinitionGuard User &amp; Administrator Guide</h1>
-    <p style="max-width: 65ch">How to define a Definition of Done (DoD) per issue type, record evidence on items,
-        stop the assignee from completing review items, waive items with a recorded reason, block moves into Done, and export the checklist history.</p>
+    <p style="max-width: 65ch">DefinitionGuard puts a Definition of Done checklist on every Jira issue. Items can need evidence, can be closed to the assignee, and can be waived only with a reason.
+        A workflow validator blocks the move into Done while a mandatory item is open. Every change is kept in a hash-chained history.</p>
 </header>
 
 <section style="margin-bottom: 4rem">
-    <h2 class="section-title">1. The Ungated Done Problem</h2>
-    <p>Agile teams rely on Definition of Done checklists to ensure code quality, unit test coverage, security reviews, and documentation standards.
-        However, in native Jira or generic checklist plugins, checklists operate on the honor system: assignees tick their own boxes
-        without attaching proof, skip peer reviews when under release pressure, and drag tickets into <em>Done</em> without technical verification.</p>
-    <p><strong>DefinitionGuard makes the Definition of Done a gate.</strong> Checklists are defined per issue type.
-        Items can require evidence (a link, a note, or both), items can be closed to the assignee, and the DefinitionGuard workflow validator blocks
-        the move into a Done status while any mandatory item is still open and not waived.</p>
-</section>
-
-<section style="margin-bottom: 4rem">
-    <h2 class="section-title">2. Operating the DoD Checklist on an Issue</h2>
-    <p>When working on a Jira issue:</p>
-    <ol>
-        <li>Open the <strong>Definition of Done</strong> issue panel. The header shows <em>DoD complete</em> or <em>Incomplete</em>, and the summary names the open mandatory items and the next step.</li>
-        <li>The <strong>Definition of Done items</strong> section lists the items of the template for this issue type (e.g. <em>Story</em> vs <em>Bug</em> vs <em>Task</em>). Each item has a <em>Mandatory</em> or <em>Optional</em> lozenge, plus <em>Needs evidence</em>, <em>Waived</em>, or <em>Evidence attached</em> where they apply.</li>
-        <li>For an item without an evidence rule, tick its checkbox. To add proof anyway, click <strong>Tick with evidence</strong>.</li>
-        <li>For an item that needs evidence, ticking the checkbox opens an evidence form inside the panel. Enter a link (it must start with <code>http://</code> or <code>https://</code>), a note of up to 500 characters, or both, and click <strong>Save and tick</strong>. DefinitionGuard checks the link format only. It does not check what the link points to.</li>
-        <li>On a completed item that has evidence, click <strong>Show evidence</strong> to see the link and note.</li>
-        <li><strong>Complete DoD</strong> acts on the first open item: it ticks it, or opens its evidence form when the item needs evidence. <strong>Reset checklist</strong> (project administrators and approvers) reopens every item; the reset is added to the history and nothing is removed.</li>
-    </ol>
-
-    <div style="margin: 2rem 0; text-align: center;">
-        <img src="/images/product/jira-governance/definitionguard/01-checklist-open.png" alt="DefinitionGuard Issue DoD Checklist" style="max-width: 100%; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
-        <p style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 1: Definition of Done panel with open mandatory items, a waived item, completed items with attribution, and progress (3 of 6 done).</p>
-    </div>
-</section>
-
-<section style="margin-bottom: 4rem">
-    <h2 class="section-title">3. Not-the-Assignee Rule</h2>
-    <p>Many teams want a person other than the assignee to sign off review items.
-        DefinitionGuard supports this with a per-item rule:</p>
+    <h2 class="section-title">1. Who this guide is for</h2>
     <ul>
-        <li>When <strong>Not the assignee</strong> is set on an item (e.g. <em>Peer code review approved</em>), neither the current assignee nor anyone who was the assignee of the issue after the item was opened can tick it or waive it. DefinitionGuard reads this from the issue's change history. The panel shows: <em>The assignee cannot complete this item. Ask a reviewer.</em></li>
-        <li>The workflow validator checks the rule again at the moment of the move into Done, for ticked and for waived items.</li>
-        <li>Every completed item records who completed it (as a pseudonym, see the <a href="/privacy" class="org-link org-link--inline">privacy policy</a>) and the time in the hash-chained checklist history.</li>
+        <li><strong>Team members</strong> who tick items and add evidence. Read sections 3 and 4.</li>
+        <li><strong>Reviewers and approvers</strong> who tick review items, waive items and reset checklists. Read sections 4 and 9.</li>
+        <li><strong>Project administrators</strong> who write the checklists and check the gate. Read sections 5 and 6.</li>
+        <li><strong>Jira administrators</strong> who install the app, add the validator and choose approver groups. Read sections 2, 6 and 12.</li>
     </ul>
 </section>
 
 <section style="margin-bottom: 4rem">
-    <h2 class="section-title">4. Audited Waivers</h2>
-    <p>When a mandatory DoD item does not apply to an issue:</p>
+    <h2 class="section-title">2. Install and first setup</h2>
     <ol>
-        <li>Click <strong>Waive</strong> on the open mandatory item. Members of the DefinitionGuard approver groups and users with the template's waiver permission (default: <em>Administer projects</em>) can waive.</li>
-        <li>Enter a reason of 10 to 500 characters and click <strong>Waive item</strong>.</li>
-        <li>DefinitionGuard records the waiver, the user, the timestamp, and the reason in the history.</li>
-        <li>The item shows a <em>Waived</em> lozenge. A waived mandatory item counts as done for the gate.</li>
+        <li><strong>Install (Jira administrator).</strong> In Jira, open <strong>Apps &gt; Explore more apps</strong>, search for <strong>DefinitionGuard</strong> and choose <strong>Get app</strong>. The app asks to read Jira work, users and workflows, to write issue properties, to store its own data, and to report personal data to Atlassian. It calls no server outside your Atlassian site.</li>
+        <li><strong>Check the checklists (project administrator).</strong> Every issue already has a built-in checklist for its type (section 5). Change it in <strong>Project settings &gt; DefinitionGuard</strong> if you want.</li>
+        <li><strong>Add the gate (Jira administrator).</strong> Add the validator <strong>DefinitionGuard DoD Enforcement</strong> to each transition into a Done status (section 6). Without it, DefinitionGuard shows the checklist but does not block.</li>
+        <li><strong>Check the coverage (project administrator).</strong> In <strong>Project settings &gt; DefinitionGuard &gt; Gate coverage</strong>, every completion transition should read <strong>Gated</strong>.</li>
+        <li><strong>Choose approvers (Jira administrator, optional).</strong> In <strong>Jira settings &gt; Apps &gt; DefinitionGuard approvers</strong>, add the groups that may waive items and reset checklists (section 9).</li>
     </ol>
+    <p><strong>Licence.</strong> When the licence is not active, the panel and the settings page show "Licence not active". The gate is off: moves to Done are not blocked, and checklist changes are not saved. Reading the checklist and its history still works.</p>
 </section>
 
 <section style="margin-bottom: 4rem">
-    <h2 class="section-title">5. Workflow Transition Gate into Done</h2>
-    <p>DefinitionGuard provides a Jira Cloud workflow validator. A Jira administrator must add it; the app cannot add it for you:</p>
+    <h2 class="section-title">3. The Definition of Done panel</h2>
+    <p>Open an issue. If the panel is not shown, choose the issue's app button (below the title) and then <strong>Definition of Done</strong>.</p>
+    <figure style="margin: 2rem 0;">
+        <img src="/images/product/jira-governance/user-guide/common/issue-app-actions-menu.png" alt="The issue's app actions menu with Approval Seal, Definition of Done, Four Realities and Add apps." width="189" height="173" loading="lazy" style="max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <figcaption style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 1: The issue's app button opens the Definition of Done panel.</figcaption>
+    </figure>
+    <figure style="margin: 2rem 0;">
+        <img src="/images/product/jira-governance/user-guide/definitionguard/01-panel-new-checklist.png" alt="The Definition of Done panel on a new story: an Incomplete lozenge, the summary naming four open mandatory items, the next step, the approver line, the Complete DoD button, five items with Mandatory or Optional lozenges and Tick with evidence and Waive buttons, Reset checklist, and the collapsed Checklist audit history." width="1113" height="646" loading="lazy" style="max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <figcaption style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 2: The panel on a new story, with the built-in Feature &amp; Story checklist.</figcaption>
+    </figure>
+    <div style="overflow-x: auto;">
+    <table class="clinical-table">
+        <thead><tr><th>Part</th><th>What it shows or does</th></tr></thead>
+        <tbody>
+            <tr><td>Status lozenge</td><td><strong>DoD complete</strong> (green) or <strong>Incomplete</strong> (red).</td></tr>
+            <tr><td>Refresh</td><td>Reads the checklist again.</td></tr>
+            <tr><td>Summary</td><td>Either "This issue can be moved to Done", or the list of open mandatory items that block the move.</td></tr>
+            <tr><td>Next step</td><td>The first open mandatory item, or "All mandatory criteria complete".</td></tr>
+            <tr><td>Approver line</td><td>Who can waive and reset on this site.</td></tr>
+            <tr><td>Complete DoD</td><td>Acts on the first unticked item only. It ticks that item, or opens its evidence form when it needs evidence. It does not tick the whole list.</td></tr>
+            <tr><td>Item checkbox</td><td>Ticks or unticks the item. On an item that needs evidence, it opens the evidence form instead.</td></tr>
+            <tr><td>Lozenges</td><td><strong>Mandatory</strong> or <strong>Optional</strong>, <strong>Needs evidence</strong>, <strong>Evidence attached</strong>, <strong>Waived</strong>.</td></tr>
+            <tr><td>Tick with evidence</td><td>Ticks an item with a link or a note, even when evidence is not required.</td></tr>
+            <tr><td>Waive</td><td>Shown on open mandatory items. Waives the item with a reason.</td></tr>
+            <tr><td>Show evidence</td><td>Shows the link and the note of a ticked item.</td></tr>
+            <tr><td>Who and when</td><td>Under a ticked or waived item: the person, "completed this" or "waived this", and the time.</td></tr>
+            <tr><td>Reset checklist</td><td>Asks "Reset this checklist?" and then reopens every item. The reset is added to the history.</td></tr>
+            <tr><td>Checklist audit history</td><td>The history, the chain check and the export (section 7).</td></tr>
+        </tbody>
+    </table>
+    </div>
+    <p>A checklist is stored on the first change (a tick, a waiver or a reset). Before that, the panel shows the current template of the issue type.</p>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">4. Everyday tasks</h2>
+    <h3>Tick an item</h3>
+    <p>Click the item's checkbox. <strong>Result:</strong> the item is ticked, with your name and the time. Untick it to reopen it; reopening an item drops its evidence.</p>
+    <h3>Tick an item with evidence</h3>
     <ol>
-        <li>Open the workflow in the Jira workflow editor.</li>
-        <li>Select the transition into <em>Done</em> (or your terminal release status).</li>
-        <li>Add the <strong>DefinitionGuard DoD Enforcement</strong> validator. It has no options.</li>
-        <li>Publish the workflow.</li>
+        <li>Click the checkbox of an item marked <strong>Needs evidence</strong>, or choose <strong>Tick with evidence</strong> on any open item.</li>
+        <li>Enter a link that starts with <code>http://</code> or <code>https://</code>, a note of up to 500 characters, or both.</li>
+        <li>Choose <strong>Save and tick</strong>. It is active once the link or the note has text.</li>
     </ol>
-    <p>The validator blocks a move into a Done-category status while any mandatory item is open and not waived. Statuses that a project administrator marked as exempt (for example <em>Canceled</em>) are let through.
-        If DefinitionGuard cannot read the data it needs, it blocks the move. Jira shows the validator message, which lists the open mandatory items:</p>
-    <p><code>Definition of Done is not complete. Open mandatory items: ... Open the Definition of Done panel on this issue (from the View app actions button if it is not shown) to finish them.</code></p>
-</section>
-
-<section style="margin-bottom: 4rem">
-    <h2 class="section-title">6. Licence</h2>
-    <p>If the DefinitionGuard licence on your site is not active, the gate is off: the validator lets every move through, the panel and the settings page show "Licence not active", and checklist changes are not saved. Reading checklists and their history still works.</p>
-</section>
-
-<section style="margin-bottom: 4rem">
-    <h2 class="section-title">7. Project Settings &amp; Checklist Configuration</h2>
-    <p>Project administrators can customize DoD requirements without touching Jira workflow schemes:</p>
+    <figure style="margin: 2rem 0;">
+        <img src="/images/product/jira-governance/user-guide/definitionguard/02-evidence-form.png" alt="The evidence form under the item Automated test suite passes with zero regressions: a link to a CI build, the note Build 1482: 412 tests passed, 0 failed, and the Save and tick and Cancel buttons." width="1113" height="379" loading="lazy" style="max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <figcaption style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 3: Ticking an item with a link and a note.</figcaption>
+    </figure>
+    <p><strong>Result:</strong> the item shows <strong>Evidence attached</strong>. DefinitionGuard checks the link's format only, not what it points to.</p>
+    <h3>Waive an item that does not apply</h3>
     <ol>
-        <li>Navigate to <strong>Project Settings &gt; DefinitionGuard</strong>.</li>
-        <li>Under <strong>Definition of Done templates</strong>, select the issue type to configure (e.g. <em>Story</em>, <em>Bug</em>, <em>Epic</em>).</li>
-        <li>Add items with <strong>Add item</strong>, edit titles, use <strong>Move up</strong> / <strong>Move down</strong> to reorder, and <strong>Remove</strong> to delete.</li>
-        <li>Set the rules for each item:
+        <li>Choose <strong>Waive</strong> on the open mandatory item.</li>
+        <li>Write why the item does not apply, 10 to 500 characters.</li>
+        <li>Choose <strong>Waive item</strong>.</li>
+    </ol>
+    <figure style="margin: 2rem 0;">
+        <img src="/images/product/jira-governance/user-guide/definitionguard/03-waive-form.png" alt="The waive form under Static analysis and dependency vulnerability scan clear, with a reason and the Waive item and Cancel buttons." width="1113" height="210" loading="lazy" style="max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <figcaption style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 4: Waiving an item with a reason.</figcaption>
+    </figure>
+    <p><strong>Result:</strong> the item shows <strong>Waived</strong>, and it counts as done for the gate. The reason is kept in the history. Unticking a waived item reopens it; that needs the same right as a waiver.</p>
+    <figure style="margin: 2rem 0;">
+        <img src="/images/product/jira-governance/user-guide/definitionguard/04-panel-in-progress.png" alt="The panel with 3 of 5 items done: one ticked item, one ticked item with Evidence attached showing its link and note, one open mandatory item, one Waived item, and one open optional item. The summary names the one open mandatory item." width="1113" height="747" loading="lazy" style="max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <figcaption style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 5: A checklist in progress. One mandatory item still blocks the move to Done.</figcaption>
+    </figure>
+    <h3>The not-the-assignee rule</h3>
+    <p>An item marked <strong>Not the assignee</strong>, for example a peer review, cannot be ticked or waived by the current assignee, or by anyone who was the assignee since the item was last opened.
+        DefinitionGuard reads this from the issue's change history. The panel shows "The assignee cannot complete this item. Ask a reviewer." The validator checks the rule again at the move into Done.</p>
+    <h3>Reset a checklist</h3>
+    <p>Choose <strong>Reset checklist</strong>, then <strong>Reset checklist</strong> again in the warning. Every item becomes open. Nothing in the history is removed.</p>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">5. Write the checklists (project administrator)</h2>
+    <p>Open <strong>Project settings &gt; DefinitionGuard</strong>. You need Administer projects, or Jira administrator.</p>
+    <figure style="margin: 2rem 0;">
+        <img src="/images/product/jira-governance/user-guide/definitionguard/07-settings-template.png" alt="The Definition of Done templates section for issue type Task: template name Payments task DoD and five items, each with Mandatory, Evidence required and Not the assignee checkboxes, a permission select, a category select, and Move up, Move down and Remove buttons." width="1568" height="529" loading="lazy" style="max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <figcaption style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 6: A project template for the issue type Task.</figcaption>
+    </figure>
+    <ol>
+        <li>Choose the issue type in the first field.</li>
+        <li>Type a template name, for example "Team DoD".</li>
+        <li>For each item, set the title and the rules:
             <ul>
-                <li><strong>Mandatory:</strong> the gate blocks the move into Done while this item is open and not waived.</li>
-                <li><strong>Evidence required:</strong> the item can only be ticked with a link, a note, or both.</li>
-                <li><strong>Not the assignee:</strong> the current assignee, and anyone who was the assignee after the item was opened, cannot tick or waive this item.</li>
-                <li><strong>Extra permission:</strong> No extra permission, Resolve issues, Transition issues, or Administer projects.</li>
-                <li><strong>Category:</strong> Testing, Code quality, Security, Compliance, or Documentation.</li>
+                <li><strong>Mandatory</strong>: the gate blocks Done while this item is open and not waived.</li>
+                <li><strong>Evidence required</strong>: the item can be ticked only with a link, a note, or both.</li>
+                <li><strong>Not the assignee</strong>: the assignee, now or since the item was opened, cannot tick or waive it.</li>
+                <li><strong>Permission</strong>: No extra permission, Resolve issues, Transition issues or Administer projects. The user needs it to tick the item.</li>
+                <li><strong>Category</strong>: Testing, Code quality, Security, Compliance or Documentation.</li>
             </ul>
         </li>
-        <li>Click <strong>Save template</strong>. To apply a changed template to open issues of that type, click <strong>Re-sync open issues</strong>; ticks on unchanged items are kept.</li>
-        <li>Under <strong>Statuses the gate lets through</strong>, tick Done-category statuses that are not completions and click <strong>Save statuses</strong>.</li>
-        <li>Under <strong>Gate coverage</strong>, see each transition into a Done status marked <em>Gated</em>, <em>Not gated</em>, or <em>Exempt</em>. Click <strong>Check again</strong> after a workflow change.</li>
+        <li>Use <strong>Move up</strong>, <strong>Move down</strong> and <strong>Remove</strong>. Type a title in <strong>New item title</strong> and choose <strong>Add item</strong>; a new item is Mandatory and in Testing.</li>
+        <li>Choose <strong>Save template</strong>. Result: "Template "NAME" version n saved." Each save adds 1 to the version.</li>
+        <li>Open issues keep their version. To move them, choose <strong>Re-sync open issues</strong>. Result: "Re-synced n open issues to version v. Ticks on unchanged items were kept." New items start open. A re-sync never reopens a ticked item.</li>
     </ol>
+    <h3>Built-in templates</h3>
+    <p>Without a project template, DefinitionGuard picks a built-in template by the issue type name: Service Desk Request, IT Help Desk, Bug Fix (bug, defect, incident, problem), Feature &amp; Story (story, feature, enhancement), Technical Task (chore, refactor, maintenance), or the Standard Engineering Definition of Done for any other type, Task included.</p>
+    <h3>Statuses the gate lets through</h3>
+    <p>The gate blocks moves into Done-category statuses. Tick the Done-category statuses that are not completions, such as Canceled or Declined, and choose <strong>Save statuses</strong>. Moves into those statuses are not gated.</p>
+    <figure style="margin: 2rem 0;">
+        <img src="/images/product/jira-governance/user-guide/definitionguard/08-settings-statuses.png" alt="Statuses the gate lets through: the explanation, a Done checkbox and the Save statuses button." width="1190" height="171" loading="lazy" style="max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <figcaption style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 7: Statuses the gate lets through. This project has one Done-category status, Done, which stays gated.</figcaption>
+    </figure>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">6. The Done gate (the workflow validator)</h2>
+    <p>DefinitionGuard blocks a move only on transitions where a Jira administrator added its validator. The app cannot add it for you.</p>
+    <ol>
+        <li>Open the project's workflow in the Jira workflow editor.</li>
+        <li>Select a transition into a Done-category status.</li>
+        <li>Add the validator <strong>DefinitionGuard DoD Enforcement</strong>. It has no options. It works in company-managed and team-managed projects.</li>
+        <li>Repeat for every transition into Done, then publish the workflow.</li>
+        <li>In <strong>Project settings &gt; DefinitionGuard &gt; Gate coverage</strong>, choose <strong>Check again</strong>. Each transition shows <strong>Gated</strong>, <strong>Not gated</strong> or <strong>Exempt</strong>.</li>
+    </ol>
+    <figure style="margin: 2rem 0;">
+        <img src="/images/product/jira-governance/user-guide/definitionguard/09-gate-coverage-before-validator.png" alt="Gate coverage before the validator is added: a warning that 0 of 1 completion transitions are gated, the Done transition marked Not gated, and the Check again button." width="1568" height="155" loading="lazy" style="max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <figcaption style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 8: Gate coverage in its state before the validator is added. The warning tells you which transition still needs the validator. After you add it and choose Check again, the transition reads Gated.</figcaption>
+    </figure>
+    <h3>What the validator does</h3>
+    <ul>
+        <li>It lets the move through when every mandatory item is done or waived, with evidence where it is required, and not ticked by an excluded assignee.</li>
+        <li>It lets through moves to statuses that are not in the Done category, and moves to exempt statuses.</li>
+        <li>An issue with no stored checklist is checked against its template, with every item open. So once the validator is on, such an issue cannot reach Done.</li>
+        <li>If DefinitionGuard cannot read what it needs, it blocks the move (it fails closed).</li>
+        <li>With an inactive licence, it lets every move through.</li>
+    </ul>
+    <p>When it blocks, Jira shows:</p>
+    <div class="callout-box" style="margin: 1.5rem 0;">
+        <p style="margin: 0;">Definition of Done is not complete. Open mandatory items: &lt;titles&gt;. Open the Definition of Done panel on this issue (from the View app actions button if it is not shown) to finish them.</p>
+    </div>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">7. Audit history and export</h2>
+    <ol>
+        <li>Open <strong>Checklist audit history</strong> in the panel and choose <strong>Load audit history</strong>.</li>
+        <li>Read the chain result: <strong>Chain intact</strong> or <strong>Chain broken</strong>, and the signature result: <strong>Property signed</strong> or <strong>Property not signed</strong>.</li>
+        <li>Read the events: who, when, the action (Checklist created, Completed, Reopened, Waived, Checklist reset), the item, the reason and the evidence. The panel lists the first 100 events; the chain check and the export cover all of them.</li>
+        <li>Project and Jira administrators choose <strong>Export history</strong>. Copy the JSON and save it as <code>KEY-definitionguard-history.json</code>. There is no download button.</li>
+    </ol>
+    <figure style="margin: 2rem 0;">
+        <img src="/images/product/jira-governance/user-guide/definitionguard/05-audit-history.png" alt="The Checklist audit history with 4 events: Chain intact, Property signed with a note naming the key, and the events Checklist created, two Completed events (one with its evidence link and note) and a Waived event with its reason." width="1113" height="771" loading="lazy" style="max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <figcaption style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 9: The audit history. This test site signs with a development key; a Marketplace installation signs with <code>dg-prod-2026-11</code>.</figcaption>
+    </figure>
+    <figure style="margin: 2rem 0;">
+        <img src="/images/product/jira-governance/user-guide/definitionguard/06-history-export.png" alt="The history export header: Checklist history export: PAY-28-definitionguard-history.json, the instruction to copy the JSON and save it under that name, and the start of the JSON." width="1113" height="154" loading="lazy" style="max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <figcaption style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 10: The export, ready to copy.</figcaption>
+    </figure>
+    <h3>What the checks mean</h3>
+    <ul>
+        <li><strong>The chain.</strong> Each event holds the SHA-256 hash of the event before it. The check shows edits, removals and reordering of the stored history. It does not stop someone who can rewrite all of the app's stored data and the chain with it, and that includes the app vendor.</li>
+        <li><strong>The signed property.</strong> On every change, DefinitionGuard writes the issue property <code>definitionguard-dod</code>: a summary of the checklist (counts, open mandatory item ids, the chain head), signed with Ed25519. The public keys are on the <a href="/product/jira-governance/signing-keys.html" class="org-link org-link--inline org-link--internal">Signing keys</a> page. FourRealities checks this signature for its Process gate. "Property signed" in the panel means the site has a signing key; the panel itself does not check the signature.</li>
+    </ul>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">8. Permissions</h2>
+    <div style="overflow-x: auto;">
+    <table class="clinical-table">
+        <thead><tr><th>Action</th><th>Who can do it</th></tr></thead>
+        <tbody>
+            <tr><td>See the panel, the history and the evidence</td><td>Users with Browse projects on the issue.</td></tr>
+            <tr><td>Tick or untick an item</td><td>Users with Edit issues, plus the item's extra permission. Not the assignee, for items marked Not the assignee.</td></tr>
+            <tr><td>Waive an item</td><td>Approvers: project administrators, Jira administrators and members of the approver groups. Not the assignee, for items marked Not the assignee.</td></tr>
+            <tr><td>Reopen a waived item</td><td>Users with Edit issues who are also approvers.</td></tr>
+            <tr><td>Reset a checklist</td><td>Approvers.</td></tr>
+            <tr><td>Export the history</td><td>Project administrators and Jira administrators.</td></tr>
+            <tr><td>Edit templates, statuses, re-sync, see coverage</td><td>Project administrators and Jira administrators. Changes need an active licence.</td></tr>
+            <tr><td>Choose approver groups</td><td>Jira administrators.</td></tr>
+        </tbody>
+    </table>
+    </div>
+    <p>Every check asks Jira as the user and fails closed: if Jira does not answer, the change is not saved.</p>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">9. Approver groups (Jira administrator)</h2>
+    <ol>
+        <li>Open <strong>Jira settings &gt; Apps &gt; DefinitionGuard approvers</strong>.</li>
+        <li>Search for a group in <strong>Find Jira groups to grant authority</strong>, then choose <strong>Add</strong>.</li>
+        <li>Choose <strong>Save changes</strong>. Result: "Saved. The approver groups apply to every project on this site."</li>
+    </ol>
+    <figure style="margin: 2rem 0;">
+        <img src="/images/product/jira-governance/user-guide/definitionguard/10-approvers-admin.png" alt="The DefinitionGuard approvers page with one approver group, its Remove button, Save changes, and the group search field." width="1568" height="358" loading="lazy" style="max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <figcaption style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 11: The DefinitionGuard approvers page with one group.</figcaption>
+    </figure>
+    <p>At most 20 groups. A search shows at most 20 results and takes at most 100 characters.</p>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">10. Data stored and where</h2>
+    <ul>
+        <li><strong>Where:</strong> in the Forge storage of your site, and in one issue property per issue. DefinitionGuard sends nothing outside your Atlassian site.</li>
+        <li><strong>In Forge storage:</strong> each issue's checklist state and its history events (status, reason, evidence link and note); project templates; exempt statuses; approver groups.</li>
+        <li><strong>On the issue:</strong> the signed property <code>definitionguard-dod</code>. It holds no personal data.</li>
+        <li><strong>People:</strong> each person is stored as a random pseudonym. The Atlassian account id is kept only in one link record per person. The app reports these ids to Atlassian every week and deletes the link of each closed account; the history then shows "A deleted user", and the chain still checks.</li>
+        <li><strong>Free text:</strong> evidence links, notes and waiver reasons are kept as typed and may name people.</li>
+        <li><strong>Retention:</strong> records stay until the issue is deleted or the app is uninstalled. Deleting an issue deletes its checklist and history.</li>
+    </ul>
+    <p>See the <a href="/privacy.html" class="org-link org-link--inline org-link--internal">privacy policy</a>.</p>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">11. Limits</h2>
+    <ul>
+        <li>Items per template: 1 to 50. Template size: 32 KiB. Template name: 100 characters. Item title: 200 characters.</li>
+        <li>Evidence link: http or https, at most 2,000 characters. Evidence note: 500 characters. Waiver reason: 10 to 500 characters.</li>
+        <li>Exempt statuses: 50. Approver groups: 20.</li>
+        <li>The panel lists the first 100 history events.</li>
+        <li>The assignee history reads at most 10,000 changelog entries; beyond that the change is refused.</li>
+    </ul>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">12. Troubleshooting and messages</h2>
+    <div style="overflow-x: auto;">
+    <table class="clinical-table">
+        <thead><tr><th>Message</th><th>What it means and what to do</th></tr></thead>
+        <tbody>
+            <tr><td>"Definition of Done is not complete. Open mandatory items: ..."</td><td>The validator blocked the move. Finish or waive the named items.</td></tr>
+            <tr><td>"DefinitionGuard could not check the Definition of Done, so this move is blocked. Try again..."</td><td>The validator could not read what it needs. Try again; if it keeps failing, ask your Jira admin.</td></tr>
+            <tr><td>"The assignee cannot complete this item. Ask a reviewer."</td><td>The item is marked Not the assignee. Another person must tick it.</td></tr>
+            <tr><td>"You need Edit issues permission to change this checklist."</td><td>Ask a project administrator for Edit issues.</td></tr>
+            <tr><td>"You need the &lt;Perm&gt; Jira permission to complete this item."</td><td>The item needs an extra permission.</td></tr>
+            <tr><td>"Only users with the &lt;Perm&gt; Jira permission can waive this item."</td><td>Ask an approver to waive it.</td></tr>
+            <tr><td>"Only a project admin can reset this checklist."</td><td>Ask an approver.</td></tr>
+            <tr><td>"Add a link or a note. This item needs evidence before it counts as done."</td><td>Use the evidence form.</td></tr>
+            <tr><td>"The evidence link must start with http:// or https://."</td><td>Fix the link.</td></tr>
+            <tr><td>"Give a reason of 10 to 500 characters for the waiver."</td><td>Write a longer or shorter reason.</td></tr>
+            <tr><td>"Someone else changed this checklist. Refresh and try again."</td><td>Choose Refresh and make your change again.</td></tr>
+            <tr><td>"Your DefinitionGuard licence is not active. Ask your Jira admin."</td><td>The licence must be renewed under Manage apps.</td></tr>
+            <tr><td>"DefinitionGuard could not &lt;action&gt;. Refresh the page and try again..."</td><td>A general error. Refresh; if it keeps failing, ask your Jira admin.</td></tr>
+            <tr><td>"DefinitionGuard could not read the project workflows..."</td><td>Gate coverage could not read workflows. A Jira admin checks the app's access.</td></tr>
+            <tr><td>"History check failed at event N (...)"</td><td>The stored history does not match its chain. Ask your Jira admin to review the issue.</td></tr>
+            <tr><td>Gate coverage shows "Not gated"</td><td>Add the validator to that transition and choose Check again.</td></tr>
+        </tbody>
+    </table>
+    </div>
+    <p>Still stuck? Write to <a href="mailto:support@asymm.systems" class="org-link org-link--inline org-link--external">support@asymm.systems</a>.</p>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">13. Uninstall and data removal</h2>
+    <ol>
+        <li>Remove the validator <strong>DefinitionGuard DoD Enforcement</strong> from your workflows first, so no transition depends on it.</li>
+        <li>A Jira administrator opens <strong>Jira settings &gt; Apps &gt; Manage apps</strong> and uninstalls DefinitionGuard.</li>
+        <li>Atlassian keeps the app's Forge storage for 28 days and then deletes it: checklists, history, templates and settings.</li>
+        <li>The issue property <code>definitionguard-dod</code> stays on each issue until the issue is deleted.</li>
+    </ol>
+    <p>For other requests, write to <a href="mailto:privacy@asymm.systems" class="org-link org-link--inline org-link--external">privacy@asymm.systems</a>.</p>
 </section>
 
 <section style="margin-bottom: 5rem">
-    <h2 class="section-title">8. Audit History &amp; Export</h2>
-    <p>For internal audits and external compliance reviews, DefinitionGuard keeps a hash-chained history of each issue's checklist:</p>
+    <h2 class="section-title">14. Related pages</h2>
     <ul>
-        <li>In the panel, open <strong>Checklist audit history</strong> and click <strong>Load audit history</strong>. The history lists each event with the user and time, plus reasons and evidence. A <em>Chain intact</em> or <em>Chain broken</em> lozenge shows the result of the history check.</li>
-        <li>The history check shows edits, removals, and reordering of the stored history. It does not stop someone who can rewrite all of the app's stored data, and that includes the app vendor.</li>
-        <li>The history section also says whether the <code>definitionguard-dod</code> issue property is signed on your site, and with which key (see <a href="/product/jira-governance/signing-keys.html" class="org-link org-link--inline org-link--internal">Signing keys</a>).</li>
-        <li>Project administrators can click <strong>Export history</strong>. The panel shows the JSON text with a file name such as <code>DEMO-35-definitionguard-history.json</code>. Copy the text and save it as that file; the panel has no download button.</li>
-        <li>The export holds every event (who ticked, waived, or reopened each item, the evidence, the reasons, and the timestamps) and the result of the history check.</li>
-        <li>All data is stored in the app's Forge storage for your site.</li>
+        <li><a href="/product/jira-governance/user-guide/" class="org-link org-link--inline org-link--internal">Jira Governance Suite user guide</a>.</li>
+        <li><a href="/product/jira-governance/signing-keys.html" class="org-link org-link--inline org-link--internal">Signing keys</a>.</li>
+        <li><a href="/product/jira-governance/user-guide/fourrealities.html" class="org-link org-link--inline org-link--internal">FourRealities guide</a>: the Process gate checks the signed DefinitionGuard record.</li>
+        <li><a href="/product/jira-governance/faq.html" class="org-link org-link--inline org-link--internal">FAQ</a>, <a href="/product/jira-governance/compliance.html" class="org-link org-link--inline org-link--internal">Compliance mapping</a>, <a href="/privacy.html" class="org-link org-link--inline org-link--internal">Privacy policy</a>.</li>
     </ul>
-
-    <div style="margin: 2rem 0; text-align: center;">
-        <img src="/images/product/jira-governance/definitionguard/05-audit-export.png" alt="DefinitionGuard Checklist History Export" style="max-width: 100%; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
-        <p style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 2: Checklist history export in the issue panel, ready to copy.</p>
-    </div>
 </section>

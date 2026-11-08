@@ -1,5 +1,5 @@
-title=Open Offline Cryptographic Verifier
-description=Standalone, zero-dependency Node.js CLI tool for checking LedgerSeal Ed25519 signatures, SHA-256 snapshot hashes, and hash chains offline.
+title=Open Offline Verifier
+description=How to check LedgerSeal evidence records and FourRealities evidence reports offline with the open, zero-dependency Node.js verifier: commands, checks, output, exit codes, keys and what a pass means.
 type=page
 toc=true
 status=published
@@ -8,47 +8,43 @@ og_image=product/jira-governance/ledgerseal/banner.png
 
 <header class="page-header">
     <span class="section-kicker">Open Verifier Guide</span>
-    <h1>Open-Source Offline Cryptographic Verifier</h1>
-    <p style="max-width: 65ch">A zero-dependency Node.js CLI verification tool allowing compliance auditors and security teams
-        to check LedgerSeal evidence offline: the snapshot hash, the hash-chained history, the newest seal and the Ed25519 signature.
-        A pass shows the evidence was not changed after export and was signed with the published key.
-        It does not stop someone who can rewrite the app's stored data, including the vendor, from writing a new consistent record.</p>
+    <h1>Open Offline Verifier</h1>
+    <p style="max-width: 65ch">The open verifier checks LedgerSeal evidence records and FourRealities evidence reports on your own computer. It needs no network and no access to Jira or to the apps.
+        It uses only the Node.js standard library, so an auditor can read every line before running it.</p>
 </header>
 
 <section style="margin-bottom: 4rem">
-    <h2 class="section-title">1. Why Offline Verification Matters</h2>
-    <p>In enterprise audits (SOC 2, ISO 27001, FDA 21 CFR Part 11), a critical principle of evidence integrity is <em>independent reproducibility</em>. 
-        If compliance evidence can only be validated by querying the proprietary software that generated it, the evidence is subject to circular trust and vendor compromise.</p>
-    <p>Every approved ticket can export a standalone evidence JSON document, and the check needs no access to Jira or to LedgerSeal. 
-        Our open-source verifier (<code>verify-evidence.mjs</code>) executes entirely on an auditor laptop with zero external network connectivity, 
-        using only the Node.js standard library.</p>
+    <h2 class="section-title">1. Who this guide is for</h2>
+    <p>Auditors, compliance teams and security engineers who receive evidence from a Jira site that uses LedgerSeal or FourRealities, and want to check it without trusting the app that made it.</p>
 </section>
 
 <section style="margin-bottom: 4rem">
-    <h2 class="section-title">2. Zero-Dependency Architecture</h2>
-    <p>The verifier is engineered for extreme audit portability:</p>
+    <h2 class="section-title">2. Get the verifier</h2>
     <ul>
-        <li><strong>Zero npm Dependencies:</strong> Requires only standard Node.js (v18 or higher). It imports only the standard modules <code>node:crypto</code>, <code>node:fs</code>, <code>node:path</code> and <code>node:url</code>.</li>
-        <li><strong>Air-Gapped Execution:</strong> Runs completely offline on isolated, air-gapped auditor workstations.</li>
-        <li><strong>Open-Source Transparency:</strong> 100% open source under the Apache-2.0 license. The script is about 135 lines of readable JavaScript.</li>
+        <li><strong>Repository:</strong> <a href="https://github.com/asymmsystems/jira-governance-code-cli" class="org-link org-link--inline org-link--external">asymmsystems/jira-governance-code-cli</a> on GitHub, Apache-2.0.</li>
+        <li><strong>Requirement:</strong> Node.js 18 or later. No npm packages: the scripts import only <code>node:crypto</code>, <code>node:fs</code>, <code>node:path</code> and <code>node:url</code>.</li>
+        <li><strong>LedgerSeal:</strong> <code>verify-evidence.mjs</code>, from <a href="https://github.com/asymmsystems/jira-governance-code-cli/releases/tag/v1.3.0" class="org-link org-link--inline org-link--external">release v1.3.0</a>.</li>
+        <li><strong>FourRealities:</strong> <code>verify-fourrealities-report.mjs</code>, which comes with version 1.4.0 of the verifier in the same repository. It uses the canonical JSON code of <code>verify-evidence.mjs</code>, so keep both files in the same folder.</li>
+        <li><strong>Keys:</strong> the <code>keys/</code> folder holds the public keys. The <a href="/product/jira-governance/signing-keys.html" class="org-link org-link--inline org-link--internal">Signing keys</a> page lists them with their fingerprints.</li>
     </ul>
+    <p>Run <code>node verify-evidence.mjs --self-test</code> to check the canonical JSON code against the published test vectors. It prints "PASS n of n vectors".</p>
 </section>
 
 <section style="margin-bottom: 4rem">
-    <h2 class="section-title">3. Command-Line Usage</h2>
-    <p>The verifier supports both named CLI flags and positional arguments:</p>
-
+    <h2 class="section-title">3. Check a LedgerSeal evidence record</h2>
+    <h3>Get the record</h3>
+    <ol>
+        <li>Open the sealed issue and its <strong>Approval Seal</strong> panel.</li>
+        <li>Open <strong>Certificate &amp; attestation details</strong> and choose <strong>Show evidence (JSON)</strong>.</li>
+        <li>Copy the JSON into a file, for example <code>PAY-29-evidence.json</code>.</li>
+    </ol>
+    <h3>Run the check</h3>
     <div class="inline-terminal inline-terminal--static" style="margin: 1.5rem 0;">
-        <code># Positional argument syntax<br/>
-node verify-evidence.mjs evidence.json public-key.pem<br/><br/>
-# Named argument syntax<br/>
-node verify-evidence.mjs --evidence evidence.json --public-key public-key.pem</code>
+        <code style="word-break: break-all;">node verify-evidence.mjs PAY-29-evidence.json<br/>
+node verify-evidence.mjs --evidence PAY-29-evidence.json --public-key ls-prod-2026-11.pub.pem</code>
     </div>
-
-    <p>If you leave out the public key, the verifier reads <code>keys/&lt;keyId&gt;.pub.pem</code> next to the script, using the key ID recorded in the evidence.
-        Run <code>node verify-evidence.mjs --self-test</code> to check the canonical JSON code against the published test vectors.</p>
-
-    <h3>Expected Success Output</h3>
+    <p>Without a key file, the verifier reads <code>keys/&lt;keyId&gt;.pub.pem</code> next to the script, using the key id named in the evidence.</p>
+    <h3>Expected output</h3>
     <div class="inline-terminal inline-terminal--static" style="margin: 1.5rem 0;">
         <code>PASS snapshot hash<br/>
 PASS history chain (3 entries)<br/>
@@ -56,70 +52,97 @@ PASS attestation names the newest seal<br/>
 PASS attestation status matches the history (SEAL_VALID)<br/>
 PASS signature (ls-prod-2026-11)</code>
     </div>
-    <p>Any check that fails prints <code>FAIL</code> instead of <code>PASS</code> on its line. The verifier always runs all five checks, so one run shows every problem.</p>
-</section>
-
-<section style="margin-bottom: 4rem">
-    <h2 class="section-title">4. Cryptographic Verification Mechanics</h2>
-    <p>When executed, <code>verify-evidence.mjs</code> performs five checks:</p>
-
-    <table class="clinical-table" style="margin-top: 1.5rem">
-        <thead>
-            <tr>
-                <th>Phase</th>
-                <th>Cryptographic Standard</th>
-                <th>Validation Logic</th>
-            </tr>
-        </thead>
+    <p>A failed check prints <code>FAIL</code> on its line. The verifier always runs all five checks, so one run shows every problem.</p>
+    <div style="overflow-x: auto;">
+    <table class="clinical-table">
+        <thead><tr><th>Check</th><th>Passes when</th></tr></thead>
         <tbody>
-            <tr>
-                <td><strong>1. Snapshot Hash</strong></td>
-                <td>SHA-256 (FIPS 180-4) over canonical JSON</td>
-                <td>Serializes the exported snapshot of covered fields, comments and attachments as canonical JSON (keys sorted at every level, no whitespace), hashes it, and checks the result equals the snapshot hash in the attestation.</td>
-            </tr>
-            <tr>
-                <td><strong>2. History Chain</strong></td>
-                <td>SHA-256 hash chain</td>
-                <td>Sorts the history entries by sequence number. Checks that the numbers run 1, 2, 3 without gaps, that each <code>prevEntryHash</code> equals the previous entry's <code>entryHash</code> (the first one equals the all-zero genesis value), and that each <code>entryHash</code> is the SHA-256 of that entry.</td>
-            </tr>
-            <tr>
-                <td><strong>3. Newest Seal</strong></td>
-                <td>Record linking</td>
-                <td>Checks that the attestation names the certificate of the newest seal entry in the history.</td>
-            </tr>
-            <tr>
-                <td><strong>4. Status</strong></td>
-                <td>Record linking</td>
-                <td>Checks that the status in the attestation is the state of the newest history entry that is not a redaction: <code>SEAL_VALID</code> for a seal, <code>SEAL_BROKEN</code> for a detected change, <code>SEAL_REVOKED</code> for a revoke.</td>
-            </tr>
-            <tr>
-                <td><strong>5. Signature</strong></td>
-                <td>Ed25519 (RFC 8032)</td>
-                <td>Verifies the Ed25519 signature over the canonical attestation (which contains the snapshot hash and certificate ID) with the published Asymm Systems public key.</td>
-            </tr>
+            <tr><td>1. Snapshot hash</td><td>The SHA-256 of the canonical JSON of the snapshot equals the snapshot hash in the attestation.</td></tr>
+            <tr><td>2. History chain</td><td>The entries run 1, 2, 3 with no gap; each entry names the hash of the entry before it (the first names 64 zeros); each entry hash is the SHA-256 of that entry.</td></tr>
+            <tr><td>3. Newest seal</td><td>The attestation names the certificate of the newest seal entry.</td></tr>
+            <tr><td>4. Status</td><td>The attestation status matches the newest entry that is not a redaction: SEAL_VALID for a seal, SEAL_BROKEN for a change, SEAL_REVOKED for a revoke.</td></tr>
+            <tr><td>5. Signature</td><td>The Ed25519 signature verifies over the canonical attestation with the public key.</td></tr>
         </tbody>
     </table>
-    <p>Evidence may contain a redaction entry (<code>LS_REDACTED</code>): records made before LedgerSeal used party tokens were converted once; the verifier names the entry in a <code>NOTE</code> line. The <code>parties</code> map is not signed.</p>
+    </div>
+    <p><strong>NOTE lines.</strong> Records made before LedgerSeal used party tokens were converted once; the history then holds a redaction entry, and the verifier names it in a NOTE line. A NOTE also says that the <code>parties</code> map (token to account id) is not signed. A NOTE is not a failure.</p>
+    <p><strong>Canonical JSON</strong> means object keys sorted at every level, no whitespace, and undefined fields left out.</p>
 </section>
 
 <section style="margin-bottom: 4rem">
-    <h2 class="section-title">5. Exit Codes for CI/CD &amp; Automated Audits</h2>
-    <p>Security teams can embed the verifier into automated release pipelines or compliance cron monitors:</p>
+    <h2 class="section-title">4. Check a FourRealities evidence report</h2>
+    <h3>Get the files</h3>
+    <ol>
+        <li>In the project, open <strong>Four Realities &gt; Evidence reports</strong> and choose <strong>Download</strong> on a Ready report.</li>
+        <li>Save the report JSON, the report CSV and the signed manifest. The people file is not signed and is not needed for the check.</li>
+        <li>To check the chain, also keep the manifest of the previous report of the project.</li>
+    </ol>
+    <h3>Run the check</h3>
+    <div class="inline-terminal inline-terminal--static" style="margin: 1.5rem 0;">
+        <code style="word-break: break-all;">node verify-fourrealities-report.mjs &lt;manifest.json&gt; &lt;report.json&gt; &lt;report.csv&gt; [--previous &lt;previous-manifest.json&gt;]</code>
+    </div>
+    <p>Without a key file, the key is read from <code>keys/&lt;keyId&gt;.pub.pem</code>. You can also give a public key file after the three report files.</p>
+    <div style="overflow-x: auto;">
+    <table class="clinical-table">
+        <thead><tr><th>Check</th><th>Passes when</th></tr></thead>
+        <tbody>
+            <tr><td>1. File hashes</td><td>The SHA-256 and the byte count of the report JSON and the report CSV equal the values in the manifest.</td></tr>
+            <tr><td>2. Signature</td><td>The Ed25519 signature verifies over the canonical JSON of the manifest without its signature, with the key named by the manifest.</td></tr>
+            <tr><td>3. Header</td><td>The header of the report JSON equals the manifest without its file list, key id and signature.</td></tr>
+            <tr><td>4. Chain (with <code>--previous</code>)</td><td>The manifest names the previous report and the SHA-256 of its manifest. A removed report shows as a break.</td></tr>
+        </tbody>
+    </table>
+    </div>
+    <p>The verifier also checks the manifest format and that the period is two dates in order, and prints the period with both days included, for example <code>NOTE period 2026-10-09 to 2026-11-07, both days included (UTC)</code>.</p>
+    <h3>WARN lines</h3>
     <ul>
-        <li><code>0</code> - <strong>PASS:</strong> All five checks passed.</li>
-        <li><code>1</code> - <strong>FAIL:</strong> At least one check failed, and the <code>FAIL</code> lines name which. The evidence may have been changed after it was exported, or the public key file you gave is not the key that signed it, or a part of the evidence is missing.</li>
-        <li><code>2</code> - <strong>USAGE ERROR:</strong> The evidence file was not given, or the evidence or public key file does not exist.</li>
+        <li><strong>Issues not in the report.</strong> When some issues of the scope are not in the report (deleted, no longer readable, or moved to another project while the report was made), the verifier prints a WARN line with their number, which the manifest signs, and one line per issue with its key and the reason. It fails when the report JSON lists a different number. A PASS with such lines means the files are intact, not that the report holds every issue. Check those issues in Jira before you sample.</li>
+        <li><strong>Development key.</strong> A report signed with a development key (a key id with <code>-dev-</code>, such as <code>fr-dev-2026-11</code>) prints a WARN line: it is a test report, not evidence from a production site. Such a report that says it is from production fails.</li>
     </ul>
+    <p>An unsigned report fails the signature check.</p>
+    <h3>What a pass means</h3>
+    <p>The three files are the ones FourRealities signed, and, with <code>--previous</code>, the report follows the previous one. It does not mean that the report holds everything Jira ever recorded: FourRealities reports what Jira's changelog held when the report was made, free-text fields show only that they changed, and the gate results are observed when the report was made.
+        FourRealities is not an administrative audit log: Jira's audit log and Atlassian Guard keep it.</p>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">5. Exit codes</h2>
+    <ul>
+        <li><code>0</code>: every check passed. WARN and NOTE lines do not change this.</li>
+        <li><code>1</code>: at least one check failed. The FAIL lines name which.</li>
+        <li><code>2</code>: a missing argument or file. The verifier prints the usage line, "No evidence file", "No file" or "No public key file".</li>
+    </ul>
+    <p>You can run the verifier in a pipeline and act on the exit code.</p>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">6. What a signature does not prove</h2>
+    <p>A pass shows that the files were not changed after they were signed, and that they were signed with the private key of the public key you used.
+        Asymm Systems holds the signing keys. Someone who can rewrite the app's stored data, including the vendor, could write a new consistent record and sign it.
+        The evidence covers only what the app recorded.</p>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">7. Keys</h2>
+    <div style="overflow-x: auto;">
+    <table class="clinical-table">
+        <thead><tr><th>Key id</th><th>Used by</th></tr></thead>
+        <tbody>
+            <tr><td><code>ls-prod-2026-11</code></td><td>LedgerSeal, production (the Marketplace app)</td></tr>
+            <tr><td><code>ls-dev-2026-11</code></td><td>LedgerSeal, development builds only</td></tr>
+            <tr><td><code>fr-prod-2026-11</code></td><td>FourRealities evidence reports, production (the Marketplace app)</td></tr>
+            <tr><td><code>fr-dev-2026-11</code></td><td>FourRealities evidence reports, development builds only</td></tr>
+        </tbody>
+    </table>
+    </div>
+    <p>Accept a record as production evidence only when it is signed with a production key. The fingerprints are on the <a href="/product/jira-governance/signing-keys.html" class="org-link org-link--inline org-link--internal">Signing keys</a> page. To check a fingerprint, run <code>openssl pkey -pubin -in key.pem -outform DER | sha256sum</code>.</p>
 </section>
 
 <section style="margin-bottom: 5rem">
-    <h2 class="section-title">6. Public Verification Keys &amp; Source Code</h2>
-    <p>The verifier and its public keys are published in an open-source repository:</p>
+    <h2 class="section-title">8. Related pages</h2>
     <ul>
-        <li><strong>Repository:</strong> <a href="https://github.com/asymmsystems/jira-governance-code-cli" class="org-link org-link--inline org-link--external">asymmsystems/jira-governance-code-cli on GitHub (Apache-2.0)</a>, <a href="https://github.com/asymmsystems/jira-governance-code-cli/releases/tag/v1.3.0" class="org-link org-link--inline org-link--external">release v1.3.0</a></li>
-        <li><strong>Production Public Key:</strong> <code>keys/ls-prod-2026-11.pub.pem</code>, key id <code>ls-prod-2026-11</code> (production: the Marketplace app), SHA-256 fingerprint of the DER public key <code style="word-break: break-all;">09f2b807adc803a7f687e0561e90b8dcadadd6c1d752c66b55980a27b89cc5d3</code>.</li>
-        <li><strong>Development Public Key:</strong> <code>keys/ls-dev-2026-11.pub.pem</code> (development builds only).</li>
-        <li><strong>All keys:</strong> the <a href="/product/jira-governance/signing-keys.html" class="org-link org-link--inline org-link--internal">Signing keys</a> page lists every key id with its public key and fingerprint.</li>
-        <li><strong>Key Algorithm:</strong> Ed25519 public key (SPKI PEM format).</li>
+        <li><a href="/product/jira-governance/user-guide/ledgerseal.html" class="org-link org-link--inline org-link--internal">LedgerSeal guide</a> and <a href="/product/jira-governance/user-guide/fourrealities.html" class="org-link org-link--inline org-link--internal">FourRealities guide</a>.</li>
+        <li><a href="/product/jira-governance/compliance.html" class="org-link org-link--inline org-link--internal">Compliance mapping</a> and <a href="/product/jira-governance/faq.html" class="org-link org-link--inline org-link--internal">FAQ</a>.</li>
+        <li>Security reports: <a href="mailto:security@asymm.systems" class="org-link org-link--inline org-link--external">security@asymm.systems</a>, not a public issue.</li>
     </ul>
 </section>

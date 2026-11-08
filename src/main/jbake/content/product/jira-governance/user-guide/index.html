@@ -1,5 +1,5 @@
 title=Jira Governance User Guide
-description=Comprehensive user and administrator documentation for the Asymm Systems Jira Governance Suite: LedgerSeal, DefinitionGuard, FourRealities, and CascadePlan.
+description=User and administrator guides for the Asymm Systems Jira Governance Suite: CascadePlan, DefinitionGuard, LedgerSeal, FourRealities and the open verifier, with quick starts, setup steps and where each app keeps its data.
 type=page
 toc=true
 status=published
@@ -9,138 +9,162 @@ og_image=product/jira-governance/ledgerseal/banner.png
 <header class="page-header">
     <span class="section-kicker">User Guide</span>
     <h1>Jira Governance Suite User Guide</h1>
-    <p style="max-width: 65ch">Everything you need to evaluate, configure, operate, and audit the Asymm Systems Jira Governance Suite. 
-        Organized by application and role: jump directly to the chapter you need.</p>
+    <p style="max-width: 65ch">Four Jira Cloud apps and one open verifier. Each app works on its own, and each guide covers setup, every screen, everyday tasks, permissions, data, limits and troubleshooting.
+        Start with the quick start of the app you use, then open its guide.</p>
 </header>
 
 <section style="margin-bottom: 4rem">
-    <h2 class="section-title">Quick start for each app</h2>
-    <p>Each app works on its own. Install it from the Atlassian Marketplace, then follow its steps below. The steps marked "Jira administrator" need that role; the others need only the usual Jira permissions of the issue.</p>
+    <h2 class="section-title">1. The apps at a glance</h2>
+    <div style="overflow-x: auto;">
+    <table class="clinical-table">
+        <thead><tr><th>App</th><th>What it does</th><th>Where you find it</th></tr></thead>
+        <tbody>
+            <tr><td>CascadePlan</td><td>A timeline where work starts at a percent of its predecessor, dates cascade, and every Jira write is shown first and can be undone.</td><td>Project navigation: <strong>CascadePlan Planner</strong></td></tr>
+            <tr><td>DefinitionGuard</td><td>A Definition of Done checklist per issue type, with evidence, waivers and a gate into Done.</td><td>Issue: <strong>Definition of Done</strong> panel. Project settings: <strong>DefinitionGuard</strong></td></tr>
+            <tr><td>LedgerSeal</td><td>Seals an approved issue, shows what changed after approval, and can gate a transition.</td><td>Issue: <strong>Approval Seal</strong> panel and the <strong>Approval seal</strong> entry</td></tr>
+            <tr><td>FourRealities</td><td>Shows the delivery evidence of each issue in four gates, and makes signed evidence reports for audits.</td><td>Project navigation: <strong>Four Realities</strong>. Issue: <strong>Four Realities</strong> panel</td></tr>
+            <tr><td>Open verifier</td><td>Checks LedgerSeal evidence and FourRealities reports offline.</td><td>GitHub: <a href="https://github.com/asymmsystems/jira-governance-code-cli" class="org-link org-link--inline org-link--external">jira-governance-code-cli</a></td></tr>
+        </tbody>
+    </table>
+    </div>
+    <p>An issue panel that is not shown opens from the issue's app button, below the issue title.</p>
+    <figure style="margin: 2rem 0;">
+        <img src="/images/product/jira-governance/user-guide/common/issue-app-actions-menu.png" alt="The issue's app actions menu with Approval Seal, Definition of Done, Four Realities and Add apps." width="189" height="173" loading="lazy" style="max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <figcaption style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 1: The issue's app button lists the issue panels of the suite.</figcaption>
+    </figure>
+</section>
 
-    <div class="product-features" style="grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); margin-top: 1.5rem;">
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">2. Quick start for each app</h2>
+    <p>Install the app from the Atlassian Marketplace, or in Jira under <strong>Apps &gt; Explore more apps</strong>. Steps marked "Jira administrator" need that role; the others need only the usual Jira permissions of the issue or project.</p>
+    <div class="product-features" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); margin-top: 1.5rem;">
         <div class="product-feature-card">
-            <h3>CascadePlan (about 5 minutes)</h3>
+            <h3>CascadePlan</h3>
             <ol>
-                <li>Open a Jira project and choose <strong>CascadePlan Planner</strong> in the project's navigation.</li>
-                <li>Drag a work item from the <strong>Backlog</strong> tray onto the timeline to give it dates.</li>
-                <li>Drag the arrow at the end of one bar onto another bar, and choose when the second may start (for example 30%).</li>
-                <li>Move the first bar: read the Jira changes listed before you let go, then let go. Ctrl+Z undoes it.</li>
+                <li>Open a project and choose <strong>CascadePlan Planner</strong>.</li>
+                <li>Open <strong>Backlog</strong> and drag a work item onto the timeline.</li>
+                <li>Click a bar, choose <strong>Add dependency</strong>, set the percent (for example 30) and choose the work item it waits for.</li>
+                <li>Move the first bar. Read the Jira changes listed before you let go. Ctrl+Z undoes the move.</li>
             </ol>
-            <p>No setup is needed. <a href="/product/jira-governance/user-guide/cascadeplan" class="org-link org-link--inline org-link--internal">CascadePlan guide</a></p>
+            <p><a href="/product/jira-governance/user-guide/cascadeplan.html" class="org-link org-link--inline org-link--internal">CascadePlan guide</a></p>
         </div>
         <div class="product-feature-card">
-            <h3>LedgerSeal (5 minutes, plus the gate)</h3>
+            <h3>DefinitionGuard</h3>
             <ol>
-                <li>Open an issue, open the <strong>Approval Seal</strong> panel from the issue's app button, choose <strong>Seal this issue</strong>, then <strong>Sign and seal</strong>.</li>
-                <li>Edit the issue description: the panel shows what changed since the seal.</li>
-                <li>Another approver chooses <strong>Approve these changes</strong> and gives a reason.</li>
-                <li>Jira administrator: add the <strong>Require Valid LedgerSeal</strong> validator to the release transition of the workflow. Without it, LedgerSeal reports changes but does not block.</li>
-            </ol>
-            <p><a href="/product/jira-governance/user-guide/ledgerseal" class="org-link org-link--inline org-link--internal">LedgerSeal guide</a></p>
-        </div>
-        <div class="product-feature-card">
-            <h3>DefinitionGuard (minutes, plus the gate)</h3>
-            <ol>
-                <li>Open an issue and add the <strong>Definition of Done</strong> panel from the issue's app button. A built-in checklist for the issue type is already there.</li>
+                <li>Open an issue and the <strong>Definition of Done</strong> panel. A built-in checklist for the issue type is there.</li>
                 <li>Tick items, add evidence where an item asks for it, or waive an item with a reason.</li>
-                <li>Jira administrator: add <strong>DefinitionGuard DoD Enforcement</strong> to every transition into a Done status, then publish the workflow.</li>
-                <li>Project administrator: open <strong>Project settings</strong>, <strong>DefinitionGuard</strong> and check that every completion transition is gated.</li>
+                <li>Jira administrator: add <strong>DefinitionGuard DoD Enforcement</strong> to every transition into Done.</li>
+                <li>Project administrator: check <strong>Project settings &gt; DefinitionGuard &gt; Gate coverage</strong>.</li>
             </ol>
-            <p><a href="/product/jira-governance/user-guide/definitionguard" class="org-link org-link--inline org-link--internal">DefinitionGuard guide</a></p>
+            <p><a href="/product/jira-governance/user-guide/definitionguard.html" class="org-link org-link--inline org-link--internal">DefinitionGuard guide</a></p>
         </div>
         <div class="product-feature-card">
-            <h3>FourRealities (about 10 minutes)</h3>
+            <h3>LedgerSeal</h3>
             <ol>
-                <li>Open <strong>Four Realities</strong> in the project's navigation. The first open builds the project's view; after that it is refreshed each day.</li>
-                <li>Link each issue to its decision record: a Confluence page on your site, or a decision issue.</li>
-                <li>Connect GitHub, Bitbucket or GitLab to Jira if you have not, so the Code check sees pull requests.</li>
-                <li>Read the issue's four checks. The Process check looks for a Definition of Done record and the Audit check for an approval seal; on a site without DefinitionGuard and LedgerSeal, those two show <em>Not used on this site</em> and are not scored.</li>
+                <li>Open an issue and the <strong>Approval Seal</strong> panel. Choose <strong>Seal this issue</strong>, tick the declaration and choose <strong>Sign and seal</strong>.</li>
+                <li>Edit the issue: the panel shows what changed since the seal.</li>
+                <li>Another approver chooses <strong>Approve these changes</strong> and gives a reason.</li>
+                <li>Jira administrator: add <strong>Require Valid LedgerSeal</strong> to the release transition.</li>
             </ol>
-            <p><a href="/product/jira-governance/user-guide/fourrealities" class="org-link org-link--inline org-link--internal">FourRealities guide</a></p>
+            <p><a href="/product/jira-governance/user-guide/ledgerseal.html" class="org-link org-link--inline org-link--internal">LedgerSeal guide</a></p>
+        </div>
+        <div class="product-feature-card">
+            <h3>FourRealities</h3>
+            <ol>
+                <li>Open <strong>Four Realities</strong> in the project. The first view builds the project's snapshot.</li>
+                <li>Use <strong>Priority actions</strong> and <strong>Inspect</strong> to find the gaps.</li>
+                <li>In an issue's <strong>Four Realities</strong> panel, choose <strong>Link decision record</strong>.</li>
+                <li>Administrator: in <strong>Evidence reports</strong>, choose <strong>New evidence report</strong> for an audit period.</li>
+            </ol>
+            <p><a href="/product/jira-governance/user-guide/fourrealities.html" class="org-link org-link--inline org-link--internal">FourRealities guide</a></p>
         </div>
     </div>
 </section>
 
-<section style="margin-bottom: 5rem">
-    <h2 class="section-title">Application Documentation</h2>
-    <p>Detailed guides covering issue panel interactions, administration settings, workflow validator gates, and compliance reports:</p>
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">3. Administration pages</h2>
+    <div style="overflow-x: auto;">
+    <table class="clinical-table">
+        <thead><tr><th>Page</th><th>Who</th><th>What you set</th></tr></thead>
+        <tbody>
+            <tr><td>Jira settings &gt; Apps &gt; CascadePlan approvers</td><td>Jira administrator</td><td>Groups that may manage plans, freeze baselines and decide scope changes.</td></tr>
+            <tr><td>Jira settings &gt; Apps &gt; DefinitionGuard approvers</td><td>Jira administrator</td><td>Groups that may waive items and reset checklists.</td></tr>
+            <tr><td>Project settings &gt; DefinitionGuard</td><td>Project administrator</td><td>Checklist templates, exempt statuses, gate coverage.</td></tr>
+            <tr><td>Jira settings &gt; Apps &gt; LedgerSeal approvers</td><td>Jira administrator</td><td>Groups that may seal, approve changes and revoke.</td></tr>
+            <tr><td>Jira settings &gt; Apps &gt; FourRealities gate authority</td><td>Jira administrator</td><td>Evidence sources, decision issue types, Code exception approvers, report retention and report groups.</td></tr>
+            <tr><td>Workflow editor</td><td>Jira administrator</td><td>The validators <strong>DefinitionGuard DoD Enforcement</strong> and <strong>Require Valid LedgerSeal</strong>.</td></tr>
+        </tbody>
+    </table>
+    </div>
+    <p>Project administrators and Jira administrators always hold the approver rights of each app. The groups add more people.</p>
+</section>
 
-    <div class="product-features" style="grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); margin-top: 2rem;">
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">4. Data, privacy and security</h2>
+    <ul>
+        <li>All four apps run on Atlassian Forge. They store their data in the Forge storage of your site, and FourRealities keeps evidence report files in Forge Object Store. No app sends data outside your Atlassian site.</li>
+        <li>Each app reads and writes Jira as the signed-in user wherever a user acts, so Jira's permissions apply.</li>
+        <li>No app stores email addresses. Account ids are kept only where a rule needs them, reported to Atlassian every week, and removed for closed accounts.</li>
+        <li>After an uninstall, Atlassian keeps the app's storage for 28 days and then deletes it. Issue properties stay on the issues.</li>
+    </ul>
+    <p>Details per app are in the <a href="/privacy.html" class="org-link org-link--inline org-link--internal">privacy policy</a> and in each guide.</p>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">5. Guides and reference</h2>
+    <div class="product-features" style="grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); margin-top: 2rem;">
         <div class="product-feature-card">
             <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
-                <img src="/images/product/jira-governance/ledgerseal/icon.png" alt="LedgerSeal" style="width: 28px; height: 28px;" />
-                <h3 style="margin: 0;">LedgerSeal</h3>
-            </div>
-            <p>Cryptographic issue snapshot hashing, Ed25519 digital signatures, tamper detection diffs, resealing workflows, and workflow transition validator setup.</p>
-            <div style="margin-top: 1.5rem;">
-                <a href="/product/jira-governance/user-guide/ledgerseal.html" class="org-link org-link--inline org-link--internal">Read LedgerSeal Guide</a>
-            </div>
-        </div>
-
-        <div class="product-feature-card">
-            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
-                <img src="/images/product/jira-governance/definitionguard/icon.png" alt="DefinitionGuard" style="width: 28px; height: 28px;" />
-                <h3 style="margin: 0;">DefinitionGuard</h3>
-            </div>
-            <p>Issue-type Definition of Done checklists, required evidence (a link or a note), items the assignee may not tick, audited waivers, and Done-gate transition blocking.</p>
-            <div style="margin-top: 1.5rem;">
-                <a href="/product/jira-governance/user-guide/definitionguard.html" class="org-link org-link--inline org-link--internal">Read DefinitionGuard Guide</a>
-            </div>
-        </div>
-
-        <div class="product-feature-card">
-            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
-                <img src="/images/product/jira-governance/fourrealities/icon.png" alt="FourRealities" style="width: 28px; height: 28px;" />
-                <h3 style="margin: 0;">FourRealities</h3>
-            </div>
-            <p>Project dashboard and issue panel showing evidence across four realities (intent, process, code, audit), Reality Alignment Index (RAI), rework loop counts, and code exception requests.</p>
-            <div style="margin-top: 1.5rem;">
-                <a href="/product/jira-governance/user-guide/fourrealities.html" class="org-link org-link--inline org-link--internal">Read FourRealities Guide</a>
-            </div>
-        </div>
-
-        <div class="product-feature-card">
-            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
-                <img src="/images/product/jira-governance/cascadeplan/icon.png" alt="CascadePlan" style="width: 28px; height: 28px;" />
+                <img src="/images/product/jira-governance/cascadeplan/icon.png" alt="CascadePlan icon" style="width: 28px; height: 28px;" />
                 <h3 style="margin: 0;">CascadePlan</h3>
             </div>
-            <p>Canvas timeline with percent-trigger dependencies, explanations of why tasks start when they do, previewed Jira writes with undo, keyboard control, table view, and weekly hours per person.</p>
-            <div style="margin-top: 1.5rem;">
-                <a href="/product/jira-governance/user-guide/cascadeplan.html" class="org-link org-link--inline org-link--internal">Read CascadePlan Guide</a>
-            </div>
+            <p>Planner screens, percent links, cascades, task details, plans and filters, baselines and scope reviews, keyboard reference.</p>
+            <a href="/product/jira-governance/user-guide/cascadeplan.html" class="org-link org-link--inline org-link--internal">Read the CascadePlan guide</a>
         </div>
-
         <div class="product-feature-card">
             <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
-                <span style="font-family: 'Fira Code', monospace; font-size: 1.2rem; font-weight: bold; color: var(--color-primary, #BA6E8F);">&gt;_</span>
-                <h3 style="margin: 0; margin-left: 0.5rem;">Open Offline Verifier</h3>
+                <img src="/images/product/jira-governance/definitionguard/icon.png" alt="DefinitionGuard icon" style="width: 28px; height: 28px;" />
+                <h3 style="margin: 0;">DefinitionGuard</h3>
             </div>
-            <p>Standalone, zero-dependency Node.js CLI verifier (<code>verify-evidence.mjs</code>). Validates signatures, SHA-256 snapshot hashes, and hash chains offline against published public keys.</p>
-            <div style="margin-top: 1.5rem;">
-                <a href="/product/jira-governance/user-guide/open-verifier.html" class="org-link org-link--inline org-link--internal">Read Verifier Guide</a>
-            </div>
+            <p>The checklist panel, evidence, the not-the-assignee rule, waivers, templates, the Done gate and the audit history.</p>
+            <a href="/product/jira-governance/user-guide/definitionguard.html" class="org-link org-link--inline org-link--internal">Read the DefinitionGuard guide</a>
         </div>
-
         <div class="product-feature-card">
             <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
-                <span style="font-family: 'Fira Code', monospace; font-size: 1.2rem; font-weight: bold; color: var(--color-primary, #BA6E8F);">§</span>
-                <h3 style="margin: 0; margin-left: 0.5rem;">Compliance &amp; Security</h3>
+                <img src="/images/product/jira-governance/ledgerseal/icon.png" alt="LedgerSeal icon" style="width: 28px; height: 28px;" />
+                <h3 style="margin: 0;">LedgerSeal</h3>
             </div>
-            <p>Formal control mappings for SOC 2 Type II (CC8.1), ISO/IEC 27001:2022 (A.8.32), and FDA 21 CFR Part 11, accompanied by a completed InfoSec vendor assessment.</p>
-            <div style="margin-top: 1.5rem;">
-                <a href="/product/jira-governance/compliance.html" class="org-link org-link--inline org-link--internal">Read Compliance Mapping</a>
+            <p>Sealing, change detection, approving changes, revoking, the transition gate and the evidence record.</p>
+            <a href="/product/jira-governance/user-guide/ledgerseal.html" class="org-link org-link--inline org-link--internal">Read the LedgerSeal guide</a>
+        </div>
+        <div class="product-feature-card">
+            <div style="display: flex; align-items: center; gap: 0.75rem; margin-bottom: 0.5rem;">
+                <img src="/images/product/jira-governance/fourrealities/icon.png" alt="FourRealities icon" style="width: 28px; height: 28px;" />
+                <h3 style="margin: 0;">FourRealities</h3>
             </div>
+            <p>The four gates and the RAI, the dashboard, the issue panel, Code exceptions and evidence reports.</p>
+            <a href="/product/jira-governance/user-guide/fourrealities.html" class="org-link org-link--inline org-link--internal">Read the FourRealities guide</a>
+        </div>
+        <div class="product-feature-card">
+            <h3>Open verifier</h3>
+            <p>Check LedgerSeal evidence records and FourRealities reports offline, with commands, checks and exit codes.</p>
+            <a href="/product/jira-governance/user-guide/open-verifier.html" class="org-link org-link--inline org-link--internal">Read the verifier guide</a>
+        </div>
+        <div class="product-feature-card">
+            <h3>Compliance, keys and FAQ</h3>
+            <p>Control mappings, the public signing keys, and common questions.</p>
+            <a href="/product/jira-governance/compliance.html" class="org-link org-link--inline org-link--internal">Compliance mapping</a><br/>
+            <a href="/product/jira-governance/signing-keys.html" class="org-link org-link--inline org-link--internal">Signing keys</a><br/>
+            <a href="/product/jira-governance/faq.html" class="org-link org-link--inline org-link--internal">FAQ</a>
         </div>
     </div>
 </section>
 
 <section style="margin-bottom: 5rem">
-    <h2 class="section-title">Support &amp; Operational Assistance</h2>
-    <p>Need assistance configuring your workflow validators or preparing for an enterprise audit? Our engineering team provides direct operational guidance:</p>
+    <h2 class="section-title">6. Support</h2>
     <ul>
-        <li><strong>Email Support:</strong> <a href="mailto:support@asymm.systems" class="org-link org-link--inline org-link--external">support@asymm.systems</a> (Response within 24 business hours).</li>
-        <li><strong>Security Disclosures:</strong> <a href="mailto:security@asymm.systems" class="org-link org-link--inline org-link--external">security@asymm.systems</a>.</li>
-        <li><strong>Open verifier:</strong> <a href="https://github.com/asymmsystems/jira-governance-code-cli" class="org-link org-link--inline org-link--external">asymmsystems/jira-governance-code-cli</a> on GitHub (Apache-2.0).</li>
-        <li><strong>Signing keys:</strong> the <a href="/product/jira-governance/signing-keys.html" class="org-link org-link--inline org-link--internal">Signing keys</a> page lists the public keys of LedgerSeal and DefinitionGuard.</li>
+        <li><strong>Support:</strong> <a href="mailto:support@asymm.systems" class="org-link org-link--inline org-link--external">support@asymm.systems</a>. First answer within 24 business hours, Monday to Friday. A defect that blocks production work: within 4 hours. See <a href="/support.html" class="org-link org-link--inline org-link--internal">Support</a>.</li>
+        <li><strong>Security reports:</strong> <a href="mailto:security@asymm.systems" class="org-link org-link--inline org-link--external">security@asymm.systems</a>.</li>
+        <li><strong>Privacy requests:</strong> <a href="mailto:privacy@asymm.systems" class="org-link org-link--inline org-link--external">privacy@asymm.systems</a>.</li>
     </ul>
 </section>
