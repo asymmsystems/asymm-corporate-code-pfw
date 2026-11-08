@@ -39,7 +39,7 @@ og_image=product/jira-governance/definitionguard/banner.png
     <h2 class="section-title">3. The Definition of Done panel</h2>
     <p>Open an issue. If the panel is not shown, choose the issue's app button (below the title) and then <strong>Definition of Done</strong>.</p>
     <figure style="margin: 2rem 0;">
-        <img src="/images/product/jira-governance/user-guide/common/issue-app-actions-menu.png" alt="The issue's app actions menu with Approval Seal, Definition of Done, Four Realities and Add apps." width="252" height="220" loading="lazy" style="max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <img src="/images/product/jira-governance/user-guide/common/issue-app-actions-menu.png" alt="The issue's app actions menu with Approval Seal, Definition of Done, Four Realities and Add apps." width="189" height="173" loading="lazy" style="max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
         <figcaption style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 1: The issue's app button opens the Definition of Done panel.</figcaption>
     </figure>
     <figure style="margin: 2rem 0;">
@@ -111,7 +111,7 @@ og_image=product/jira-governance/definitionguard/banner.png
     <h2 class="section-title">5. Write the checklists (project administrator)</h2>
     <p>Open <strong>Project settings &gt; DefinitionGuard</strong>. You need Administer projects, or Jira administrator.</p>
     <figure style="margin: 2rem 0;">
-        <img src="/images/product/jira-governance/user-guide/definitionguard/07-settings-template.png" alt="The Definition of Done templates section for issue type Task: template name Payments task DoD and five items, each with Mandatory, Evidence required and Not the assignee checkboxes, a permission select, a category select, and Move up, Move down and Remove buttons." width="1568" height="658" loading="lazy" style="max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <img src="/images/product/jira-governance/user-guide/definitionguard/07-settings-template.png" alt="The Definition of Done templates section for issue type Task: template name Payments task DoD and five items, each with Mandatory, Evidence required and Not the assignee checkboxes, a permission select, a category select, and Move up, Move down and Remove buttons." width="1568" height="529" loading="lazy" style="max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
         <figcaption style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 6: A project template for the issue type Task.</figcaption>
     </figure>
     <ol>
@@ -134,6 +134,10 @@ og_image=product/jira-governance/definitionguard/banner.png
     <p>Without a project template, DefinitionGuard picks a built-in template by the issue type name: Service Desk Request, IT Help Desk, Bug Fix (bug, defect, incident, problem), Feature &amp; Story (story, feature, enhancement), Technical Task (chore, refactor, maintenance), or the Standard Engineering Definition of Done for any other type, Task included.</p>
     <h3>Statuses the gate lets through</h3>
     <p>The gate blocks moves into Done-category statuses. Tick the Done-category statuses that are not completions, such as Canceled or Declined, and choose <strong>Save statuses</strong>. Moves into those statuses are not gated.</p>
+    <figure style="margin: 2rem 0;">
+        <img src="/images/product/jira-governance/user-guide/definitionguard/08-settings-statuses.png" alt="Statuses the gate lets through: the explanation, a Done checkbox and the Save statuses button." width="1190" height="171" loading="lazy" style="max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <figcaption style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 7: Statuses the gate lets through. This project has one Done-category status, Done, which stays gated.</figcaption>
+    </figure>
 </section>
 
 <section style="margin-bottom: 4rem">
@@ -147,8 +151,8 @@ og_image=product/jira-governance/definitionguard/banner.png
         <li>In <strong>Project settings &gt; DefinitionGuard &gt; Gate coverage</strong>, choose <strong>Check again</strong>. Each transition shows <strong>Gated</strong>, <strong>Not gated</strong> or <strong>Exempt</strong>.</li>
     </ol>
     <figure style="margin: 2rem 0;">
-        <img src="/images/product/jira-governance/user-guide/definitionguard/08-settings-statuses-coverage.png" alt="The settings page: Save template and Re-sync open issues buttons, Statuses the gate lets through with a Done checkbox and Save statuses, and Gate coverage warning that 0 of 1 completion transitions are gated, with the Done transition marked Not gated and a Check again button." width="1568" height="437" loading="lazy" style="max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
-        <figcaption style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 7: Gate coverage before the validator is added. The Done transition is Not gated.</figcaption>
+        <img src="/images/product/jira-governance/user-guide/definitionguard/09-gate-coverage-before-validator.png" alt="Gate coverage before the validator is added: a warning that 0 of 1 completion transitions are gated, the Done transition marked Not gated, and the Check again button." width="1568" height="155" loading="lazy" style="max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <figcaption style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 8: Gate coverage in its state before the validator is added. The warning tells you which transition still needs the validator. After you add it and choose Check again, the transition reads Gated.</figcaption>
     </figure>
     <h3>What the validator does</h3>
     <ul>
@@ -173,12 +177,12 @@ og_image=product/jira-governance/definitionguard/banner.png
         <li>Project and Jira administrators choose <strong>Export history</strong>. Copy the JSON and save it as <code>KEY-definitionguard-history.json</code>. There is no download button.</li>
     </ol>
     <figure style="margin: 2rem 0;">
-        <img src="/images/product/jira-governance/user-guide/definitionguard/05-audit-history.png" alt="The Checklist audit history with 4 events: Chain intact, Property signed with a note naming the key, and the events Checklist created, two Completed events (one with its evidence link and note) and a Waived event with its reason." width="1113" height="733" loading="lazy" style="max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
-        <figcaption style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 8: The audit history. This test site signs with a development key; a Marketplace installation signs with <code>dg-prod-2026-11</code>.</figcaption>
+        <img src="/images/product/jira-governance/user-guide/definitionguard/05-audit-history.png" alt="The Checklist audit history with 4 events: Chain intact, Property signed with a note naming the key, and the events Checklist created, two Completed events (one with its evidence link and note) and a Waived event with its reason." width="1113" height="771" loading="lazy" style="max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <figcaption style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 9: The audit history. This test site signs with a development key; a Marketplace installation signs with <code>dg-prod-2026-11</code>.</figcaption>
     </figure>
     <figure style="margin: 2rem 0;">
-        <img src="/images/product/jira-governance/user-guide/definitionguard/06-history-export.png" alt="The history export header: Checklist history export: PAY-28-definitionguard-history.json, the instruction to copy the JSON and save it under that name, and the start of the JSON." width="1113" height="226" loading="lazy" style="max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
-        <figcaption style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 9: The export, ready to copy.</figcaption>
+        <img src="/images/product/jira-governance/user-guide/definitionguard/06-history-export.png" alt="The history export header: Checklist history export: PAY-28-definitionguard-history.json, the instruction to copy the JSON and save it under that name, and the start of the JSON." width="1113" height="154" loading="lazy" style="max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <figcaption style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 10: The export, ready to copy.</figcaption>
     </figure>
     <h3>What the checks mean</h3>
     <ul>
@@ -215,8 +219,8 @@ og_image=product/jira-governance/definitionguard/banner.png
         <li>Choose <strong>Save changes</strong>. Result: "Saved. The approver groups apply to every project on this site."</li>
     </ol>
     <figure style="margin: 2rem 0;">
-        <img src="/images/product/jira-governance/user-guide/definitionguard/09-approvers-admin.png" alt="The DefinitionGuard approvers page with one approver group, its Remove button, Save changes, and the group search field." width="1568" height="358" loading="lazy" style="max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
-        <figcaption style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 10: The DefinitionGuard approvers page with one group.</figcaption>
+        <img src="/images/product/jira-governance/user-guide/definitionguard/10-approvers-admin.png" alt="The DefinitionGuard approvers page with one approver group, its Remove button, Save changes, and the group search field." width="1568" height="358" loading="lazy" style="max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+        <figcaption style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 11: The DefinitionGuard approvers page with one group.</figcaption>
     </figure>
     <p>At most 20 groups. A search shows at most 20 results and takes at most 100 characters.</p>
 </section>
