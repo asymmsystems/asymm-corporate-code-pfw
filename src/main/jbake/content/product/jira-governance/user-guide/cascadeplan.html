@@ -148,10 +148,17 @@ og_image=product/jira-governance/cascadeplan/banner.png
     <h3>Put a work item on the timeline</h3>
     <ol>
         <li>Choose <strong>Backlog</strong> in the toolbar. The tray <strong>Unmapped Project Issues</strong> opens.</li>
-        <li>Drag a card onto the timeline at the start date you want. Or choose <strong>+ Schedule</strong> on the card: the bar starts today and spans 3 weeks.</li>
+        <li>Drag a card onto the timeline part of a row, at the start date you want. The bar starts on the day under the pointer and spans 3 weeks. A date label follows the pointer while you drag. At Month zoom and wider, the start is the Monday of that week.</li>
+        <li>A drop in another place starts the bar on a fixed day, also for 3 weeks:
+            <ul>
+                <li><strong>On the grid</strong> (the columns on the left of a row, or the rows "+ Drop here to place task at top of schedule" and "+ Drop here to place task at bottom of schedule" that show while you drag): the Monday of the current week.</li>
+                <li><strong>In an empty plan</strong> (the area "Drop backlog issues here to schedule"): today, wherever you drop the card.</li>
+                <li><strong>+ Schedule</strong> on the card: today.</li>
+            </ul>
+        </li>
         <li>If the item has a Jira due date, the bar ends on that date. If the due date is before the start, CascadePlan refuses and names the due date.</li>
     </ol>
-    <p><strong>Result:</strong> a message says "Scheduled KEY to timeline." The start date is saved on the work item. CascadePlan writes a due date only when you choose an end.</p>
+    <p><strong>Result:</strong> after a drop on a row, a message says "Scheduled KEY." and offers <strong>Undo</strong>. After <strong>+ Schedule</strong>, or a drop in an empty plan, it says "Scheduled KEY to timeline." The start date is saved on the work item. CascadePlan writes a due date only when you choose an end.</p>
     <figure style="margin: 2rem 0;">
         <img src="/images/product/jira-governance/user-guide/cascadeplan/09-backlog-tray.png" alt="The Unmapped Project Issues tray with five cards, PAY-29, PAY-28, PAY-21, PAY-20 and PAY-19, each with its type, estimate, assignee and a + Schedule button." width="277" height="588" loading="lazy" style="max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
         <figcaption style="font-size: 0.85rem; opacity: 0.8; margin-top: 0.5rem;">Figure 5: The Backlog tray. Drag a card onto the timeline, or choose + Schedule.</figcaption>
