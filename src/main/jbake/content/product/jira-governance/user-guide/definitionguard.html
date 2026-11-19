@@ -293,8 +293,10 @@ og_image=product/jira-governance/definitionguard/banner.png
     <h2 class="section-title">13. Uninstall and data removal</h2>
     <ol>
         <li>Remove the validator <strong>DefinitionGuard DoD Enforcement</strong> from your workflows first, so no transition depends on it.</li>
+        <li>If a transition still has the validator when DefinitionGuard is uninstalled, Jira refuses every move through that transition until a Jira administrator removes the rule or installs the app again.</li>
         <li>A Jira administrator opens <strong>Jira settings &gt; Apps &gt; Manage apps</strong> and uninstalls DefinitionGuard.</li>
         <li>Atlassian keeps the app's Forge storage for 28 days and then deletes it: checklists, history, templates and settings.</li>
+        <li>Installing the app again does not bring this data back by itself. If you install it again, write to <a href="mailto:support@asymm.systems" class="org-link org-link--inline org-link--external">support@asymm.systems</a> within 21 days of the uninstall. With your consent, we can ask Atlassian to link the old data to the new installation.</li>
         <li>The issue property <code>definitionguard-dod</code> stays on each issue until the issue is deleted.</li>
     </ol>
     <p>For other requests, write to <a href="mailto:privacy@asymm.systems" class="org-link org-link--inline org-link--external">privacy@asymm.systems</a>.</p>
