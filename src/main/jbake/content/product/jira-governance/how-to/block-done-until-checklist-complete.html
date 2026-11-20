@@ -1,0 +1,77 @@
+title=How to block the move to Done until a checklist is complete in Jira Cloud
+description=Block a Jira issue from moving to Done until every checklist step is complete: the steps with Jira alone, then with DefinitionGuard, and the limits of both.
+type=page
+toc=true
+status=published
+og_image=product/jira-governance/definitionguard/banner.png
+~~~~~~
+
+<header class="page-header">
+    <h1>How to block the move to Done until a checklist is complete in Jira Cloud</h1>
+    <p style="max-width: 65ch">Checked on our own Jira site on 20 November 2026. Jira's screens now say "work item" and "space" where older pages say "issue" and "project". They are the same things.</p>
+</header>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">With Jira alone</h2>
+    <ol>
+        <li>Give each step of your checklist its own field. For example, a checkbox field "Peer review done" with the single option "Yes".</li>
+        <li>Open the workflow in the workflow editor and select the transition into Done.</li>
+        <li>Add the rule "Validate a field": choose the check "Isn't empty", then the fields. Its rule type is "Validate details". The old editor called it the Field Required Validator.</li>
+        <li>Select "Update workflow".</li>
+    </ol>
+    <figure style="margin: 2rem 0;">
+        <img src="/images/product/jira-governance/how-to/block-done-until-checklist-complete/01-jira-rule-on-transition.png" alt="The rule on the transition." width="1568" height="527" loading="lazy" style="max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+    </figure>
+    <p>Now try to move a work item with an empty field. Jira stops the move: "Field Peer review done is required."</p>
+    <figure style="margin: 2rem 0;">
+        <img src="/images/product/jira-governance/how-to/block-done-until-checklist-complete/02-jira-refused-move.png" alt="The refused move." width="1568" height="671" loading="lazy" style="max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+    </figure>
+    <p>A team-managed space has the same rule, "Validate a field", in the same workflow editor.</p>
+    <p>If your checklist is two or three fields, you are done. You need no app.</p>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">Where this stops</h2>
+    <ul>
+        <li>A field shows its present value. Who changed it is in the History tab, not next to the step.</li>
+        <li>A skipped step has no place for its reason.</li>
+        <li>A workflow often has more than one transition into Done. Each one needs the rules.</li>
+    </ul>
+</section>
+
+<section style="margin-bottom: 4rem">
+    <h2 class="section-title">With DefinitionGuard</h2>
+    <p>DefinitionGuard is our app for this task. It shows a checklist on the issue and has one workflow validator.</p>
+    <ol>
+        <li>Install DefinitionGuard from the Atlassian Marketplace. It is free for sites with up to 10 users.</li>
+        <li>Open an issue. Select the button "View app actions" under the title, and choose DefinitionGuard. The panel shows a built-in checklist for the issue type, before any setup.</li>
+    </ol>
+    <figure style="margin: 2rem 0;">
+        <img src="/images/product/jira-governance/how-to/block-done-until-checklist-complete/03-definitionguard-panel.png" alt="The panel before any setup." width="1568" height="671" loading="lazy" style="max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+    </figure>
+    <ol start="3">
+        <li>As a Jira admin, add the validator "DefinitionGuard DoD Enforcement" to each transition into a Done status, in the workflow editor. The app cannot add it for you.</li>
+        <li>In the space settings, under Apps, open DefinitionGuard and look at Gate coverage. It lists each transition into a Done status as Gated, Not gated or Exempt.</li>
+    </ol>
+    <figure style="margin: 2rem 0;">
+        <img src="/images/product/jira-governance/how-to/block-done-until-checklist-complete/05-definitionguard-gate-coverage.png" alt="Gate coverage with one gated transition." width="1400" height="166" loading="lazy" style="max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border-subtle, #333);" />
+    </figure>
+    <figure style="margin: 2rem 0;">
+        <video controls preload="none" playsinline poster="/videos/product/jira-governance/how-to/block-done-until-checklist-complete/definitionguard-listing-poster.jpg" width="1920" height="1080" aria-label="The refused move, with the open items named." style="display: block; max-width: 100%; height: auto; border-radius: 6px; border: 1px solid var(--border-subtle, #333);">
+            <source src="/videos/product/jira-governance/how-to/block-done-until-checklist-complete/definitionguard-listing.mp4" type="video/mp4" />
+        </video>
+    </figure>
+    <p>On those transitions the move is now blocked while a mandatory item is open and not waived. Jira's "Transition failed" message names the open items.</p>
+</section>
+
+<section style="margin-bottom: 5rem">
+    <h2 class="section-title">Limits</h2>
+    <ul>
+        <li>Without the validator, the app shows the checklist and blocks nothing.</li>
+        <li>A tick is a record of a Jira user's action. It is not an electronic signature.</li>
+        <li>If the app cannot read the data it needs, it blocks the move. A Jira admin can take the validator off at any time.</li>
+        <li>With an inactive licence the gate is off, and every move goes through.</li>
+    </ul>
+    <p>The exact clicks are in the user guide: <a href="/product/jira-governance/user-guide/definitionguard.html" class="org-link org-link--inline org-link--internal" style="overflow-wrap: anywhere;">https://asymm.systems/product/jira-governance/user-guide/definitionguard</a></p>
+    <p>DefinitionGuard on the Atlassian Marketplace: <a href="https://marketplace.atlassian.com/apps/4212324863/definitionguard-enforced-definition-of-done?utm_source=asymm&amp;utm_medium=howto&amp;utm_campaign=dg-howto&amp;utm_content=block-done-until-checklist-complete" target="_blank" rel="noopener" class="org-link org-link--inline org-link--external" style="overflow-wrap: anywhere;">https://marketplace.atlassian.com/apps/4212324863/definitionguard-enforced-definition-of-done?utm_source=asymm&amp;utm_medium=howto&amp;utm_campaign=dg-howto&amp;utm_content=block-done-until-checklist-complete</a></p>
+</section>
