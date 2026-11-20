@@ -118,6 +118,7 @@
                 "label": "Guides",
                 "children": [
                     { "label": "User Guide Hub",   "href": "/product/jira-governance/user-guide/" },
+                    { "label": "How-to Pages",     "href": "/product/jira-governance/how-to/" },
                     { "label": "Open Verifier",    "href": "/product/jira-governance/user-guide/open-verifier.html" },
                     { "label": "Signing Keys",     "href": "/product/jira-governance/signing-keys.html" },
                     { "label": "Compliance &amp; Security", "href": "/product/jira-governance/compliance.html" },
@@ -142,6 +143,24 @@
             { "label": "product",         "href": "" },
             { "label": "jira-governance", "href": "/product/jira-governance.html" },
             { "label": "user-guide",      "href": "/product/jira-governance/user-guide/" }
+        ]
+    },
+    {
+        <#-- The how-to index: its own segment is the leaf, so the trail stops one step earlier. -->
+        "match": "product/jira-governance/how-to/index.html",
+        "trail": [
+            { "label": "asymm",           "href": "/" },
+            { "label": "product",         "href": "" },
+            { "label": "jira-governance", "href": "/product/jira-governance.html" }
+        ]
+    },
+    {
+        "match": "product/jira-governance/how-to",
+        "trail": [
+            { "label": "asymm",           "href": "/" },
+            { "label": "product",         "href": "" },
+            { "label": "jira-governance", "href": "/product/jira-governance.html" },
+            { "label": "how-to",          "href": "/product/jira-governance/how-to/" }
         ]
     },
     {
